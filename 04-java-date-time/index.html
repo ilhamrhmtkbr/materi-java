@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>☕ Belajar Java DateTime API</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <style>
+        .code-block {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow-x: auto;
+            border-radius: var(--radius-l);
+            margin: var(--m) 0;
+            font-size: var(--s);
+        }
+        .code-block pre {
+            margin: 0;
+        }
+        .code-block pre code {
+            border-radius: var(--radius-l);
+            font-size: var(--s);
+        }
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transprimary-color);
+            border-left: 4px solid var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .info-box.warning {
+            background: var(--transwarning-color);
+            border-left-color: var(--warning-color);
+        }
+        .info-box.success {
+            background: var(--transsuccess-color);
+            border-left-color: var(--success-color);
+        }
+        .info-box.danger {
+            background: var(--transdanger-color);
+            border-left-color: var(--danger-color);
+        }
+        .info-box.laravel {
+            background: var(--transsecond-primary-color);
+            border-left-color: var(--second-primary-color);
+        }
+        .info-box-title {
+            font-weight: 700;
+            margin-bottom: var(--xs);
+            color: var(--primary-color);
+        }
+        .info-box.warning .info-box-title { color: var(--warning-color); }
+        .info-box.success .info-box-title { color: var(--success-color); }
+        .info-box.danger .info-box-title { color: var(--danger-color); }
+        .info-box.laravel .info-box-title { color: var(--second-primary-color); }
+
+        .line-explain {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            margin: var(--m) 0;
+        }
+        .line-explain-item {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: var(--s);
+            align-items: start;
+            padding: var(--xs) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .line-explain-item:last-child { border-bottom: none; }
+        .line-num {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: var(--xs);
+            padding: 2px var(--xs);
+            border-radius: var(--radius-s);
+            white-space: nowrap;
+            font-family: monospace;
+        }
+        .line-desc { font-size: var(--s); }
+
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transthird-primary-color);
+            border: 1px solid var(--third-primary-color);
+            border-radius: var(--radius-l);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .quiz-title {
+            font-weight: 700;
+            color: var(--third-primary-color);
+            margin-bottom: var(--s);
+        }
+        .quiz-option {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--s);
+            padding: var(--xs) var(--s);
+            margin: var(--xs) 0;
+            border-radius: var(--radius-m);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            transition: all 0.2s;
+        }
+        .quiz-option:hover { border-color: var(--third-primary-color); background: var(--transthird-primary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong { background: var(--transdanger-color); border-color: var(--danger-color); }
+        .quiz-option input { margin-top: 3px; }
+        .quiz-feedback {
+            margin-top: var(--s);
+            padding: var(--xs) var(--s);
+            border-radius: var(--radius-m);
+            font-size: var(--s);
+            display: none;
+        }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.wrong { background: var(--transdanger-color); color: var(--danger-color); }
+
+        .comparison-grid {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s);
+            margin: var(--m) 0;
+        }
+        @media (max-width: 600px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+        .comparison-wrong {
+            background: var(--transdanger-color);
+            border: 1px solid var(--danger-color);
+            border-radius: var(--radius-m);
+            padding: var(--s);
+        }
+        .comparison-right {
+            background: var(--transsuccess-color);
+            border: 1px solid var(--success-color);
+            border-radius: var(--radius-m);
+            padding: var(--s);
+        }
+        .comparison-label {
+            font-weight: 700;
+            font-size: var(--s);
+            margin-bottom: var(--xs);
+        }
+        .comparison-wrong .comparison-label { color: var(--danger-color); }
+        .comparison-right .comparison-label { color: var(--success-color); }
+        .comparison-wrong .code-block, .comparison-right .code-block { margin: var(--xs) 0; }
+
+        .chapter-intro {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: linear-gradient(135deg, var(--transprimary-color) 0%, var(--transsecond-primary-color) 100%);
+            border-radius: var(--radius-x);
+            padding: var(--x);
+            margin-bottom: var(--m);
+        }
+        .chapter-intro-number {
+            font-size: var(--xs);
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .chapter-intro-title {
+            font-size: var(--xx);
+            font-weight: 800;
+            margin: var(--xs) 0;
+        }
+        .chapter-intro-desc {
+            font-size: var(--s);
+            opacity: 0.85;
+        }
+
+        .api-table {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+        }
+
+        .badge-chapter {
+            display: inline-block;
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            font-size: var(--xs);
+            font-weight: 700;
+            padding: 2px var(--s);
+            border-radius: 999px;
+            margin-bottom: var(--s);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mt-xs { margin-top: var(--xs); }
+        .mt-s { margin-top: var(--s); }
+        .mt-m { margin-top: var(--m); }
+        .mt-l { margin-top: var(--l); }
+        .mb-xs { margin-bottom: var(--xs); }
+        .mb-s { margin-bottom: var(--s); }
+        .mb-m { margin-bottom: var(--m); }
+
+        .text-sm { font-size: var(--s); }
+        .text-xs { font-size: var(--xs); }
+        .fw-bold { font-weight: 700; }
+        .text-muted { opacity: 0.65; }
+
+        .divider { height: 1px; background: var(--border-color); margin: var(--l) 0; }
+
+        .summary-card {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transprimary-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-l);
+            padding: var(--m);
+            margin: var(--s) 0;
+        }
+        .summary-card-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--xs);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-1">🏛️ Legacy</a>
+    <a class="bottom-nav-item" href="#chapter-3">✨ java.time</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bottom-nav-items-check-1">📚 More</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bottom-nav-items-check-1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bottom-nav-items-check-1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-5">📅 LocalDate/Time</a>
+                <a class="bottom-nav-item" href="#chapter-8">🌐 Zone & Instant</a>
+                <a class="bottom-nav-item" href="#chapter-11">⏱️ Duration</a>
+                <a class="bottom-nav-item" href="#chapter-13">🎨 Formatter</a>
+                <a class="bottom-nav-item" href="#chapter-15">🔬 Temporal</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java DateTime</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro" class="sidebar-menu-item active" data-title="Intro">
+            <div class="sidebar-menu-item-svg">🚀</div>
+            <span>Intro & Overview</span>
+        </a>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Legacy API">
+                <strong class="sidebar-menu-item-svg">🏛️</strong>
+                <span>Legacy API</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-1" class="sidebar-menu-item" data-title="Date & Calendar">
+                    <strong class="sidebar-menu-item-svg">📅</strong>
+                    <span>Date & Calendar</span>
+                </a>
+                <a href="#chapter-2" class="sidebar-menu-item" data-title="TimeZone Legacy">
+                    <strong class="sidebar-menu-item-svg">🌍</strong>
+                    <span>TimeZone (Legacy)</span>
+                </a>
+            </div>
+        </details>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="java.time Modern">
+                <strong class="sidebar-menu-item-svg">✨</strong>
+                <span>Modern java.time</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-3" class="sidebar-menu-item" data-title="Pengantar java.time">
+                    <strong class="sidebar-menu-item-svg">📦</strong>
+                    <span>Pengantar java.time</span>
+                </a>
+                <a href="#chapter-4" class="sidebar-menu-item" data-title="Year YearMonth MonthDay">
+                    <strong class="sidebar-menu-item-svg">🗓️</strong>
+                    <span>Year & YearMonth</span>
+                </a>
+                <a href="#chapter-5" class="sidebar-menu-item" data-title="LocalDate">
+                    <strong class="sidebar-menu-item-svg">📅</strong>
+                    <span>LocalDate</span>
+                </a>
+                <a href="#chapter-6" class="sidebar-menu-item" data-title="LocalTime">
+                    <strong class="sidebar-menu-item-svg">⏰</strong>
+                    <span>LocalTime</span>
+                </a>
+                <a href="#chapter-7" class="sidebar-menu-item" data-title="LocalDateTime">
+                    <strong class="sidebar-menu-item-svg">📅⏰</strong>
+                    <span>LocalDateTime</span>
+                </a>
+            </div>
+        </details>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Timezone & Offset">
+                <strong class="sidebar-menu-item-svg">🌐</strong>
+                <span>Timezone & Offset</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-8" class="sidebar-menu-item" data-title="ZoneId & ZoneOffset">
+                    <strong class="sidebar-menu-item-svg">🗺️</strong>
+                    <span>ZoneId & ZoneOffset</span>
+                </a>
+                <a href="#chapter-9" class="sidebar-menu-item" data-title="ZonedDateTime">
+                    <strong class="sidebar-menu-item-svg">🌏</strong>
+                    <span>ZonedDateTime</span>
+                </a>
+                <a href="#chapter-10" class="sidebar-menu-item" data-title="OffsetTime & OffsetDateTime">
+                    <strong class="sidebar-menu-item-svg">↔️</strong>
+                    <span>Offset Time/DateTime</span>
+                </a>
+            </div>
+        </details>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Instant & Clock">
+                <strong class="sidebar-menu-item-svg">⚡</strong>
+                <span>Instant & Clock</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-11" class="sidebar-menu-item" data-title="Instant">
+                    <strong class="sidebar-menu-item-svg">⚡</strong>
+                    <span>Instant</span>
+                </a>
+                <a href="#chapter-12" class="sidebar-menu-item" data-title="Clock">
+                    <strong class="sidebar-menu-item-svg">🕐</strong>
+                    <span>Clock</span>
+                </a>
+            </div>
+        </details>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Duration & Period">
+                <strong class="sidebar-menu-item-svg">⏱️</strong>
+                <span>Duration & Period</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-13" class="sidebar-menu-item" data-title="Duration">
+                    <strong class="sidebar-menu-item-svg">⏱️</strong>
+                    <span>Duration</span>
+                </a>
+                <a href="#chapter-14" class="sidebar-menu-item" data-title="Period">
+                    <strong class="sidebar-menu-item-svg">📆</strong>
+                    <span>Period</span>
+                </a>
+            </div>
+        </details>
+
+        <a href="#chapter-15" class="sidebar-menu-item" data-title="DateTimeFormatter">
+            <div class="sidebar-menu-item-svg">🎨</div>
+            <span>DateTimeFormatter</span>
+        </a>
+
+        <a href="#chapter-16" class="sidebar-menu-item" data-title="Temporal API">
+            <div class="sidebar-menu-item-svg">🔬</div>
+            <span>Temporal API</span>
+        </a>
+
+        <a href="#chapter-17" class="sidebar-menu-item" data-title="Legacy Interop">
+            <div class="sidebar-menu-item-svg">🔄</div>
+            <span>Legacy Interop</span>
+        </a>
+
+        <a href="#summary" class="sidebar-menu-item" data-title="Summary">
+            <div class="sidebar-menu-item-svg">📊</div>
+            <span>Summary</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52"
+             viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality"
+             fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#intro">
+                <span class="container-header-nav-item-text">☕ Java DateTime</span>
+            </a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-1"><span class="container-header-nav-item-text">🏛️ Legacy</span></a>
+                    <a class="container-header-nav-item" href="#chapter-3"><span class="container-header-nav-item-text">✨ Modern</span></a>
+                    <a class="container-header-nav-item" href="#summary"><span class="container-header-nav-item-text">📊 Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===== INTRO ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="intro">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">☕ Modul Pembelajaran Java</div>
+                    <div class="chapter-intro-title">Belajar Java DateTime API</div>
+                    <div class="chapter-intro-desc">Dari Legacy <code>java.util.Date</code> sampai Modern <code>java.time</code> — panduan lengkap untuk PHP/Laravel developer yang migrasi ke Java.</div>
+                </div>
+
+                <p>Selamat datang! Modul ini dirancang khusus untuk kamu yang sudah mahir di PHP/Laravel dan sekarang belajar Java. Kita akan belajar cara Java mengelola tanggal dan waktu, mulai dari cara lama (legacy) sampai cara modern yang direkomendasikan.</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">🗺️ Peta Belajar</div>
+                    <p>Kita akan melalui perjalanan dari <strong>Legacy API</strong> (java.util.Date, Calendar) → <strong>Modern API</strong> (java.time.*) → <strong>Timezone</strong> → <strong>Instant & Clock</strong> → <strong>Duration & Period</strong> → <strong>Formatting</strong> → <strong>Temporal API (Advanced)</strong>.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Perbedaan Mindset: Java vs PHP</div>
+                    <p><strong>PHP/Laravel:</strong> tanggal adalah tipe data yang flexible. <code>Carbon::now()</code> bisa langsung dipakai, diformat, dibanding, diubah sesuka hati dengan method chaining.<br><br>
+                        <strong>Java:</strong> tanggal dibagi menjadi <strong>banyak kelas spesifik</strong> yang masing-masing punya purpose tersendiri. Ada yang hanya menyimpan tanggal, ada yang hanya waktu, ada yang menyimpan keduanya dengan atau tanpa timezone. Ini bukan kerumitan tanpa alasan — ini adalah <strong>type safety</strong> yang mencegah banyak bug.</p>
+                </div>
+
+                <div class="mt-m">
+                    <div class="text-title">📊 Gambaran Besar: Dua Era Java DateTime</div>
+                    <div class="api-table">
+                        <div class="table-content">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Era</th>
+                                    <th>Package</th>
+                                    <th>Kelas Utama</th>
+                                    <th>Digunakan Sejak</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>🏛️ Legacy</td>
+                                    <td><code>java.util</code></td>
+                                    <td>Date, Calendar, TimeZone</td>
+                                    <td>Java 1.0 (1996)</td>
+                                    <td><span class="badge badge-small bg-warning"><p>Deprecated</p></span></td>
+                                </tr>
+                                <tr>
+                                    <td>✨ Modern</td>
+                                    <td><code>java.time</code></td>
+                                    <td>LocalDate, LocalTime, ZonedDateTime, dst.</td>
+                                    <td>Java 8 (2014)</td>
+                                    <td><span class="badge badge-small bg-success"><p>Recommended</p></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 1: Legacy Date & Calendar ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 1 • Legacy API</div>
+                    <div class="chapter-intro-title">🏛️ java.util.Date & Calendar</div>
+                    <div class="chapter-intro-desc">Mengenal API lama — penting untuk membaca kode warisan (legacy code), meski tidak direkomendasikan untuk kode baru.</div>
+                </div>
+
+                <span class="badge-chapter">Kenapa Perlu Tahu Legacy?</span>
+                <p>Di dunia kerja, kamu <em>pasti</em> akan menemukan codebase lama yang masih menggunakan <code>Date</code> dan <code>Calendar</code>. Memahaminya akan memudahkan proses refactoring ke API modern.</p>
+
+                <div class="text-title mt-m">📅 java.util.Date</div>
+                <p>Kelas <code>Date</code> adalah representasi titik waktu (timestamp) sejak <strong>Unix Epoch</strong> (1 Januari 1970, 00:00:00 UTC) dalam satuan milidetik.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: DateTest.java
+@Test
+void create() {
+    var date1 = new Date();                          // 1. Waktu sekarang
+    var date2 = new Date(System.currentTimeMillis()); // 2. Sama seperti date1
+    var date3 = new Date(339958800000L);              // 3. Tanggal spesifik dari epoch millis
+
+    System.out.println(date1); // Mon Jan 08 10:30:00 WIB 2024
+    System.out.println(date2);
+    System.out.println(date3); // Fri Feb 10 15:00:00 WIB 1980
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Line 1 — new Date()</span>
+                        <div class="line-desc">Membuat objek Date dengan waktu saat ini. Secara internal, ini hanya menyimpan angka long yang merepresentasikan milidetik sejak epoch.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Line 2 — new Date(long)</span>
+                        <div class="line-desc"><code>System.currentTimeMillis()</code> mengembalikan epoch millis saat ini. Hasilnya identik dengan <code>new Date()</code>.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Line 3 — var</span>
+                        <div class="line-desc">Keyword <code>var</code> adalah <em>local variable type inference</em> (Java 10+). Type-nya tetap <code>Date</code>, tapi compiler yang menyimpulkan — mirip seperti PHP yang loosely typed, tapi di Java ini BUKAN dynamic typing, tipe masih fixed saat compile.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">339958800000L</span>
+                        <div class="line-desc">Suffix <code>L</code> menandakan ini adalah literal <code>long</code> (64-bit integer), bukan <code>int</code> (32-bit). Penting karena angka epoch melebihi kapasitas int!</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="text-title">📆 java.util.Calendar</div>
+                <p><code>Calendar</code> hadir untuk mengatasi keterbatasan <code>Date</code> — memungkinkan manipulasi komponen tanggal secara individual (tahun, bulan, hari, dst.).</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: CalendarTest.java - Membuat dan Memodifikasi Calendar
+@Test
+void create() {
+    Calendar calendar = Calendar.getInstance(); // Singleton factory method
+    Date date = calendar.getTime();             // Konversi ke Date
+    System.out.println(date);
+}
+
+@Test
+void modifyCalendar() {
+    Calendar calendar = Calendar.getInstance();
+
+    // Set komponen satu per satu pakai konstanta integer
+    calendar.set(Calendar.YEAR, 1980);
+    calendar.set(Calendar.MONTH, Calendar.JANUARY); // MONTH dimulai dari 0!
+    calendar.set(Calendar.DAY_OF_MONTH, 10);
+    calendar.set(Calendar.HOUR_OF_DAY, 15);         // Format 24 jam
+    calendar.set(Calendar.MINUTE, 50);
+    calendar.set(Calendar.SECOND, 30);
+    calendar.set(Calendar.MILLISECOND, 100);
+
+    Date date = calendar.getTime();
+    System.out.println(date);
+    System.out.println(date.getTime()); // Epoch millis
+}
+
+@Test
+void getCalendar() {
+    Calendar calendar = Calendar.getInstance();
+
+    System.out.println(calendar.get(Calendar.YEAR));        // e.g. 2024
+    System.out.println(calendar.get(Calendar.MONTH));       // 0 = Januari!
+    System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
+    System.out.println(calendar.get(Calendar.DAY_OF_YEAR)); // Hari ke-? di tahun ini
+    System.out.println(calendar.get(Calendar.HOUR_OF_DAY));
+    System.out.println(calendar.get(Calendar.MINUTE));
+    System.out.println(calendar.get(Calendar.SECOND));
+    System.out.println(calendar.get(Calendar.MILLISECOND));
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Calendar.getInstance()</span>
+                        <div class="line-desc"><strong>Factory Method Pattern</strong>: kamu tidak bisa <code>new Calendar()</code> karena konstruktornya protected. Ini memungkinkan Java memilih implementasi yang tepat (misalnya <code>GregorianCalendar</code>).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Calendar.MONTH</span>
+                        <div class="line-desc">⚠️ <strong>Gotcha terkenal!</strong> Bulan di Calendar <strong>dimulai dari 0</strong>. JANUARY = 0, FEBRUARY = 1, ..., DECEMBER = 11. Gunakan konstanta <code>Calendar.JANUARY</code> daripada angka untuk menghindari bug ini.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">calendar.set(field, value)</span>
+                        <div class="line-desc">Calendar adalah objek yang <strong>mutable</strong> (bisa diubah langsung). Berbeda dengan API modern yang <strong>immutable</strong>.</div>
+                    </div>
+                </div>
+
+                <div class="info-box danger mt-m">
+                    <div class="info-box-title">🐛 Bug Klasik: Month dimulai dari 0</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-wrong">
+                            <div class="comparison-label">❌ Salah (Bug tersembunyi)</div>
+                            <div class="code-block">
+                                <pre><code class="language-java">// Ini bukan Maret, ini April!
+calendar.set(Calendar.MONTH, 3);
+// Developer berniat bulan ke-3 (Maret)
+// Tapi MARCH = 2, dan 3 = April!</code></pre>
+                            </div>
+                        </div>
+                        <div class="comparison-right">
+                            <div class="comparison-label">✅ Benar</div>
+                            <div class="code-block">
+                                <pre><code class="language-java">// Gunakan konstanta, jelas dan aman
+calendar.set(Calendar.MONTH, Calendar.MARCH);
+// Atau di API modern:
+LocalDate.of(2024, Month.MARCH, 10);</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel mt-m">
+                    <div class="info-box-title">🐘 Analogi Laravel: Carbon vs Calendar</div>
+                    <p>Di Laravel, kamu pakai <code>Carbon::now()</code> untuk waktu sekarang, <code>Carbon::create(1980, 1, 10)</code> untuk tanggal spesifik, dan method chaining seperti <code>$date->addDays(5)->subMonths(2)</code>. Di Java Legacy, ini dilakukan via <code>calendar.set(field, value)</code> yang terasa lebih verbose. API modern Java (<code>java.time</code>) jauh lebih mirip Carbon!</p>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Kode berikut bermaksud set bulan ke Maret. Apa yang sebenarnya terjadi?</p>
+                    <div class="code-block">
+                        <pre><code class="language-java">calendar.set(Calendar.MONTH, 3);</code></pre>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q1', this, false)">
+                        <input type="radio" name="q1">
+                        <span>Benar, bulan ke-3 adalah Maret</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q1', this, true)">
+                        <input type="radio" name="q1">
+                        <span>Salah, ini mengeset bulan April karena MONTH mulai dari 0</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q1', this, false)">
+                        <input type="radio" name="q1">
+                        <span>Akan throw Exception karena nilai tidak valid</span>
+                    </div>
+                    <div class="quiz-feedback" id="q1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 2: TimeZone Legacy ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 2 • Legacy API</div>
+                    <div class="chapter-intro-title">🌍 TimeZone (Legacy)</div>
+                    <div class="chapter-intro-desc">Manajemen timezone di era legacy — mutable dan rawan bug.</div>
+                </div>
+
+                <p><code>java.util.TimeZone</code> adalah cara lama Java mengelola timezone. Setiap <code>Calendar</code> punya timezone, dan hasilnya bisa berbeda tergantung timezone yang diset.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: TimeZoneTest.java
+@Test
+void create() {
+    TimeZone timeZoneDefault = TimeZone.getDefault(); // Timezone JVM
+    System.out.println(timeZoneDefault); // sun.util.calendar.ZoneInfo[id="Asia/Jakarta",...]
+
+    TimeZone timeZoneGMT = TimeZone.getTimeZone("GMT");
+    System.out.println(timeZoneGMT);
+
+    // Daftar semua timezone ID yang tersedia
+    String[] availableIDs = TimeZone.getAvailableIDs();
+    Arrays.asList(availableIDs).forEach(zoneId -> System.out.println(zoneId));
+}
+
+@Test
+void calendar() {
+    Calendar calendarJakarta = Calendar.getInstance(TimeZone.getTimeZone("Asia/Jakarta"));
+    Calendar calendarGMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+    // Jam berbeda karena timezone berbeda
+    System.out.println(calendarJakarta.get(Calendar.HOUR_OF_DAY)); // e.g. 10
+    System.out.println(calendarGMT.get(Calendar.HOUR_OF_DAY));     // e.g. 3
+
+    // Bahaya! Timezone bisa diubah setelah Calendar dibuat
+    calendarJakarta.setTimeZone(TimeZone.getTimeZone("GMT"));
+    System.out.println(calendarJakarta.get(Calendar.HOUR_OF_DAY)); // Berubah!
+}</code></pre>
+                </div>
+
+                <div class="info-box danger">
+                    <div class="info-box-title">⚠️ Bahaya Mutability: Calendar + TimeZone</div>
+                    <p>Karena <code>Calendar</code> bersifat mutable, timezone-nya bisa diubah kapan saja via <code>setTimeZone()</code>. Ini berbahaya jika objek Calendar dipakai bersama di beberapa tempat — perubahan di satu tempat akan mempengaruhi semua referensi ke objek yang sama.</p>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel</div>
+                    <p>Di Laravel, kamu set timezone di <code>config/app.php</code> dan Carbon secara otomatis ikut timezone tersebut. Di Java Legacy, setiap Calendar harus di-set timezone-nya secara manual — lebih verbose dan lebih rawan lupa.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 3: Pengantar java.time ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 3 • Modern API</div>
+                    <div class="chapter-intro-title">✨ Pengantar java.time</div>
+                    <div class="chapter-intro-desc">Java 8 merevolusi cara kerja dengan tanggal & waktu. Semua immutable, thread-safe, dan intuitif.</div>
+                </div>
+
+                <span class="badge-chapter">Revolusi Java 8</span>
+                <p>Package <code>java.time</code> (dikenal juga sebagai <strong>JSR-310</strong> atau <strong>Joda-Time</strong> terinspirasi) hadir di Java 8 untuk mengatasi semua masalah API lama. Tiga prinsip utamanya:</p>
+
+                <div class="flex-ais-jcs gap-m mt-m mb-m">
+                    <div class="badge text-white bg-primary"><p>🔒 Immutable</p></div>
+                    <div class="badge text-white bg-success"><p>🧵 Thread-Safe</p></div>
+                    <div class="badge text-white bg-warning"><p>📐 Fluent API</p></div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Immutable itu Artinya Apa?</div>
+                    <p><strong>Di PHP/Carbon:</strong> <code>$date->addDay()</code> mengubah <code>$date</code> itu sendiri (mutable by default, kecuali pakai <code>CarbonImmutable</code>).<br><br>
+                        <strong>Di java.time:</strong> semua operasi <em>selalu</em> mengembalikan objek baru. Objek asli tidak pernah berubah. Ini mirip seperti menggunakan <code>CarbonImmutable</code> di Laravel.<br><br>
+                        <code>LocalDate date1 = LocalDate.now();</code><br>
+                        <code>LocalDate date2 = date1.plusDays(5);</code><br>
+                        → <code>date1</code> masih tanggal hari ini! <code>date2</code> adalah objek baru 5 hari ke depan.</p>
+                </div>
+
+                <div class="text-title mt-l">🗺️ Peta Kelas java.time</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Kelas</th>
+                            <th>Berisi</th>
+                            <th>Timezone?</th>
+                            <th>Contoh Nilai</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>LocalDate</code></td><td>Tanggal saja</td><td>❌</td><td>2024-01-15</td></tr>
+                        <tr><td><code>LocalTime</code></td><td>Waktu saja</td><td>❌</td><td>10:30:45</td></tr>
+                        <tr><td><code>LocalDateTime</code></td><td>Tanggal + Waktu</td><td>❌</td><td>2024-01-15T10:30:45</td></tr>
+                        <tr><td><code>ZonedDateTime</code></td><td>Tanggal + Waktu + Zone</td><td>✅ (Named Zone)</td><td>2024-01-15T10:30:45+07:00[Asia/Jakarta]</td></tr>
+                        <tr><td><code>OffsetDateTime</code></td><td>Tanggal + Waktu + Offset</td><td>✅ (Offset only)</td><td>2024-01-15T10:30:45+07:00</td></tr>
+                        <tr><td><code>OffsetTime</code></td><td>Waktu + Offset</td><td>✅ (Offset only)</td><td>10:30:45+07:00</td></tr>
+                        <tr><td><code>Instant</code></td><td>Titik waktu absolut</td><td>✅ (UTC)</td><td>2024-01-15T03:30:45Z</td></tr>
+                        <tr><td><code>Year</code></td><td>Tahun saja</td><td>❌</td><td>2024</td></tr>
+                        <tr><td><code>YearMonth</code></td><td>Tahun + Bulan</td><td>❌</td><td>2024-01</td></tr>
+                        <tr><td><code>MonthDay</code></td><td>Bulan + Hari</td><td>❌</td><td>--01-15</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warning mt-m">
+                    <div class="info-box-title">🧠 Kapan Pakai Apa?</div>
+                    <p>
+                        <strong>Database (tanggal lahir, anniversary):</strong> <code>LocalDate</code> — tidak perlu jam/timezone.<br>
+                        <strong>Jadwal harian (jam meeting):</strong> <code>LocalTime</code> — "09:00 pagi" tidak perlu tanggal/timezone.<br>
+                        <strong>Log & event global:</strong> <code>Instant</code> atau <code>ZonedDateTime</code> — perlu timezone untuk akurasi lintas zona.<br>
+                        <strong>API response (ISO 8601):</strong> <code>OffsetDateTime</code> — portable, tidak ambiguous.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 4: Year, YearMonth, MonthDay ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 4 • Building Blocks</div>
+                    <div class="chapter-intro-title">🗓️ Year, YearMonth, MonthDay & DayOfWeek</div>
+                    <div class="chapter-intro-desc">Unit-unit waktu yang lebih granular — blok pembangun untuk membentuk tanggal lengkap.</div>
+                </div>
+
+                <p>Java menyediakan kelas untuk setiap "potongan" tanggal yang mungkin kamu butuhkan. Ini berguna ketika kamu hanya peduli sebagian dari tanggal.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: YearTest.java — Tiga cara membuat objek di java.time
+@Test
+void create() {
+    // ── Year ──
+    Year year1 = Year.now();          // Tahun sekarang
+    Year year2 = Year.of(1980);       // Tahun spesifik
+    Year year3 = Year.parse("2020");  // Parsing dari String
+
+    // ── YearMonth ──
+    YearMonth yearMonth1 = YearMonth.now();
+    YearMonth yearMonth2 = YearMonth.of(1980, Month.JUNE); // Pakai enum Month!
+    YearMonth yearMonth3 = YearMonth.parse("2020-09");
+
+    // ── MonthDay (berguna untuk ulang tahun — tanpa tahun) ──
+    MonthDay monthDay1 = MonthDay.now();
+    MonthDay monthDay2 = MonthDay.of(Month.DECEMBER, 18);
+    MonthDay monthDay3 = MonthDay.parse("--10-09"); // Format ISO: --MM-dd
+}
+
+@Test
+void name() {
+    Year year = Year.now();
+
+    // Chaining: Year → LocalDate via YearMonth → Day
+    LocalDate localDate = year.atMonth(Month.DECEMBER).atDay(19);
+    // year.atMonth() mengembalikan YearMonth
+    // .atDay(19) mengembalikan LocalDate
+
+    MonthDay monthDay = MonthDay.from(localDate); // Ekstrak MonthDay dari LocalDate
+}
+
+@Test
+void get() {
+    Year year = Year.now();
+    YearMonth yearMonth = YearMonth.now();
+    MonthDay monthDay = MonthDay.now();
+
+    System.out.println(year.getValue());          // int: 2024
+    System.out.println(yearMonth.getYear());      // int: 2024
+    System.out.println(yearMonth.getMonth());     // Enum: JANUARY
+    System.out.println(monthDay.getMonth());      // Enum: JANUARY
+    System.out.println(monthDay.getDayOfMonth()); // int: 15
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Three ways pattern</span>
+                        <div class="line-desc">Hampir semua kelas di <code>java.time</code> mengikuti pola yang sama: <strong>now()</strong> untuk waktu sekarang, <strong>of(...)</strong> untuk nilai spesifik, <strong>parse(String)</strong> untuk parsing dari teks. Ini desain API yang konsisten!</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Month.JUNE (Enum)</span>
+                        <div class="line-desc">Tidak seperti Calendar legacy yang pakai konstanta integer (MONTH = 0 untuk Januari), <code>java.time</code> menggunakan enum <code>Month</code>. Ini type-safe — compiler akan error jika kamu pakai nilai yang bukan bulan valid.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">MonthDay format "--10-09"</span>
+                        <div class="line-desc">Format ISO 8601 untuk MonthDay menggunakan prefix "<code>--</code>" untuk menandakan tidak ada informasi tahun. Ini standar internasional yang diikuti Java.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">year.atMonth().atDay()</span>
+                        <div class="line-desc"><strong>Fluent Builder Pattern</strong>: membangun tanggal step by step. Mirip seperti query builder di Laravel: <code>Year → YearMonth → LocalDate</code>.</div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">📆 DayOfWeek — Enum Hari dalam Seminggu</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// File: DayOfWeekTest.java
+@Test
+void create() {
+    DayOfWeek dayOfWeek1 = DayOfWeek.SUNDAY;      // Enum konstanta
+    DayOfWeek dayOfWeek2 = dayOfWeek1.plus(7);    // +7 hari = SUNDAY lagi
+    DayOfWeek dayOfWeek3 = dayOfWeek1.plus(1);    // SUNDAY + 1 = MONDAY
+
+    System.out.println(dayOfWeek1); // SUNDAY
+    System.out.println(dayOfWeek2); // SUNDAY (circular!)
+    System.out.println(dayOfWeek3); // MONDAY
+}</code></pre>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 DayOfWeek adalah Circular (Modular Arithmetic)</div>
+                    <p>Nilai DayOfWeek secara internal adalah 1 (MONDAY) sampai 7 (SUNDAY). Operasi <code>plus()</code> dilakukan modulo 7, sehingga SUNDAY.plus(7) kembali ke SUNDAY. Berguna untuk logika penjadwalan mingguan.</p>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 4</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Apa output dari <code>YearMonth.of(1980, Month.JUNE).getMonth()</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q4', this, false)">
+                        <input type="radio" name="q4"><span>5 (karena bulan berbasis 0)</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q4', this, false)">
+                        <input type="radio" name="q4"><span>6 (integer bulan ke-6)</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q4', this, true)">
+                        <input type="radio" name="q4"><span>JUNE (enum Month)</span>
+                    </div>
+                    <div class="quiz-feedback" id="q4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 5: LocalDate ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 5 • Modern API</div>
+                    <div class="chapter-intro-title">📅 LocalDate — Tanggal Tanpa Waktu & Timezone</div>
+                    <div class="chapter-intro-desc">Kelas paling sering digunakan untuk menyimpan tanggal (tanggal lahir, deadline, jadwal) tanpa perlu informasi jam atau timezone.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: LocalDateTest.java
+
+@Test
+void create() {
+    LocalDate localDate1 = LocalDate.now();                     // Hari ini
+    LocalDate localDate2 = LocalDate.of(1980, Month.JANUARY, 10); // Spesifik
+    LocalDate localDate3 = LocalDate.parse("1980-01-10");       // Dari String ISO
+
+    System.out.println(localDate1); // 2024-01-15
+    System.out.println(localDate2); // 1980-01-10
+    System.out.println(localDate3); // 1980-01-10
+}
+
+@Test
+void with() {
+    // with() = "ubah satu komponen, sisanya sama" — IMMUTABLE!
+    LocalDate localDate1 = LocalDate.now();         // 2024-01-15
+    LocalDate localDate2 = localDate1.withYear(1980);           // 1980-01-15
+    LocalDate localDate3 = localDate1.withYear(1980).withMonth(1); // 1980-01-15
+
+    // localDate1 TIDAK berubah!
+    System.out.println(localDate1); // 2024-01-15 (tetap!)
+    System.out.println(localDate2); // 1980-01-15
+    System.out.println(localDate3); // 1980-01-15
+}
+
+@Test
+void modify() {
+    // plus/minus = tambah/kurangi durasi — juga IMMUTABLE
+    LocalDate localDate1 = LocalDate.now();
+    LocalDate localDate2 = localDate1.plusYears(10);    // 10 tahun ke depan
+    LocalDate localDate3 = localDate1.minusMonths(10);  // 10 bulan ke belakang
+}
+
+@Test
+void get() {
+    LocalDate localDate1 = LocalDate.now();
+
+    System.out.println(localDate1.getYear());        // int: 2024
+    System.out.println(localDate1.getMonth());       // enum: JANUARY
+    System.out.println(localDate1.getMonthValue());  // int: 1 (dimulai dari 1!)
+    System.out.println(localDate1.getDayOfMonth());  // int: 15
+    System.out.println(localDate1.getDayOfWeek());   // enum: MONDAY
+    System.out.println(localDate1.getDayOfYear());   // int: 15 (hari ke-15 di tahun ini)
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">LocalDate.parse()</span>
+                        <div class="line-desc">Default format adalah ISO 8601 (<code>yyyy-MM-dd</code>). Jika format berbeda, perlu <code>DateTimeFormatter</code> (akan dibahas di chapter 15).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">getMonthValue() vs getMonth()</span>
+                        <div class="line-desc"><strong>Perbedaan penting!</strong> <code>getMonthValue()</code> mengembalikan <code>int</code> (1-12, Januari = 1 — berbeda dari Calendar lama!). <code>getMonth()</code> mengembalikan enum <code>Month</code>.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">with() vs plus()/minus()</span>
+                        <div class="line-desc"><code>with()</code> = "set nilai absolut" (seperti setter tapi immutable). <code>plus()/minus()</code> = "tambah/kurangi relatif dari nilai sekarang".</div>
+                    </div>
+                </div>
+
+                <div class="comparison-grid mt-m">
+                    <div class="comparison-wrong">
+                        <div class="comparison-label">❌ Salah (Mindset PHP)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">LocalDate date = LocalDate.now();
+date.plusDays(5); // SALAH!
+// Hasil dibuang, date tidak berubah
+System.out.println(date); // Masih hari ini!</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-right">
+                        <div class="comparison-label">✅ Benar (Immutable mindset)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">LocalDate date = LocalDate.now();
+LocalDate nextWeek = date.plusDays(5);
+// Selalu tangkap hasilnya!
+System.out.println(nextWeek);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Carbon vs LocalDate</div>
+                    <p>Di PHP: <code>$date = Carbon::now(); $date->addDays(5);</code> → <code>$date</code> sekarang berubah (mutable). Di Java: <code>LocalDate date = LocalDate.now(); date.plusDays(5);</code> → <code>date</code> TIDAK berubah! Kamu harus pakai <code>LocalDate newDate = date.plusDays(5);</code>. Ini mirip seperti menggunakan <code>CarbonImmutable</code> di Laravel.</p>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 5</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Apa output dari kode ini?</p>
+                    <div class="code-block">
+                        <pre><code class="language-java">LocalDate d = LocalDate.of(2024, 1, 1);
+d.withYear(2000);
+System.out.println(d.getYear());</code></pre>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q5', this, false)">
+                        <input type="radio" name="q5"><span>2000 — karena withYear mengubah d</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q5', this, true)">
+                        <input type="radio" name="q5"><span>2024 — karena LocalDate immutable, hasil with() dibuang</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q5', this, false)">
+                        <input type="radio" name="q5"><span>Error compile karena d adalah val</span>
+                    </div>
+                    <div class="quiz-feedback" id="q5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 6: LocalTime ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 6 • Modern API</div>
+                    <div class="chapter-intro-title">⏰ LocalTime — Waktu Tanpa Tanggal & Timezone</div>
+                    <div class="chapter-intro-desc">Untuk menyimpan waktu seperti jam operasional toko, jadwal alarm, atau batas jam pengiriman.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: LocalTimeTest.java
+@Test
+void create() {
+    LocalTime localTime1 = LocalTime.now();             // Jam sekarang
+    LocalTime localTime2 = LocalTime.of(10, 10, 10);   // 10:10:10
+    LocalTime localTime3 = LocalTime.parse("08:08");    // Hanya jam:menit, detik default 0
+}
+
+@Test
+void change() {
+    // with() = ubah satu komponen, immutable
+    LocalTime localTime1 = LocalTime.now();                         // e.g. 14:30:45
+    LocalTime localTime2 = localTime1.withHour(10);                 // 10:30:45
+    LocalTime localTime3 = localTime1.withHour(5).withMinute(10).withSecond(0); // 05:10:00
+    // Chain of with() calls — setiap call mengembalikan objek baru
+}
+
+@Test
+void modify() {
+    // plus/minus untuk tambah/kurangi relatif
+    LocalTime localTime1 = LocalTime.now();
+    LocalTime localTime2 = localTime1.plusHours(10);
+    LocalTime localTime3 = localTime1.plusHours(5).minusMinutes(10).minusSeconds(5);
+    // Perhatikan: LocalTime bersifat circular!
+    // LocalTime.of(23, 0).plusHours(2) = 01:00 (bukan 25:00)
+}
+
+@Test
+void get() {
+    LocalTime localTime = LocalTime.now();
+    System.out.println(localTime.getHour());   // int: 0-23
+    System.out.println(localTime.getMinute()); // int: 0-59
+    System.out.println(localTime.getSecond()); // int: 0-59
+    System.out.println(localTime.getNano());   // int: 0-999999999
+}</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ LocalTime adalah Circular</div>
+                    <p>Jika kamu menambah jam melewati tengah malam, hasilnya akan "wrap around" kembali ke 00:xx. Contoh: <code>LocalTime.of(23, 0).plusHours(3)</code> = <code>02:00</code>, <strong>bukan</strong> <code>26:00</code>. Informasi tentang "hari berganti" hilang. Jika perlu tracking lintas hari, gunakan <code>LocalDateTime</code>.</p>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel</div>
+                    <p>PHP tidak punya tipe data khusus untuk "waktu tanpa tanggal". Kamu biasanya pakai string <code>"08:00"</code> atau Carbon dengan tanggal dummy. Di Java, <code>LocalTime</code> adalah tipe yang proper dan type-safe untuk menyimpan waktu saja.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 7: LocalDateTime ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 7 • Modern API</div>
+                    <div class="chapter-intro-title">📅⏰ LocalDateTime — Tanggal + Waktu</div>
+                    <div class="chapter-intro-desc">Gabungan LocalDate dan LocalTime — untuk data yang butuh tanggal DAN waktu, tapi tidak perlu timezone.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: LocalDateTimeTest.java
+@Test
+void create() {
+    LocalDateTime localDateTime1 = LocalDateTime.now();
+    LocalDateTime localDateTime2 = LocalDateTime.of(1980, Month.JANUARY, 8, 10, 9, 10, 456000000);
+    // of(year, month, day, hour, minute, second, nanosecond)
+    // 456000000 nano = 456 millisecond
+    LocalDateTime localDateTime3 = LocalDateTime.parse("1980-01-08T10:09:10.456");
+    // Format ISO 8601: T adalah pemisah tanggal dan waktu
+}
+
+@Test
+void with() {
+    LocalDateTime localDateTime1 = LocalDateTime.now();
+    LocalDateTime localDateTime2 = localDateTime1.withYear(1980).withMonth(1);
+    // Bisa chain with() berkali-kali
+}
+
+@Test
+void modify() {
+    LocalDateTime localDateTime1 = LocalDateTime.now();
+    LocalDateTime localDateTime2 = localDateTime1.plusYears(5).minusHours(5);
+    // Bisa chain plus dan minus
+}
+
+@Test
+void get() {
+    LocalDateTime localDateTime = LocalDateTime.now();
+    System.out.println(localDateTime.getYear());
+    System.out.println(localDateTime.getMonth());       // enum Month
+    System.out.println(localDateTime.getDayOfMonth());
+    System.out.println(localDateTime.getHour());
+    System.out.println(localDateTime.getMinute());
+    System.out.println(localDateTime.getSecond());
+    System.out.println(localDateTime.getNano());        // presisi nanosecond!
+}
+
+@Test
+void date() {
+    // Konversi LocalDateTime <-> LocalDate + LocalTime
+    LocalDateTime localDateTime = LocalDateTime.now();
+
+    LocalDate localDate = localDateTime.toLocalDate();      // Ambil bagian tanggal
+    LocalDateTime result = localDate.atTime(10, 10, 10, 10); // LocalDate + tambahkan waktu
+}
+
+@Test
+void time() {
+    LocalDateTime localDateTime = LocalDateTime.now();
+
+    LocalTime localTime = localDateTime.toLocalTime();          // Ambil bagian waktu
+    LocalDateTime result = localTime.atDate(LocalDate.now());   // LocalTime + tambahkan tanggal
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">ISO 8601 — "T" separator</span>
+                        <div class="line-desc">Karakter <code>T</code> di <code>"1980-01-08T10:09:10.456"</code> adalah pemisah standar internasional antara tanggal dan waktu. Java mengikuti standar ini secara default.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">456000000 nanoseconds</span>
+                        <div class="line-desc">Java menyimpan sub-detik dalam <strong>nanosecond</strong> (bukan millisecond). 1 millisecond = 1.000.000 nanosecond. Presisi ini lebih tinggi dari PHP yang menggunakan microsecond.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">toLocalDate() / toLocalTime()</span>
+                        <div class="line-desc">Cara "memotong" LocalDateTime menjadi bagian yang lebih kecil. Kebalikannya adalah <code>localDate.atTime()</code> dan <code>localTime.atDate()</code> untuk "menggabungkan" dua objek menjadi LocalDateTime.</div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel</div>
+                    <p><code>LocalDateTime</code> di Java setara dengan <code>Carbon</code> di Laravel dari sisi fungsi — tanggal + waktu, manipulasi, parsing. Perbedaannya: <code>LocalDateTime</code> <strong>tidak punya timezone</strong>. Ini seperti Carbon yang dibuat tanpa argument timezone: <code>Carbon::create(2024, 1, 15, 10, 30, 0)</code> tanpa timezone param.</p>
+                </div>
+
+                <!-- Quiz 7 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 7</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Kapan kamu <strong>tidak</strong> boleh menggunakan <code>LocalDateTime</code> dan harus menggunakan <code>ZonedDateTime</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q7', this, false)">
+                        <input type="radio" name="q7"><span>Ketika nilai waktu lebih dari 24 jam</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q7', this, true)">
+                        <input type="radio" name="q7"><span>Ketika data harus akurat lintas timezone, misalnya jadwal penerbangan internasional</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q7', this, false)">
+                        <input type="radio" name="q7"><span>Ketika menyimpan tanggal lahir pengguna</span>
+                    </div>
+                    <div class="quiz-feedback" id="q7-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 8: ZoneId & ZoneOffset ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 8 • Timezone Modern</div>
+                    <div class="chapter-intro-title">🗺️ ZoneId & ZoneOffset</div>
+                    <div class="chapter-intro-desc">Dua cara Java merepresentasikan timezone — ZoneId untuk zona bernama, ZoneOffset untuk offset numerik.</div>
+                </div>
+
+                <p>Java memisahkan dua konsep timezone:</p>
+
+                <div class="flex-ais-jcs gap-m mb-m">
+                    <div class="summary-card" style="flex:1; min-width:200px;">
+                        <div class="summary-card-title">🗺️ ZoneId</div>
+                        <p class="text-sm">Nama zona geografis seperti <code>"Asia/Jakarta"</code>, <code>"America/New_York"</code>. Mengikuti aturan DST (Daylight Saving Time) — offset bisa berubah musiman.</p>
+                    </div>
+                    <div class="summary-card" style="flex:1; min-width:200px;">
+                        <div class="summary-card-title">↔️ ZoneOffset</div>
+                        <p class="text-sm">Offset numerik tetap dari UTC seperti <code>"+07:00"</code>. Tidak mengikuti DST — selalu konsisten.</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ZoneTest.java
+@Test
+void createZoneId() {
+    ZoneId zoneId = ZoneId.systemDefault();    // Timezone JVM saat ini
+    System.out.println(zoneId);                // Asia/Jakarta
+
+    ZoneId zoneIdGMT = ZoneId.of("GMT");
+    ZoneId zoneIdJakarta = ZoneId.of("Asia/Jakarta");
+    ZoneId zoneIdJapan = ZoneId.of("Asia/Tokyo");
+
+    // Lihat semua timezone yang tersedia
+    Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
+    availableZoneIds.forEach(id -> System.out.println(id));
+}
+
+@Test
+void createZoneOffset() {
+    ZoneOffset zoneOffset1 = ZoneOffset.of("+07:00");      // Parsing dari String
+    ZoneOffset zoneOffset2 = ZoneOffset.ofHours(-7);       // Dari integer jam
+    ZoneOffset zoneOffset3 = ZoneOffset.ofHoursMinutes(7, 30); // Jam + menit
+
+    System.out.println(zoneOffset1); // +07:00
+    System.out.println(zoneOffset2); // -07:00
+    System.out.println(zoneOffset3); // +07:30
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">ZoneId.of("Asia/Jakarta")</span>
+                        <div class="line-desc">Format: <code>"Benua/Kota"</code>. Ini adalah IANA Timezone Database ID. Untuk Indonesia: <code>Asia/Jakarta</code> (WIB), <code>Asia/Makassar</code> (WITA), <code>Asia/Jayapura</code> (WIT).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">ZoneOffset vs ZoneId</span>
+                        <div class="line-desc"><code>ZoneOffset</code> extends <code>ZoneId</code>, jadi ZoneOffset bisa dipakai di mana pun ZoneId dibutuhkan. Namun ZoneOffset tidak tahu tentang DST karena hanya menyimpan offset numerik.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 ZoneOffset: +07:30?</div>
+                    <p>Beberapa negara punya offset setengah jam, seperti India (+05:30) atau Nepal (+05:45). <code>ZoneOffset.ofHoursMinutes(5, 30)</code> berguna untuk kasus ini. Jakarta sendiri <code>+07:00</code>.</p>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel</div>
+                    <p>Di Laravel config: <code>'timezone' => 'Asia/Jakarta'</code>. Ini ekuivalen dengan <code>ZoneId.of("Asia/Jakarta")</code>. Format nama-nya sama karena keduanya menggunakan IANA Timezone Database.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 9: ZonedDateTime ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 9 • Timezone Modern</div>
+                    <div class="chapter-intro-title">🌏 ZonedDateTime</div>
+                    <div class="chapter-intro-desc">Representasi waktu paling lengkap — tanggal, waktu, DAN timezone lengkap dengan DST awareness.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ZonedDateTimeTest.java
+@Test
+void create() {
+    // 4 cara membuat ZonedDateTime
+    ZonedDateTime zdt1 = ZonedDateTime.now();
+    // Menggunakan timezone JVM default
+
+    ZonedDateTime zdt2 = ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("Asia/Jakarta"));
+    // Gabungkan LocalDateTime + ZoneId
+
+    ZonedDateTime zdt3 = ZonedDateTime.now(ZoneId.of("GMT"));
+    // Waktu sekarang tapi di timezone tertentu
+
+    ZonedDateTime zdt4 = ZonedDateTime.now(ZoneOffset.ofHours(5));
+    // Gunakan ZoneOffset langsung
+
+    System.out.println(zdt1); // 2024-01-15T10:30:45.123+07:00[Asia/Jakarta]
+    System.out.println(zdt2); // 2024-01-15T10:30:45.123+07:00[Asia/Jakarta]
+    System.out.println(zdt3); // 2024-01-15T03:30:45.123Z[GMT]
+}
+
+@Test
+void parsing() {
+    // Parse dari String dengan ZoneId named
+    ZonedDateTime zdt1 = ZonedDateTime.parse("1980-10-10T10:10:10+07:00[Asia/Jakarta]");
+    // Parse dari String dengan offset saja
+    ZonedDateTime zdt2 = ZonedDateTime.parse("1980-10-10T10:10:10+05:00");
+}
+
+@Test
+void changeZoneId() {
+    ZonedDateTime zdt1 = ZonedDateTime.now();            // +07:00 Jakarta
+    System.out.println(zdt1); // 2024-01-15T10:30:45+07:00[Asia/Jakarta]
+
+    // withZoneSameLocal: timezone berubah, nilai waktu TETAP
+    ZonedDateTime zdt2 = zdt1.withZoneSameLocal(ZoneId.of("GMT"));
+    System.out.println(zdt2); // 2024-01-15T10:30:45Z[GMT] — jam masih 10:30!
+
+    // withZoneSameInstant: timezone berubah, titik waktu TETAP (konversi benar)
+    ZonedDateTime zdt3 = zdt1.withZoneSameInstant(ZoneId.of("GMT"));
+    System.out.println(zdt3); // 2024-01-15T03:30:45Z[GMT] — jam dikonversi ke GMT!
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">withZoneSameLocal vs withZoneSameInstant</span>
+                        <div class="line-desc">Ini perbedaan <strong>kritis</strong>! <code>withZoneSameLocal</code> = "label timezone berubah, waktu yang tampil sama" (berbahaya, bisa mengubah titik waktu sebenarnya). <code>withZoneSameInstant</code> = "konversi benar seperti kalkulator timezone online" — ini yang hampir selalu kamu inginkan.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Format output ZonedDateTime</span>
+                        <div class="line-desc">Output: <code>2024-01-15T10:30:45+07:00[Asia/Jakarta]</code>. Terdiri dari: tanggal (<code>2024-01-15</code>), pemisah T, waktu (<code>10:30:45</code>), offset (<code>+07:00</code>), dan zone ID dalam kurung siku (<code>[Asia/Jakarta]</code>).</div>
+                    </div>
+                </div>
+
+                <div class="comparison-grid mt-m">
+                    <div class="comparison-wrong">
+                        <div class="comparison-label">❌ Salah: Mengubah Timezone</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Ingin konversi Jakarta → GMT
+ZonedDateTime jakarta = ZonedDateTime.now();
+// SALAH: waktu tidak dikonversi
+ZonedDateTime gmt = jakarta.withZoneSameLocal(ZoneId.of("GMT"));
+// Jam tetap 10:30 tapi sekarang "di GMT"
+// Padahal jam 10:30 Jakarta = 03:30 GMT!</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-right">
+                        <div class="comparison-label">✅ Benar: Konversi Timezone</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Konversi yang benar
+ZonedDateTime jakarta = ZonedDateTime.now();
+// BENAR: sama instant, timezone berbeda
+ZonedDateTime gmt = jakarta.withZoneSameInstant(ZoneId.of("GMT"));
+// Jam Jakarta 10:30 → 03:30 GMT ✓</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Carbon setTimezone</div>
+                    <p>Di Laravel: <code>$date->setTimezone('UTC')</code> itu seperti <code>withZoneSameInstant()</code> — zona berubah dan waktu dikonversi dengan benar. Tidak ada equivalent langsung untuk <code>withZoneSameLocal()</code> di Carbon secara default.</p>
+                </div>
+
+                <!-- Quiz 9 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 9</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Jam 15:00 WIB (Asia/Jakarta, +07:00). Setelah <code>withZoneSameInstant(ZoneId.of("UTC"))</code>, berapakah jam yang tampil?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q9', this, false)">
+                        <input type="radio" name="q9"><span>15:00 UTC</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q9', this, true)">
+                        <input type="radio" name="q9"><span>08:00 UTC (15:00 - 7 jam offset)</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q9', this, false)">
+                        <input type="radio" name="q9"><span>22:00 UTC (15:00 + 7 jam offset)</span>
+                    </div>
+                    <div class="quiz-feedback" id="q9-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 10: OffsetTime & OffsetDateTime ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 10 • Timezone Modern</div>
+                    <div class="chapter-intro-title">↔️ OffsetTime & OffsetDateTime</div>
+                    <div class="chapter-intro-desc">Seperti Zoned, tapi hanya menyimpan offset numerik (bukan nama zona) — cocok untuk API/JSON portabel.</div>
+                </div>
+
+                <p>Perbedaan utama <code>Offset*</code> vs <code>Zoned*</code>: OffsetDateTime hanya menyimpan offset numerik (+07:00), tidak menyimpan nama zona (Asia/Jakarta). Ini membuat data lebih portable karena tidak bergantung pada IANA timezone database.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: OffsetTimeTest.java
+@Test
+void create() {
+    // OffsetTime: waktu + offset
+    OffsetTime offsetTime1 = OffsetTime.now();
+    OffsetTime offsetTime2 = OffsetTime.now(ZoneId.of("Asia/Jakarta"));
+    OffsetTime offsetTime3 = OffsetTime.of(10, 10, 10, 10, ZoneOffset.ofHours(7));
+    // of(hour, minute, second, nanoOfSecond, offset)
+    OffsetTime offsetTime4 = OffsetTime.parse("09:09:09.100+07:00");
+
+    // OffsetDateTime: tanggal + waktu + offset
+    OffsetDateTime offsetDateTime1 = OffsetDateTime.now();
+    OffsetDateTime offsetDateTime2 = OffsetDateTime.now(ZoneId.of("Asia/Jakarta"));
+    OffsetDateTime offsetDateTime3 = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.ofHours(7));
+    // Gabungkan LocalDateTime + ZoneOffset
+    OffsetDateTime offsetDateTime4 = OffsetDateTime.parse("1980-09-17T10:10:10.100+05:00");
+}
+
+@Test
+void toLocalTime() {
+    // Konversi dua arah: LocalTime ←→ OffsetTime
+    LocalTime localTime = LocalTime.now();
+    OffsetTime offsetTime = localTime.atOffset(ZoneOffset.ofHours(7)); // Tambah offset
+    LocalTime localTime1 = offsetTime.toLocalTime();                    // Hapus offset
+}
+
+@Test
+void toLocalDateTime() {
+    // Konversi dua arah: LocalDateTime ←→ OffsetDateTime
+    LocalDateTime localDateTime = LocalDateTime.now();
+    OffsetDateTime offsetDateTime = localDateTime.atOffset(ZoneOffset.ofHours(7));
+    LocalDateTime localDateTime1 = offsetDateTime.toLocalDateTime();
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">OffsetDateTime vs ZonedDateTime</span>
+                        <div class="line-desc"><code>OffsetDateTime</code> output: <code>2024-01-15T10:30:45+07:00</code>. <code>ZonedDateTime</code> output: <code>2024-01-15T10:30:45+07:00[Asia/Jakarta]</code>. OffsetDateTime tidak menyimpan nama zone, sehingga tidak bisa menghitung DST. Untuk API response publik, OffsetDateTime lebih disarankan karena lebih portable.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">atOffset() / toLocalDateTime()</span>
+                        <div class="line-desc">Pola konversi di java.time konsisten: <code>atXxx()</code> untuk menambah informasi, <code>toXxx()</code> untuk mengurangi/mengekstrak informasi.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Best Practice: OffsetDateTime untuk API</div>
+                    <p>Saat mendesain REST API yang mengirimkan data waktu dalam JSON, gunakan <code>OffsetDateTime</code> dan format ISO 8601 (<code>2024-01-15T10:30:45+07:00</code>). Ini standar yang dimengerti semua bahasa pemrograman, tidak ambigu, dan tidak bergantung pada timezone database klien.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 11: Instant ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 11 • Instant & Clock</div>
+                    <div class="chapter-intro-title">⚡ Instant — Titik Waktu Absolut</div>
+                    <div class="chapter-intro-desc">Representasi titik waktu dalam UTC — setara dengan epoch millis, tapi lebih modern dan type-safe.</div>
+                </div>
+
+                <p><code>Instant</code> adalah versi modern dari <code>System.currentTimeMillis()</code>. Ini merepresentasikan titik waktu absolut dalam UTC, cocok untuk logging, auditing, dan pengukuran performa.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: InstantTest.java
+@Test
+void create() {
+    Instant instant1 = Instant.now();              // Titik waktu sekarang di UTC
+    System.out.println(instant1);                  // 2024-01-15T03:30:45.123Z
+
+    Instant instant2 = Instant.ofEpochMilli(0);   // Unix Epoch: 1970-01-01T00:00:00Z
+    System.out.println(instant2);                  // 1970-01-01T00:00:00Z
+}
+
+@Test
+void modify() {
+    Instant instant1 = Instant.now();
+    Instant instant2 = instant1.plusMillis(1000);  // +1 detik
+    Instant instant3 = instant1.minusMillis(1000); // -1 detik
+    // Semua immutable — instant1 tidak berubah
+}
+
+@Test
+void get() {
+    Instant instant = Instant.now();
+    System.out.println(instant.toEpochMilli());    // Epoch milidetik (long)
+    System.out.println(instant.getEpochSecond());  // Epoch detik (long)
+    System.out.println(instant.getNano());         // Nano dalam detik (int)
+}
+
+@Test
+void fromInstant() {
+    // Konversi Instant ke berbagai tipe dengan ZoneId
+    Instant instant = Instant.now();
+    ZoneId zoneId = ZoneId.of("Asia/Jakarta");
+
+    LocalTime localTime = LocalTime.ofInstant(instant, zoneId);
+    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+    ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId);
+    OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(instant, zoneId);
+}
+
+@Test
+void toInstant() {
+    // Konversi dari berbagai tipe ke Instant
+    Instant instant1 = LocalDateTime.now().toInstant(ZoneOffset.ofHours(7));
+    // LocalDateTime perlu ZoneOffset untuk tau ini jam berapa di UTC
+
+    Instant instant2 = ZonedDateTime.now().toInstant();    // Sudah ada zone info
+    Instant instant3 = OffsetDateTime.now().toInstant();   // Sudah ada offset info
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Instant.now() output "Z"</span>
+                        <div class="line-desc">Huruf <code>Z</code> di akhir timestamp berarti "Zulu time" = UTC = offset +00:00. Ini notasi ISO 8601 standar untuk UTC.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">LocalDateTime.toInstant() butuh offset</span>
+                        <div class="line-desc">Karena <code>LocalDateTime</code> tidak punya info timezone, untuk mengkonversinya ke <code>Instant</code> (yang selalu UTC), kita harus memberitahu Java "ini jam berapa di offset mana". Itulah kenapa dibutuhkan <code>ZoneOffset</code> sebagai parameter.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">getEpochSecond() vs toEpochMilli()</span>
+                        <div class="line-desc">Untuk kompatibilitas dengan sistem lain: UNIX timestamp biasanya dalam <strong>detik</strong> (<code>getEpochSecond()</code>), sementara JavaScript dan banyak database menggunakan <strong>milidetik</strong> (<code>toEpochMilli()</code>).</div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel</div>
+                    <p>Di PHP: <code>time()</code> mengembalikan Unix timestamp dalam detik. <code>microtime(true)</code> untuk milidetik. Di Java: <code>Instant.now().getEpochSecond()</code> setara <code>time()</code>, dan <code>Instant.now().toEpochMilli()</code> setara <code>round(microtime(true) * 1000)</code>.</p>
+                </div>
+
+                <!-- Quiz 11 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 11</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Kenapa <code>LocalDateTime.toInstant()</code> membutuhkan parameter <code>ZoneOffset</code>, sementara <code>ZonedDateTime.toInstant()</code> tidak?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q11', this, true)">
+                        <input type="radio" name="q11"><span>Karena LocalDateTime tidak punya info timezone, jadi Java tidak tau titik waktu UTC-nya tanpa diberitahu offset-nya</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q11', this, false)">
+                        <input type="radio" name="q11"><span>Ini hanya perbedaan API desain, secara fungsional tidak ada perbedaan</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q11', this, false)">
+                        <input type="radio" name="q11"><span>Karena ZonedDateTime lebih baru dari LocalDateTime</span>
+                    </div>
+                    <div class="quiz-feedback" id="q11-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 12: Clock ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-12">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 12 • Instant & Clock</div>
+                    <div class="chapter-intro-title">🕐 Clock — Sumber Waktu yang Bisa Diinjeksi</div>
+                    <div class="chapter-intro-desc">Clock abstraksi sumber waktu — kunci untuk unit testing tanggal dan waktu.</div>
+                </div>
+
+                <p><code>Clock</code> adalah abstraksi dari "sumber waktu". Biasanya kita pakai waktu dari sistem (<code>Clock.systemUTC()</code>), tapi saat unit testing, kita bisa inject Clock palsu untuk mensimulasikan waktu tertentu.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ClockTest.java
+@Test
+void create() {
+    Clock clock1 = Clock.systemUTC();                      // Waktu sistem dalam UTC
+    Clock clock2 = Clock.systemDefaultZone();              // Waktu sistem, timezone default JVM
+    Clock clock3 = Clock.system(ZoneId.of("Asia/Jakarta")); // Waktu sistem, timezone Jakarta
+
+    System.out.println(clock1); // SystemClock[Z]
+    System.out.println(clock2); // SystemClock[Asia/Jakarta]
+    System.out.println(clock3); // SystemClock[Asia/Jakarta]
+}
+
+@Test
+void instant() throws Throwable {
+    Clock clock = Clock.system(ZoneId.of("Asia/Jakarta"));
+
+    Instant instant1 = clock.instant(); // Snapshot waktu #1
+    System.out.println(instant1);       // 2024-01-15T03:30:45Z
+
+    Thread.sleep(1_000); // Tunggu 1 detik (1000ms)
+    // Note: underscore dalam integer literal Java = pemisah ribuan (Java 7+)
+    // 1_000 = 1000, mudah dibaca!
+
+    Instant instant2 = clock.instant(); // Snapshot waktu #2
+    System.out.println(instant2);       // 2024-01-15T03:30:46Z (1 detik lebih)
+}
+
+@Test
+void fromClock() {
+    // Clock bisa dipakai sebagai argumen ke .now(clock) di semua kelas java.time
+    Clock clock = Clock.system(ZoneId.of("Asia/Jakarta"));
+
+    Year year = Year.now(clock);
+    YearMonth yearMonth = YearMonth.now(clock);
+    MonthDay monthDay = MonthDay.now(clock);
+    LocalTime localTime = LocalTime.now(clock);
+    LocalDateTime localDateTime = LocalDateTime.now(clock);
+    OffsetTime offsetTime = OffsetTime.now(clock);
+    OffsetDateTime offsetDateTime = OffsetDateTime.now(clock);
+    ZonedDateTime zonedDateTime = ZonedDateTime.now(clock);
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">1_000 — Underscore Literal</span>
+                        <div class="line-desc">Java 7+ memperbolehkan underscore dalam literal angka sebagai pemisah ribuan untuk keterbacaan. <code>1_000_000</code> = satu juta. Ini hanya untuk manusia, compiler mengabaikannya.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Clock sebagai dependency</span>
+                        <div class="line-desc">Pola terbaik adalah tidak memanggil <code>LocalDateTime.now()</code> langsung, tapi menerima <code>Clock</code> sebagai dependency. Saat production, inject <code>Clock.systemDefaultZone()</code>. Saat testing, inject <code>Clock.fixed(someInstant, someZone)</code> untuk mensimulasikan waktu tertentu.</div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Best Practice: Testable Code dengan Clock</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// ❌ Buruk: Hard to test
+public boolean isOfficeHours() {
+    return LocalTime.now().isAfter(LocalTime.of(9, 0));
+}
+
+// ✅ Baik: Testable dengan Clock injection
+public boolean isOfficeHours(Clock clock) {
+    return LocalTime.now(clock).isAfter(LocalTime.of(9, 0));
+}
+
+// Test:
+Clock fixedClock = Clock.fixed(
+    Instant.parse("2024-01-15T02:00:00Z"), // 09:00 WIB
+    ZoneId.of("Asia/Jakarta")
+);
+assertTrue(service.isOfficeHours(fixedClock));</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Carbon::setTestNow()</div>
+                    <p>Di Laravel testing, kamu bisa "membekukan" waktu dengan <code>Carbon::setTestNow(Carbon::create(2024, 1, 15, 9, 0, 0))</code>. Di Java, konsep yang sama dicapai dengan menginjeksi <code>Clock.fixed()</code>. Keduanya membuat code yang berurusan dengan waktu menjadi mudah di-test.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 13: Duration ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-13">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 13 • Durasi</div>
+                    <div class="chapter-intro-title">⏱️ Duration — Durasi Waktu (Jam, Menit, Detik)</div>
+                    <div class="chapter-intro-desc">Merepresentasikan selisih waktu berbasis detik/nanosecond — untuk mengukur jeda waktu dengan presisi tinggi.</div>
+                </div>
+
+                <p><code>Duration</code> merepresentasikan jumlah waktu dalam unit jam, menit, detik, dan nanosecond. Berbeda dengan <code>Period</code> yang berbasis hari/bulan/tahun.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: DurationTest.java
+@Test
+void create() {
+    Duration duration1 = Duration.ofHours(10);    // 10 jam
+    Duration duration2 = Duration.ofMinutes(10);  // 10 menit
+    Duration duration3 = Duration.ofMillis(10);   // 10 milidetik
+
+    System.out.println(duration1); // PT10H  (ISO 8601 duration format)
+    System.out.println(duration2); // PT10M
+    System.out.println(duration3); // PT0.01S
+}
+
+@Test
+void get() {
+    Duration duration = Duration.ofHours(50); // 50 jam
+
+    System.out.println(duration.toDays());    // 2 (50/24 = 2.08 → 2)
+    System.out.println(duration.toHours());   // 50
+    System.out.println(duration.toMinutes()); // 3000 (50 * 60)
+    System.out.println(duration.toSeconds()); // 180000
+    System.out.println(duration.toMillis());  // 180000000
+    System.out.println(duration.toNanos());   // 180000000000000
+}
+
+@Test
+void between() {
+    // Duration.between(start, end) — order penting!
+    Duration duration1 = Duration.between(
+        LocalDateTime.now(),
+        LocalDateTime.now().plusHours(10)  // end > start = positif
+    );
+    System.out.println(duration1.toHours());   // 10
+    System.out.println(duration1.toMinutes()); // 600
+
+    Duration duration2 = Duration.between(
+        LocalDateTime.now().plusHours(10),
+        LocalDateTime.now()                    // end < start = NEGATIF!
+    );
+    System.out.println(duration2.toHours());   // -10
+    System.out.println(duration2.toMinutes()); // -600
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Format "PT10H" — ISO 8601 Duration</span>
+                        <div class="line-desc"><code>P</code> = Period, <code>T</code> = Time, <code>10H</code> = 10 jam. Format lengkapnya: <code>PnYnMnDTnHnMnS</code>. Contoh: <code>P1Y2M3DT4H5M6S</code> = 1 tahun 2 bulan 3 hari 4 jam 5 menit 6 detik.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">duration.toDays() vs toHours()</span>
+                        <div class="line-desc"><code>toDays()</code> mengembalikan total hari (dibulatkan ke bawah, bukan total komponen hari saja). <code>Duration.ofHours(50).toDays()</code> = 2, bukan 0.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Duration bisa negatif</span>
+                        <div class="line-desc">Jika <code>start > end</code> di <code>Duration.between()</code>, hasilnya negatif. Ini berguna untuk mengetahui "berapa lama yang lalu" suatu event terjadi.</div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: CarbonInterval</div>
+                    <p>Di Laravel: <code>CarbonInterval::hours(10)</code> atau <code>$date1->diffInHours($date2)</code>. Di Java: <code>Duration.ofHours(10)</code> atau <code>Duration.between(dt1, dt2)</code>. Konsep yang sama, sintaks yang berbeda.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 14: Period ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-14">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 14 • Durasi</div>
+                    <div class="chapter-intro-title">📆 Period — Durasi Kalender (Tahun, Bulan, Hari)</div>
+                    <div class="chapter-intro-desc">Merepresentasikan perbedaan dalam unit kalender — berbasis tahun, bulan, dan hari (bukan detik).</div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Duration vs Period — Perbedaan Krusial</div>
+                    <p><strong>Duration</strong> = waktu dalam detik/nanosecond. "10 jam" selalu tepat 36.000 detik.<br>
+                        <strong>Period</strong> = waktu dalam kalender. "1 bulan" bisa 28, 29, 30, atau 31 hari tergantung bulan dan tahun!<br><br>
+                        Gunakan <code>Period</code> untuk "umur", "masa kontrak", "selisih hari kalender". Gunakan <code>Duration</code> untuk "waktu eksekusi", "timeout", "selisih detik presisi".</p>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: PeriodTest.java
+@Test
+void create() {
+    Period period1 = Period.ofDays(10);    // 10 hari
+    Period period2 = Period.ofWeeks(10);   // 10 minggu = 70 hari
+    Period period3 = Period.ofMonths(10);  // 10 bulan
+    Period period4 = Period.ofYears(10);   // 10 tahun
+    Period period5 = Period.of(10, 10, 10); // 10 tahun, 10 bulan, 10 hari
+
+    System.out.println(period1); // P10D
+    System.out.println(period2); // P70D
+    System.out.println(period3); // P10M
+    System.out.println(period4); // P10Y
+    System.out.println(period5); // P10Y10M10D
+}
+
+@Test
+void get() {
+    Period period = Period.of(10, 10, 10);
+
+    System.out.println(period.getYears());  // 10 (hanya komponen tahun)
+    System.out.println(period.getMonths()); // 10 (hanya komponen bulan)
+    System.out.println(period.getDays());   // 10 (hanya komponen hari)
+    // Note: tidak ada getTotalDays() di Period!
+}
+
+@Test
+void between() {
+    // Hitung selisih dua tanggal dalam unit kalender
+    Period period = Period.between(
+        LocalDate.of(1985, 10, 10),
+        LocalDate.now()
+    );
+
+    System.out.println(period.getYears());  // e.g. 38 (tahun)
+    System.out.println(period.getMonths()); // e.g. 3 (bulan sisa)
+    System.out.println(period.getDays());   // e.g. 5 (hari sisa)
+    // Ini seperti: "Usianya 38 tahun, 3 bulan, dan 5 hari"
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Period.of(10, 10, 10)</span>
+                        <div class="line-desc">Urutan parameter: <code>(years, months, days)</code>. Period menyimpan ketiga komponen secara terpisah — tidak dikonversi ke satu unit.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">getYears() hanya komponen</span>
+                        <div class="line-desc">Berbeda dari Duration, <code>period.getYears()</code> hanya mengembalikan komponen tahun, bukan total tahun dari semua komponen. <code>Period.of(0, 25, 0).getYears()</code> = 0, bukan 2 (meski 25 bulan ≈ 2 tahun).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Period.between() untuk umur</span>
+                        <div class="line-desc">Cara idiomatis menghitung umur seseorang di Java: <code>Period.between(birthDate, LocalDate.now())</code>. Akurasi kalender: sudah memperhitungkan tahun kabisat dan perbedaan panjang bulan.</div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Use Case: Menghitung Umur</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">LocalDate birthDate = LocalDate.of(1990, Month.MAY, 15);
+Period age = Period.between(birthDate, LocalDate.now());
+System.out.println("Umur: " + age.getYears() + " tahun, "
+    + age.getMonths() + " bulan, "
+    + age.getDays() + " hari");</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 15: DateTimeFormatter ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-15">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 15 • Formatting</div>
+                    <div class="chapter-intro-title">🎨 DateTimeFormatter — Format & Parse</div>
+                    <div class="chapter-intro-desc">Mengubah objek waktu ke String dan sebaliknya — dengan dukungan locale untuk format lokal.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: DateFormatterTest.java
+@Test
+void parsing() {
+    // Buat formatter dengan pattern kustom
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
+
+    // Parse dari String ke LocalDate
+    LocalDate localDate = LocalDate.parse("2020 10 25", formatter);
+    System.out.println(localDate); // 2020-10-25 (output default ISO)
+}
+
+@Test
+void format() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
+
+    LocalDate localDate = LocalDate.parse("2020 10 25", formatter);
+    // Format dari LocalDate ke String
+    String format = localDate.format(formatter);
+    System.out.println(format); // 2020 10 25
+}
+
+@Test
+void defaultFormatter() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
+    LocalDate localDate = LocalDate.parse("2020 10 25", formatter);
+
+    // Gunakan formatter bawaan (konstanta statis)
+    String format = localDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    System.out.println(format); // 2020-10-25 (format standar ISO)
+}
+
+@Test
+void i18n() {
+    // Format dengan locale bahasa Indonesia
+    Locale locale = new Locale("in", "ID"); // "in" = Indonesian language code
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd", locale);
+
+    LocalDate localDate = LocalDate.of(2020, 1, 1);
+    String format = localDate.format(formatter);
+    System.out.println(format); // 2020 Januari 01
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Pattern: yyyy MM dd</span>
+                        <div class="line-desc">Huruf pattern: <code>y</code> = tahun, <code>M</code> = bulan, <code>d</code> = hari, <code>H</code> = jam (24), <code>h</code> = jam (12), <code>m</code> = menit, <code>s</code> = detik. Jumlah huruf menentukan lebar: <code>MM</code> = 01-12, <code>M</code> = 1-12. <code>MMMM</code> = nama bulan panjang, <code>MMM</code> = singkatan.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">DateTimeFormatter.ISO_LOCAL_DATE</span>
+                        <div class="line-desc">Java menyediakan konstanta formatter standar ISO 8601. Lainnya: <code>ISO_LOCAL_TIME</code>, <code>ISO_LOCAL_DATE_TIME</code>, <code>ISO_OFFSET_DATE_TIME</code>, <code>ISO_ZONED_DATE_TIME</code>, dll.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Locale("in", "ID")</span>
+                        <div class="line-desc">Locale untuk Indonesia: language code <code>"in"</code> (bukan <code>"id"</code> — ini quirk historis Java), country code <code>"ID"</code>. Dengan locale ini, bulan diformat dalam bahasa Indonesia (<code>MMMM</code> = "Januari", "Februari", dst.).</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📋 Tabel Pattern Karakter Penting</div>
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Simbol</th><th>Makna</th><th>Contoh</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td><code>yyyy</code></td><td>Tahun 4 digit</td><td>2024</td></tr>
+                            <tr><td><code>MM</code></td><td>Bulan 2 digit</td><td>01-12</td></tr>
+                            <tr><td><code>MMMM</code></td><td>Nama bulan penuh</td><td>Januari</td></tr>
+                            <tr><td><code>dd</code></td><td>Hari 2 digit</td><td>01-31</td></tr>
+                            <tr><td><code>HH</code></td><td>Jam 24h</td><td>00-23</td></tr>
+                            <tr><td><code>mm</code></td><td>Menit</td><td>00-59</td></tr>
+                            <tr><td><code>ss</code></td><td>Detik</td><td>00-59</td></tr>
+                            <tr><td><code>SSS</code></td><td>Milidetik</td><td>000-999</td></tr>
+                            <tr><td><code>XXX</code></td><td>Offset (+07:00)</td><td>+07:00</td></tr>
+                            <tr><td><code>z</code></td><td>Nama zona singkat</td><td>WIB</td></tr>
+                            <tr><td><code>VV</code></td><td>Zone ID</td><td>Asia/Jakarta</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="comparison-grid mt-m">
+                    <div class="comparison-wrong">
+                        <div class="comparison-label">❌ Salah: SimpleDateFormat (Legacy)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// SimpleDateFormat TIDAK thread-safe!
+// Berbahaya untuk dipakai sebagai static field
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+String result = sdf.format(new Date());
+// Jika dipakai di multi-thread: race condition!</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-right">
+                        <div class="comparison-label">✅ Benar: DateTimeFormatter (Thread-Safe)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// DateTimeFormatter THREAD-SAFE dan IMMUTABLE
+// Aman sebagai static field
+private static final DateTimeFormatter FORMATTER =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+String result = LocalDate.now().format(FORMATTER);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Carbon Format</div>
+                    <p>Di Laravel: <code>Carbon::now()->format('Y-m-d H:i:s')</code> menggunakan format PHP (<code>Y</code> = tahun 4 digit, <code>m</code> = bulan 2 digit, dll.). Di Java: <code>LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))</code>. Perbedaan: PHP pakai <code>H</code> untuk jam 24h tapi lowercase, Java pakai <code>HH</code>. PHP pakai <code>m</code> untuk menit tapi di Java <code>m</code> adalah bulan!</p>
+                </div>
+
+                <!-- Quiz 15 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 15</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Apa perbedaan paling penting antara <code>DateTimeFormatter</code> dan <code>SimpleDateFormat</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q15', this, false)">
+                        <input type="radio" name="q15"><span>DateTimeFormatter lebih mudah digunakan</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q15', this, false)">
+                        <input type="radio" name="q15"><span>SimpleDateFormat hanya untuk formatting, bukan parsing</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q15', this, true)">
+                        <input type="radio" name="q15"><span>DateTimeFormatter thread-safe dan immutable; SimpleDateFormat tidak thread-safe sehingga berbahaya di concurrency</span>
+                    </div>
+                    <div class="quiz-feedback" id="q15-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 16: Temporal API ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-16">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 16 • Advanced</div>
+                    <div class="chapter-intro-title">🔬 Temporal API — Abstraksi Level Tinggi</div>
+                    <div class="chapter-intro-desc">Interface Temporal, ChronoUnit, ChronoField, TemporalQuery, dan TemporalAdjuster — fondasi polimorfisme Java DateTime.</div>
+                </div>
+
+                <span class="badge-chapter">Advanced Topic</span>
+                <p>Semua kelas <code>java.time</code> yang sudah kita pelajari mengimplementasikan interface <code>Temporal</code>. Ini memungkinkan penulisan kode generik yang bisa bekerja dengan tipe tanggal/waktu apapun.</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="temporal-interface" class="accordion-item-check"/>
+                    <label for="temporal-interface" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔷 Interface Temporal & TemporalAmount</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Polimorfisme tanggal dan waktu di Java</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// File: TemporalTest.java
+@Test
+void temporal() {
+    // Semua ini adalah implementasi Temporal
+    Temporal temporal1 = LocalDate.now();
+    Temporal temporal2 = LocalTime.now();
+    Temporal temporal3 = ZonedDateTime.now();
+    Temporal temporal4 = Year.now();
+    // Bisa dipegang oleh variabel bertipe Temporal (polimorfisme)
+}
+
+@Test
+void temporalAmount() {
+    Temporal temporal1 = LocalDateTime.now();
+
+    // plus(TemporalAmount) menerima Duration ATAU Period
+    Temporal temporal2 = temporal1.plus(Duration.ofHours(10));  // +10 jam
+    Temporal temporal3 = temporal1.plus(Period.ofDays(10));      // +10 hari
+    // TemporalAmount = Duration | Period (dan implementasi kustom lainnya)
+}</code></pre>
+                        </div>
+                        <p class="text-sm mt-s">Interface <code>Temporal</code> mendefinisikan operasi dasar: <code>plus()</code>, <code>minus()</code>, <code>with()</code>, <code>until()</code>, <code>get()</code>. <code>TemporalAmount</code> adalah abstraksi untuk "jumlah waktu" (Duration/Period).</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="chrono-unit" class="accordion-item-check"/>
+                    <label for="chrono-unit" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>📐 ChronoUnit — Unit Waktu Standar</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Enum unit waktu yang bisa dipakai di semua Temporal</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">@Test
+void temporalUnit() {
+    // ChronoUnit.DAYS.between() menghitung selisih dalam satuan hari
+    long days = ChronoUnit.DAYS.between(
+        LocalDateTime.now(),
+        LocalDateTime.now().plusHours(10)
+    );
+    System.out.println(days); // 0 (10 jam < 1 hari, dibulatkan ke bawah)
+
+    // Contoh lain:
+    long months = ChronoUnit.MONTHS.between(
+        LocalDate.of(2024, 1, 1),
+        LocalDate.of(2024, 6, 1)
+    );
+    System.out.println(months); // 5
+
+    // Bisa dipakai di plus/minus
+    LocalDate nextWeek = LocalDate.now().plus(1, ChronoUnit.WEEKS);
+}</code></pre>
+                        </div>
+                        <p class="text-sm mt-s">ChronoUnit tersedia: <code>NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS, DAYS, WEEKS, MONTHS, YEARS, DECADES, CENTURIES, MILLENNIA</code>.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="chrono-field" class="accordion-item-check"/>
+                    <label for="chrono-field" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🏷️ ChronoField — Akses Field dengan Generic API</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Akses komponen tanggal/waktu secara seragam</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">@Test
+void temporalField() {
+    LocalDateTime temporal = LocalDateTime.now();
+
+    // Akses field via enum ChronoField — generic, bisa dipakai di semua Temporal
+    System.out.println(temporal.get(ChronoField.YEAR));             // 2024
+    System.out.println(temporal.get(ChronoField.MONTH_OF_YEAR));    // 1
+    System.out.println(temporal.get(ChronoField.DAY_OF_MONTH));     // 15
+    System.out.println(temporal.get(ChronoField.HOUR_OF_DAY));      // 10
+    System.out.println(temporal.get(ChronoField.MINUTE_OF_HOUR));   // 30
+    System.out.println(temporal.get(ChronoField.SECOND_OF_MINUTE)); // 45
+    System.out.println(temporal.get(ChronoField.MILLI_OF_SECOND));  // 123
+    System.out.println(temporal.get(ChronoField.NANO_OF_SECOND));   // 123456789
+}</code></pre>
+                        </div>
+                        <p class="text-sm mt-s">ChronoField sangat berguna saat menulis kode generik yang harus bekerja dengan berbagai tipe Temporal, karena kamu tidak perlu tahu tipe konkretnya.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="temporal-query" class="accordion-item-check"/>
+                    <label for="temporal-query" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>❓ TemporalQuery — Query Kustom</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Ekstrak data kustom dari objek Temporal</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">@Test
+void temporalQuery() {
+    Temporal temporal = LocalDateTime.now();
+
+    // Buat TemporalQuery kustom menggunakan anonymous class
+    List<Integer> integers = temporal.query(new TemporalQuery<List<Integer>>() {
+        @Override
+        public List<Integer> queryFrom(TemporalAccessor temporal) {
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(temporal.get(ChronoField.YEAR));
+            list.add(temporal.get(ChronoField.MONTH_OF_YEAR));
+            list.add(temporal.get(ChronoField.DAY_OF_MONTH));
+            return list;
+        }
+    });
+
+    System.out.println(integers); // [2024, 1, 15]
+
+    // Versi lambda (lebih ringkas):
+    List<Integer> result = temporal.query(t -> List.of(
+        t.get(ChronoField.YEAR),
+        t.get(ChronoField.MONTH_OF_YEAR),
+        t.get(ChronoField.DAY_OF_MONTH)
+    ));
+}</code></pre>
+                        </div>
+                        <p class="text-sm mt-s"><code>TemporalQuery</code> adalah functional interface — bisa ditulis sebagai lambda. Java juga punya built-in queries: <code>TemporalQueries.localDate()</code>, <code>TemporalQueries.zone()</code>, dll.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="temporal-adjuster" class="accordion-item-check"/>
+                    <label for="temporal-adjuster" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔧 TemporalAdjuster — Transformasi Tanggal Kustom</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Transformasi tanggal kompleks yang bisa direuse</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">@Test
+void temporalAdjuster() {
+    Temporal temporal1 = LocalDate.now(); // e.g. 2024-01-15
+    System.out.println(temporal1);        // 2024-01-15
+
+    // TemporalAdjuster kustom: set ke hari pertama bulan ini
+    Temporal temporal2 = temporal1.with(new TemporalAdjuster() {
+        @Override
+        public Temporal adjustInto(Temporal temporal) {
+            return LocalDate.of(
+                temporal.get(ChronoField.YEAR),
+                temporal.get(ChronoField.MONTH_OF_YEAR),
+                1 // Hari pertama
+            );
+        }
+    });
+    System.out.println(temporal2); // 2024-01-01
+
+    // TemporalAdjusters sudah menyediakan built-in yang umum
+    Temporal temporal3 = temporal1.with(TemporalAdjusters.firstDayOfMonth());
+    System.out.println(temporal3); // 2024-01-01
+
+    Temporal temporal4 = temporal1.with(TemporalAdjusters.lastDayOfMonth());
+    System.out.println(temporal4); // 2024-01-31
+}</code></pre>
+                        </div>
+                        <p class="text-sm mt-s"><strong>TemporalAdjusters built-in</strong> yang berguna: <code>firstDayOfMonth()</code>, <code>lastDayOfMonth()</code>, <code>firstDayOfNextMonth()</code>, <code>firstDayOfYear()</code>, <code>lastDayOfYear()</code>, <code>next(DayOfWeek)</code>, <code>previous(DayOfWeek)</code>, <code>nextOrSame(DayOfWeek)</code>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Macro & CarbonInterface</div>
+                    <p><code>TemporalAdjuster</code> di Java mirip seperti Carbon Macro di Laravel: cara mendefinisikan transformasi tanggal kustom yang bisa dipakai ulang. Contoh Laravel: <code>Carbon::macro('firstDayOfQuarter', fn() => ...)</code>. Di Java, kamu implementasikan interface <code>TemporalAdjuster</code> dan inject via <code>date.with(myAdjuster)</code>.</p>
+                </div>
+
+                <!-- Quiz 16 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 16</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Apa keuntungan menggunakan <code>TemporalAdjuster</code> dibandingkan menulis logika manipulasi tanggal langsung?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q16', this, false)">
+                        <input type="radio" name="q16"><span>TemporalAdjuster lebih cepat performa-nya</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q16', this, true)">
+                        <input type="radio" name="q16"><span>Logika bisa dienkapsulasi, diuji, dan direuse di berbagai tipe Temporal; mendukung polymorphism</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q16', this, false)">
+                        <input type="radio" name="q16"><span>TemporalAdjuster wajib dipakai untuk semua operasi tanggal di Java</span>
+                    </div>
+                    <div class="quiz-feedback" id="q16-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 17: Legacy Interoperability ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-17">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 17 • Interoperabilitas</div>
+                    <div class="chapter-intro-title">🔄 Legacy Interoperability</div>
+                    <div class="chapter-intro-desc">Menjembatani dunia lama dan baru — konversi antara java.util.Date/Calendar dan java.time.*</div>
+                </div>
+
+                <p>Ketika bekerja dengan kode warisan atau library pihak ketiga yang masih menggunakan API lama, kamu perlu mengkonversi antara kedua dunia. Untungnya, Java menyediakan method konversi di kedua arah.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: LegacyTest.java
+
+@Test
+void fromLegacy() {
+    // Date → Instant
+    Date date = new Date();
+    Instant instant = date.toInstant(); // Date mendapat method .toInstant() di Java 8+
+
+    // Calendar → Instant
+    Calendar calendar = Calendar.getInstance();
+    Instant instant1 = calendar.toInstant(); // Calendar juga mendapat .toInstant()
+
+    // TimeZone → ZoneId
+    TimeZone timeZone = TimeZone.getDefault();
+    ZoneId zoneId = timeZone.toZoneId(); // TimeZone mendapat .toZoneId()
+}
+
+@Test
+void toLegacy() {
+    ZonedDateTime zonedDateTime = ZonedDateTime.now();
+
+    // ZonedDateTime → Date
+    Date date = Date.from(zonedDateTime.toInstant());
+    // Date.from() adalah static method baru di Java 8
+
+    // ZonedDateTime → Calendar
+    Calendar calendar = GregorianCalendar.from(zonedDateTime);
+    // GregorianCalendar.from() adalah static factory baru
+
+    // ZoneId → TimeZone
+    ZoneId zoneId = ZoneId.systemDefault();
+    TimeZone timeZone = TimeZone.getTimeZone(zoneId);
+    // TimeZone.getTimeZone() menerima ZoneId langsung
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">date.toInstant() — Bridge Method</span>
+                        <div class="line-desc">Di Java 8, kelas-kelas legacy (<code>Date</code>, <code>Calendar</code>, <code>TimeZone</code>) mendapat tambahan method "bridge" untuk konversi ke API baru. Method ini sudah ada di kelas yang sama — tidak perlu library tambahan.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Date.from(instant)</span>
+                        <div class="line-desc">Arah sebaliknya: dari API baru ke lama. <code>Date.from()</code>, <code>GregorianCalendar.from()</code> adalah static factory method baru yang ditambahkan ke kelas legacy.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Mengapa harus via Instant?</span>
+                        <div class="line-desc"><code>Date</code> hanya bisa merepresentasikan titik waktu absolut (seperti Instant). Jadi konversi selalu harus melalui Instant. <code>LocalDate</code> tidak bisa langsung dikonversi ke Date karena tidak punya informasi timezone!</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📋 Ringkasan Konversi</div>
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Dari</th><th>Ke</th><th>Cara</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td><code>Date</code></td><td><code>Instant</code></td><td><code>date.toInstant()</code></td></tr>
+                            <tr><td><code>Instant</code></td><td><code>Date</code></td><td><code>Date.from(instant)</code></td></tr>
+                            <tr><td><code>Calendar</code></td><td><code>Instant</code></td><td><code>calendar.toInstant()</code></td></tr>
+                            <tr><td><code>ZonedDateTime</code></td><td><code>Calendar</code></td><td><code>GregorianCalendar.from(zdt)</code></td></tr>
+                            <tr><td><code>TimeZone</code></td><td><code>ZoneId</code></td><td><code>timeZone.toZoneId()</code></td></tr>
+                            <tr><td><code>ZoneId</code></td><td><code>TimeZone</code></td><td><code>TimeZone.getTimeZone(zoneId)</code></td></tr>
+                            <tr><td><code>Instant</code> + <code>ZoneId</code></td><td><code>LocalDateTime</code></td><td><code>LocalDateTime.ofInstant(instant, zone)</code></td></tr>
+                            <tr><td><code>LocalDateTime</code> + <code>ZoneOffset</code></td><td><code>Instant</code></td><td><code>localDateTime.toInstant(offset)</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel</div>
+                    <p>Di Laravel, kalau kamu dapat <code>DateTime</code> native PHP tapi perlu Carbon, kamu bisa <code>Carbon::instance($phpDateTime)</code>. Di Java, pola yang sama: dari API lama ke baru via <code>.toInstant()</code>, dari baru ke lama via <code>Date.from()</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro" style="background: linear-gradient(135deg, var(--transprimary-color), var(--transsuccess-color));">
+                    <div class="chapter-intro-number">Summary</div>
+                    <div class="chapter-intro-title">📊 Rangkuman Arsitektur Java DateTime</div>
+                    <div class="chapter-intro-desc">Gambaran lengkap semua yang telah dipelajari dan kapan menggunakannya.</div>
+                </div>
+
+                <div class="text-title mt-m">🗂️ Hierarki & Hubungan Antar Kelas</div>
+
+                <div class="timeline">
+                    <div>
+                        <span class="timeline-key active">1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🏛️ Legacy API (Hindari untuk kode baru)</div>
+                        <div class="timeline-content-desc"><code>java.util.Date</code> — timestamp epoch. <code>java.util.Calendar</code> — manipulasi tanggal, mutable, MONTH mulai dari 0. <code>java.util.TimeZone</code> — timezone legacy. Masalah utama: mutable, tidak thread-safe, API membingungkan.</div>
+                        <div class="timeline-content-time">java.util package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">2</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">📦 Building Blocks</div>
+                        <div class="timeline-content-desc"><code>Year</code>, <code>YearMonth</code>, <code>MonthDay</code>, <code>Month</code> (enum), <code>DayOfWeek</code> (enum). Tipe-tipe granular untuk menyimpan sebagian tanggal.</div>
+                        <div class="timeline-content-time">java.time package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">3</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">📅 Local Date/Time (Tanpa Timezone)</div>
+                        <div class="timeline-content-desc"><code>LocalDate</code> — tanggal saja. <code>LocalTime</code> — waktu saja. <code>LocalDateTime</code> — tanggal + waktu. Semua immutable, cocok untuk data lokal yang tidak perlu timezone (tanggal lahir, jam operasional).</div>
+                        <div class="timeline-content-time">java.time package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">4</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🌐 Timezone & Offset</div>
+                        <div class="timeline-content-desc"><code>ZoneId</code> — nama zona (Asia/Jakarta), DST-aware. <code>ZoneOffset</code> — offset numerik (+07:00), fixed. <code>ZonedDateTime</code> — datetime + named zone. <code>OffsetDateTime</code> — datetime + offset. <code>OffsetTime</code> — time + offset.</div>
+                        <div class="timeline-content-time">java.time package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">5</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">⚡ Instant & Clock</div>
+                        <div class="timeline-content-desc"><code>Instant</code> — titik waktu absolut UTC (pengganti epoch millis). <code>Clock</code> — abstraksi sumber waktu, kunci untuk testability.</div>
+                        <div class="timeline-content-time">java.time package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">6</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">⏱️ Durasi</div>
+                        <div class="timeline-content-desc"><code>Duration</code> — durasi berbasis detik/nano (jam, menit, detik). <code>Period</code> — durasi berbasis kalender (tahun, bulan, hari). Keduanya immutable dan implement <code>TemporalAmount</code>.</div>
+                        <div class="timeline-content-time">java.time package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">7</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🎨 Formatting</div>
+                        <div class="timeline-content-desc"><code>DateTimeFormatter</code> — immutable, thread-safe, dukung locale. Gantikan <code>SimpleDateFormat</code> yang rawan race condition.</div>
+                        <div class="timeline-content-time">java.time.format package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">8</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🔬 Temporal API (Advanced)</div>
+                        <div class="timeline-content-desc"><code>Temporal</code> — interface dasar semua datetime. <code>ChronoUnit</code> — unit waktu enum. <code>ChronoField</code> — field waktu enum. <code>TemporalQuery</code> — query kustom. <code>TemporalAdjuster</code> + <code>TemporalAdjusters</code> — transformasi tanggal reusable.</div>
+                        <div class="timeline-content-time">java.time.temporal package</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">9</span>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🔄 Legacy Interoperability</div>
+                        <div class="timeline-content-desc">Bridge methods di Java 8: <code>date.toInstant()</code>, <code>Date.from(instant)</code>, <code>timeZone.toZoneId()</code>. Semua konversi melalui <code>Instant</code> sebagai titik tengah.</div>
+                        <div class="timeline-content-time">java.util (bridge to java.time)</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="text-title">📋 Decision Tree: Pilih Kelas yang Tepat</div>
+
+                <div class="summary-card">
+                    <div class="summary-card-title">🤔 Perlu timezone?</div>
+                    <p class="text-sm">
+                        <strong>Tidak</strong> → <code>LocalDate</code> / <code>LocalTime</code> / <code>LocalDateTime</code><br>
+                        <strong>Ya, nama zona (DST-aware)</strong> → <code>ZonedDateTime</code><br>
+                        <strong>Ya, offset numerik saja</strong> → <code>OffsetDateTime</code> / <code>OffsetTime</code><br>
+                        <strong>Ya, titik waktu absolut UTC</strong> → <code>Instant</code>
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-card-title">⏱️ Menghitung Selisih Waktu?</div>
+                    <p class="text-sm">
+                        <strong>Selisih detik/jam/menit yang presisi</strong> → <code>Duration</code><br>
+                        <strong>Selisih tahun/bulan/hari kalender</strong> → <code>Period</code><br>
+                        <strong>Selisih dalam satu unit tertentu</strong> → <code>ChronoUnit.X.between()</code>
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-card-title">🎯 Kasus Umum</div>
+                    <p class="text-sm">
+                        <strong>Tanggal lahir / anniversary</strong> → <code>LocalDate</code><br>
+                        <strong>Jam operasional</strong> → <code>LocalTime</code><br>
+                        <strong>Timestamp log/audit</strong> → <code>Instant</code><br>
+                        <strong>Jadwal event global</strong> → <code>ZonedDateTime</code><br>
+                        <strong>API response (JSON)</strong> → <code>OffsetDateTime</code><br>
+                        <strong>Umur seseorang</strong> → <code>Period.between(birthDate, LocalDate.now())</code><br>
+                        <strong>Timeout / durasi proses</strong> → <code>Duration</code><br>
+                        <strong>Format/parse String</strong> → <code>DateTimeFormatter</code>
+                    </p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="text-title">💡 Key Insights untuk PHP/Laravel Developer</div>
+
+                <div class="flex-ais-jcs gap-m mt-m">
+                    <div class="summary-card" style="flex: 1; min-width: 250px;">
+                        <div class="summary-card-title">🔒 Immutability First</div>
+                        <p class="text-sm">Selalu tangkap hasil operasi tanggal dalam variabel baru. <code>date.plusDays(5)</code> tidak mengubah <code>date</code> — berbeda dari Carbon di PHP!</p>
+                    </div>
+                    <div class="summary-card" style="flex: 1; min-width: 250px;">
+                        <div class="summary-card-title">🔢 Bulan dimulai dari 1</div>
+                        <p class="text-sm">Di <code>java.time</code>, Januari = 1 (bukan 0 seperti Calendar lama). Gunakan enum <code>Month.JANUARY</code> untuk kejelasan.</p>
+                    </div>
+                    <div class="summary-card" style="flex: 1; min-width: 250px;">
+                        <div class="summary-card-title">🧵 Thread-Safe by Default</div>
+                        <p class="text-sm">Semua kelas <code>java.time</code> aman dipakai di multi-threading. <code>DateTimeFormatter</code> bisa dijadikan static field tanpa khawatir race condition.</p>
+                    </div>
+                    <div class="summary-card" style="flex: 1; min-width: 250px;">
+                        <div class="summary-card-title">💉 Inject Clock</div>
+                        <p class="text-sm">Jangan hardcode <code>LocalDateTime.now()</code>. Inject <code>Clock</code> sebagai dependency agar mudah di-test, mirip <code>Carbon::setTestNow()</code> di Laravel.</p>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-l">
+                    <div class="info-box-title">🎉 Selamat! Kamu Telah Menyelesaikan Modul Java DateTime API</div>
+                    <p>Kamu sekarang sudah memahami keseluruhan ekosistem Java DateTime — dari API lama hingga modern, dari konsep dasar hingga abstraksi Temporal yang advanced. Ingat: java.time adalah salah satu API Java yang paling well-designed. Kuasai ini, dan kamu akan menulis kode tanggal/waktu yang bersih, aman, dan maintainable.</p>
+                    <p class="text-sm mt-s">Happy coding! ☕</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer></footer>
+</main>
+
+<script>
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active');
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode");
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        let iconGetMenu = document.getElementById('get-menu');
+        iconGetMenu.classList.toggle('opened');
+    }
+
+    // Quiz logic
+    const quizAnswers = {
+        q1: 'Salah, ini mengeset bulan April karena MONTH mulai dari 0',
+        q4: 'JUNE (enum Month)',
+        q5: '2024 — karena LocalDate immutable, hasil with() dibuang',
+        q7: 'Ketika data harus akurat lintas timezone, misalnya jadwal penerbangan internasional',
+        q9: '08:00 UTC (15:00 - 7 jam offset)',
+        q11: 'Karena LocalDateTime tidak punya info timezone, jadi Java tidak tau titik waktu UTC-nya tanpa diberitahu offset-nya',
+        q15: 'DateTimeFormatter thread-safe dan immutable; SimpleDateFormat tidak thread-safe sehingga berbahaya di concurrency',
+        q16: 'Logika bisa dienkapsulasi, diuji, dan direuse di berbagai tipe Temporal; mendukung polymorphism'
+    };
+
+    function checkQuiz(qid, el, isCorrect) {
+        // Reset semua opsi
+        const options = el.parentElement.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.classList.remove('correct', 'wrong'); });
+        // Mark pilihan ini
+        el.classList.add(isCorrect ? 'correct' : 'wrong');
+        // Tandai jawaban benar
+        if (!isCorrect) {
+            options.forEach(o => {
+                if (o.textContent.trim() === quizAnswers[qid]) {
+                    o.classList.add('correct');
+                }
+            });
+        }
+        // Tampilkan feedback
+        const feedback = document.getElementById(qid + '-feedback');
+        if (feedback) {
+            feedback.classList.add('show');
+            feedback.classList.toggle('correct', isCorrect);
+            feedback.classList.toggle('wrong', !isCorrect);
+            feedback.textContent = isCorrect
+                ? '✅ Benar! Jawaban yang tepat.'
+                : '❌ Belum tepat. Lihat jawaban yang ditandai hijau di atas.';
+        }
+    }
+
+    // Initialize highlight.js
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre code').forEach(el => {
+            hljs.highlightElement(el);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Belajar Java IO - dari PHP ke Java</title>
+    <link rel="stylesheet" href="https://unpkg.com/@iamra/css/dist/style.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --java-orange: #f89820;
+            --java-blue: #2563eb;
+        }
+
+        .chapter-badge {
+            display: inline-block;
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: 2px 10px;
+            font-size: var(--xs);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: var(--s);
+        }
+
+        .hero-banner {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: linear-gradient(135deg, var(--transprimary-color) 0%, var(--transsecond-primary-color) 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-x);
+            padding: var(--x);
+        }
+
+        .hero-banner h1 {
+            font-size: var(--xxxx);
+            font-weight: 800;
+            margin: 0 0 var(--s) 0;
+            color: var(--primary-color);
+        }
+
+        .hero-banner p {
+            margin: 0;
+            color: var(--transtext-color);
+        }
+
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-m);
+            padding: var(--m);
+        }
+
+        .info-box.primary {
+            background: var(--transprimary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .info-box.success {
+            background: var(--transsuccess-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .info-box.warning {
+            background: var(--transwarning-color);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .info-box.danger {
+            background: var(--transdanger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        pre code.hljs {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: block;
+            border-radius: var(--radius-m);
+            font-size: var(--s);
+            font-family: 'Fira Code', 'Courier New', monospace;
+        }
+
+        .code-wrapper {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+        }
+
+        .line-explain {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+        }
+
+        .line-explain table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .line-explain table td {
+            padding: 6px 10px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border-color);
+            font-size: var(--s);
+        }
+
+        .line-explain table td:first-child {
+            font-family: 'Fira Code', monospace;
+            font-size: var(--xs);
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            white-space: nowrap;
+            width: 1%;
+            border-radius: var(--radius-s);
+        }
+
+        .mistake-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+        }
+
+        .mistake-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--m);
+            margin-top: var(--m);
+        }
+
+        @media (max-width: 700px) {
+            .mistake-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mistake-item {
+            border-radius: var(--radius-m);
+            padding: var(--m);
+        }
+
+        .mistake-item.wrong {
+            background: var(--transdanger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .mistake-item.right {
+            background: var(--transsuccess-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .mistake-item .label {
+            font-weight: 700;
+            margin-bottom: var(--xs);
+        }
+
+        .mistake-item.wrong .label { color: var(--danger-color); }
+        .mistake-item.right .label { color: var(--success-color); }
+
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transprimary-color);
+            border-radius: var(--radius-x);
+            padding: var(--x);
+        }
+
+        .quiz-box .quiz-title {
+            font-weight: 700;
+            font-size: var(--l);
+            color: var(--primary-color);
+            margin-bottom: var(--m);
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-m);
+            padding: var(--s) var(--m);
+            margin-bottom: var(--s);
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-color);
+            font-size: var(--s);
+            box-sizing: border-box;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .quiz-option.correct {
+            background: var(--transsuccess-color);
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .quiz-option.wrong-answer {
+            background: var(--transdanger-color);
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .quiz-feedback {
+            display: none;
+            margin-top: var(--s);
+            padding: var(--s) var(--m);
+            border-radius: var(--radius-m);
+            font-size: var(--s);
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.success { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.fail { background: var(--transdanger-color); color: var(--danger-color); }
+
+        .analogy-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--sidebar-color);
+            border-radius: var(--radius-m);
+            padding: var(--m);
+            display: flex;
+            gap: var(--m);
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .analogy-box .icon { font-size: 1.8rem; }
+
+        .text-title {
+            font-size: var(--xx);
+            font-weight: 700;
+            margin-bottom: var(--s);
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: var(--l) 0;
+        }
+
+        .insight-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .insight-list li {
+            padding: var(--xs) 0;
+            padding-left: var(--m);
+            position: relative;
+            font-size: var(--s);
+        }
+
+        .insight-list li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+        }
+
+        .io-map {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+        }
+
+        .io-flow {
+            display: flex;
+            align-items: center;
+            gap: var(--s);
+            flex-wrap: wrap;
+            margin: var(--s) 0;
+        }
+
+        .io-node {
+            background: var(--transprimary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: var(--xs) var(--m);
+            font-size: var(--s);
+            color: var(--primary-color);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .io-arrow {
+            color: var(--transtext-color);
+            font-size: var(--m);
+        }
+    </style>
+</head>
+<body>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-1">📁 Path</a>
+    <a class="bottom-nav-item" href="#chapter-2">🔒 Closeable</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bottom-nav-items-check-1">📖 Lainnya</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bottom-nav-items-check-1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bottom-nav-items-check-1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-3">📥 InputStream</a>
+                <a class="bottom-nav-item" href="#chapter-4">📤 OutputStream</a>
+                <a class="bottom-nav-item" href="#chapter-5">📝 Reader/Writer</a>
+                <a class="bottom-nav-item" href="#chapter-6">🔍 Scanner</a>
+                <a class="bottom-nav-item" href="#chapter-7">🖨️ PrintStream</a>
+                <a class="bottom-nav-item" href="#chapter-8">⚡ Small Files</a>
+                <a class="bottom-nav-item" href="#chapter-9">🔧 OpenOption</a>
+                <a class="bottom-nav-item" href="#chapter-10">💾 Memory</a>
+                <a class="bottom-nav-item" href="#chapter-11">📦 Serialisasi</a>
+                <a class="bottom-nav-item" href="#summary">✅ Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <span style="font-size:1.4rem;">☕</span>
+        </div>
+        <div class="sidebar-header-title">Java IO</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro" class="sidebar-menu-item active" data-title="Intro">
+            <span class="sidebar-menu-item-svg">🏠</span>
+            <span>Intro & Mindset</span>
+        </a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Path & File">
+            <span class="sidebar-menu-item-svg">📁</span>
+            <span>Path & File API</span>
+        </a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Closeable">
+            <span class="sidebar-menu-item-svg">🔒</span>
+            <span>Closeable & Try-Resource</span>
+        </a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="InputStream">
+            <span class="sidebar-menu-item-svg">📥</span>
+            <span>InputStream</span>
+        </a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="OutputStream">
+            <span class="sidebar-menu-item-svg">📤</span>
+            <span>OutputStream</span>
+        </a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="Reader Writer">
+            <span class="sidebar-menu-item-svg">📝</span>
+            <span>Reader & Writer</span>
+        </a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Scanner">
+            <span class="sidebar-menu-item-svg">🔍</span>
+            <span>Scanner</span>
+        </a>
+        <a href="#chapter-7" class="sidebar-menu-item" data-title="PrintStream">
+            <span class="sidebar-menu-item-svg">🖨️</span>
+            <span>PrintStream</span>
+        </a>
+        <a href="#chapter-8" class="sidebar-menu-item" data-title="Small Files">
+            <span class="sidebar-menu-item-svg">⚡</span>
+            <span>Small File Utilities</span>
+        </a>
+        <a href="#chapter-9" class="sidebar-menu-item" data-title="OpenOption">
+            <span class="sidebar-menu-item-svg">🔧</span>
+            <span>Open Options</span>
+        </a>
+        <a href="#chapter-10" class="sidebar-menu-item" data-title="Memory">
+            <span class="sidebar-menu-item-svg">💾</span>
+            <span>Memory Stream</span>
+        </a>
+        <a href="#chapter-11" class="sidebar-menu-item" data-title="Serialisasi">
+            <span class="sidebar-menu-item-svg">📦</span>
+            <span>Object Serialization</span>
+        </a>
+        <a href="#summary" class="sidebar-menu-item" data-title="Summary">
+            <span class="sidebar-menu-item-svg">✅</span>
+            <span>Summary</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52"
+             viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality"
+             fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===== INTRO ===== -->
+        <div class="card-wrapper max-width-1000" id="intro">
+            <div class="hero-banner">
+                <h1>☕ Belajar Java IO</h1>
+                <p>Dari PHP/Laravel ke Java — step by step, tanpa ribet. Kita pelajari cara Java baca & tulis file, dan kenapa cara kerjanya berbeda dari PHP.</p>
+            </div>
+
+            <div class="text-title" style="margin-top:var(--l)">Apa itu Java IO?</div>
+            <p>Di PHP kamu biasa pakai fungsi seperti <code>file_get_contents()</code>, <code>fopen()</code>, <code>fwrite()</code>. Di Java, konsepnya sama tapi dibalut dalam <strong>object-oriented API</strong> yang lebih terstruktur.</p>
+
+            <div class="info-box primary">
+                <strong>🧠 Mindset Utama</strong>
+                Di PHP, fungsi IO bisa langsung dipanggil global. Di Java, semuanya adalah <strong>objek</strong>. Kamu buat objek stream, gunakan, lalu tutup. Ini lebih verbose tapi lebih aman dan lebih mudah di-test.
+            </div>
+
+            <div class="text-title" style="margin-top:var(--l)">Peta Java IO — Big Picture</div>
+            <div class="io-map">
+                <div class="io-flow">
+                    <div class="io-node">Sumber Data<br><small>(File, Network, Memory)</small></div>
+                    <div class="io-arrow">→</div>
+                    <div class="io-node">Stream / Reader<br><small>(baca data)</small></div>
+                    <div class="io-arrow">→</div>
+                    <div class="io-node">Program Java<br><small>(proses)</small></div>
+                    <div class="io-arrow">→</div>
+                    <div class="io-node">Stream / Writer<br><small>(tulis data)</small></div>
+                    <div class="io-arrow">→</div>
+                    <div class="io-node">Tujuan<br><small>(File, Network, Memory)</small></div>
+                </div>
+            </div>
+
+            <div class="table-content" style="margin-top:var(--m)">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Jenis</th>
+                        <th>Berbasis</th>
+                        <th>Class Utama</th>
+                        <th>Analogi PHP</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>InputStream</td><td>Byte (binary)</td><td>InputStream, FileInputStream</td><td>fread() / file_get_contents() binary</td></tr>
+                    <tr><td>OutputStream</td><td>Byte (binary)</td><td>OutputStream, FileOutputStream</td><td>fwrite() binary</td></tr>
+                    <tr><td>Reader</td><td>Karakter (text)</td><td>Reader, BufferedReader</td><td>fgets()</td></tr>
+                    <tr><td>Writer</td><td>Karakter (text)</td><td>Writer, BufferedWriter</td><td>fputs()</td></tr>
+                    <tr><td>Scanner</td><td>Token/Line</td><td>Scanner</td><td>fgets() + parsing</td></tr>
+                    <tr><td>PrintStream</td><td>Formatted text</td><td>PrintStream</td><td>fprintf()</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-title" style="margin-top:var(--l)">Learning Path Kita</div>
+            <div class="display-grid">
+                <div class="stepper">
+                    <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value">Path & File</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key active">2</div><div class="stepper-value">Closeable</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key active">3</div><div class="stepper-value">InputStream</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key active">4</div><div class="stepper-value">OutputStream</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Reader/Writer</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">6</div><div class="stepper-value">Lanjutan</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 1: PATH & FILE ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 1</div>
+                <div class="text-title">📁 Path & File API</div>
+                <p>Sebelum bisa baca/tulis file, kamu perlu tahu cara Java <em>merepresentasikan lokasi file</em>. Ada dua cara: cara lama (<code>File</code>) dan cara modern (<code>Path</code>).</p>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">📄 Cara Lama: Class <code>File</code></div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// FileTest.java
+File file = new File("file.txt");           // Line 1
+Assertions.assertEquals("file.txt", file.getName());  // Line 2
+Assertions.assertFalse(file.exists());                 // Line 3
+
+File file2 = new File("src/main/resources/application.properties");  // Line 4
+Assertions.assertTrue(file2.exists());                               // Line 5</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>new File("file.txt")</code> — Buat objek yang merepresentasikan path file. <strong>PERHATIAN:</strong> ini belum membuat file di disk! Ini cuma "alamat".</td></tr>
+                            <tr><td>Line 2</td><td><code>file.getName()</code> — ambil nama file saja (tanpa direktori).</td></tr>
+                            <tr><td>Line 3</td><td><code>file.exists()</code> — cek apakah file benar-benar ada di disk. File "file.txt" belum ada, jadi <code>false</code>.</td></tr>
+                            <tr><td>Line 4</td><td>Path bisa juga menyertakan direktori. Karakter pemisah direktori di sini pakai <code>/</code> yang aman di semua OS.</td></tr>
+                            <tr><td>Line 5</td><td><code>application.properties</code> sudah ada karena dibuat Spring Boot, jadi <code>exists()</code> = <code>true</code>.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">✨ Cara Modern: Class <code>Path</code> + <code>Files</code></div>
+                <p>Sejak Java 7, ada NIO2 (New IO 2) yang lebih powerful. Gunakan ini untuk kode baru!</p>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// PathTest.java
+Path path = Path.of("file.txt");           // Line 1
+Assertions.assertEquals("file.txt", path.toString());  // Line 2
+Assertions.assertFalse(path.isAbsolute()); // Line 3
+
+Path path2 = Path.of("pom.xml");
+Assertions.assertTrue(Files.exists(path2)); // Line 4</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>Path.of("file.txt")</code> — cara modern buat representasi path. Lebih bersih dari <code>new File()</code>.</td></tr>
+                            <tr><td>Line 2</td><td><code>path.toString()</code> — kembalikan path sebagai String.</td></tr>
+                            <tr><td>Line 3</td><td><code>isAbsolute()</code> — path relatif (tidak dimulai dari root/drive). Di PHP ini seperti membedakan <code>./file.txt</code> vs <code>/var/www/file.txt</code>.</td></tr>
+                            <tr><td>Line 4</td><td><code>Files.exists(path)</code> — class <code>Files</code> adalah utility class untuk operasi file. Semua method-nya static.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">🗂️ Membuat & Menghapus File/Direktori</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// FileManipulationTest.java
+Path path = Path.of("file.txt");
+Files.createFile(path);                     // Line 1
+Assertions.assertTrue(Files.exists(path));  // Line 2
+Files.delete(path);                         // Line 3
+Assertions.assertFalse(Files.exists(path)); // Line 4
+
+// Buat direktori
+Path dir = Path.of("contoh");
+Files.createDirectory(dir);                  // Line 5
+Assertions.assertTrue(Files.isDirectory(dir)); // Line 6
+Files.delete(dir);                           // Line 7</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>Files.createFile(path)</code> — benar-benar buat file kosong di disk. Seperti <code>touch file.txt</code> di terminal atau <code>fopen($path, 'w')</code> di PHP.</td></tr>
+                            <tr><td>Line 2</td><td>Setelah dibuat, <code>exists()</code> = <code>true</code>.</td></tr>
+                            <tr><td>Line 3</td><td><code>Files.delete(path)</code> — hapus file. Jika file tidak ada, akan <strong>throw exception</strong>.</td></tr>
+                            <tr><td>Line 5</td><td><code>Files.createDirectory()</code> — buat satu direktori. Kalau mau buat nested direktori sekaligus, pakai <code>Files.createDirectories()</code>.</td></tr>
+                            <tr><td>Line 6</td><td><code>Files.isDirectory(path)</code> — cek apakah path adalah direktori (bukan file).</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi Laravel/PHP</strong><br>
+                        <code>Path.of("file.txt")</code> itu seperti string path di PHP — hanya representasi. <code>Files.createFile()</code> itu seperti <code>Storage::put()</code> di Laravel. Class <code>Files</code> (static utility) itu seperti <code>Storage</code> facade di Laravel.
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="1">
+                    <div class="quiz-title">🧠 Mini Quiz — Path & File</div>
+                    <p>Kamu tulis kode berikut: <code>Path path = Path.of("data.csv");</code> — Apa yang terjadi?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 1)">A) File data.csv langsung dibuat di disk</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 1)">B) Hanya membuat objek representasi path, belum ada file di disk</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 1)">C) Program error karena file tidak ada</button>
+                    <div class="quiz-feedback" id="quiz-feedback-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 2: CLOSEABLE ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 2</div>
+                <div class="text-title">🔒 Closeable & Try-with-Resources</div>
+                <p>Ini salah satu konsep <strong>paling penting</strong> di Java IO. Stream harus selalu ditutup setelah digunakan, karena jika tidak, akan terjadi <em>resource leak</em> (memori/file handle bocor).</p>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">❌ Cara Lama (verbose & rawan bug)</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ClosableTest.java — cara lama
+Path path = Path.of("pom.xml");
+InputStream inputStream = null;                     // Line 1
+try {
+    inputStream = Files.newInputStream(path);        // Line 2
+    // lakukan operasi...
+} catch (IOException exception) {
+    Assertions.fail(exception);                      // Line 3
+} finally {
+    if (inputStream != null) {                       // Line 4
+        try {
+            inputStream.close();                     // Line 5
+        } catch (IOException e) {
+            Assertions.fail(e);
+        }
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td>Deklarasi di luar try agar bisa diakses di blok finally.</td></tr>
+                            <tr><td>Line 2</td><td>Buka stream — bisa throw IOException.</td></tr>
+                            <tr><td>Line 3</td><td><code>Assertions.fail()</code> dipakai di unit test untuk menandai test gagal jika ada exception.</td></tr>
+                            <tr><td>Line 4-5</td><td>Harus cek null dulu sebelum close, karena mungkin stream tidak pernah berhasil dibuka. Lalu close juga bisa throw exception! Ini sudah sangat ribet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">✅ Cara Modern: Try-with-Resources (WAJIB PAKAI INI!)</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ClosableTest.java — cara modern
+Path path = Path.of("pom.xml");
+try (InputStream inputStream = Files.newInputStream(path);     // Line 1
+     InputStream inputStream2 = Files.newInputStream(path);    // Line 2
+     InputStream inputStream3 = Files.newInputStream(path)) {  // Line 3
+    // lakukan apapun dengan input stream
+} catch (IOException exception) {
+    Assertions.fail(exception);   // Line 4
+}
+// Semua stream otomatis di-close di sini!</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1-3</td><td>Deklarasi resource di dalam tanda kurung <code>try(...)</code>. Bisa deklarasi banyak resource sekaligus, dipisah titik koma.</td></tr>
+                            <tr><td>Otomatis</td><td>Java akan otomatis memanggil <code>.close()</code> untuk semua resource — bahkan jika ada exception. Urutannya terbalik (stream3 ditutup duluan, lalu stream2, lalu stream1).</td></tr>
+                            <tr><td>Line 4</td><td>Catch tetap ada untuk menangani exception dari operasi IO.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--m)">
+                    <strong>💡 Kenapa ini bisa bekerja?</strong>
+                    Semua class IO di Java mengimplementasikan interface <code>AutoCloseable</code> (atau <code>Closeable</code>). Try-with-resources bekerja dengan interface ini. Siapapun yang implement <code>AutoCloseable</code> bisa dipakai di try-with-resources.
+                </div>
+
+                <div class="mistake-box" style="margin-top:var(--m)">
+                    <div style="font-weight:700;margin-bottom:var(--s)">⚠️ Common Mistake</div>
+                    <div class="mistake-row">
+                        <div class="mistake-item wrong">
+                            <div class="label">❌ Salah</div>
+                            <code>InputStream stream = Files.newInputStream(path);<br>// lupa close!<br>// resource leak terjadi</code>
+                        </div>
+                        <div class="mistake-item right">
+                            <div class="label">✅ Benar</div>
+                            <code>try (InputStream stream = Files.newInputStream(path)) {<br>  // otomatis close<br>}</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        Di PHP kamu juga perlu <code>fclose($handle)</code> setelah selesai. Tapi PHP sering "dimaafkan" karena script-nya short-lived. Di Java yang berjalan terus-menerus (server), lupa close = memory/file leak yang serius. Try-with-resources adalah solusinya.
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="2">
+                    <div class="quiz-title">🧠 Mini Quiz — Closeable</div>
+                    <p>Kamu punya 3 stream di dalam try-with-resources. Jika stream ke-2 throw exception saat di-close, apa yang terjadi dengan stream ke-1?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 2)">A) Stream ke-1 tidak di-close karena ada exception</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 2)">B) Java tetap mencoba close stream ke-1, exception "suppressed" ke exception utama</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 2)">C) Program crash langsung</button>
+                    <div class="quiz-feedback" id="quiz-feedback-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 3: INPUT STREAM ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 3</div>
+                <div class="text-title">📥 InputStream — Baca Data Byte</div>
+                <p><code>InputStream</code> dipakai untuk membaca data dalam format <strong>byte</strong> (binary). Cocok untuk gambar, PDF, file biner, atau teks yang ingin dibaca secara low-level.</p>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Cara 1: Baca Satu Byte Sekaligus (lambat)</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// InputStreamTest.java
+Path path = Path.of("pom.xml");
+try (InputStream stream = Files.newInputStream(path)) {   // Line 1
+    StringBuilder builder = new StringBuilder();           // Line 2
+    int data;                                             // Line 3
+    while ((data = stream.read()) != -1) {                // Line 4
+        builder.append((char) data);                       // Line 5
+    }
+    System.out.println(builder.toString());
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td>Buka stream ke file <code>pom.xml</code>. Gunakan try-with-resources agar otomatis close.</td></tr>
+                            <tr><td>Line 2</td><td><code>StringBuilder</code> dipakai untuk membangun string secara efisien. Lebih baik dari <code>String +=</code> di loop.</td></tr>
+                            <tr><td>Line 3</td><td>Tipe <code>int</code>, bukan <code>byte</code>! Karena <code>stream.read()</code> return int 0-255, atau <code>-1</code> jika end of file.</td></tr>
+                            <tr><td>Line 4</td><td>Loop selama masih ada data. <code>-1</code> = tanda EOF (End Of File).</td></tr>
+                            <tr><td>Line 5</td><td>Cast <code>int</code> ke <code>char</code> untuk ubah byte ke karakter teks.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box warning" style="margin-top:var(--m)">
+                    <strong>⚠️ Kenapa tipe-nya int bukan byte?</strong>
+                    <code>byte</code> di Java adalah -128 sampai 127. Tapi <code>stream.read()</code> perlu bisa return nilai <strong>-1</strong> sebagai sinyal EOF, yang tidak muat di byte. Makanya dipakai <code>int</code> (0-255 untuk data valid, -1 untuk EOF).
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Cara 2: Baca Buffer (jauh lebih cepat!)</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// InputStreamTest.java — readBytes
+try (InputStream stream = Files.newInputStream(path)) {
+    StringBuilder builder = new StringBuilder();
+    byte[] bytes = new byte[1024];          // Line 1 — buffer 1KB
+    int length;
+    while ((length = stream.read(bytes)) != -1) {  // Line 2
+        builder.append(new String(bytes, 0, length));  // Line 3
+    }
+    System.out.println(builder.toString());
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td>Alokasi buffer 1024 byte (1 KB). Tiap iterasi, stream mengisi array ini.</td></tr>
+                            <tr><td>Line 2</td><td><code>stream.read(bytes)</code> — baca data sebanyak mungkin ke dalam buffer, return jumlah byte yang berhasil dibaca.</td></tr>
+                            <tr><td>Line 3</td><td><code>new String(bytes, 0, length)</code> — penting! Jangan pakai <code>new String(bytes)</code> saja, karena byte terakhir mungkin tidak penuh. Pakai <code>0, length</code> untuk baca hanya yang valid.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mistake-box" style="margin-top:var(--m)">
+                    <div style="font-weight:700;margin-bottom:var(--s)">⚠️ Common Mistake</div>
+                    <div class="mistake-row">
+                        <div class="mistake-item wrong">
+                            <div class="label">❌ Salah</div>
+                            <code>builder.append(new String(bytes));<br>// Ikut serta "sampah" di akhir buffer</code>
+                        </div>
+                        <div class="mistake-item right">
+                            <div class="label">✅ Benar</div>
+                            <code>builder.append(new String(bytes, 0, length));<br>// Hanya baca yang valid</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        <code>stream.read()</code> per byte = <code>fgetc($handle)</code><br>
+                        <code>stream.read(bytes)</code> dengan buffer = <code>fread($handle, 1024)</code>
+                    </div>
+                </div>
+
+                <ul class="insight-list" style="margin-top:var(--m)">
+                    <li>Selalu pakai buffer untuk file besar — jauh lebih cepat dari baca 1 byte sekaligus</li>
+                    <li>Ukuran buffer 4096 atau 8192 byte biasanya optimal untuk I/O file</li>
+                    <li>InputStream cocok untuk data binary (gambar, audio), untuk teks lebih baik pakai Reader</li>
+                </ul>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="3">
+                    <div class="quiz-title">🧠 Mini Quiz — InputStream</div>
+                    <p>Kenapa <code>stream.read()</code> return tipe <code>int</code>, bukan <code>byte</code>?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 3)">A) Karena Java tidak punya tipe byte</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 3)">B) Karena nilai -1 dipakai sebagai sinyal EOF, dan -1 tidak bisa direpresentasikan sebagai byte valid</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 3)">C) Karena int lebih cepat dibaca oleh CPU</button>
+                    <div class="quiz-feedback" id="quiz-feedback-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 4: OUTPUT STREAM ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 4</div>
+                <div class="text-title">📤 OutputStream — Tulis Data Byte</div>
+                <p>Kebalikan dari InputStream. Dipakai untuk <strong>menulis</strong> data byte ke file atau tujuan lainnya.</p>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// OutputStreamTest.java
+Path path = Path.of("output.txt");
+try (OutputStream stream = Files.newOutputStream(path)) {  // Line 1
+    for (int i = 0; i < 100; i++) {
+        stream.write("Hello World\n".getBytes());  // Line 2
+        stream.flush();                             // Line 3
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>Files.newOutputStream(path)</code> — buka file untuk menulis. Jika file tidak ada, dibuat baru. Jika sudah ada, isinya <strong>ditimpa</strong>!</td></tr>
+                            <tr><td>Line 2</td><td><code>"Hello World\n".getBytes()</code> — konversi String ke array byte. Method <code>write()</code> menerima array byte.</td></tr>
+                            <tr><td>Line 3</td><td><code>stream.flush()</code> — paksa data yang ada di buffer untuk benar-benar ditulis ke disk. Tanpa flush, data mungkin masih di memori buffer.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box primary" style="margin-top:var(--m)">
+                    <strong>💡 Apa itu buffer & kenapa perlu flush?</strong>
+                    Stream sering menggunakan buffer internal untuk efisiensi — data dikumpulkan di memori dulu, baru ditulis ke disk sekaligus. <code>flush()</code> memaksa penulisan sekarang. Saat menggunakan try-with-resources, <code>close()</code> juga otomatis memanggil <code>flush()</code>.
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        <code>Files.newOutputStream(path)</code> = <code>fopen($path, 'w')</code><br>
+                        <code>stream.write(data)</code> = <code>fwrite($handle, $data)</code><br>
+                        <code>stream.flush()</code> = <code>fflush($handle)</code>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="4">
+                    <div class="quiz-title">🧠 Mini Quiz — OutputStream</div>
+                    <p>Apa yang terjadi jika kamu buka file yang sudah ada menggunakan <code>Files.newOutputStream(path)</code> tanpa option tambahan?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 4)">A) Error, file tidak bisa ditimpa</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 4)">B) Data baru ditambahkan di akhir file (append)</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 4)">C) Isi file lama ditimpa (overwrite)</button>
+                    <div class="quiz-feedback" id="quiz-feedback-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 5: READER & WRITER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 5</div>
+                <div class="text-title">📝 Reader & Writer — IO Berbasis Karakter</div>
+                <p>InputStream/OutputStream bekerja dengan byte. <strong>Reader/Writer bekerja dengan karakter (text)</strong>. Ini lebih cocok untuk membaca/menulis file teks karena menangani encoding (UTF-8, dll) secara otomatis.</p>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Reader — Baca File Teks</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ReaderTest.java
+Path path = Path.of("output.txt");
+try (Reader reader = Files.newBufferedReader(path)) {  // Line 1
+    StringBuilder builder = new StringBuilder();
+    int character;
+    while ((character = reader.read()) != -1) {         // Line 2
+        builder.append((char) character);
+    }
+    System.out.println(builder.toString());
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>Files.newBufferedReader(path)</code> — buka file sebagai BufferedReader (sudah ada buffering-nya). Otomatis pakai encoding default sistem (biasanya UTF-8).</td></tr>
+                            <tr><td>Line 2</td><td>Mirip InputStream tapi membaca per <strong>karakter</strong>, bukan per byte. Ini penting untuk karakter multi-byte (emoji, aksara Asia).</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="font-weight:700;margin-bottom:var(--s);margin-top:var(--m)">Baca Chunks (lebih efisien)</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ReaderTest.java — readChars
+try (Reader reader = Files.newBufferedReader(path)) {
+    StringBuilder builder = new StringBuilder();
+    char[] chars = new char[1024];              // Line 1
+    int length;
+    while ((length = reader.read(chars)) != -1) {  // Line 2
+        builder.append(chars, 0, length);           // Line 3
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td>Buffer array of <code>char</code> (bukan <code>byte</code>!) sebesar 1024 karakter.</td></tr>
+                            <tr><td>Line 2</td><td>Baca banyak karakter sekaligus ke buffer, return jumlah karakter yang dibaca.</td></tr>
+                            <tr><td>Line 3</td><td>Append ke StringBuilder, hanya sebanyak yang dibaca (<code>0, length</code>).</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Writer — Tulis File Teks</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// WriterTest.java
+Path path = Path.of("writer.txt");
+try (Writer writer = Files.newBufferedWriter(path)) {  // Line 1
+    for (int i = 0; i < 100; i++) {
+        writer.write("Hello World\n");  // Line 2
+        writer.flush();
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>Files.newBufferedWriter(path)</code> — buka file untuk menulis teks. Langsung bisa terima String, tidak perlu konversi ke byte.</td></tr>
+                            <tr><td>Line 2</td><td><code>writer.write(String)</code> — tulis String langsung, tanpa <code>.getBytes()</code>. Ini keunggulan Writer vs OutputStream.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-content" style="margin-top:var(--m)">
+                    <table>
+                        <thead>
+                        <tr><th>Aspek</th><th>InputStream/OutputStream</th><th>Reader/Writer</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Unit data</td><td>byte (0-255)</td><td>char (Unicode)</td></tr>
+                        <tr><td>Encoding</td><td>Manual (getBytes)</td><td>Otomatis</td></tr>
+                        <tr><td>Cocok untuk</td><td>Binary (gambar, PDF)</td><td>Text (txt, csv, json)</td></tr>
+                        <tr><td>Class utama</td><td>InputStream, OutputStream</td><td>Reader, Writer</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="5">
+                    <div class="quiz-title">🧠 Mini Quiz — Reader vs InputStream</div>
+                    <p>Kamu ingin baca file gambar (.jpg). Mana yang lebih tepat?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 5)">A) InputStream — karena gambar adalah data binary</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 5)">B) Reader — karena Reader lebih modern</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 5)">C) Keduanya sama saja untuk semua jenis file</button>
+                    <div class="quiz-feedback" id="quiz-feedback-5"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 6: SCANNER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 6</div>
+                <div class="text-title">🔍 Scanner — Baca Input Baris per Baris</div>
+                <p><code>Scanner</code> adalah class high-level yang bisa membaca dari berbagai sumber (file, System.in, String) dengan cara yang mudah — bisa baca per token, per baris, per angka, dll.</p>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Baca Input dari User (keyboard)</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// InputApp.java
+Scanner scanner = new Scanner(System.in);        // Line 1
+
+System.out.print("Masukkan nama: ");
+String name = scanner.nextLine();                // Line 2
+
+System.out.println("Halo " + name);             // Line 3</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>new Scanner(System.in)</code> — <code>System.in</code> adalah InputStream dari keyboard. Scanner membungkusnya agar mudah dibaca. <code>System.in</code> di Java = <code>STDIN</code> di PHP.</td></tr>
+                            <tr><td>Line 2</td><td><code>scanner.nextLine()</code> — baca satu baris hingga Enter ditekan. Ada juga: <code>nextInt()</code>, <code>nextDouble()</code>, <code>next()</code> (per kata).</td></tr>
+                            <tr><td>Line 3</td><td>Konkatenasi string dengan <code>+</code> — sama seperti PHP.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Baca File dengan Scanner</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ScannerTest.java
+Path path = Path.of("print.txt");
+try (InputStream stream = Files.newInputStream(path);
+     Scanner scanner = new Scanner(stream)) {    // Line 1
+
+    while (scanner.hasNextLine()) {              // Line 2
+        String line = scanner.nextLine();        // Line 3
+        System.out.println(line);
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td>Scanner bisa menerima InputStream sebagai input. Scanner implements <code>Closeable</code> jadi bisa dipakai di try-with-resources.</td></tr>
+                            <tr><td>Line 2</td><td><code>scanner.hasNextLine()</code> — cek apakah masih ada baris berikutnya. Seperti <code>!feof($handle)</code> di PHP.</td></tr>
+                            <tr><td>Line 3</td><td><code>scanner.nextLine()</code> — baca satu baris (tanpa newline di akhir).</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box primary" style="margin-top:var(--m)">
+                    <strong>💡 Kapan pakai Scanner vs BufferedReader?</strong>
+                    Scanner lebih mudah dan fleksibel (bisa parse int, double langsung). BufferedReader lebih cepat untuk file teks besar. Untuk input user, Scanner lebih umum dipakai.
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="6">
+                    <div class="quiz-title">🧠 Mini Quiz — Scanner</div>
+                    <p>Kamu ingin baca input angka integer dari keyboard. Method Scanner apa yang tepat?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 6)">A) <code>scanner.nextLine()</code> lalu parse manual</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 6)">B) <code>scanner.nextInt()</code></button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 6)">C) <code>scanner.readInt()</code></button>
+                    <div class="quiz-feedback" id="quiz-feedback-6"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 7: PRINT STREAM ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 7</div>
+                <div class="text-title">🖨️ PrintStream — Output yang Ramah</div>
+                <p><code>PrintStream</code> adalah OutputStream yang ditambahkan kemampuan print teks dengan mudah. Kamu sudah sering pakai ini tanpa sadar!</p>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// PrintStreamTest.java
+
+// System.out ADALAH PrintStream!
+PrintStream stream = System.out;    // Line 1
+stream.println("Hello World");      // Line 2
+stream.println("Hello World");
+stream.println("Hello World");</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>System.out</code> yang kamu pakai setiap hari adalah instance dari <code>PrintStream</code>! Ini menulis ke console/terminal.</td></tr>
+                            <tr><td>Line 2</td><td><code>println()</code> — print + newline otomatis. Ada juga <code>print()</code> (tanpa newline) dan <code>printf()</code> (format string).</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">PrintStream ke File</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// PrintStreamTest.java
+Path path = Path.of("print.txt");
+try (OutputStream outputStream = Files.newOutputStream(path);
+     PrintStream stream = new PrintStream(outputStream)) {  // Line 1
+
+    stream.println("Hello World");  // Line 2
+    stream.println("Hello World");
+    stream.println("Hello World");
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>new PrintStream(outputStream)</code> — bungkus OutputStream dengan PrintStream. Ini pola <strong>Decorator Pattern</strong> — PrintStream menambahkan fitur print ke OutputStream biasa.</td></tr>
+                            <tr><td>Line 2</td><td>Sekarang bisa pakai <code>println()</code> untuk nulis ke file, sama seperti nulis ke console.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--m)">
+                    <strong>💡 Insight: Decorator Pattern</strong>
+                    Java IO banyak menggunakan Decorator Pattern — class seperti <code>PrintStream</code>, <code>BufferedOutputStream</code>, <code>ObjectOutputStream</code> membungkus stream lain untuk menambah fitur. Ini kenapa kamu sering lihat <code>new SomeStream(otherStream)</code>.
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="7">
+                    <div class="quiz-title">🧠 Mini Quiz — PrintStream</div>
+                    <p><code>System.out</code> di Java adalah instance dari class apa?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 7)">A) OutputStream</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 7)">B) PrintStream</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 7)">C) Writer</button>
+                    <div class="quiz-feedback" id="quiz-feedback-7"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 8: SMALL FILE UTILITIES ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 8</div>
+                <div class="text-title">⚡ Small File Utilities — Baca/Tulis Singkat</div>
+                <p>Kalau file kecil dan mau baca/tulis sekaligus, gak perlu repot buka/tutup stream. Class <code>Files</code> punya shortcut yang sangat mudah!</p>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// SmallFileTest.java
+
+// TULIS file kecil
+Path path1 = Path.of("small1.txt");
+byte[] bytes = "Hello World".getBytes();
+Files.write(path1, bytes);                // Line 1 — tulis dari byte[]
+
+Path path2 = Path.of("small2.txt");
+Files.writeString(path2, "Hello World"); // Line 2 — tulis dari String (lebih mudah!)
+
+// BACA file kecil
+byte[] readBytes = Files.readAllBytes(path1);      // Line 3
+String content1 = new String(readBytes);
+
+String content2 = Files.readString(path2);         // Line 4 — paling simpel!</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>Files.write(path, bytes)</code> — tulis array byte ke file sekaligus. File dibuat jika belum ada.</td></tr>
+                            <tr><td>Line 2</td><td><code>Files.writeString(path, string)</code> — tulis String langsung. Paling mudah untuk file teks.</td></tr>
+                            <tr><td>Line 3</td><td><code>Files.readAllBytes(path)</code> — baca seluruh isi file sebagai byte[]. Hati-hati untuk file besar!</td></tr>
+                            <tr><td>Line 4</td><td><code>Files.readString(path)</code> — baca seluruh isi file sebagai String. Paling simple untuk file teks kecil.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box warning" style="margin-top:var(--m)">
+                    <strong>⚠️ Kapan JANGAN pakai ini?</strong>
+                    <code>readAllBytes()</code> dan <code>readString()</code> membaca <strong>seluruh file ke memori</strong>. Untuk file kecil (< beberapa MB), fine. Untuk file besar (log file, dump database), gunakan InputStream/Reader dengan buffer!
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        <code>Files.readString(path)</code> = <code>file_get_contents($path)</code><br>
+                        <code>Files.writeString(path, str)</code> = <code>file_put_contents($path, $str)</code><br>
+                        Sama persis! Dan sama-sama tidak cocok untuk file sangat besar.
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="8">
+                    <div class="quiz-title">🧠 Mini Quiz — Small File Utilities</div>
+                    <p>Kamu perlu membaca file log sebesar 500MB. Mana pendekatan yang benar?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 8)">A) <code>Files.readString(path)</code> — simpel dan mudah</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 8)">B) Gunakan InputStream/Reader dengan buffer, proses baris per baris</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 8)">C) <code>Files.readAllBytes(path)</code> — paling lengkap</button>
+                    <div class="quiz-feedback" id="quiz-feedback-8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 9: OPEN OPTIONS ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 9</div>
+                <div class="text-title">🔧 Open Options — Kontrol Cara Buka File</div>
+                <p><code>StandardOpenOption</code> adalah enum yang mengontrol perilaku saat membuka file — apakah ditimpa? ditambahkan? dibuat baru?</p>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// OpenOptionTest.java
+Path path = Path.of("append.txt");
+try (Writer writer = Files.newBufferedWriter(path,
+        StandardOpenOption.CREATE,    // Line 1
+        StandardOpenOption.APPEND)) { // Line 2
+
+    writer.write("Hello World\n");
+    writer.flush();
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>StandardOpenOption.CREATE</code> — buat file jika belum ada. Jika sudah ada, lanjutkan.</td></tr>
+                            <tr><td>Line 2</td><td><code>StandardOpenOption.APPEND</code> — data baru ditambahkan di akhir file, bukan menimpa. Tiap kali test ini dijalankan, "Hello World" ditambahkan.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-content" style="margin-top:var(--m)">
+                    <table>
+                        <thead>
+                        <tr><th>Option</th><th>Efek</th><th>Analogi PHP</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>CREATE</td><td>Buat file jika belum ada</td><td>fopen('a'), fopen('w')</td></tr>
+                        <tr><td>CREATE_NEW</td><td>Error jika file sudah ada</td><td>fopen('x')</td></tr>
+                        <tr><td>APPEND</td><td>Tambah di akhir file</td><td>fopen('a')</td></tr>
+                        <tr><td>TRUNCATE_EXISTING</td><td>Kosongkan file dulu (default)</td><td>fopen('w')</td></tr>
+                        <tr><td>READ</td><td>Buka untuk baca</td><td>fopen('r')</td></tr>
+                        <tr><td>WRITE</td><td>Buka untuk tulis</td><td>fopen('w')</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        Di PHP kamu pakai mode string di <code>fopen()</code> seperti <code>'r'</code>, <code>'w'</code>, <code>'a'</code>, <code>'x'</code>. Di Java, ini digantikan dengan enum <code>StandardOpenOption</code> yang lebih eksplisit dan bisa dikombinasikan.
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="9">
+                    <div class="quiz-title">🧠 Mini Quiz — Open Options</div>
+                    <p>Kamu ingin menulis ke file log yang terus bertambah, dan buat filenya jika belum ada. Option apa yang dipakai?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 9)">A) WRITE saja</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 9)">B) CREATE + APPEND</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 9)">C) CREATE_NEW + WRITE</button>
+                    <div class="quiz-feedback" id="quiz-feedback-9"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 10: MEMORY STREAM ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 10</div>
+                <div class="text-title">💾 Memory Stream — IO di Memori</div>
+                <p>Tidak semua IO harus ke file! <code>StringWriter</code> dan <code>ByteArrayOutputStream</code> memungkinkan kamu "menulis" ke memori, lalu ambil hasilnya sebagai String atau byte array.</p>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// MemoryStreamTest.java
+StringWriter writer = new StringWriter();          // Line 1
+for (int i = 0; i < 10; i++) {
+    writer.write("Hello World\n");                 // Line 2
+}
+
+String content = writer.getBuffer().toString();    // Line 3
+System.out.println(content);</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>new StringWriter()</code> — buat Writer yang menulis ke memori (bukan ke file). Tidak perlu close! Tidak ada resource fisik yang dibuka.</td></tr>
+                            <tr><td>Line 2</td><td>Tulis ke "memori" persis seperti menulis ke file biasa.</td></tr>
+                            <tr><td>Line 3</td><td><code>writer.getBuffer().toString()</code> — ambil semua yang sudah ditulis sebagai String.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--m)">
+                    <strong>💡 Kapan Memory Stream berguna?</strong>
+                    <ul style="margin:var(--xs) 0 0 var(--m)">
+                        <li>Membangun string dinamis yang panjang secara efisien</li>
+                        <li>Testing — mock output tanpa perlu file sungguhan</li>
+                        <li>Menangkap output dari library yang menulis ke Stream</li>
+                        <li>Membangun response HTTP dari berbagai sumber sebelum dikirim</li>
+                    </ul>
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        <code>StringWriter</code> mirip dengan <code>ob_start()</code> di PHP — kamu "menangkap" output ke buffer memori, lalu ambil hasilnya dengan <code>ob_get_clean()</code>.
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="10">
+                    <div class="quiz-title">🧠 Mini Quiz — Memory Stream</div>
+                    <p>Apakah <code>StringWriter</code> perlu di-close menggunakan try-with-resources?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 10)">A) Ya, wajib seperti semua IO lainnya</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 10)">B) Tidak wajib karena tidak ada resource fisik (file/network) yang dibuka</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 10)">C) Tidak bisa dipakai di try-with-resources</button>
+                    <div class="quiz-feedback" id="quiz-feedback-10"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 11: OBJECT SERIALIZATION ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Chapter 11</div>
+                <div class="text-title">📦 Object Serialization — Simpan Objek ke File</div>
+                <p>Serialisasi adalah proses mengubah objek Java menjadi stream byte agar bisa disimpan ke file atau dikirim via network. Deserialisasi adalah kebalikannya.</p>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Step 1: Buat Class yang Bisa Diserialisasi</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// Person.java
+public class Person implements Serializable {           // Line 1
+
+    public static final long serialVersionUID = 1L;    // Line 2
+
+    private String id;
+    private String name;
+
+    // getter & setter...
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>implements Serializable</code> — "menandai" class ini boleh di-serialize. Interface ini tidak punya method apapun (marker interface). Tanpa ini, akan throw <code>NotSerializableException</code>.</td></tr>
+                            <tr><td>Line 2</td><td><code>serialVersionUID</code> — "version ID" untuk class. Saat deserialisasi, Java memeriksa apakah UID yang tersimpan di file cocok dengan class saat ini. Jika tidak cocok, gagal. Ini penting saat class berubah.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Step 2: Simpan Objek ke File</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ObjectStreamTest.java — savePerson
+Person person = new Person();
+person.setId("1");
+person.setName("Eko");
+
+Path path = Path.of("eko.person");
+try (OutputStream stream = Files.newOutputStream(path);
+     ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream)) {  // Line 1
+
+    objectOutputStream.writeObject(person);  // Line 2
+    objectOutputStream.flush();
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>new ObjectOutputStream(stream)</code> — lagi-lagi Decorator Pattern! Membungkus OutputStream biasa dengan kemampuan serialize objek.</td></tr>
+                            <tr><td>Line 2</td><td><code>writeObject(person)</code> — konversi objek Person menjadi byte dan tulis ke stream. Semua field (id, name) ikut tersimpan.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div style="font-weight:700;margin-bottom:var(--s)">Step 3: Baca Kembali Objek dari File</div>
+
+                <div class="code-wrapper">
+<pre><code class="language-java">// ObjectStreamTest.java — getPerson
+Path path = Path.of("eko.person");
+try (InputStream stream = Files.newInputStream(path);
+     ObjectInputStream objectInputStream = new ObjectInputStream(stream)) {
+
+    Person person = (Person) objectInputStream.readObject();  // Line 1
+
+    Assertions.assertEquals("1", person.getId());
+    Assertions.assertEquals("Eko", person.getName());
+} catch (IOException | ClassNotFoundException exception) {    // Line 2
+    Assertions.fail(exception);
+}</code></pre>
+                </div>
+
+                <div class="line-explain" style="margin-top:var(--m)">
+                    <div class="table-content">
+                        <table>
+                            <tbody>
+                            <tr><td>Line 1</td><td><code>readObject()</code> return tipe <code>Object</code>, jadi harus di-cast ke <code>Person</code>. Ini karena Java butuh tahu tipe spesifiknya saat compile time.</td></tr>
+                            <tr><td>Line 2</td><td>Catch dua jenis exception: <code>IOException</code> (masalah IO) dan <code>ClassNotFoundException</code> (class Person tidak ditemukan saat deserialisasi). Ini multi-catch dengan <code>|</code>.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box warning" style="margin-top:var(--m)">
+                    <strong>⚠️ Peringatan Keamanan Serialisasi</strong>
+                    Java Serialization memiliki risiko keamanan — jangan deserialisasi data dari sumber yang tidak dipercaya! Di aplikasi modern, lebih baik gunakan JSON (Jackson/Gson) atau protobuf untuk menyimpan/transfer data objek.
+                </div>
+
+                <div class="analogy-box" style="margin-top:var(--m)">
+                    <div class="icon">🐘</div>
+                    <div>
+                        <strong>Analogi PHP</strong><br>
+                        <code>serialize($object)</code> → <code>objectOutputStream.writeObject(obj)</code><br>
+                        <code>unserialize($str)</code> → <code>objectInputStream.readObject()</code><br>
+                        Dan sama-sama ada risiko keamanan di deserialisasi!
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="quiz-box" data-quiz="11">
+                    <div class="quiz-title">🧠 Mini Quiz — Serialization</div>
+                    <p>Apa yang terjadi jika kamu mencoba serialize objek dari class yang TIDAK implements Serializable?</p>
+                    <button class="quiz-option" onclick="answerQuiz(this, true, 11)">A) <code>NotSerializableException</code> saat runtime</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 11)">B) Compile error</button>
+                    <button class="quiz-option" onclick="answerQuiz(this, false, 11)">C) Berjalan normal, field non-serializable diabaikan</button>
+                    <div class="quiz-feedback" id="quiz-feedback-11"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Summary</div>
+                <div class="text-title">✅ Rangkuman Java IO</div>
+
+                <div class="timeline">
+                    <div>
+                        <span class="timeline-key active">1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">📁 Path & File</div>
+                        <div class="timeline-content-desc">Gunakan <code>Path.of()</code> dan <code>Files.*</code> (NIO2) untuk semua operasi file. Lebih modern dari class <code>File</code> lama.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">2</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">🔒 Try-with-Resources</div>
+                        <div class="timeline-content-desc">SELALU gunakan try-with-resources untuk stream. Ini memastikan stream ditutup otomatis dan mencegah resource leak.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">3</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">📥📤 InputStream & OutputStream</div>
+                        <div class="timeline-content-desc">Untuk data binary. Baca/tulis dalam bentuk byte. Gunakan buffer array untuk performa optimal.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">4</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">📝 Reader & Writer</div>
+                        <div class="timeline-content-desc">Untuk data teks. Menangani encoding (UTF-8) secara otomatis. Lebih mudah dari InputStream/OutputStream untuk file teks.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">5</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">🔍 Scanner</div>
+                        <div class="timeline-content-desc">High-level reader yang bisa parse token, baris, angka. Cocok untuk input user (<code>System.in</code>) dan membaca file terstruktur.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">6</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">⚡ Small File Utils</div>
+                        <div class="timeline-content-desc"><code>Files.readString()</code> dan <code>Files.writeString()</code> untuk file kecil. Seperti <code>file_get_contents()</code> dan <code>file_put_contents()</code> di PHP.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">7</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">🔧 Open Options</div>
+                        <div class="timeline-content-desc">Gunakan <code>StandardOpenOption</code> untuk kontrol detail: <code>CREATE</code>, <code>APPEND</code>, <code>TRUNCATE_EXISTING</code>, dll.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">8</span>
+                        <div class="timeline-divider"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">📦 Serialization</div>
+                        <div class="timeline-content-desc">Implement <code>Serializable</code> untuk simpan objek ke file. Di aplikasi modern, pertimbangkan JSON sebagai alternatif yang lebih aman.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">9</span>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">🧩 Decorator Pattern di IO</div>
+                        <div class="timeline-content-desc">Java IO menggunakan Decorator Pattern — stream dibungkus stream lain untuk menambah fitur. Contoh: <code>new ObjectOutputStream(new BufferedOutputStream(stream))</code>.</div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-title">📊 Cheat Sheet — Pilih yang Mana?</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr><th>Kebutuhan</th><th>Gunakan</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Baca file teks kecil sekaligus</td><td><code>Files.readString(path)</code></td></tr>
+                        <tr><td>Tulis file teks kecil sekaligus</td><td><code>Files.writeString(path, str)</code></td></tr>
+                        <tr><td>Baca file teks besar baris per baris</td><td><code>Files.newBufferedReader(path)</code> + while loop</td></tr>
+                        <tr><td>Tulis file teks besar</td><td><code>Files.newBufferedWriter(path)</code></td></tr>
+                        <tr><td>Baca file binary (gambar, PDF)</td><td><code>Files.newInputStream(path)</code></td></tr>
+                        <tr><td>Tulis file binary</td><td><code>Files.newOutputStream(path)</code></td></tr>
+                        <tr><td>Input dari user keyboard</td><td><code>new Scanner(System.in)</code></td></tr>
+                        <tr><td>Tambah data di akhir file</td><td><code>Files.newBufferedWriter(path, CREATE, APPEND)</code></td></tr>
+                        <tr><td>Simpan objek Java ke file</td><td><code>ObjectOutputStream</code> (atau JSON di proyek nyata)</td></tr>
+                        <tr><td>Build string di memori</td><td><code>StringWriter</code> atau <code>StringBuilder</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--m)">
+                    <strong>🎉 Selamat!</strong>
+                    Kamu sudah mempelajari semua konsep dasar Java IO. Langkah selanjutnya: coba implementasi sesuatu yang nyata — misalnya baca file CSV, parse, lalu tulis hasilnya ke file lain. Happy coding! ☕
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer style="text-align:center;padding:var(--x);color:var(--transtext-color);font-size:var(--xs)">
+        Dibuat dengan ❤️ sebagai learning material Java IO — based on project <code>programmerzamannow.io</code>
+    </footer>
+</main>
+
+<script>
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active')
+    }
+
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse")
+        document.getElementsByClassName("container")[0].classList.toggle("expanded")
+    }
+
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode")
+    }
+
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show")
+        let iconGetMenu = document.getElementById('get-menu');
+        iconGetMenu.classList.toggle('opened')
+    }
+
+    function answerQuiz(btn, isCorrect, quizNum) {
+        const feedback = document.getElementById('quiz-feedback-' + quizNum);
+        const options = btn.closest('.quiz-box').querySelectorAll('.quiz-option');
+
+        options.forEach(opt => opt.disabled = true);
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            feedback.textContent = '✅ Benar! ' + getQuizExplanation(quizNum, true);
+            feedback.className = 'quiz-feedback show success';
+        } else {
+            btn.classList.add('wrong-answer');
+            feedback.textContent = '❌ Kurang tepat. ' + getQuizExplanation(quizNum, false);
+            feedback.className = 'quiz-feedback show fail';
+        }
+    }
+
+    function getQuizExplanation(quizNum, correct) {
+        const explanations = {
+            1: { t: 'Path.of() hanya membuat representasi objek di memori. File baru benar-benar dibuat saat kamu memanggil Files.createFile() atau Files.write().', f: 'Coba lagi! Path.of() tidak menyentuh disk sama sekali.' },
+            2: { t: 'Java menggunakan mekanisme "suppressed exceptions" — semua resource tetap dicoba untuk di-close, dan exception tambahan dilampirkan ke exception utama.', f: 'Java sangat peduli dengan resource management! Semua stream tetap dicoba ditutup.' },
+            3: { t: 'stream.read() perlu bisa membedakan "byte bernilai 255" dengan "tidak ada data lagi (EOF)". Jika pakai byte, nilai -1 tidak bisa dibedakan dari data valid.', f: 'Ini tentang range nilai! byte di Java adalah -128 sampai 127, sedangkan kita butuh -1 untuk EOF.' },
+            4: { t: 'Secara default, newOutputStream() menggunakan TRUNCATE_EXISTING — file dikosongkan dulu baru ditulis.', f: 'Hati-hati! Default behavior-nya adalah overwrite, bukan append.' },
+            5: { t: 'InputStream bekerja pada level byte — tepat untuk data binary seperti gambar. Reader menambahkan layer encoding (karakter), yang tidak relevan untuk binary.', f: 'Pikirkan: gambar bukan teks, jadi tidak perlu encoding karakter.' },
+            6: { t: 'scanner.nextInt() langsung mem-parse token berikutnya sebagai integer. Tapi hati-hati: setelah nextInt(), ada newline yang tersisa di buffer!', f: 'Scanner punya method khusus untuk berbagai tipe data.' },
+            7: { t: 'System.out adalah static field bertipe PrintStream di class System. Makanya kamu bisa langsung pakai println(), printf(), dsb.', f: 'Coba lihat dokumentasi class System — field out-nya bertipe PrintStream.' },
+            8: { t: 'readString() dan readAllBytes() membaca SELURUH file ke memori. 500MB file = 500MB RAM terpakai sekaligus. Gunakan buffered reader untuk file besar.', f: 'Bayangkan membaca buku 500 halaman sekaligus vs satu halaman per halaman.' },
+            9: { t: 'CREATE memastikan file ada (buat jika belum ada), APPEND memastikan data baru ditambahkan di akhir tanpa menimpa data lama.', f: 'Untuk logging, kamu butuh: buat jika belum ada + tambahkan di akhir = CREATE + APPEND.' },
+            10: { t: 'StringWriter menulis ke StringBuffer di memori — tidak ada file, socket, atau resource OS yang dibuka. close() pada StringWriter adalah no-op (tidak melakukan apa-apa).', f: 'Tidak ada file yang dibuka, jadi tidak ada yang perlu di-close.' },
+            11: { t: 'NotSerializableException adalah RuntimeException yang dilempar saat runtime ketika mencoba serialize objek yang class-nya tidak implements Serializable.', f: 'Ini bukan compile error karena writeObject() menerima tipe Object — Java tidak bisa tahu di compile time apakah objek bisa di-serialize.' },
+        };
+        return correct ? explanations[quizNum].t : explanations[quizNum].f;
+    }
+
+    // Highlight.js init
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+
+        // Active sidebar tracking
+        const sections = document.querySelectorAll('[id]');
+        const sidebarItems = document.querySelectorAll('.sidebar-menu-item');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    sidebarItems.forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('href') === '#' + id) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(section => observer.observe(section));
+    });
+</script>
+</body>
+</html>

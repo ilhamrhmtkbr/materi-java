@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Belajar Java CSV — Modul Interaktif</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+
+        /* ===== Code Blocks ===== */
+        pre {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            max-width: 77dvw;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--xs);
+            line-height: 1.7;
+            box-sizing: border-box;
+        }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--xs);
+        }
+        pre .kw   { color: #cba6f7; } /* keyword */
+        pre .cls  { color: #89dceb; } /* class name */
+        pre .str  { color: #a6e3a1; } /* string */
+        pre .num  { color: #fab387; } /* number */
+        pre .ann  { color: #f9e2af; } /* annotation */
+        pre .cmt  { color: #6c7086; font-style: italic; } /* comment */
+        pre .met  { color: #89b4fa; } /* method */
+        pre .typ  { color: #94e2d5; } /* type */
+
+        /* ===== Info Boxes ===== */
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            margin-top: var(--m);
+        }
+        .info-box.primary   { background: var(--transprimary-color);  border-left: 4px solid var(--primary-color);  }
+        .info-box.success   { background: var(--transsuccess-color);  border-left: 4px solid var(--success-color);  }
+        .info-box.warning   { background: var(--transwarning-color);  border-left: 4px solid var(--warning-color);  }
+        .info-box.danger    { background: var(--transdanger-color);   border-left: 4px solid var(--danger-color);   }
+
+        /* ===== Line Explain ===== */
+        .line-explain {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            gap: var(--s);
+            margin-top: var(--m);
+        }
+        .line-explain-item {
+            display: flex;
+            gap: var(--s);
+            align-items: flex-start;
+        }
+        .line-num {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border-radius: var(--radius-s);
+            padding: 2px var(--xs);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--xs);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .line-desc { font-size: var(--s); }
+
+        /* ===== Salah Benar ===== */
+        .compare-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--m);
+            margin-top: var(--m);
+        }
+        @media (max-width: 640px) { .compare-box { grid-template-columns: 1fr; } }
+        .compare-wrong { border-radius: var(--radius-x); padding: var(--m); background: var(--transdanger-color); border: 1px solid var(--danger-color); }
+        .compare-right { border-radius: var(--radius-x); padding: var(--m); background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .compare-label { font-weight: 600; margin-bottom: var(--s); font-size: var(--s); }
+        .compare-wrong .compare-label { color: var(--danger-color); }
+        .compare-right .compare-label { color: var(--success-color); }
+
+        /* ===== Laravel Analogy Box ===== */
+        .laravel-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            margin-top: var(--m);
+            background: var(--transsecond-primary-color);
+            border-left: 4px solid var(--second-primary-color);
+        }
+        .laravel-box-title {
+            font-weight: 700;
+            color: var(--second-primary-color);
+            margin-bottom: var(--xs);
+            display: flex;
+            align-items: center;
+            gap: var(--xs);
+        }
+
+        /* ===== Quiz ===== */
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            margin-top: var(--m);
+            background: var(--transprimary-color);
+            border: 1px solid var(--primary-color);
+        }
+        .quiz-title { font-weight: 700; color: var(--primary-color); margin-bottom: var(--s); }
+        .quiz-options { display: grid; gap: var(--xs); margin-top: var(--s); }
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: var(--xs);
+            padding: var(--xs) var(--s);
+            border-radius: var(--radius-m);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            transition: all 0.2s;
+            font-size: var(--s);
+        }
+        .quiz-option:hover { border-color: var(--primary-color); background: var(--transprimary-color); }
+        .quiz-option.correct { border-color: var(--success-color); background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-option.wrong   { border-color: var(--danger-color);  background: var(--transdanger-color);  color: var(--danger-color);  }
+        .quiz-feedback { margin-top: var(--s); font-size: var(--s); padding: var(--xs) var(--s); border-radius: var(--radius-m); display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.no { background: var(--transdanger-color); color: var(--danger-color); }
+
+        /* ===== Section Banner ===== */
+        .chapter-banner {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--l) var(--m);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--second-primary-color) 100%);
+            color: #fff;
+            margin-bottom: var(--m);
+        }
+        .chapter-banner .chapter-num { font-size: var(--xs); opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .chapter-banner .chapter-title { font-size: var(--xx); font-weight: 700; margin-top: 4px; }
+        .chapter-banner .chapter-sub { font-size: var(--s); opacity: 0.85; margin-top: 4px; }
+
+        /* ===== Hero ===== */
+        .hero {
+            border-radius: var(--radius-x);
+            padding: var(--xxxx) var(--xx);
+            background: linear-gradient(135deg, #1e1e2e 0%, #313244 80%);
+            color: #cdd6f4;
+            text-align: center;
+            margin-bottom: var(--x);
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+        }
+        .hero h1 { font-size: var(--xx); font-weight: 800; color: #cba6f7; font-family: 'JetBrains Mono', monospace; }
+        .hero p   { font-size: var(--s); color: #a6adc8; margin-top: var(--s); }
+        .hero .tag-row { display: flex; flex-wrap: wrap; gap: var(--xs); justify-content: center; margin-top: var(--m); }
+        .hero-tag { background: rgba(203,166,247,0.15); border: 1px solid #cba6f7; color: #cba6f7; border-radius: 999px; padding: 3px var(--s); font-size: var(--xs); font-family: 'JetBrains Mono', monospace; }
+
+        /* ===== Inline code ===== */
+        p code, li code, .line-desc code {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            padding: 1px 5px;
+            border-radius: var(--radius-s);
+        }
+
+        /* margin utilities */
+        .mt-s { margin-top: var(--s); }
+        .mt-m { margin-top: var(--m); }
+        .mt-l { margin-top: var(--l); }
+    </style>
+</head>
+<body>
+<!-- Bottom Nav (Mobile) -->
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠 Intro</a>
+    <a class="bottom-nav-item" href="#chapter-1">📦 Setup</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnav-check">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnav-check">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnav-check">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-2">✍️ Tulis CSV</a>
+                <a class="bottom-nav-item" href="#chapter-3">📖 Baca CSV</a>
+                <a class="bottom-nav-item" href="#chapter-4">🏷️ Header</a>
+                <a class="bottom-nav-item" href="#chapter-5">⇥ Delimiter</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java CSV</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro" class="sidebar-menu-item active" data-title="Pengantar">
+            <div class="sidebar-menu-item-svg">🏠</div>
+            <span>Pengantar</span>
+        </a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Setup & Dependency">
+            <div class="sidebar-menu-item-svg">📦</div>
+            <span>Setup &amp; Dependency</span>
+        </a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Menulis CSV Dasar">
+            <div class="sidebar-menu-item-svg">✍️</div>
+            <span>Menulis CSV Dasar</span>
+        </a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="Membaca CSV">
+            <div class="sidebar-menu-item-svg">📖</div>
+            <span>Membaca CSV</span>
+        </a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="CSV dengan Header">
+            <div class="sidebar-menu-item-svg">🏷️</div>
+            <span>CSV dengan Header</span>
+        </a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="Custom Delimiter">
+            <div class="sidebar-menu-item-svg">⇥</div>
+            <span>Custom Delimiter / TDF</span>
+        </a>
+        <a href="#summary" class="sidebar-menu-item" data-title="Ringkasan Arsitektur">
+            <div class="sidebar-menu-item-svg">📋</div>
+            <span>Ringkasan Arsitektur</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52"
+             viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality"
+             fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#intro">
+                <span class="container-header-nav-item-text">☕ Java CSV Course</span>
+            </a>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===================== HERO / INTRO ===================== -->
+        <div class="card-wrapper max-width-1000" id="intro">
+            <div class="hero">
+                <h1>☕ Belajar Java CSV</h1>
+                <p>Modul pembelajaran interaktif untuk developer PHP / Laravel yang migrasi ke Java & Spring Boot.<br>
+                    Materi: Apache Commons CSV — membuat, membaca, dan memformat file CSV dengan benar.</p>
+                <div class="tag-row">
+                    <span class="hero-tag">Java 17+</span>
+                    <span class="hero-tag">Spring Boot</span>
+                    <span class="hero-tag">Apache Commons CSV</span>
+                    <span class="hero-tag">JUnit 5</span>
+                    <span class="hero-tag">Untuk ex-Laravel Dev</span>
+                </div>
+            </div>
+
+            <p>Selamat datang! Sebelum masuk ke kode, ada beberapa perbedaan <strong>mindset</strong> fundamental antara Java dan PHP yang wajib kamu pahami terlebih dahulu.</p>
+
+            <div class="mt-m"></div>
+            <div class="accordion-item">
+                <input type="checkbox" id="mindset-1" class="accordion-item-check"/>
+                <label for="mindset-1" class="accordion-item-label">
+                    <div class="flex-aic-jcb">
+                        <p>🧠 Mindset: Strongly-typed vs Loosely-typed</p>
+                        <span>▼</span>
+                    </div>
+                    <div class="accordion-item-label-subtitle">Salah satu perbedaan terbesar Java vs PHP</div>
+                </label>
+                <div class="accordion-content">
+                    <p>Di PHP/Laravel, kamu bisa menulis:</p>
+                    <pre><span class="cmt">// PHP — tidak ada type check saat "compile"</span>
+$nama = "Eko";
+$nama = 42; <span class="cmt">// valid! PHP tidak protes</span></pre>
+                    <p class="mt-s">Di Java, setiap variabel <strong>harus punya tipe data</strong> yang dideklarasikan secara eksplisit. Tipe itu tidak bisa berubah:</p>
+                    <pre><span class="cmt">// Java — strongly-typed</span>
+<span class="typ">String</span> nama = <span class="str">"Eko"</span>;
+nama = <span class="num">42</span>; <span class="cmt">// ERROR! compiler menolak sebelum kode dijalankan</span></pre>
+                    <p class="mt-s">Keuntungannya: bug tipe data terdeteksi saat <em>kompilasi</em>, bukan saat aplikasi sudah live di production. Ini yang disebut <strong>"fail fast"</strong>.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <input type="checkbox" id="mindset-2" class="accordion-item-check"/>
+                <label for="mindset-2" class="accordion-item-label">
+                    <div class="flex-aic-jcb">
+                        <p>⚙️ Mindset: Kompilasi vs Interpretasi</p>
+                        <span>▼</span>
+                    </div>
+                    <div class="accordion-item-label-subtitle">Mengapa Java perlu langkah "build" sebelum dijalankan</div>
+                </label>
+                <div class="accordion-content">
+                    <p>PHP diinterpretasi langsung — server membaca file <code>.php</code> baris per baris saat request masuk. Java dikompilasi lebih dulu menjadi <strong>bytecode</strong> (<code>.class</code>), lalu dieksekusi oleh JVM (Java Virtual Machine). Proses build di Spring Boot (Maven / Gradle) mirip seperti menjalankan <code>composer install</code> + <code>php artisan optimize</code> digabung menjadi satu langkah wajib.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <input type="checkbox" id="mindset-3" class="accordion-item-check"/>
+                <label for="mindset-3" class="accordion-item-label">
+                    <div class="flex-aic-jcb">
+                        <p>🗂️ Mindset: Exception Handling adalah Kewajiban</p>
+                        <span>▼</span>
+                    </div>
+                    <div class="accordion-item-label-subtitle">Kenapa method Java sering menambahkan "throws IOException"</div>
+                </label>
+                <div class="accordion-content">
+                    <p>Di Java, ada konsep <strong>Checked Exception</strong> — error yang secara tipe sistem <em>dipaksakan</em> untuk kamu tangani. Ketika kamu membuka file, Java "memaksa" kamu mendeklarasikan <code>throws IOException</code> atau menambahkan <code>try-catch</code>. Di PHP, exception bisa kamu abaikan begitu saja (sampai server error 500). Java membuatnya eksplisit agar tidak ada "silent failure".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== CHAPTER 1: SETUP ===================== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 01</div>
+                    <div class="chapter-title">📦 Setup & Dependency</div>
+                    <div class="chapter-sub">Maven, Spring Boot, dan struktur project</div>
+                </div>
+
+                <p>Project ini menggunakan <strong>Spring Boot</strong> dengan <strong>Maven</strong> sebagai build tool, dan library <strong>Apache Commons CSV</strong> untuk memproses file CSV.</p>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Apa itu Apache Commons CSV?</strong><br>
+                    Library open-source dari Apache untuk membaca dan menulis CSV. Mirip seperti package <code>league/csv</code> di ekosistem PHP — kamu tidak perlu membuat parser CSV sendiri dari nol.
+                </div>
+
+                <div class="text-title mt-l">Struktur Project</div>
+                <pre>belajar-java-csv/
+├── <span class="kw">pom.xml</span>                          <span class="cmt">← Dependency management (seperti composer.json)</span>
+└── src/
+    ├── main/java/programmerzamannow/csv/
+    │   └── <span class="cls">BelajarJavaCsvApplication.java</span>  <span class="cmt">← Entry point Spring Boot</span>
+    └── test/java/programmerzamannow/csv/
+        ├── <span class="cls">BelajarJavaCsvApplicationTests.java</span>
+        └── <span class="cls">CSVTest.java</span>               <span class="cmt">← Semua contoh kode CSV ada di sini</span></pre>
+
+                <div class="text-title mt-l">Dependency Maven (pom.xml)</div>
+                <pre><span class="cmt">&lt;!-- Tambahkan di dalam &lt;dependencies&gt; --&gt;</span>
+&lt;<span class="cls">dependency</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.apache.commons&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">artifactId</span>&gt;commons-csv&lt;/<span class="kw">artifactId</span>&gt;
+    &lt;<span class="kw">version</span>&gt;1.10.0&lt;/<span class="kw">version</span>&gt;
+&lt;/<span class="cls">dependency</span>&gt;</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">groupId</span>
+                        <span class="line-desc">Identifier organisasi/vendor library. Seperti "vendor" di Composer PHP (<code>league/csv</code> → groupId = <code>league</code>).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">artifactId</span>
+                        <span class="line-desc">Nama library spesifik. Ini yang kamu tulis di <code>require</code> Composer.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">version</span>
+                        <span class="line-desc">Versi library yang digunakan. Maven akan mengunduhnya dari Maven Central (seperti Packagist-nya Java).</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Entry Point: BelajarJavaCsvApplication.java</div>
+                <pre><span class="ann">@SpringBootApplication</span>
+<span class="kw">public class</span> <span class="cls">BelajarJavaCsvApplication</span> {
+    <span class="kw">public static void</span> <span class="met">main</span>(<span class="typ">String</span>[] args) {
+        SpringApplication.<span class="met">run</span>(BelajarJavaCsvApplication.<span class="kw">class</span>, args);
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">@SpringBootApplication</span>
+                        <span class="line-desc">Annotation gabungan — aktifkan auto-configuration, component scanning, dan konfigurasi Spring. Ekuivalen dengan bootstrap Laravel di <code>public/index.php</code> tapi jauh lebih powerful.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">main()</span>
+                        <span class="line-desc">Entry point Java. JVM selalu mencari method <code>main</code> untuk memulai eksekusi program — mirip entry point PHP tapi eksplisit dan hanya satu.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">SpringApplication.run()</span>
+                        <span class="line-desc">Menginisialisasi Spring Application Context, menjalankan semua bean, dan (jika ada web server) menyalakan Tomcat embedded. Di balik layar, ini seperti menjalankan seluruh kernel Laravel sekaligus.</span>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>@SpringBootApplication</code> + <code>SpringApplication.run()</code> adalah kombinasi dari <code>public/index.php</code> + bootstrap Laravel + service provider registration — semua dalam satu method. Di Java, semuanya eksplisit dan verifiable oleh compiler.</p>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 1</div>
+                    <p><strong>Q1:</strong> Apa fungsi annotation <code>@SpringBootApplication</code>?</p>
+                    <div class="quiz-options" id="q1">
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">A. Mendefinisikan sebuah REST controller</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,true)">B. Mengaktifkan auto-configuration, component scan, dan konfigurasi Spring sekaligus</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">C. Menjalankan JUnit test</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">D. Membuat class menjadi abstract</div>
+                    </div>
+                    <div class="quiz-feedback" id="q1-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== CHAPTER 2: MENULIS CSV DASAR ===================== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 02</div>
+                    <div class="chapter-title">✍️ Menulis CSV Dasar</div>
+                    <div class="chapter-sub">CSVPrinter, StringWriter, dan CSVFormat.DEFAULT</div>
+                </div>
+
+                <p>Langkah pertama yang paling fundamental: <strong>membuat (menulis) data CSV</strong>. Kita mulai tanpa header terlebih dahulu agar kamu mengerti mekanisme dasarnya.</p>
+
+                <div class="text-title mt-m">Kode: <code>createCSV()</code></div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">createCSV</span>() <span class="kw">throws</span> <span class="cls">IOException</span> {
+    <span class="typ">StringWriter</span> writer = <span class="kw">new</span> <span class="cls">StringWriter</span>();              <span class="cmt">// (1)</span>
+
+    <span class="cls">CSVPrinter</span> printer = <span class="kw">new</span> <span class="cls">CSVPrinter</span>(writer, <span class="cls">CSVFormat</span>.DEFAULT); <span class="cmt">// (2)</span>
+    printer.<span class="met">printRecord</span>(<span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>, <span class="num">100</span>);          <span class="cmt">// (3)</span>
+    printer.<span class="met">printRecord</span>(<span class="str">"Budi"</span>, <span class="str">"Nugraha"</span>, <span class="num">95</span>);           <span class="cmt">// (4)</span>
+    printer.<span class="met">flush</span>();                                       <span class="cmt">// (5)</span>
+
+    <span class="typ">String</span> csv = writer.<span class="met">getBuffer</span>().<span class="met">toString</span>();             <span class="cmt">// (6)</span>
+    System.out.<span class="met">println</span>(csv);
+}</pre>
+
+                <div class="text-title mt-m">Penjelasan Baris per Baris</div>
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) StringWriter</span>
+                        <span class="line-desc"><code>StringWriter</code> adalah buffer di memory (RAM) — bukan file di disk. Ini seperti <code>ob_start()</code> di PHP: kamu "menangkap" output ke dalam string, bukan langsung mencetak ke layar atau file. Berguna untuk testing atau ketika kamu ingin memanipulasi string CSV sebelum disimpan.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) CSVPrinter</span>
+                        <span class="line-desc"><code>CSVPrinter</code> adalah engine penulis CSV. Ia membutuhkan dua hal: <em>tujuan output</em> (si <code>writer</code>) dan <em>format CSV</em> (<code>CSVFormat.DEFAULT</code>). <code>CSVFormat.DEFAULT</code> artinya menggunakan koma sebagai pemisah kolom dan mengikuti standar RFC 4180.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3-4) printRecord()</span>
+                        <span class="line-desc">Menulis SATU baris record CSV. Setiap argumen yang dipisah koma menjadi satu kolom. Java menerima tipe data campuran (<code>String</code> dan <code>int</code>) karena method ini menerima <code>Object...</code> (varargs). Output baris (3): <code>Eko,Khannedy,100</code></span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(5) flush()</span>
+                        <span class="line-desc"><strong>Krusial.</strong> Java menggunakan buffer I/O — data tidak langsung ditulis ke tujuan akhir, melainkan dikumpulkan dulu di buffer untuk efisiensi. <code>flush()</code> memaksa semua data di buffer untuk segera ditulis ke <code>writer</code>. Tanpa ini, data bisa hilang.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(6) getBuffer().toString()</span>
+                        <span class="line-desc">Mengambil isi <code>StringWriter</code> sebagai <code>String</code> Java biasa. Hasilnya adalah teks CSV siap pakai.</span>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>📤 Output yang Dihasilkan:</strong>
+                    <pre style="margin-top:8px;background:#0d1117;">Eko,Khannedy,100
+Budi,Nugraha,95</pre>
+                </div>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ Kenapa <code>throws IOException</code>?</strong><br>
+                    Operasi I/O (Input/Output) di Java — membaca file, menulis file, akses network — bisa gagal karena alasan di luar kendali program (disk penuh, koneksi putus, dll). Java memiliki <strong>Checked Exception</strong>: compiler <em>mewajibkan</em> kamu mendeklarasikan <code>throws IOException</code> di signature method, atau menambahkan <code>try-catch</code>. Ini berbeda dengan PHP di mana exception bisa saja tidak tertangani dan baru ketahuan saat runtime.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Lupa flush()</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;">CSVPrinter printer = new CSVPrinter(
+    writer, CSVFormat.DEFAULT);
+printer.printRecord("Eko", "Khannedy", 100);
+<span class="cmt">// Lupa flush() — data bisa hilang!</span>
+String csv = writer.getBuffer().toString();
+<span class="cmt">// csv mungkin kosong atau tidak lengkap</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Selalu flush() sebelum membaca buffer</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;">CSVPrinter printer = new CSVPrinter(
+    writer, CSVFormat.DEFAULT);
+printer.printRecord("Eko", "Khannedy", 100);
+printer.flush(); <span class="cmt">// ← wajib ada</span>
+String csv = writer.getBuffer().toString();
+<span class="cmt">// csv dijamin berisi semua data</span></pre>
+                    </div>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Mindset PHP: String concat manual</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// Cara PHP yang di-port ke Java — jangan lakukan ini</span>
+String csv = "";
+csv += "Eko,Khannedy,100\n";
+csv += "Budi,Nugraha,95\n";
+<span class="cmt">// Tidak handle koma dalam nilai, quoting, dll</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Gunakan CSVPrinter</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// Library yang handle edge case: nilai dengan koma,
+// newline di dalam nilai, quoting otomatis, dll</span>
+printer.printRecord("Eko, Ph.D", "Khannedy", 100);
+<span class="cmt">// Output: "Eko, Ph.D",Khannedy,100 ← auto-quoted!</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Di Laravel, kamu bisa membuat response CSV dengan <code>Response::stream()</code> atau package <code>maatwebsite/excel</code>. <code>CSVPrinter</code> di Java berperan seperti package tersebut — abstraksi yang menangani semua detail teknis format CSV (escaping, quoting, delimiter) sehingga kamu hanya perlu fokus pada data. <code>StringWriter</code> mirip seperti <code>ob_get_clean()</code>: menangkap output ke buffer.</p>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q1:</strong> Apa yang terjadi jika kamu lupa memanggil <code>printer.flush()</code> sebelum membaca <code>writer.getBuffer()</code>?</p>
+                    <div class="quiz-options" id="q2">
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">A. Program akan crash dengan NullPointerException</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,true)">B. Data di buffer mungkin belum ditulis, sehingga string CSV bisa kosong atau tidak lengkap</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">C. Tidak ada efek, Java otomatis flush saat program berakhir</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">D. Compiler langsung error</div>
+                    </div>
+                    <div class="quiz-feedback" id="q2-fb"></div>
+
+                    <p class="mt-m"><strong>Q2:</strong> Kenapa lebih baik menggunakan <code>CSVPrinter</code> daripada string concatenation manual?</p>
+                    <div class="quiz-options" id="q2b">
+                        <div class="quiz-option" onclick="checkQuiz('q2b',this,false)">A. Karena Java tidak support string concatenation</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2b',this,true)">B. CSVPrinter otomatis menangani quoting, escaping, dan nilai yang mengandung koma/newline</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2b',this,false)">C. Karena string concatenation lebih lambat secara performa</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2b',this,false)">D. Hanya masalah preferensi gaya penulisan</div>
+                    </div>
+                    <div class="quiz-feedback" id="q2b-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== CHAPTER 3: MEMBACA CSV ===================== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 03</div>
+                    <div class="chapter-title">📖 Membaca CSV dari File</div>
+                    <div class="chapter-sub">Path, Reader, CSVParser, dan iterasi record</div>
+                </div>
+
+                <p>Setelah bisa menulis, kini saatnya membaca CSV dari file. Java menyediakan cara yang aman dan eksplisit untuk membuka file dengan <code>Path</code> dan <code>Files</code>.</p>
+
+                <div class="info-box primary mt-m">
+                    <strong>📁 Asumsi File <code>sample.csv</code></strong><br>
+                    Test ini mengasumsikan ada file <code>sample.csv</code> di <em>working directory</em> saat test dijalankan. Isinya:
+                    <pre style="margin-top:8px;background:#0d1117;">First Name,Last Name,Value
+Eko,Khannedy,100
+Budi,Nugraha,95</pre>
+                </div>
+
+                <div class="text-title mt-l">Kode: <code>readCSV()</code></div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">readCSV</span>() <span class="kw">throws</span> <span class="cls">IOException</span> {
+    <span class="cls">Path</span> path = <span class="cls">Path</span>.<span class="met">of</span>(<span class="str">"sample.csv"</span>);                          <span class="cmt">// (1)</span>
+    <span class="cls">Reader</span> reader = <span class="cls">Files</span>.<span class="met">newBufferedReader</span>(path);              <span class="cmt">// (2)</span>
+
+    <span class="cls">CSVParser</span> parser = <span class="kw">new</span> <span class="cls">CSVParser</span>(reader, <span class="cls">CSVFormat</span>.DEFAULT); <span class="cmt">// (3)</span>
+    <span class="kw">for</span> (<span class="cls">CSVRecord</span> record : parser) {                          <span class="cmt">// (4)</span>
+        System.out.<span class="met">println</span>(<span class="str">"First Name : "</span> + record.<span class="met">get</span>(<span class="num">0</span>));   <span class="cmt">// (5)</span>
+        System.out.<span class="met">println</span>(<span class="str">"Last Name : "</span>  + record.<span class="met">get</span>(<span class="num">1</span>));
+        System.out.<span class="met">println</span>(<span class="str">"Value : "</span>      + record.<span class="met">get</span>(<span class="num">2</span>));
+    }
+}</pre>
+
+                <div class="text-title mt-m">Penjelasan Baris per Baris</div>
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) Path.of()</span>
+                        <span class="line-desc">Membuat representasi path file di filesystem. Ini adalah cara modern (Java 11+) — lebih aman dan ekspresif dibanding <code>new File("sample.csv")</code> yang lama. Ekuivalen dengan <code>storage_path('sample.csv')</code> di Laravel, tapi tanpa magic string helper.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) Files.newBufferedReader()</span>
+                        <span class="line-desc">Membuka file untuk dibaca sebagai karakter (bukan byte mentah). Menggunakan <strong>buffered reader</strong> artinya Java membaca file dalam blok-blok besar ke memory sekaligus — jauh lebih efisien daripada membaca karakter satu per satu. Ini seperti <code>fopen($path, 'r')</code> di PHP tapi dengan buffering otomatis.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) CSVParser</span>
+                        <span class="line-desc">Engine pembaca CSV. Ia membungkus <code>reader</code> dan tahu cara mem-parsing teks CSV sesuai <code>CSVFormat</code>. Hasilnya adalah stream record yang bisa diiterasi.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(4) for-each loop</span>
+                        <span class="line-desc"><code>CSVParser</code> mengimplementasikan interface <code>Iterable&lt;CSVRecord&gt;</code>, sehingga bisa digunakan langsung di loop <code>for-each</code>. Setiap iterasi menghasilkan satu <code>CSVRecord</code> (satu baris CSV). Di balik layar, parser membaca file secara <em>lazy</em> — tidak langsung load semua baris ke memory (cocok untuk file besar).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(5) record.get(index)</span>
+                        <span class="line-desc">Mengambil nilai kolom berdasarkan <strong>index berbasis 0</strong>. Kolom pertama = index 0, kedua = 1, dst. Ini rawan kesalahan jika urutan kolom berubah — itulah mengapa ada cara yang lebih baik menggunakan nama header (dibahas di Chapter 4).</span>
+                    </div>
+                </div>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ Masalah: Header Ikut Terbaca</strong><br>
+                    Karena menggunakan <code>CSVFormat.DEFAULT</code>, baris pertama file CSV (yang seharusnya header) akan ikut dibaca sebagai data biasa. Jika file kamu punya header, output pertama akan jadi:<br>
+                    <code>First Name : First Name</code> — bukan yang diinginkan! Solusinya ada di Chapter 4.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Index Magic Number</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// Tiba-tiba ada kolom baru di posisi ke-2</span>
+<span class="cmt">// Semua record.get(2) jadi salah tanpa error!</span>
+record.<span class="met">get</span>(<span class="num">0</span>); <span class="cmt">// first name</span>
+record.<span class="met">get</span>(<span class="num">1</span>); <span class="cmt">// last name</span>
+record.<span class="met">get</span>(<span class="num">2</span>); <span class="cmt">// ← seharusnya value, tapi bisa jadi kolom lain</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Gunakan nama header (lihat Chapter 4)</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// Tidak terpengaruh perubahan urutan kolom</span>
+record.<span class="met">get</span>(<span class="str">"First Name"</span>);
+record.<span class="met">get</span>(<span class="str">"Last Name"</span>);
+record.<span class="met">get</span>(<span class="str">"Value"</span>);</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Membaca CSV dengan loop ini mirip seperti menggunakan <code>SplFileObject</code> di PHP atau membaca dengan Laravel Excel's <code>ToCollection</code> concern. Perbedaannya: di Java, tipe data setiap tahap (Path → Reader → Parser → Record) eksplisit dan terstruktur. Di PHP, kamu bisa langsung <code>fgetcsv()</code> dan itu langsung mengembalikan array — lebih cepat ditulis tapi kurang ekspresif soal apa yang terjadi di dalam.</p>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q1:</strong> Kenapa <code>Files.newBufferedReader()</code> lebih baik daripada membuka file lalu membaca karakter satu per satu?</p>
+                    <div class="quiz-options" id="q3">
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">A. Karena Java tidak support membaca karakter satu per satu</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,true)">B. Buffered reader membaca file dalam blok besar ke memory sekaligus, jauh lebih efisien dari I/O per karakter</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">C. Karena hanya buffered reader yang kompatibel dengan CSVParser</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">D. Untuk mengenkripsi data file secara otomatis</div>
+                    </div>
+                    <div class="quiz-feedback" id="q3-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== CHAPTER 4: CSV DENGAN HEADER ===================== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 04</div>
+                    <div class="chapter-title">🏷️ CSV dengan Header</div>
+                    <div class="chapter-sub">CSVFormat.builder(), setHeader(), dan akses kolom by name</div>
+                </div>
+
+                <p>Mengakses kolom dengan index angka seperti <code>record.get(0)</code> sangat rawan bug jika struktur file berubah. Solusinya: gunakan <strong>header</strong> agar kolom bisa diakses dengan nama yang bermakna.</p>
+
+                <div class="text-title mt-m">Kode: <code>readCSVWithHeader()</code></div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">readCSVWithHeader</span>() <span class="kw">throws</span> <span class="cls">IOException</span> {
+    <span class="cls">Path</span> path = <span class="cls">Path</span>.<span class="met">of</span>(<span class="str">"sample.csv"</span>);
+    <span class="cls">Reader</span> reader = <span class="cls">Files</span>.<span class="met">newBufferedReader</span>(path);
+
+    <span class="cls">CSVFormat</span> format = <span class="cls">CSVFormat</span>.DEFAULT.<span class="met">builder</span>()
+            .<span class="met">setHeader</span>()                                           <span class="cmt">// (1)</span>
+            .<span class="met">build</span>();                                               <span class="cmt">// (2)</span>
+    <span class="cls">CSVParser</span> parser = <span class="kw">new</span> <span class="cls">CSVParser</span>(reader, format);
+    <span class="kw">for</span> (<span class="cls">CSVRecord</span> record : parser) {
+        System.out.<span class="met">println</span>(<span class="str">"First Name : "</span> + record.<span class="met">get</span>(<span class="str">"First Name"</span>)); <span class="cmt">// (3)</span>
+        System.out.<span class="met">println</span>(<span class="str">"Last Name : "</span>  + record.<span class="met">get</span>(<span class="str">"Last Name"</span>));
+        System.out.<span class="met">println</span>(<span class="str">"Value : "</span>      + record.<span class="met">get</span>(<span class="str">"Value"</span>));
+    }
+}</pre>
+
+                <div class="text-title mt-m">Penjelasan Baris per Baris</div>
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) .setHeader()</span>
+                        <span class="line-desc">Tanpa argumen = "<strong>baca baris pertama file sebagai header</strong>". Parser akan skip baris pertama dari iterasi data, dan menyimpannya sebagai mapping nama kolom → index. Sekarang <code>record.get("First Name")</code> tahu kalau "First Name" adalah kolom ke-0.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) .build()</span>
+                        <span class="line-desc">Pola <strong>Builder Pattern</strong> — cara Java membuat objek dengan banyak konfigurasi opsional secara terstruktur. Daripada constructor dengan 10 parameter, kamu memanggil method secara berantai lalu menutupnya dengan <code>build()</code>. Di PHP/Laravel, ini mirip seperti query builder: <code>DB::table('users')-&gt;where(...)-&gt;get()</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) record.get("nama")</span>
+                        <span class="line-desc">Mengakses kolom berdasarkan nama — jauh lebih aman dan readable. Jika nama kolom tidak ditemukan, Java akan throw <code>IllegalArgumentException</code> yang jelas, bukan silent undefined behavior.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Kode: <code>createCSVWithHeader()</code></div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">createCSVWithHeader</span>() <span class="kw">throws</span> <span class="cls">IOException</span> {
+    <span class="cls">StringWriter</span> writer = <span class="kw">new</span> <span class="cls">StringWriter</span>();
+
+    <span class="cls">CSVFormat</span> format = <span class="cls">CSVFormat</span>.DEFAULT.<span class="met">builder</span>()
+            .<span class="met">setHeader</span>(<span class="str">"First Name"</span>, <span class="str">"Last Name"</span>, <span class="str">"Value"</span>)     <span class="cmt">// (A)</span>
+            .<span class="met">build</span>();
+    <span class="cls">CSVPrinter</span> printer = <span class="kw">new</span> <span class="cls">CSVPrinter</span>(writer, format);
+    printer.<span class="met">printRecord</span>(<span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>, <span class="num">100</span>);
+    printer.<span class="met">printRecord</span>(<span class="str">"Budi"</span>, <span class="str">"Nugraha"</span>, <span class="num">95</span>);
+    printer.<span class="met">flush</span>();
+
+    <span class="typ">String</span> csv = writer.<span class="met">getBuffer</span>().<span class="met">toString</span>();
+    System.out.<span class="met">println</span>(csv);
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) setHeader("col1","col2",...)</span>
+                        <span class="line-desc">Ketika menulis CSV, <code>setHeader()</code> dengan argumen berarti: "<strong>tuliskan baris header ini terlebih dahulu</strong>, kemudian tulis data di bawahnya." Output akan dimulai dengan <code>First Name,Last Name,Value</code> sebelum data record.</span>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>📤 Output yang Dihasilkan:</strong>
+                    <pre style="margin-top:8px;background:#0d1117;">First Name,Last Name,Value
+Eko,Khannedy,100
+Budi,Nugraha,95</pre>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>🔑 Builder Pattern — Pola Desain yang Wajib Kamu Kenal</strong><br>
+                    Builder Pattern sangat umum di Java. Kamu akan menemukannya di mana-mana: Spring, Lombok (<code>@Builder</code>), OkHttp, dsb. Prinsipnya: pisahkan konstruksi objek yang kompleks menjadi langkah-langkah kecil yang bisa dikustomisasi sebelum objek final dibuat dengan <code>build()</code>.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — setHeader() saat baca vs tulis tertukar</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// Saat MEMBACA: setHeader() tanpa argumen</span>
+<span class="cmt">// → baca baris pertama file sebagai header</span>
+<span class="cmt">// Saat MENULIS: setHeader() dengan argumen</span>
+<span class="cmt">// → tulis baris header ke output</span>
+
+<span class="cmt">// Kesalahan umum: pakai setHeader("col") saat baca</span>
+<span class="cmt">// → parser mengabaikan baris pertama file</span>
+<span class="cmt">// → kehilangan record pertama yang valid!</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Bedakan konteks membaca vs menulis</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// MEMBACA: setHeader() tanpa argumen</span>
+CSVFormat.DEFAULT.builder()
+    .setHeader()  <span class="cmt">// ← ambil dari file</span>
+    .build();
+
+<span class="cmt">// MENULIS: setHeader() dengan argumen</span>
+CSVFormat.DEFAULT.builder()
+    .setHeader("Col1","Col2")  <span class="cmt">// ← tulis ke output</span>
+    .build();</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Builder Pattern di Java sangat mirip dengan Fluent Interface di Laravel. Contoh: <code>CSVFormat.DEFAULT.builder().setHeader().build()</code> seperti <code>User::query()-&gt;where('active', true)-&gt;orderBy('name')-&gt;get()</code> — kamu merangkai konfigurasi, lalu menutupnya dengan method terminasi (<code>build()</code> / <code>get()</code>). Perbedaannya: di Java, <code>build()</code> menghasilkan objek immutable yang bisa direuse, bukan langsung mengeksekusi query.</p>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 4</div>
+                    <p><strong>Q1:</strong> Apa perbedaan <code>.setHeader()</code> (tanpa argumen) vs <code>.setHeader("Col1", "Col2")</code> (dengan argumen)?</p>
+                    <div class="quiz-options" id="q4">
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">A. Keduanya sama saja, hanya gaya penulisan berbeda</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,true)">B. Tanpa argumen: baca baris pertama file sebagai header (untuk parsing). Dengan argumen: tulis baris header ke output (untuk printing)</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">C. Tanpa argumen: tidak ada header. Dengan argumen: validasi header file</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">D. Tanpa argumen selalu error, wajib isi argumen</div>
+                    </div>
+                    <div class="quiz-feedback" id="q4-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== CHAPTER 5: CUSTOM DELIMITER / TDF ===================== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 05</div>
+                    <div class="chapter-title">⇥ Custom Delimiter — TSV / TDF</div>
+                    <div class="chapter-sub">CSVFormat.TDF dan pemisah kolom selain koma</div>
+                </div>
+
+                <p>CSV (Comma-Separated Values) tidak selalu harus menggunakan koma sebagai pemisah. Format lain yang umum adalah <strong>TSV/TDF</strong> (Tab-Separated Values/Delimiter Format) — menggunakan karakter tab (<code>\t</code>) sebagai pemisah kolom. Apache Commons CSV mendukung ini dengan preset <code>CSVFormat.TDF</code>.</p>
+
+                <div class="text-title mt-m">Kode: <code>createCSVWithTab()</code></div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">createCSVWithTab</span>() <span class="kw">throws</span> <span class="cls">IOException</span> {
+    <span class="cls">StringWriter</span> writer = <span class="kw">new</span> <span class="cls">StringWriter</span>();
+
+    <span class="cls">CSVFormat</span> format = <span class="cls">CSVFormat</span>.TDF.<span class="met">builder</span>()            <span class="cmt">// (1)</span>
+            .<span class="met">setHeader</span>(<span class="str">"First Name"</span>, <span class="str">"Last Name"</span>, <span class="str">"Value"</span>)
+            .<span class="met">build</span>();
+    <span class="cls">CSVPrinter</span> printer = <span class="kw">new</span> <span class="cls">CSVPrinter</span>(writer, format);
+    printer.<span class="met">printRecord</span>(<span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>, <span class="num">100</span>);
+    printer.<span class="met">printRecord</span>(<span class="str">"Budi"</span>, <span class="str">"Nugraha"</span>, <span class="num">95</span>);
+    printer.<span class="met">flush</span>();
+
+    <span class="typ">String</span> csv = writer.<span class="met">getBuffer</span>().<span class="met">toString</span>();
+    System.out.<span class="met">println</span>(csv);
+}</pre>
+
+                <div class="text-title mt-m">Penjelasan</div>
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) CSVFormat.TDF</span>
+                        <span class="line-desc">Preset format TDF (Tab Delimited Format). Ini adalah konstanta yang sudah dikonfigurasi dengan tab (<code>\t</code>) sebagai delimiter, bukan koma. Semua method lainnya sama persis — kamu hanya mengubah format preset di awal.</span>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>📤 Output yang Dihasilkan (tab digambarkan sebagai →):</strong>
+                    <pre style="margin-top:8px;background:#0d1117;">First Name→Last Name→Value
+Eko→Khannedy→100
+Budi→Nugraha→95</pre>
+                </div>
+
+                <div class="text-title mt-l">Perbandingan Format yang Tersedia</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Konstanta</th>
+                            <th>Delimiter</th>
+                            <th>Use Case</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><code>CSVFormat.DEFAULT</code></td>
+                            <td>Koma (,)</td>
+                            <td>File CSV umum, Excel export</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVFormat.TDF</code></td>
+                            <td>Tab (\t)</td>
+                            <td>TSV, data interchange antar sistem</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVFormat.EXCEL</code></td>
+                            <td>Koma (,)</td>
+                            <td>Kompatibel dengan Microsoft Excel</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVFormat.RFC4180</code></td>
+                            <td>Koma (,)</td>
+                            <td>Standar RFC 4180 yang ketat</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVFormat.MYSQL</code></td>
+                            <td>Tab (\t)</td>
+                            <td>MySQL LOAD DATA INFILE format</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Custom Delimiter Sendiri</strong><br>
+                    Jika tidak ada preset yang cocok, kamu bisa membuat format custom:
+                    <pre style="margin-top:8px;background:#0d1117;"><span class="cls">CSVFormat</span> customFormat = <span class="cls">CSVFormat</span>.DEFAULT.<span class="met">builder</span>()
+        .<span class="met">setDelimiter</span>(<span class="str">';'</span>)   <span class="cmt">// Semicolon — umum di negara Eropa</span>
+        .<span class="met">setHeader</span>(<span class="str">"Col1"</span>, <span class="str">"Col2"</span>)
+        .<span class="met">build</span>();</pre>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Baca TSV dengan DEFAULT format</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// File adalah TSV (tab-separated)</span>
+<span class="cmt">// Tapi kita pakai DEFAULT (koma-separated)</span>
+CSVParser parser = new CSVParser(
+    reader, CSVFormat.DEFAULT); <span class="cmt">// ← salah format!</span>
+<span class="cmt">// Seluruh baris dianggap 1 kolom, tidak ter-parse</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Sesuaikan format dengan isi file</div>
+                        <pre style="font-size:0.65rem;margin-top:8px;"><span class="cmt">// File adalah TSV → gunakan TDF</span>
+CSVParser parser = new CSVParser(
+    reader, CSVFormat.TDF); <span class="cmt">// ← cocok!</span>
+<span class="cmt">// Kolom ter-parse dengan benar</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Memilih <code>CSVFormat</code> di Java mirip seperti memilih disk driver di Laravel Filesystem (<code>config/filesystems.php</code>): kamu pilih "preset" yang sesuai dengan konteks (<code>local</code>, <code>s3</code>, dll), dan interface-nya tetap sama. Di sini, interface-nya tetap <code>CSVPrinter</code>/<code>CSVParser</code>, yang berubah hanya preset format-nya (<code>DEFAULT</code>, <code>TDF</code>, dll). Ini adalah prinsip <strong>Open/Closed Principle</strong> — terbuka untuk ekstensi (format baru), tertutup untuk modifikasi (interface tidak berubah).</p>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 5</div>
+                    <p><strong>Q1:</strong> Jika kamu menerima file dari rekan kerja yang dibuat dengan Excel dari Jerman (yang menggunakan semicolon sebagai separator), format apa yang paling tepat untuk mem-parsing-nya?</p>
+                    <div class="quiz-options" id="q5">
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,false)">A. <code>CSVFormat.DEFAULT</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,false)">B. <code>CSVFormat.TDF</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,true)">C. <code>CSVFormat.DEFAULT.builder().setDelimiter(';').build()</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,false)">D. <code>CSVFormat.MYSQL</code></div>
+                    </div>
+                    <div class="quiz-feedback" id="q5-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SUMMARY ===================== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background: linear-gradient(135deg,#16a34a 0%,#15803d 100%);">
+                    <div class="chapter-num">Summary</div>
+                    <div class="chapter-title">📋 Ringkasan Arsitektur Project</div>
+                    <div class="chapter-sub">Peta besar: class, alur data, dan relationship</div>
+                </div>
+
+                <p>Berikut adalah gambaran keseluruhan arsitektur project <strong>belajar-java-csv</strong> dan bagaimana komponen-komponennya saling berhubungan.</p>
+
+                <div class="text-title mt-m">Alur Data: Menulis CSV</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">1</div>
+                            <div class="stepper-value">Buat <code>StringWriter</code> (atau <code>FileWriter</code>)</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">2</div>
+                            <div class="stepper-value">Konfigurasi <code>CSVFormat</code> via Builder</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">3</div>
+                            <div class="stepper-value">Buat <code>CSVPrinter</code> dengan writer + format</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">4</div>
+                            <div class="stepper-value">Panggil <code>printRecord()</code> per baris data</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">5</div>
+                            <div class="stepper-value"><code>flush()</code> → ambil hasil dari writer</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Alur Data: Membaca CSV</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">1</div>
+                            <div class="stepper-value">Definisikan <code>Path</code> ke file CSV</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">2</div>
+                            <div class="stepper-value">Buka <code>BufferedReader</code> via <code>Files.newBufferedReader()</code></div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">3</div>
+                            <div class="stepper-value">Konfigurasi <code>CSVFormat</code> (termasuk <code>setHeader()</code>)</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">4</div>
+                            <div class="stepper-value">Buat <code>CSVParser</code> → iterasi <code>CSVRecord</code></div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">5</div>
+                            <div class="stepper-value">Akses kolom via index atau nama header</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Ringkasan Class & Peran</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Class / Interface</th>
+                            <th>Package</th>
+                            <th>Peran</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><code>CSVFormat</code></td>
+                            <td>org.apache.commons.csv</td>
+                            <td>Konfigurasi format: delimiter, header, quoting, dsb. Immutable setelah <code>build()</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVPrinter</code></td>
+                            <td>org.apache.commons.csv</td>
+                            <td>Menulis data CSV ke output (Writer). Satu printer per output.</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVParser</code></td>
+                            <td>org.apache.commons.csv</td>
+                            <td>Membaca dan mem-parsing CSV dari Reader. Iterable&lt;CSVRecord&gt;.</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVRecord</code></td>
+                            <td>org.apache.commons.csv</td>
+                            <td>Representasi satu baris CSV. Akses kolom via index atau nama.</td>
+                        </tr>
+                        <tr>
+                            <td><code>StringWriter</code></td>
+                            <td>java.io</td>
+                            <td>Buffer in-memory untuk menampung output CSV sebagai String.</td>
+                        </tr>
+                        <tr>
+                            <td><code>Path</code></td>
+                            <td>java.nio.file</td>
+                            <td>Representasi path file modern (Java NIO). Gantikan <code>java.io.File</code> lama.</td>
+                        </tr>
+                        <tr>
+                            <td><code>Files</code></td>
+                            <td>java.nio.file</td>
+                            <td>Utility class statis untuk operasi file (baca, tulis, copy, dsb).</td>
+                        </tr>
+                        <tr>
+                            <td><code>BelajarJavaCsvApplication</code></td>
+                            <td>programmerzamannow.csv</td>
+                            <td>Entry point Spring Boot. Inisialisasi Application Context.</td>
+                        </tr>
+                        <tr>
+                            <td><code>CSVTest</code></td>
+                            <td>programmerzamannow.csv</td>
+                            <td>JUnit 5 test class. Berisi semua contoh penggunaan Apache Commons CSV.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title mt-l">Key Takeaways untuk ex-Laravel Dev</div>
+                <div class="timeline mt-m">
+                    <div>
+                        <span class="timeline-key active">1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Tipe Data itu Kontrak</div>
+                        <div class="timeline-content-desc">Java memaksamu berpikir soal tipe setiap variabel. Ini bukan hambatan — ini <em>dokumentasi yang diperiksa compiler</em>. Semakin ketat tipe datamu, semakin sedikit bug yang lolos ke production.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">2</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Builder Pattern = Fluent Interface</div>
+                        <div class="timeline-content-desc"><code>CSVFormat.DEFAULT.builder().setHeader().build()</code> adalah pola yang akan kamu temukan di seluruh ekosistem Java. Kenali polanya dan kamu akan cepat membaca kode Java orang lain.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">3</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">flush() adalah Kewajiban I/O</div>
+                        <div class="timeline-content-desc">Selalu panggil <code>flush()</code> (atau gunakan try-with-resources agar otomatis) setelah operasi tulis. Buffer I/O adalah fitur performa, bukan bug — tapi kamu harus tahu kapan mengosongkannya.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">4</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Gunakan Nama, Bukan Angka</div>
+                        <div class="timeline-content-desc">Akses kolom CSV dengan <code>record.get("Nama Kolom")</code>, bukan <code>record.get(0)</code>. Kode yang dibaca bertahun-tahun kemudian akan berterima kasih padamu.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">5</span>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Library = Ekosistem Maven Central</div>
+                        <div class="timeline-content-desc">Apache Commons CSV adalah salah satu dari ribuan library di Maven Central — "Packagist"-nya Java. Selalu cari library yang sudah teruji sebelum menulis implementasi sendiri dari nol.</div>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-l">
+                    <strong>🚀 Langkah Berikutnya</strong><br>
+                    Setelah menguasai dasar CSV ini, eksplorasi topik berikut untuk meningkatkan skill Java-mu:
+                    <ul style="margin-top:8px; padding-left:1.2rem; line-height:2;">
+                        <li><strong>try-with-resources</strong> — cara aman menutup Reader/Writer secara otomatis</li>
+                        <li><strong>Spring Batch</strong> — framework Java untuk memproses jutaan baris CSV secara efisien</li>
+                        <li><strong>Java Streams</strong> — cara functional & efisien memproses koleksi data</li>
+                        <li><strong>Lombok @Builder</strong> — generate Builder Pattern otomatis untuk class buatanmu</li>
+                        <li><strong>OpenCSV / Jackson Dataformat CSV</strong> — alternatif library CSV dengan fitur mapping ke POJO</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spacer -->
+        <div style="height: 4rem;"></div>
+
+    </section>
+
+    <footer>
+        <p style="text-align:center; padding: var(--m); color: var(--transtext-color); font-size: var(--xs);">
+            Modul Interaktif Java CSV · Dibuat untuk developer PHP/Laravel yang migrasi ke Java & Spring Boot
+        </p>
+    </footer>
+</main>
+
+<script>
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active')
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse")
+        document.getElementsByClassName("container")[0].classList.toggle("expanded")
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode")
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show")
+        let iconGetMenu = document.getElementById('get-menu');
+        iconGetMenu.classList.toggle('opened')
+    }
+
+    // Quiz engine
+    function checkQuiz(groupId, clickedEl, isCorrect) {
+        const container = document.getElementById(groupId);
+        const fbEl = document.getElementById(groupId + '-fb');
+        // Prevent re-answer
+        if (container.dataset.answered) return;
+        container.dataset.answered = '1';
+
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(opt => {
+            opt.style.pointerEvents = 'none';
+        });
+
+        if (isCorrect) {
+            clickedEl.classList.add('correct');
+            fbEl.textContent = '✅ Benar! ' + getFeedbackText(groupId, true);
+            fbEl.className = 'quiz-feedback show ok';
+        } else {
+            clickedEl.classList.add('wrong');
+            fbEl.textContent = '❌ Kurang tepat. ' + getFeedbackText(groupId, false);
+            fbEl.className = 'quiz-feedback show no';
+            // Highlight correct
+            options.forEach(opt => {
+                if (opt.onclick && opt.onclick.toString().includes('true')) {
+                    opt.classList.add('correct');
+                }
+            });
+        }
+    }
+
+    function getFeedbackText(groupId, correct) {
+        const texts = {
+            'q1':  { ok: '@SpringBootApplication adalah meta-annotation yang menggabungkan @Configuration, @EnableAutoConfiguration, dan @ComponentScan — tiga baris menjadi satu.', no: 'Coba lagi! @SpringBootApplication bukan tentang REST controller maupun unit test.' },
+            'q2':  { ok: 'Tepat! Buffer I/O di Java tidak otomatis ditulis ke tujuan. flush() adalah sinyal eksplisit untuk mengosongkan buffer.', no: 'Ingat: Java menggunakan buffered I/O untuk performa. Data dikumpulkan dulu, baru ditulis saat flush() dipanggil.' },
+            'q2b': { ok: 'Benar! CSVPrinter secara otomatis menambahkan tanda kutip jika nilai mengandung koma, newline, atau karakter khusus lainnya — sesuatu yang sulit dilakukan dengan string manual.', no: 'Alasan utamanya adalah correctness (kebenaran), bukan hanya performa.' },
+            'q3':  { ok: 'Tepat! Disk I/O sangat lambat. Membaca dalam blok besar (misal 8KB sekaligus) ke memory lalu memproses dari sana jauh lebih efisien daripada akses disk per karakter.', no: 'Perhatikan kata "efisiensi" — buffering adalah tentang mengurangi jumlah akses disk yang mahal.' },
+            'q4':  { ok: 'Tepat sekali! Ini perbedaan konteks yang penting: setHeader() tanpa argumen = "ambil header dari file saat parsing", setHeader("x","y") = "cetak baris header ini saat printing".', no: 'Baca kembali penjelasan konteks membaca vs menulis. Ini adalah sumber bug yang sering muncul!' },
+            'q5':  { ok: 'Benar! Karena tidak ada preset bawaan untuk semicolon, kamu perlu menggunakan builder dan setDelimiter(\';\') secara manual.', no: 'DEFAULT = koma, TDF = tab, MYSQL = tab. Tidak ada preset semicolon, jadi perlu konfigurasi manual.' },
+        };
+        const entry = texts[groupId];
+        return entry ? (correct ? entry.ok : entry.no) : '';
+    }
+
+    // Active sidebar tracking on scroll
+    const sections = document.querySelectorAll('[id^="chapter-"], #intro, #summary');
+    const sidebarItems = document.querySelectorAll('.sidebar-menu-item');
+    const observerOptions = { rootMargin: '-20% 0px -60% 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                sidebarItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + entry.target.id) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+    sections.forEach(section => observer.observe(section));
+</script>
+</body>
+</html>

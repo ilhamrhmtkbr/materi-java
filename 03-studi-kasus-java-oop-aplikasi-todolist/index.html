@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java OOP — Studi Kasus Aplikasi TodoList</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+    <style>
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+
+        .code-block {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow-x: auto;
+            border-radius: var(--radius-l);
+            margin: var(--m) 0;
+        }
+        .code-block pre {
+            margin: 0;
+            border-radius: var(--radius-l);
+            font-size: var(--s);
+            line-height: 1.6;
+        }
+        .code-block pre code {
+            font-family: 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+        }
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-left: 4px solid var(--primary-color);
+            background: var(--transprimary-color);
+            padding: var(--m);
+            border-radius: 0 var(--radius-m) var(--radius-m) 0;
+            margin: var(--m) 0;
+        }
+        .info-box.warning {
+            border-left-color: var(--warning-color);
+            background: var(--transwarning-color);
+        }
+        .info-box.success {
+            border-left-color: var(--success-color);
+            background: var(--transsuccess-color);
+        }
+        .info-box.danger {
+            border-left-color: var(--danger-color);
+            background: var(--transdanger-color);
+        }
+        .compare-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--m);
+            margin: var(--m) 0;
+        }
+        @media (max-width: 600px) {
+            .compare-box { grid-template-columns: 1fr; }
+        }
+        .compare-box .wrong {
+            border: 2px solid var(--danger-color);
+            border-radius: var(--radius-m);
+            padding: var(--s);
+            background: var(--transdanger-color);
+        }
+        .compare-box .correct {
+            border: 2px solid var(--success-color);
+            border-radius: var(--radius-m);
+            padding: var(--s);
+            background: var(--transsuccess-color);
+        }
+        .compare-box .wrong .compare-label,
+        .compare-box .correct .compare-label {
+            font-weight: bold;
+            margin-bottom: var(--xs);
+            font-size: var(--s);
+        }
+        .laravel-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border: 2px dashed var(--second-primary-color);
+            border-radius: var(--radius-m);
+            background: var(--transsecond-primary-color);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .laravel-box .laravel-title {
+            font-weight: bold;
+            color: var(--second-primary-color);
+            margin-bottom: var(--xs);
+            font-size: var(--s);
+        }
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transprimary-color);
+            border-radius: var(--radius-l);
+            padding: var(--l);
+            margin: var(--l) 0;
+        }
+        .quiz-box .quiz-title {
+            font-weight: bold;
+            font-size: var(--l);
+            margin-bottom: var(--m);
+            color: var(--primary-color);
+        }
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: var(--s) var(--m);
+            margin: var(--xs) 0;
+            border-radius: var(--radius-m);
+            cursor: pointer;
+            border: var(--border);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: var(--s);
+            transition: background 0.2s;
+        }
+        .quiz-option:hover { background: var(--transprimary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong { background: var(--transdanger-color); border-color: var(--danger-color); }
+        .quiz-feedback {
+            display: none;
+            margin-top: var(--s);
+            padding: var(--s);
+            border-radius: var(--radius-m);
+            font-size: var(--s);
+        }
+        .quiz-feedback.show { display: block; }
+        .line-explain {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: var(--xs) var(--m);
+            align-items: start;
+            font-size: var(--s);
+            margin: var(--m) 0;
+        }
+        .line-num {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border-radius: var(--radius-s);
+            padding: 2px var(--xs);
+            font-family: monospace;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .arch-flow {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow-x: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--m);
+            align-items: center;
+            margin: var(--m) 0;
+        }
+        .arch-node {
+            background: var(--transprimary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: var(--s) var(--m);
+            font-weight: bold;
+            font-size: var(--s);
+            color: var(--primary-color);
+            text-align: center;
+            min-width: 100px;
+        }
+        .arch-node.entity { border-color: var(--success-color); background: var(--transsuccess-color); color: var(--success-color); }
+        .arch-node.repo { border-color: var(--warning-color); background: var(--transwarning-color); color: var(--warning-color); }
+        .arch-node.service { border-color: var(--third-primary-color); background: var(--transthird-primary-color); color: var(--third-primary-color); }
+        .arch-node.view { border-color: var(--second-primary-color); background: var(--transsecond-primary-color); color: var(--second-primary-color); }
+        .arch-arrow { font-size: var(--x); color: var(--text-color); opacity: 0.5; }
+        .chapter-hero {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--xx) var(--x);
+            background: linear-gradient(135deg, var(--transprimary-color) 0%, var(--transsecond-primary-color) 100%);
+            border: var(--border);
+            margin-bottom: var(--l);
+        }
+        .chapter-hero .chapter-number {
+            font-size: var(--s);
+            font-weight: bold;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: var(--xs);
+        }
+        .chapter-hero .chapter-title {
+            font-size: var(--xx);
+            font-weight: bold;
+            margin-bottom: var(--s);
+        }
+        .chapter-hero .chapter-desc {
+            font-size: var(--s);
+            opacity: 0.8;
+        }
+        .section-divider {
+            border: none;
+            border-top: 2px dashed var(--border-color);
+            margin: var(--l) 0;
+        }
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--xs);
+            margin: var(--s) 0;
+        }
+        .sidebar-menu-item-svg { font-style: normal; }
+    </style>
+</head>
+<body>
+
+<nav class="bottom-nav">
+    <a href="#chapter-0" class="bottom-nav-item">🧠 Mindset</a>
+    <a href="#chapter-1" class="bottom-nav-item">🏗️ Arsitektur</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bottom-nav-items-check-1">📚 Materi</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bottom-nav-items-check-1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bottom-nav-items-check-1">&Cross;</label>
+                <a href="#chapter-2" class="bottom-nav-item">📦 Entity</a>
+                <a href="#chapter-3" class="bottom-nav-item">📋 V1 Prosedural</a>
+                <a href="#chapter-4" class="bottom-nav-item">🗄️ Repository</a>
+                <a href="#chapter-5" class="bottom-nav-item">⚙️ Service</a>
+                <a href="#chapter-6" class="bottom-nav-item">🖥️ View</a>
+                <a href="#chapter-7" class="bottom-nav-item">🔧 Utility</a>
+                <a href="#chapter-8" class="bottom-nav-item">🚀 Entry Point</a>
+                <a href="#chapter-9" class="bottom-nav-item">🗺️ Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java OOP</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#chapter-0" class="sidebar-menu-item active" data-title="Mindset Shift">
+            <strong class="sidebar-menu-item-svg">🧠</strong>
+            <span>Mindset Shift</span>
+        </a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Arsitektur Project">
+            <strong class="sidebar-menu-item-svg">🏗️</strong>
+            <span>Arsitektur Project</span>
+        </a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Materi OOP">
+                <strong class="sidebar-menu-item-svg">📚</strong>
+                <span>Materi OOP</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-2" class="sidebar-menu-item" data-title="Entity Class">
+                    <strong class="sidebar-menu-item-svg">📦</strong>
+                    <span>Entity Class</span>
+                </a>
+                <a href="#chapter-3" class="sidebar-menu-item" data-title="V1 Prosedural">
+                    <strong class="sidebar-menu-item-svg">📋</strong>
+                    <span>V1 Prosedural</span>
+                </a>
+                <a href="#chapter-4" class="sidebar-menu-item" data-title="Repository Pattern">
+                    <strong class="sidebar-menu-item-svg">🗄️</strong>
+                    <span>Repository Pattern</span>
+                </a>
+                <a href="#chapter-5" class="sidebar-menu-item" data-title="Service Layer">
+                    <strong class="sidebar-menu-item-svg">⚙️</strong>
+                    <span>Service Layer</span>
+                </a>
+                <a href="#chapter-6" class="sidebar-menu-item" data-title="View Layer">
+                    <strong class="sidebar-menu-item-svg">🖥️</strong>
+                    <span>View Layer</span>
+                </a>
+                <a href="#chapter-7" class="sidebar-menu-item" data-title="Utility">
+                    <strong class="sidebar-menu-item-svg">🔧</strong>
+                    <span>Utility Class</span>
+                </a>
+                <a href="#chapter-8" class="sidebar-menu-item" data-title="Entry Point">
+                    <strong class="sidebar-menu-item-svg">🚀</strong>
+                    <span>Entry Point & V1 vs V2</span>
+                </a>
+            </div>
+        </details>
+        <a href="#chapter-9" class="sidebar-menu-item" data-title="Summary Arsitektur">
+            <strong class="sidebar-menu-item-svg">🗺️</strong>
+            <span>Summary Arsitektur</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52"
+             viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality"
+             fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active">
+                <span class="container-header-nav-item-text">☕ Java OOP TodoList</span>
+            </a>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===== HERO ===== -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box; max-width:77dvw; overflow:auto; border-radius:var(--radius-x); padding:var(--xxx) var(--x); background:linear-gradient(135deg, var(--transprimary-color), var(--transsecond-primary-color)); border:var(--border); text-align:center;">
+                <div style="font-size:3rem; margin-bottom:var(--s);">☕</div>
+                <div style="font-size:var(--xxx); font-weight:900; margin-bottom:var(--s);">Java OOP — Studi Kasus TodoList</div>
+                <div style="font-size:var(--m); opacity:0.75; margin-bottom:var(--l);">Modul pembelajaran mandiri untuk developer PHP/Laravel yang baru migrasi ke Java. Dari prosedural sederhana hingga arsitektur berlapis berbasis OOP.</div>
+                <div class="tag-list" style="justify-content:center;">
+                    <div class="badge bg-primary text-white"><p>Java 17+</p></div>
+                    <div class="badge bg-success text-white"><p>OOP</p></div>
+                </div>
+            </div>
+            <br/>
+            <p>Modul ini membedah sebuah aplikasi <strong>TodoList Java</strong> dari dua versi: versi V1 yang masih prosedural/statis, hingga versi V2 yang sudah menggunakan arsitektur berlapis OOP penuh. Setiap chapter didesain agar kamu bisa memahami <em>mengapa</em> kode ditulis seperti itu, bukan hanya <em>bagaimana</em>.</p>
+            <hr class="section-divider"/>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:var(--m); text-align:center;">
+                <div style="padding:var(--m); border:var(--border); border-radius:var(--radius-m);">
+                    <div style="font-size:1.5rem;">9</div>
+                    <div style="font-size:var(--xs); opacity:0.7;">Chapter</div>
+                </div>
+                <div style="padding:var(--m); border:var(--border); border-radius:var(--radius-m);">
+                    <div style="font-size:1.5rem;">10</div>
+                    <div style="font-size:var(--xs); opacity:0.7;">File Java</div>
+                </div>
+                <div style="padding:var(--m); border:var(--border); border-radius:var(--radius-m);">
+                    <div style="font-size:1.5rem;">14</div>
+                    <div style="font-size:var(--xs); opacity:0.7;">Mini Quiz</div>
+                </div>
+                <div style="padding:var(--m); border:var(--border); border-radius:var(--radius-m);">
+                    <div style="font-size:1.5rem;">∞</div>
+                    <div style="font-size:var(--xs); opacity:0.7;">Analogi Laravel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 0: MINDSET SHIFT ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-0">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 0</div>
+                    <div class="chapter-title">🧠 Mindset Shift — Java vs PHP</div>
+                    <div class="chapter-desc">Sebelum menyentuh satu baris kode pun, kita perlu meluruskan ekspektasi. Java dan PHP bukan hanya beda sintaks — mereka punya cara berpikir yang fundamental berbeda.</div>
+                </div>
+
+                <div class="text-title">Mengapa Java Terasa "Lebih Ketat"?</div>
+                <p>Kamu mungkin sudah terbiasa dengan PHP di mana variabel bisa berpindah tipe sesuka hati. Di Java, compiler adalah penjaga gerbang yang sangat tegas. Ini bukan hambatan — ini adalah <strong>jaring pengaman</strong> yang menangkap bug sebelum sampai ke production.</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-strongly-typed" class="accordion-item-check" checked/>
+                    <label for="acc-strongly-typed" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p><strong>1. Strongly-typed vs Loosely-typed</strong></p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Java wajib deklarasi tipe. PHP fleksibel tapi rawan bug.</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="compare-box">
+                            <div class="wrong">
+                                <div class="compare-label">🐘 PHP — Loosely Typed</div>
+                                <div class="code-block">
+<pre><code class="language-php">// PHP: variabel bisa berubah tipe kapan saja
+$value = 10;       // integer
+$value = "hello";  // sekarang jadi string — VALID!
+$value = true;     // sekarang boolean — masih VALID!
+
+// Bahaya tersembunyi:
+echo 10 + "5 apples"; // = 15, PHP convert otomatis</code></pre>
+                                </div>
+                            </div>
+                            <div class="correct">
+                                <div class="compare-label">☕ Java — Strongly Typed</div>
+                                <div class="code-block">
+<pre><code class="language-java">// Java: tipe harus konsisten, dideklarasikan eksplisit
+int value = 10;
+// value = "hello"; // ❌ ERROR kompilasi!
+
+// Java MENOLAK compile jika tipe tidak cocok
+String result = value + " items"; // ✅ OK, int → String otomatis
+// int x = "5"; // ❌ ERROR: tipe tidak kompatibel</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-box success">
+                            💡 <strong>Keuntungan buat kamu:</strong> Bug tipe terdeteksi saat kompilasi, bukan saat user pakai aplikasimu di production. Ini menghemat berjam-jam debugging.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-compile" class="accordion-item-check"/>
+                    <label for="acc-compile" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p><strong>2. Compiled vs Interpreted</strong></p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Java dikompilasi ke bytecode, PHP diinterpretasi langsung.</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="display-grid">
+                            <div class="stepper">
+                                <div class="stepper-item">
+                                    <div class="stepper-key active">1</div>
+                                    <div class="stepper-value">Tulis <code>.java</code></div>
+                                </div>
+                                <div class="stepper-divider"></div>
+                                <div class="stepper-item">
+                                    <div class="stepper-key active">2</div>
+                                    <div class="stepper-value">Compile → <code>.class</code> (bytecode)</div>
+                                </div>
+                                <div class="stepper-divider"></div>
+                                <div class="stepper-item">
+                                    <div class="stepper-key active">3</div>
+                                    <div class="stepper-value">JVM jalankan bytecode</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="margin-top:var(--m);">PHP bisa langsung dijalankan tanpa compile. Java harus dikompilasi dulu dengan <code>javac</code>. Tapi hasilnya: performa lebih kencang, dan error tertangkap lebih awal.</p>
+                        <div class="info-box warning">
+                            ⚠️ <strong>Ingat:</strong> Kalau kamu dapat pesan "Cannot find symbol" atau "incompatible types" — itu bukan error runtime. Itu <strong>compile-time error</strong>. Perbaiki sebelum program bisa jalan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-oop" class="accordion-item-check"/>
+                    <label for="acc-oop" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p><strong>3. OOP sebagai Wajib, Bukan Opsional</strong></p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Di PHP/Laravel kamu bisa nulis fungsi di luar class. Di Java — mustahil.</div>
+                    </label>
+                    <div class="accordion-content">
+                        <p>Di Java, <strong>segala sesuatu harus berada di dalam class</strong>. Bahkan method <code>main()</code> yang menjadi titik masuk program pun ada di dalam class. Tidak ada fungsi top-level seperti di PHP.</p>
+                        <div class="compare-box">
+                            <div class="wrong">
+                                <div class="compare-label">❌ Tidak Bisa di Java</div>
+                                <div class="code-block">
+<pre><code class="language-java">// TIDAK VALID — tidak ada class pembungkus
+public static void main(String[] args) {
+    System.out.println("Hello");
+}</code></pre>
+                                </div>
+                            </div>
+                            <div class="correct">
+                                <div class="compare-label">✅ Benar di Java</div>
+                                <div class="code-block">
+<pre><code class="language-java">// WAJIB ada class pembungkus
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-package" class="accordion-item-check"/>
+                    <label for="acc-package" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p><strong>4. Package System — Namespace Java</strong></p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Package di Java = namespace di PHP = folder module di Laravel.</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="laravel-box">
+                            <div class="laravel-title">🐘 Analogi Laravel</div>
+                            <p>Di Laravel kamu punya <code>App\Models\User</code>, <code>App\Services\UserService</code>. Di Java itu persis sama: <code>entity.Todolist</code>, <code>service.TodoListService</code>. Package = namespace, tapi juga mencerminkan <strong>struktur folder fisik</strong> di disk.</p>
+                        </div>
+                        <div class="code-block">
+<pre><code class="language-java">// File: src/entity/Todolist.java
+package entity;  // ← deklarasi package, harus cocok dengan path folder
+
+// File: src/service/TodoListServiceImpl.java
+package service;
+
+import entity.Todolist;  // ← import dari package lain, seperti use App\Models\User; di Laravel
+import repository.TodoListRepository;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUIZ 0 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 0</div>
+                    <p><strong>Q1.</strong> Di Java, kamu menulis <code>int age = 25;</code> lalu di baris berikutnya <code>age = "dua puluh lima";</code>. Apa yang terjadi?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz0-1')">A. Program berjalan normal, Java convert otomatis</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz0-1')">B. Error saat kompilasi — tipe tidak kompatibel</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz0-1')">C. Error saat runtime saja</button>
+                    <div class="quiz-feedback" id="quiz0-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Package <code>entity</code> di Java paling mirip dengan konsep apa di Laravel?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz0-2')">A. Middleware</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz0-2')">B. Route group</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz0-2')">C. Namespace / folder App\Models</button>
+                    <div class="quiz-feedback" id="quiz0-2"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 1: ARSITEKTUR ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">🏗️ Arsitektur Project — Gambaran Besar</div>
+                    <div class="chapter-desc">Sebelum masuk ke detail kode, kita perlu melihat "peta"-nya terlebih dahulu. Project ini punya dua versi dengan pendekatan arsitektur yang sangat berbeda.</div>
+                </div>
+
+                <div class="text-title">Struktur File Project</div>
+                <div class="code-block">
+<pre><code class="language-java">src/
+├── AplikasiTodolist.java        // V1: Single class, semua dalam satu file
+├── AplikasiTodolistV2.java      // V2: Entry point baru, wiring dependency
+│
+├── entity/
+│   └── Todolist.java            // Data model (POJO)
+│
+├── repository/
+│   ├── TodoListRepository.java      // Interface (kontrak)
+│   └── TodoListRepositoryImpl.java  // Implementasi konkret
+│
+├── service/
+│   ├── TodoListService.java         // Interface (kontrak)
+│   └── TodoListServiceImpl.java     // Logika bisnis
+│
+├── view/
+│   └── TodoListView.java            // Tampilan & interaksi user
+│
+├── util/
+│   └── InputUtil.java               // Helper input scanner
+│
+└── test/
+    ├── service/TodoListServiceTest.java
+    └── view/TodoListViewTest.java</code></pre>
+                </div>
+
+                <div class="text-title">Arsitektur Berlapis (Layered Architecture)</div>
+                <p>V2 menggunakan pola arsitektur yang memisahkan tanggung jawab ke dalam lapisan-lapisan berbeda. Ini disebut <strong>Separation of Concerns</strong>.</p>
+
+                <div class="arch-flow">
+                    <div class="arch-node view">View Layer<br/><small>Interaksi User</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node service">Service Layer<br/><small>Logika Bisnis</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node repo">Repository Layer<br/><small>Akses Data</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node entity">Entity<br/><small>Model Data</small></div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel MVC</div>
+                    <p>Ini sangat familiar! Di Laravel kamu punya: <strong>Controller</strong> (≈ View di sini) → <strong>Service</strong> (logika bisnis) → <strong>Repository/Model Eloquent</strong> (akses data). Bedanya, di Java ini diimplementasikan dengan <strong>Interface + Implementasi</strong> secara eksplisit, bukan dengan magic Eloquent.</p>
+                </div>
+
+                <div class="text-title">V1 vs V2 — Evolusi Arsitektur</div>
+                <div class="timeline">
+                    <div>
+                        <span class="timeline-key active">V1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">AplikasiTodolist.java</div>
+                        <div class="timeline-content-desc">Semua dalam satu class. Static methods. Mudah dipahami tapi tidak scalable. Bagus untuk belajar dasar Java.</div>
+                        <div class="timeline-content-time">Pendekatan Prosedural</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">V2</span>
+                    </div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">AplikasiTodolistV2.java</div>
+                        <div class="timeline-content-desc">Dipisah ke Entity, Repository, Service, View. OOP penuh. Mudah di-test, mudah dimodifikasi, siap scale.</div>
+                        <div class="timeline-content-time">Pendekatan OOP Berlapis</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    💡 <strong>Insight Arsitektur:</strong> V1 bagus untuk prototipe cepat. V2 adalah cara yang benar untuk production. Modul ini akan mengajarkan keduanya, agar kamu paham <em>evolusi</em> cara berpikir Java.
+                </div>
+
+                <!-- QUIZ 1 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 1</div>
+                    <p><strong>Q1.</strong> Dalam arsitektur berlapis V2, manakah layer yang seharusnya <strong>tidak mengetahui</strong> detail implementasi database/penyimpanan?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz1-1')">A. Repository Layer</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz1-1')">B. Service Layer & View Layer</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz1-1')">C. Entity Layer</button>
+                    <div class="quiz-feedback" id="quiz1-1"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 2: ENTITY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">📦 Entity Class — <code>Todolist.java</code></div>
+                    <div class="chapter-desc">Entity adalah representasi data dalam bentuk object. Di sinilah kita belajar tentang encapsulation, constructor, getter, dan setter — fondasi OOP Java.</div>
+                </div>
+
+                <div class="text-title">Source Code</div>
+                <div class="code-block">
+<pre><code class="language-java">package entity;                        // Line 1
+
+public class Todolist {                // Line 3
+
+  private String todo;                 // Line 5
+
+  public Todolist() {                  // Line 7
+  }
+
+  public Todolist(String todo) {       // Line 11
+    this.todo = todo;
+  }
+
+  public String getTodo() {            // Line 15
+    return todo;
+  }
+
+  public void setTodo(String todo) {   // Line 19
+    this.todo = todo;
+  }
+}</code></pre>
+                </div>
+
+                <div class="text-title">Penjelasan Baris per Baris</div>
+                <div class="line-explain">
+                    <span class="line-num">Line 1</span>
+                    <span><code>package entity;</code> — Mendeklarasikan bahwa class ini berada di dalam package <code>entity</code>. Ini harus cocok dengan nama folder di filesystem. Analoginya: <code>namespace App\Entity;</code> di PHP.</span>
+
+                    <span class="line-num">Line 3</span>
+                    <span><code>public class Todolist</code> — Keyword <code>public</code> artinya class ini bisa diakses dari package lain. Di Java, nama file harus sama persis dengan nama class public (case-sensitive!). File bernama <code>Todolist.java</code> harus punya class <code>Todolist</code>.</span>
+
+                    <span class="line-num">Line 5</span>
+                    <span><code>private String todo;</code> — Field <strong>private</strong> = encapsulation. Dari luar class, properti ini tidak bisa diakses langsung. Ini berbeda dari PHP di mana kamu mungkin sering bikin <code>public $todo</code>. Di Java, default best practice adalah selalu <code>private</code>.</span>
+
+                    <span class="line-num">Line 7-9</span>
+                    <span><strong>No-arg constructor</strong> (constructor tanpa parameter). Di Java, jika kamu sudah mendefinisikan constructor berparameter, Java <em>tidak otomatis</em> menyediakan no-arg constructor. Kamu harus menulisnya eksplisit jika masih dibutuhkan.</span>
+
+                    <span class="line-num">Line 11-13</span>
+                    <span><strong>Constructor berparameter.</strong> <code>this.todo = todo;</code> — kata kunci <code>this</code> merujuk ke field instance (bukan parameter). Ini perlu karena nama parameter sama dengan nama field. Di PHP: <code>$this->todo = $todo;</code></span>
+
+                    <span class="line-num">Line 15-17</span>
+                    <span><strong>Getter</strong> — Method <code>getTodo()</code> adalah satu-satunya cara "resmi" untuk membaca nilai field private dari luar class. Ini adalah standar POJO (Plain Old Java Object) / JavaBean.</span>
+
+                    <span class="line-num">Line 19-21</span>
+                    <span><strong>Setter</strong> — Method <code>setTodo()</code> untuk mengubah nilai. Return type <code>void</code> berarti tidak mengembalikan nilai apapun.</span>
+                </div>
+
+                <div class="info-box">
+                    🏛️ <strong>Insight — Encapsulation:</strong> Membuat field <code>private</code> dan menyediakan getter/setter adalah prinsip encapsulation. Manfaatnya: kamu bisa menambahkan validasi di setter tanpa mengubah semua kode yang menggunakan class ini. Contoh: di setter, kamu bisa validasi <code>todo</code> tidak boleh kosong.
+                </div>
+
+                <div class="text-title">Common Mistakes (❌ Salah vs ✅ Benar)</div>
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Salah — Public Field</div>
+                        <div class="code-block">
+<pre><code class="language-java">public class Todolist {
+  // JANGAN ini — field publik
+  public String todo;
+}
+
+// Akibat: siapapun bisa ubah langsung
+todolist.todo = ""; // tidak ada validasi!</code></pre>
+                        </div>
+                        <p style="font-size:var(--xs);">Rawan bug karena tidak ada kontrol atas siapa yang bisa mengubah nilai, dan tidak ada tempat untuk validasi.</p>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Benar — Private + Getter/Setter</div>
+                        <div class="code-block">
+<pre><code class="language-java">public class Todolist {
+  private String todo;
+
+  public void setTodo(String todo) {
+    // Bisa tambah validasi di sini
+    if (todo == null || todo.isBlank()) {
+      throw new IllegalArgumentException("Todo kosong!");
+    }
+    this.todo = todo;
+  }
+}</code></pre>
+                        </div>
+                        <p style="font-size:var(--xs);">Enkapsulasi yang benar. Setter adalah satu-satunya pintu masuk untuk mengubah data.</p>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p>Class <code>Todolist.java</code> ini persis seperti <strong>Eloquent Model</strong> di Laravel — ini adalah representasi data. Bedanya, di Eloquent kamu pakai <code>$fillable</code> dan magic method, sedangkan di Java POJO semua harus eksplisit: field, constructor, getter, setter. Tidak ada magic <code>$model->attribute</code> — kamu harus memanggil <code>model.getAttribute()</code>.</p>
+                </div>
+
+                <!-- QUIZ 2 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q1.</strong> Kenapa field <code>todo</code> dibuat <code>private</code> bukan <code>public</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz2-1')">A. Karena Java memaksa semua field harus private</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz2-1')">B. Untuk encapsulation — agar akses/modifikasi data terkontrol dan bisa divalidasi</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz2-1')">C. Karena field public lebih lambat eksekusinya</button>
+                    <div class="quiz-feedback" id="quiz2-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Jika kamu sudah menulis constructor <code>Todolist(String todo)</code>, apakah <code>new Todolist()</code> (tanpa argumen) masih bisa dipakai?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz2-2')">A. Ya, Java otomatis menyediakan no-arg constructor</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz2-2')">B. Tidak, kamu harus menulisnya secara eksplisit</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz2-2')">C. Ya, tapi hanya kalau class tidak punya field private</button>
+                    <div class="quiz-feedback" id="quiz2-2"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 3: V1 PROCEDURAL ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">📋 V1 Prosedural — <code>AplikasiTodolist.java</code></div>
+                    <div class="chapter-desc">Versi pertama aplikasi ini ditulis dalam satu class besar dengan static methods. Ini adalah titik awal yang bagus untuk memahami array, static, dan alur logika Java sebelum masuk ke OOP penuh.</div>
+                </div>
+
+                <div class="text-title">Deklarasi Static di V1</div>
+                <div class="code-block">
+<pre><code class="language-java">public class AplikasiTodolist {
+
+  public static String[] model = new String[10];  // Line 3
+  public static java.util.Scanner scanner =        // Line 5
+      new java.util.Scanner(System.in);
+
+  public static void main(String[] args) {         // Line 8
+    viewShowTodoList();
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">Line 3</span>
+                    <span><code>public static String[] model = new String[10];</code> — Di Java, array punya ukuran TETAP saat dibuat. <code>new String[10]</code> membuat array berisi 10 slot, semua bernilai <code>null</code>. Ini berbeda dari PHP di mana array bisa tumbuh otomatis.</span>
+
+                    <span class="line-num">Line 5</span>
+                    <span><code>java.util.Scanner</code> — Scanner adalah class bawaan Java untuk membaca input user. Ditulis dengan fully-qualified name (termasuk package) karena tidak ada <code>import</code> di atas. Cara lebih bersih: tambahkan <code>import java.util.Scanner;</code> di atas.</span>
+
+                    <span class="line-num">static</span>
+                    <span>Keyword <code>static</code> artinya field/method ini milik <em>class</em>, bukan milik <em>instance</em>. Di V1, semua method static sehingga bisa dipanggil langsung tanpa membuat object. Analoginya di PHP: <code>static function</code>.</span>
+                </div>
+
+                <div class="text-title">Dynamic Array Resize — Logika Krusial</div>
+                <p>Karena Java array statis, V1 mengimplementasikan logika resize manual ketika array penuh:</p>
+                <div class="code-block">
+<pre><code class="language-java">public static void addTodoList(String todo) {
+  // STEP 1: Cek apakah semua slot terisi (tidak ada null)
+  var isFull = true;
+  for (int i = 0; i < model.length; i++) {
+    if (model[i] == null) {
+      isFull = false;
+      break;
+    }
+  }
+
+  // STEP 2: Jika penuh, buat array baru 2x lebih besar
+  if (isFull) {
+    var temp = model;                          // simpan referensi lama
+    model = new String[model.length * 2];      // array baru ukuran 2x
+
+    for (int i = 0; i < temp.length; i++) {   // copy semua elemen
+      model[i] = temp[i];
+    }
+  }
+
+  // STEP 3: Masukkan data ke slot null pertama
+  for (var i = 0; i < model.length; i++) {
+    if (model[i] == null) {
+      model[i] = todo;
+      break;
+    }
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">var</span>
+                    <span>Keyword <code>var</code> (Java 10+) untuk type inference. Compiler mendeteksi tipe otomatis. <code>var isFull = true;</code> sama dengan <code>boolean isFull = true;</code>. Mirip PHP tapi berbeda — Java tetap strongly-typed, hanya inferensinya otomatis.</span>
+
+                    <span class="line-num">Step 2</span>
+                    <span>Strategi "double when full" ini adalah pola klasik Dynamic Array, persis seperti cara kerja <code>ArrayList</code> di Java dan PHP's built-in array secara internal. Kenapa 2x? Amortized O(1) time complexity untuk operasi tambah.</span>
+
+                    <span class="line-num">break</span>
+                    <span>Menghentikan loop segera setelah kondisi terpenuhi. Penting untuk performa — tanpa <code>break</code>, loop terus berjalan bahkan setelah data sudah ditemukan/dimasukkan.</span>
+                </div>
+
+                <div class="text-title">Logika Remove — Shift Kiri</div>
+                <div class="code-block">
+<pre><code class="language-java">public static boolean removeTodoList(Integer number) {
+  // Guard clause: validasi input
+  if ((number - 1) >= model.length) {
+    return false;  // nomor melebihi panjang array
+  } else if (model[number - 1] == null) {
+    return false;  // slot sudah kosong
+  } else {
+    // Geser semua elemen ke kiri mulai dari posisi yang dihapus
+    for (int i = (number - 1); i < model.length; i++) {
+      if (i == (model.length - 1)) {
+        model[i] = null;        // elemen terakhir dikosongkan
+      } else {
+        model[i] = model[i + 1]; // geser kiri
+      }
+    }
+    return true;
+  }
+}</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    ⚠️ <strong>Catatan Penting — Integer vs int:</strong> Parameter ditulis <code>Integer number</code> (bukan <code>int</code>). <code>Integer</code> (huruf kapital) adalah <strong>wrapper class</strong> — versi object dari primitive <code>int</code>. Wrapper class bisa bernilai <code>null</code>, primitive tidak. Ini perbedaan Java yang sering bikin bingung developer PHP.
+                </div>
+
+                <div class="info-box success">
+                    💡 <strong>Insight — Guard Clause:</strong> Pola <code>if kondisi salah → return false</code> di awal method disebut Guard Clause. Ini membuat kode lebih mudah dibaca karena kasus edge ditangani dulu, logika utama di akhir. Sangat direkomendasikan!
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Salah — Nested if Deep</div>
+                        <div class="code-block">
+<pre><code class="language-java">// Susah dibaca, deeply nested
+if (number - 1 < model.length) {
+  if (model[number-1] != null) {
+    // logika utama di dalam 2 level if
+    for (int i = ...) {
+      // ...
+    }
+    return true;
+  }
+}
+return false;</code></pre>
+                        </div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Benar — Guard Clause</div>
+                        <div class="code-block">
+<pre><code class="language-java">// Mudah dibaca, langsung ke inti
+if ((number - 1) >= model.length)
+    return false;
+if (model[number - 1] == null)
+    return false;
+
+// Logika utama tanpa nesting berlebihan
+for (int i = (number-1); i < model.length; i++) {
+  // ...
+}
+return true;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p>Di Laravel/PHP, array bisa <code>push</code> data kapan saja tanpa khawatir ukuran. Di Java, kalau pakai array biasa, kamu <em>harus</em> kelola sendiri seperti di atas. Itulah mengapa di Java modern kita lebih sering pakai <code>ArrayList&lt;T&gt;</code> — ini adalah <em>dynamic array</em> yang sudah built-in, mirip dengan array PHP. Studi kasus ini sengaja menggunakan array biasa agar kamu memahami mekanismenya.</p>
+                </div>
+
+                <!-- QUIZ 3 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q1.</strong> Apa perbedaan <code>int</code> dan <code>Integer</code> di Java?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz3-1')">A. Tidak ada perbedaan, keduanya identik</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz3-1')">B. <code>int</code> adalah primitive (tidak bisa null), <code>Integer</code> adalah wrapper class (bisa null)</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz3-1')">C. <code>Integer</code> untuk angka negatif, <code>int</code> untuk positif</button>
+                    <div class="quiz-feedback" id="quiz3-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Kenapa setelah menghapus elemen array, kode menggeser semua elemen ke kiri?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz3-2')">A. Agar tidak ada "lubang" null di tengah array, urutan nomor tetap konsekutif</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz3-2')">B. Karena Java tidak mengizinkan null di dalam array</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz3-2')">C. Untuk menghemat memori</button>
+                    <div class="quiz-feedback" id="quiz3-2"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 4: REPOSITORY PATTERN ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">🗄️ Repository Pattern — Interface &amp; Implementasi</div>
+                    <div class="chapter-desc">Di sinilah kekuatan OOP Java mulai terasa. Repository Pattern memisahkan "apa yang bisa dilakukan" (interface) dari "bagaimana melakukannya" (implementasi). Ini adalah pola yang juga ada di Laravel!</div>
+                </div>
+
+                <div class="text-title">Interface — Kontrak, Bukan Implementasi</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/repository/TodoListRepository.java
+package repository;
+
+import entity.Todolist;
+
+public interface TodoListRepository {  // ← "interface", bukan "class"!
+
+  Todolist[] getAll();          // Metode tanpa body — hanya kontrak
+
+  void add(Todolist todolist);
+
+  boolean remove(Integer number);
+
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">interface</span>
+                    <span>Interface di Java adalah <strong>kontrak murni</strong> — mendefinisikan <em>apa</em> yang bisa dilakukan, tapi tidak <em>bagaimana</em>. Tidak ada implementasi di sini, hanya signature method. Siapa pun yang ingin menjadi <code>TodoListRepository</code> wajib mengimplementasikan semua method ini.</span>
+
+                    <span class="line-num">Todolist[]</span>
+                    <span>Return type <code>Todolist[]</code> artinya method ini mengembalikan array dari object <code>Todolist</code>. Ini menunjukkan penggunaan Entity di dalam Repository.</span>
+
+                    <span class="line-num">void</span>
+                    <span>Method <code>add</code> bertipe <code>void</code> — tidak mengembalikan nilai apapun. Di PHP, kamu bisa skip return type; di Java harus eksplisit bahkan jika tidak mengembalikan apa-apa.</span>
+                </div>
+
+                <div class="text-title">Implementasi — Cara Konkret Bekerja</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/repository/TodoListRepositoryImpl.java
+package repository;
+
+import entity.Todolist;
+
+public class TodoListRepositoryImpl implements TodoListRepository {
+//                                       ↑ keyword "implements" = "saya memenuhi kontrak interface ini"
+
+  public Todolist[] data = new Todolist[10]; // penyimpanan data internal
+
+  @Override
+  public Todolist[] getAll() {
+    return data;           // kembalikan seluruh array
+  }
+
+  public boolean isFull() {  // ← method helper, tidak ada di interface
+    var isFull = true;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i] == null) {
+        isFull = false;
+        break;
+      }
+    }
+    return isFull;
+  }
+
+  public void resizeIfFull() {
+    if (isFull()) {
+      var temp = data;
+      data = new Todolist[data.length * 2];
+      for (int i = 0; i < temp.length; i++) {
+        data[i] = temp[i];
+      }
+    }
+  }
+
+  @Override
+  public void add(Todolist todolist) {
+    resizeIfFull();          // resize otomatis jika penuh
+    for (var i = 0; i < data.length; i++) {
+      if (data[i] == null) {
+        data[i] = todolist;  // simpan object Todolist, bukan String!
+        break;
+      }
+    }
+  }
+
+  @Override
+  public boolean remove(Integer number) {
+    // ... logika sama dengan V1, tapi untuk Todolist[]
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">implements</span>
+                    <span>Keyword <code>implements TodoListRepository</code> artinya class ini berjanji memenuhi semua kontrak di interface. Jika ada satu method interface yang tidak diimplementasikan, program TIDAK BISA dikompilasi.</span>
+
+                    <span class="line-num">@Override</span>
+                    <span>Annotation <code>@Override</code> memberitahu compiler "method ini saya override dari interface/parent class." Ini opsional tapi <strong>sangat direkomendasikan</strong> — compiler akan error jika kamu salah ketik nama method, sehingga override tidak terjadi secara diam-diam.</span>
+
+                    <span class="line-num">isFull() &amp; resizeIfFull()</span>
+                    <span>Method helper yang tidak ada di interface. Ini adalah implementasi detail yang <em>tidak perlu diketahui</em> oleh layer lain. Ini adalah enkapsulasi logika internal.</span>
+                </div>
+
+                <div class="info-box">
+                    🏛️ <strong>Mengapa Interface + Implementasi Terpisah?</strong> Kekuatan pattern ini: kamu bisa swap implementasi tanpa mengubah kode yang menggunakan Repository. Contoh: <code>TodoListRepositoryImpl</code> simpan data di array → kamu bisa buat <code>TodoListRepositoryDatabase</code> yang simpan ke MySQL → tanpa ubah Service/View sama sekali! Ini prinsip <strong>Open/Closed Principle</strong> (SOLID).
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Salah — Pakai Class Langsung</div>
+                        <div class="code-block">
+<pre><code class="language-java">// Service langsung bergantung pada class konkret
+public class TodoListServiceImpl {
+  private TodoListRepositoryImpl repo; // ← terikat erat!
+  // ...
+}
+// Kalau ganti implementasi repo, Service harus ikut diubah</code></pre>
+                        </div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Benar — Pakai Interface</div>
+                        <div class="code-block">
+<pre><code class="language-java">// Service bergantung pada interface (abstraksi)
+public class TodoListServiceImpl {
+  private TodoListRepository repo; // ← fleksibel!
+  // ...
+}
+// Bisa inject implementasi apapun: array, DB, API, dll.</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p>Di Laravel, kamu bisa binding interface ke implementasi di <code>AppServiceProvider</code>: <code>$this->app->bind(TodoRepositoryInterface::class, TodoRepositoryImpl::class)</code>. Lalu di Controller, kamu type-hint interface-nya. Di Java (tanpa Spring), kita lakukan "binding" ini secara manual di method <code>main()</code> — kita akan lihat ini di Chapter 8. Di Spring Boot, prosesnya mirip dengan Laravel DI container: pakai <code>@Autowired</code> / constructor injection.</p>
+                </div>
+
+                <!-- QUIZ 4 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 4</div>
+                    <p><strong>Q1.</strong> Apa yang terjadi jika class <code>TodoListRepositoryImpl</code> tidak mengimplementasikan method <code>remove()</code> yang ada di interface <code>TodoListRepository</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz4-1')">A. Error kompilasi — class dianggap abstract dan tidak bisa diinstansiasi</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz4-1')">B. Error hanya saat runtime ketika method dipanggil</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz4-1')">C. Tidak ada error, method dianggap null</button>
+                    <div class="quiz-feedback" id="quiz4-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Apa manfaat utama mendeclare variabel repository dengan tipe <code>TodoListRepository</code> (interface) bukan <code>TodoListRepositoryImpl</code> (class)?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz4-2')">A. Performa lebih cepat karena interface lebih ringan</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz4-2')">B. Fleksibilitas — bisa diganti implementasi lain tanpa mengubah kode yang bergantung padanya</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz4-2')">C. Interface memiliki lebih banyak method bawaan</button>
+                    <div class="quiz-feedback" id="quiz4-2"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 5: SERVICE LAYER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 5</div>
+                    <div class="chapter-title">⚙️ Service Layer — Logika Bisnis</div>
+                    <div class="chapter-desc">Service layer adalah "otak" aplikasi. Di sinilah logika bisnis tinggal — bukan di View (yang hanya urusan tampilan), bukan di Repository (yang hanya urusan data). Di sini juga kita belajar Constructor Injection, pola DI yang paling direkomendasikan.</div>
+                </div>
+
+                <div class="text-title">Interface Service</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/service/TodoListService.java
+package service;
+
+public interface TodoListService {
+
+  void showTodoList();
+
+  void addTodoList(String todo);
+
+  void removeTodoList(Integer number);
+
+}</code></pre>
+                </div>
+
+                <div class="info-box">
+                    💡 <strong>Kenapa Interface Service juga diperlukan?</strong> Sama dengan Repository — memungkinkan penggantian implementasi service (misal: versi dengan caching, versi dengan logging, dll.) tanpa mengubah View. Ini juga memudahkan unit testing dengan mock.
+                </div>
+
+                <div class="text-title">Implementasi Service — Constructor Injection</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/service/TodoListServiceImpl.java
+package service;
+
+import entity.Todolist;
+import repository.TodoListRepository;
+
+public class TodoListServiceImpl implements TodoListService {
+
+  private TodoListRepository todoListRepository;  // Line 8: dependency
+
+  public TodoListServiceImpl(TodoListRepository todoListRepository) {  // Line 10: constructor injection
+    this.todoListRepository = todoListRepository;
+  }
+
+  @Override
+  public void showTodoList() {
+    Todolist[] model = todoListRepository.getAll();  // Line 16: pakai repository
+
+    System.out.println("TODOLIST");
+    for (var i = 0; i < model.length; i++) {
+      var todolist = model[i];
+      var no = i + 1;
+
+      if (todolist != null) {
+        System.out.println(no + ". " + todolist.getTodo()); // Line 23: pakai getter!
+      }
+    }
+  }
+
+  @Override
+  public void addTodoList(String todo) {
+    Todolist todolist = new Todolist(todo);  // Line 29: buat object entity
+    todoListRepository.add(todolist);        // Line 30: simpan via repository
+    System.out.println("SUKSES MENAMBAH TODO : " + todo);
+  }
+
+  @Override
+  public void removeTodoList(Integer number) {
+    boolean success = todoListRepository.remove(number);
+    if (success) {
+      System.out.println("SUKSES MENGHAPUS TODO : " + number);
+    } else {
+      System.out.println("GAGAL MENGHAPUS TODO : " + number);
+    }
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">Line 8</span>
+                    <span>Field <code>private TodoListRepository todoListRepository</code> — perhatikan tipenya <code>TodoListRepository</code> (interface), bukan <code>TodoListRepositoryImpl</code>. Service ini tidak peduli implementasi spesifiknya.</span>
+
+                    <span class="line-num">Line 10-12</span>
+                    <span><strong>Constructor Injection</strong> — dependency diberikan melalui constructor, bukan dibuat di dalam class. Service tidak tahu "cara buat repository" — itu bukan urusannya. Pihak luar (entry point di main) yang bertanggung jawab menciptakan dan menyerahkan repository.</span>
+
+                    <span class="line-num">Line 16</span>
+                    <span>Service memanggil <code>todoListRepository.getAll()</code> melalui interface. Ini adalah penggunaan polymorphism — service tidak perlu tahu apakah di baliknya ada array, database, atau API.</span>
+
+                    <span class="line-num">Line 23</span>
+                    <span><code>todolist.getTodo()</code> — mengakses data entity melalui getter, bukan langsung ke field. Ini konsekuensi encapsulation yang kita pelajari di Chapter 2.</span>
+
+                    <span class="line-num">Line 29-30</span>
+                    <span>Service membuat object <code>Todolist</code> (entity) lalu menyerahkannya ke repository. Ini alur data yang bersih: String input → Entity object → disimpan di Repository.</span>
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Salah — Field Injection (@Autowired)</div>
+                        <div class="code-block">
+<pre><code class="language-java">// Ini pola yang ada di Spring — tapi BUKAN best practice
+public class TodoListServiceImpl {
+  @Autowired  // ← langsung inject ke field
+  private TodoListRepository repo;
+
+  // Masalah: class tidak bisa di-test tanpa Spring context,
+  // dependency tidak visible dari luar
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Benar — Constructor Injection</div>
+                        <div class="code-block">
+<pre><code class="language-java">public class TodoListServiceImpl {
+  private final TodoListRepository repo; // final!
+
+  // Dependency jelas, wajib disediakan saat dibuat
+  public TodoListServiceImpl(TodoListRepository repo) {
+    this.repo = repo;
+  }
+  // Mudah di-test: tinggal inject mock di test
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p>Constructor Injection di Java = Constructor Injection di Laravel Service. Kalau di Laravel kamu punya:</p>
+                    <div class="code-block">
+<pre><code class="language-php">class TodoService {
+    public function __construct(
+        private TodoRepository $repository
+    ) {}
+}</code></pre>
+                    </div>
+                    <p>Di Java itu persis sama strukturnya! Bedanya di Laravel ada DI container yang inject otomatis; di Java (tanpa framework) kita inject manual di <code>main()</code>.</p>
+                </div>
+
+                <!-- QUIZ 5 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 5</div>
+                    <p><strong>Q1.</strong> Kenapa Constructor Injection lebih direkomendasikan dibanding Field Injection (<code>@Autowired</code>) di Spring?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz5-1')">A. Karena Constructor Injection lebih cepat secara performa</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz5-1')">B. Dependency jelas dan eksplisit, class bisa di-test tanpa IoC container, dan bisa dibuat <code>final</code> (immutable)</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz5-1')">C. Karena Field Injection tidak didukung di Java standar</button>
+                    <div class="quiz-feedback" id="quiz5-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Di <code>showTodoList()</code>, mengapa kode menggunakan <code>todolist.getTodo()</code> bukan langsung <code>todolist.todo</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz5-2')">A. Karena field <code>todo</code> bersifat private — hanya bisa diakses via getter</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz5-2')">B. Karena <code>getTodo()</code> lebih cepat dieksekusi</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz5-2')">C. Karena Java melarang akses field secara langsung</button>
+                    <div class="quiz-feedback" id="quiz5-2"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 6: VIEW LAYER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 6</div>
+                    <div class="chapter-title">🖥️ View Layer — Interaksi User</div>
+                    <div class="chapter-desc">View layer hanya bertanggung jawab pada interaksi dengan user: membaca input dan menampilkan output. Tidak ada logika bisnis di sini. View hanya "berbicara" dengan Service.</div>
+                </div>
+
+                <div class="text-title">Source Code — <code>TodoListView.java</code></div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/view/TodoListView.java
+package view;
+
+import service.TodoListService;
+import util.InputUtil;
+
+public class TodoListView {
+
+  private TodoListService todoListService;  // dependency ke service
+
+  public TodoListView(TodoListService todoListService) {  // constructor injection
+    this.todoListService = todoListService;
+  }
+
+  public void showTodoList() {
+    while (true) {                          // loop menu utama
+      todoListService.showTodoList();       // delegasi ke service
+
+      System.out.println("MENU : ");
+      System.out.println("1. Tambah");
+      System.out.println("2. Hapus");
+      System.out.println("x. Keluar");
+
+      var input = InputUtil.input("Pilih");  // baca input user
+
+      if (input.equals("1")) {              // equals() bukan ==!
+        addTodoList();
+      } else if (input.equals("2")) {
+        removeTodoList();
+      } else if (input.equals("x")) {
+        break;
+      } else {
+        System.out.println("Pilihan tidak dimengerti");
+      }
+    }
+  }
+
+  public void addTodoList() {
+    System.out.println("MENAMBAH TODOLIST");
+    var todo = InputUtil.input("Todo (x Jika Batal)");
+    if (todo.equals("x")) {
+      // batal — tidak melakukan apa-apa
+    } else {
+      todoListService.addTodoList(todo);  // serahkan ke service
+    }
+  }
+
+  public void removeTodoList() {
+    System.out.println("MENGHAPUS TODOLIST");
+    var number = InputUtil.input("Nomor yang Dihapus (x Jika Batal)");
+    if (number.equals("x")) {
+      // batal
+    } else {
+      todoListService.removeTodoList(Integer.valueOf(number));
+      //                             ↑ String → Integer conversion
+    }
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">equals()</span>
+                    <span><strong>PENTING SEKALI:</strong> Di Java, <code>==</code> untuk String membandingkan <em>referensi memori</em>, bukan <em>isi</em>. Selalu gunakan <code>.equals()</code> untuk membandingkan konten String. Ini adalah salah satu jebakan terbesar pindahan dari PHP, di mana <code>==</code> sudah cukup untuk membandingkan string.</span>
+
+                    <span class="line-num">Integer.valueOf()</span>
+                    <span>Konversi dari <code>String</code> ke <code>Integer</code> object. Di PHP, PHP cast otomatis <code>"2"</code> jadi <code>2</code>. Di Java, kamu harus eksplisit: <code>Integer.valueOf("2")</code> atau <code>Integer.parseInt("2")</code>. Jika string bukan angka valid, akan throw <code>NumberFormatException</code>.</span>
+
+                    <span class="line-num">while(true)</span>
+                    <span>Loop tak terbatas yang hanya berhenti ketika user memasukkan "x" dan <code>break</code> dieksekusi. Ini pola umum untuk menu CLI interaktif. Di PHP: <code>while(true) { ... break; }</code> — persis sama!</span>
+                </div>
+
+                <div class="info-box danger">
+                    🚨 <strong>Jebakan Klasik PHP → Java: String Comparison!</strong>
+                    <div class="compare-box" style="margin-top:var(--s);">
+                        <div class="wrong">
+                            <div class="compare-label">❌ Jangan — Pakai ==</div>
+                            <div class="code-block">
+<pre><code class="language-java">String input = scanner.nextLine();
+if (input == "1") {
+  // Mungkin TIDAK PERNAH true meski input = "1"
+  // Membandingkan referensi, bukan nilai!
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="correct">
+                            <div class="compare-label">✅ Selalu — Pakai .equals()</div>
+                            <div class="code-block">
+<pre><code class="language-java">String input = scanner.nextLine();
+if (input.equals("1")) {
+  // BENAR — membandingkan isi string
+}
+// Atau lebih aman dari NullPointerException:
+if ("1".equals(input)) { ... }</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p><code>TodoListView</code> ini adalah <strong>Controller</strong> di Laravel. Controller tidak boleh berisi logika bisnis — tugasnya hanya menerima request (input user), memanggil service yang tepat, dan mengembalikan response (output). Prinsip ini sama persis: View/Controller hanya "memanggil" Service, tidak "melakukan" sendiri.</p>
+                </div>
+
+                <!-- QUIZ 6 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 6</div>
+                    <p><strong>Q1.</strong> Kode <code>if (input == "x")</code> di Java akan selalu menghasilkan <code>false</code> meski user mengetik "x". Mengapa?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz6-1')">A. Karena <code>==</code> pada String membandingkan referensi memori, bukan isi string</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz6-1')">B. Karena "x" adalah keyword reserved di Java</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz6-1')">C. Karena Scanner menambahkan spasi di akhir input</button>
+                    <div class="quiz-feedback" id="quiz6-1"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 7: UTILITY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 7</div>
+                    <div class="chapter-title">🔧 Utility Class — <code>InputUtil.java</code></div>
+                    <div class="chapter-desc">Utility class berisi helper method yang bisa dipakai di mana saja. Di sini kita belajar tentang static method di konteks yang tepat, dan DRY (Don't Repeat Yourself) principle.</div>
+                </div>
+
+                <div class="text-title">Source Code</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/util/InputUtil.java
+package util;
+
+import java.util.Scanner;
+
+public class InputUtil {
+
+  private static Scanner scanner = new Scanner(System.in);  // Line 7: satu instance Scanner
+
+  public static String input(String info) {   // Line 9: static method
+    System.out.print(info + " : ");
+    String data = scanner.nextLine();
+    return data;
+  }
+
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">Line 7</span>
+                    <span><code>private static Scanner scanner</code> — Scanner adalah resource yang mahal (terhubung ke System.in). Dibuat satu kali sebagai static field agar di-share oleh semua panggilan <code>input()</code> tanpa perlu membuat instance baru setiap kali. Ini adalah singleton sederhana.</span>
+
+                    <span class="line-num">Line 9</span>
+                    <span><code>public static String input(String info)</code> — Static method bisa dipanggil tanpa membuat instance class: <code>InputUtil.input("Nama")</code>. Ini tepat untuk utility method yang bersifat stateless (tidak bergantung pada state object).</span>
+
+                    <span class="line-num">System.out.print</span>
+                    <span>Perhatikan <code>print</code> (bukan <code>println</code>). <code>print</code> tidak menambahkan newline sehingga cursor tetap di baris yang sama dengan prompt, dan input user ada di baris yang sama. <code>println</code> akan ke baris baru.</span>
+                </div>
+
+                <div class="info-box success">
+                    💡 <strong>Kapan Pakai <code>static</code>?</strong> Gunakan static untuk:
+                    <ul style="margin:var(--s) 0; padding-left:var(--l);">
+                        <li>Method yang tidak bergantung pada state object (stateless helper)</li>
+                        <li>Utility/helper class seperti <code>InputUtil</code>, <code>Math</code>, <code>Arrays</code></li>
+                        <li>Constants (<code>public static final</code>)</li>
+                    </ul>
+                    Hindari static untuk logika bisnis — karena membuat unit testing lebih sulit.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p><code>InputUtil</code> ini mirip <strong>Laravel Helper functions</strong> (<code>str_pad()</code>, <code>now()</code>) atau <strong>static facade</strong> seperti <code>Str::slug()</code>. Semuanya adalah utility stateless yang bisa dipanggil dari mana saja tanpa instansiasi. Di Java, kita pakai <code>InputUtil.input()</code> persis seperti <code>Str::slug()</code>.</p>
+                </div>
+
+                <!-- QUIZ 7 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 7</div>
+                    <p><strong>Q1.</strong> Apa kelebihan dan kekurangan menggunakan <code>static</code> method untuk logika bisnis?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz7-1')">A. Kelebihan: lebih cepat. Tidak ada kekurangan.</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz7-1')">B. Kelebihan: mudah dipanggil. Kekurangan: sulit di-mock saat unit testing, membuat coupling yang ketat.</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz7-1')">C. Kelebihan: Thread-safe otomatis. Kekurangan: hanya bisa dipanggil sekali.</button>
+                    <div class="quiz-feedback" id="quiz7-1"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 8: ENTRY POINT ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 8</div>
+                    <div class="chapter-title">🚀 Entry Point — V1 vs V2, Manual DI</div>
+                    <div class="chapter-desc">Entry point adalah titik masuk program. Di sini kita melihat perbedaan dramatis antara V1 (langsung panggil static method) dan V2 (manual dependency injection — wiring semua komponen secara eksplisit).</div>
+                </div>
+
+                <div class="text-title">V1 Entry Point — Sederhana, Langsung</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/AplikasiTodolist.java
+public class AplikasiTodolist {
+
+  public static String[] model = new String[10];  // state global
+  public static java.util.Scanner scanner = new java.util.Scanner(System.in);
+
+  public static void main(String[] args) {
+    viewShowTodoList();  // langsung panggil static method
+  }
+  // ...semua method ada di satu class yang sama
+}</code></pre>
+                </div>
+
+                <div class="text-title">V2 Entry Point — Manual Dependency Injection</div>
+                <div class="code-block">
+<pre><code class="language-java">// File: src/AplikasiTodolistV2.java
+import repository.TodoListRepository;
+import repository.TodoListRepositoryImpl;
+import service.TodoListService;
+import service.TodoListServiceImpl;
+import view.TodoListView;
+
+public class AplikasiTodolistV2 {
+
+  public static void main(String[] args) {
+
+    // Step 1: Buat Repository (layer terdalam)
+    TodoListRepository todoListRepository = new TodoListRepositoryImpl();
+
+    // Step 2: Buat Service, inject Repository ke dalamnya
+    TodoListService todoListService = new TodoListServiceImpl(todoListRepository);
+
+    // Step 3: Buat View, inject Service ke dalamnya
+    TodoListView todoListView = new TodoListView(todoListService);
+
+    // Step 4: Jalankan aplikasi
+    todoListView.showTodoList();
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">Step 1</span>
+                    <span><code>TodoListRepository todoListRepository = new TodoListRepositoryImpl();</code> — Variabel bertipe interface (<code>TodoListRepository</code>), tapi diisi dengan implementasi konkret (<code>TodoListRepositoryImpl</code>). Ini disebut <strong>programming to interface</strong>.</span>
+
+                    <span class="line-num">Step 2</span>
+                    <span>Repository "diinjeksikan" ke Service melalui constructor. Service sendiri tidak pernah tahu "cara membuat" repository — dia hanya menerima apa yang diberikan.</span>
+
+                    <span class="line-num">Step 3</span>
+                    <span>Service "diinjeksikan" ke View. Dependency chain: View → Service → Repository → Entity.</span>
+
+                    <span class="line-num">Pola</span>
+                    <span>Ini adalah <strong>Composition Root</strong> — satu tempat di mana semua dependency dirakit. Ini adalah best practice: wiring dependency hanya terjadi di satu titik, bukan tersebar di seluruh codebase.</span>
+                </div>
+
+                <div class="info-box">
+                    🏛️ <strong>Ini adalah Spring Boot secara manual!</strong> Ketika kamu nanti belajar Spring Boot, framework ini melakukan semua "wiring" di atas secara otomatis melalui <code>@Component</code>, <code>@Service</code>, <code>@Repository</code>, dan <code>@Autowired</code>. Tapi sekarang kamu sudah mengerti apa yang terjadi <em>di balik layar</em>.
+                </div>
+
+                <div class="text-title">Perbandingan Langsung V1 vs V2</div>
+                <div class="table-content" style="box-sizing:border-box; max-width:77dvw; overflow-x:auto;">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Aspek</th>
+                            <th>V1 — Prosedural</th>
+                            <th>V2 — OOP Berlapis</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Jumlah File</td>
+                            <td>1 file</td>
+                            <td>9+ file</td>
+                        </tr>
+                        <tr>
+                            <td>Testability</td>
+                            <td>❌ Sulit — state global</td>
+                            <td>✅ Mudah — inject mock</td>
+                        </tr>
+                        <tr>
+                            <td>Ganti penyimpanan data</td>
+                            <td>❌ Ubah semua kode</td>
+                            <td>✅ Buat implementasi baru</td>
+                        </tr>
+                        <tr>
+                            <td>Keterbacaan kode</td>
+                            <td>⚠️ Semua campur jadi satu</td>
+                            <td>✅ Setiap class satu tanggung jawab</td>
+                        </tr>
+                        <tr>
+                            <td>Cocok untuk</td>
+                            <td>Belajar dasar, prototipe</td>
+                            <td>Production, tim besar</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p>V1 itu seperti menulis logika langsung di PHP procedural (<code>index.php</code> satu file). V2 itu seperti Laravel dengan <code>AppServiceProvider</code>, Service, Repository terpisan. Method <code>main()</code> di V2 persis seperti <code>AppServiceProvider::register()</code> — tempat semua binding didefinisikan secara eksplisit sebelum aplikasi berjalan.</p>
+                </div>
+
+                <!-- QUIZ 8 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 8</div>
+                    <p><strong>Q1.</strong> Di V2, mengapa <code>TodoListRepository todoListRepository = new TodoListRepositoryImpl()</code> menggunakan tipe interface di kiri, bukan <code>TodoListRepositoryImpl todoListRepository = new TodoListRepositoryImpl()</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz8-1')">A. Karena interface lebih hemat memori</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, true, 'quiz8-1')">B. Agar variabel bisa menampung implementasi lain di masa depan tanpa mengubah baris kode ini</button>
+                    <button class="quiz-option" onclick="checkQuiz(this, false, 'quiz8-1')">C. Karena Java tidak mengizinkan memakai class implementasi sebagai tipe variabel</button>
+                    <div class="quiz-feedback" id="quiz8-1"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 9: SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero" style="background: linear-gradient(135deg, var(--transsuccess-color), var(--transprimary-color));">
+                    <div class="chapter-number">Chapter 9 — Summary</div>
+                    <div class="chapter-title">🗺️ Peta Arsitektur &amp; Ringkasan Project</div>
+                    <div class="chapter-desc">Kita sudah menjelajahi seluruh codebase. Sekarang saatnya melihat gambaran besar dan memahami bagaimana semua potongan puzzle ini bersatu.</div>
+                </div>
+
+                <div class="text-title">Alur Data Lengkap — V2</div>
+                <div class="code-block">
+<pre><code class="language-java">// Alur ketika user menambah todo:
+
+// [USER mengetik "1" lalu "Belajar Java"]
+//    ↓
+// TodoListView.showTodoList()        → terima input "1"
+//    ↓
+// TodoListView.addTodoList()         → terima input "Belajar Java"
+//    ↓
+// todoListService.addTodoList("Belajar Java")
+//    ↓
+// TodoListServiceImpl.addTodoList() {
+//   Todolist entity = new Todolist("Belajar Java");  // buat entity
+//   todoListRepository.add(entity);                  // serahkan ke repo
+// }
+//    ↓
+// TodoListRepositoryImpl.add(entity) {
+//   resizeIfFull();                  // cek kapasitas
+//   data[i] = entity;                // simpan di array
+// }
+//    ↓
+// [DATA TERSIMPAN] ✅</code></pre>
+                </div>
+
+                <div class="text-title">Diagram Dependency (Siapa Tahu Siapa)</div>
+                <div style="box-sizing:border-box; max-width:77dvw; overflow-x:auto; border:var(--border); border-radius:var(--radius-l); padding:var(--l);">
+                    <div style="display:grid; grid-template-columns:repeat(3, max-content); gap:var(--m) var(--x); align-items:center;">
+                        <div class="arch-node view">TodoListView</div>
+                        <div class="arch-arrow">──depends on──▶</div>
+                        <div class="arch-node service">TodoListService<br/><small>(Interface)</small></div>
+
+                        <div></div>
+                        <div></div>
+                        <div style="display:flex; align-items:center; gap:var(--xs);">
+                            <span style="font-size:var(--xs); opacity:0.6;">implemented by ▼</span>
+                        </div>
+
+                        <div class="arch-node service" style="opacity:0.5; font-size:var(--xs);">TodoListServiceImpl</div>
+                        <div class="arch-arrow">──depends on──▶</div>
+                        <div class="arch-node repo">TodoListRepository<br/><small>(Interface)</small></div>
+
+                        <div></div>
+                        <div></div>
+                        <div style="display:flex; align-items:center; gap:var(--xs);">
+                            <span style="font-size:var(--xs); opacity:0.6;">implemented by ▼</span>
+                        </div>
+
+                        <div></div>
+                        <div></div>
+                        <div class="arch-node repo" style="opacity:0.5; font-size:var(--xs);">TodoListRepositoryImpl</div>
+
+                        <div></div>
+                        <div></div>
+                        <div style="display:flex; align-items:center; gap:var(--xs);">
+                            <span style="font-size:var(--xs); opacity:0.6;">uses ▼</span>
+                        </div>
+
+                        <div></div>
+                        <div></div>
+                        <div class="arch-node entity">Todolist (Entity)</div>
+                    </div>
+                </div>
+
+                <div class="text-title">Prinsip SOLID yang Diterapkan</div>
+                <div class="timeline">
+                    <div>
+                        <span class="timeline-key active">S</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Single Responsibility Principle</div>
+                        <div class="timeline-content-desc">Setiap class punya satu tanggung jawab: Entity = data, Repository = penyimpanan, Service = logika bisnis, View = UI. Tidak ada class yang "tahu terlalu banyak".</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">O</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Open/Closed Principle</div>
+                        <div class="timeline-content-desc">Bisa menambah implementasi baru (misal: <code>TodoListRepositoryDatabase</code>) tanpa mengubah Service atau View. Open for extension, closed for modification.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">D</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Dependency Inversion Principle</div>
+                        <div class="timeline-content-desc">High-level modules (Service, View) tidak bergantung pada low-level modules (Impl). Keduanya bergantung pada abstraksi (Interface). Inilah kenapa semua dependency bertipe interface.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">→</span>
+                    </div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Spring Boot selanjutnya</div>
+                        <div class="timeline-content-desc">Semua yang kamu pelajari di sini adalah fondasi Spring Boot. Spring hanya mengotomasi "wiring" di main() — sisanya sama persis: interface, implementasi, constructor injection, layered architecture.</div>
+                    </div>
+                </div>
+
+                <div class="text-title">Cheat Sheet — Sintaks Java Penting</div>
+                <div class="table-content" style="box-sizing:border-box; max-width:77dvw; overflow-x:auto;">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Konsep</th>
+                            <th>Java</th>
+                            <th>PHP/Laravel Equivalent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Deklarasi variabel</td><td><code>String name = "Java";</code></td><td><code>$name = "PHP";</code></td></tr>
+                        <tr><td>Array tetap</td><td><code>new String[10]</code></td><td>PHP array bisa tumbuh otomatis</td></tr>
+                        <tr><td>Perbandingan String</td><td><code>a.equals(b)</code></td><td><code>$a == $b</code></td></tr>
+                        <tr><td>Package</td><td><code>package service;</code></td><td><code>namespace App\Services;</code></td></tr>
+                        <tr><td>Import</td><td><code>import entity.Todolist;</code></td><td><code>use App\Models\Todolist;</code></td></tr>
+                        <tr><td>Interface</td><td><code>interface X { void doSomething(); }</code></td><td><code>interface X { public function doSomething(); }</code></td></tr>
+                        <tr><td>Implementasi</td><td><code>class Impl implements Interface</code></td><td><code>class Impl implements Interface</code></td></tr>
+                        <tr><td>Override</td><td><code>@Override</code> annotation</td><td>Tidak ada annotation, override otomatis</td></tr>
+                        <tr><td>Constructor</td><td><code>public ClassName(Type param) {}</code></td><td><code>public function __construct(Type $param) {}</code></td></tr>
+                        <tr><td>Getter</td><td><code>public String getTodo() { return todo; }</code></td><td>Magic <code>$model->todo</code> (Eloquent) atau getter manual</td></tr>
+                        <tr><td>Type inference</td><td><code>var x = new ArrayList&lt;&gt;();</code></td><td>PHP infer otomatis selalu</td></tr>
+                        <tr><td>String ke int</td><td><code>Integer.parseInt("5")</code></td><td><code>(int)"5"</code> atau otomatis</td></tr>
+                        <tr><td>Void method</td><td><code>public void doIt() {}</code></td><td><code>public function doIt(): void {}</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="section-divider"/>
+                <div class="info-box success" style="text-align:center; padding:var(--x);">
+                    <div style="font-size:2rem; margin-bottom:var(--s);">🎉</div>
+                    <div style="font-size:var(--l); font-weight:bold; margin-bottom:var(--s);">Selamat! Kamu Telah Menyelesaikan Modul Ini</div>
+                    <p>Kamu sekarang memahami dasar-dasar Java OOP melalui studi kasus nyata: Entity, Repository Pattern, Service Layer, View Layer, Constructor Injection, dan Manual DI. Fondasi ini adalah persis yang dibutuhkan untuk mempelajari Spring Boot. Langkah berikutnya: replace Array dengan <code>ArrayList&lt;Todolist&gt;</code>, lalu coba tambahkan Spring Boot!</p>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="text-align:center; padding:var(--x); opacity:0.5; font-size:var(--xs);">
+        Java OOP — Studi Kasus TodoList &bull; Modul Self-Paced Learning
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script>
+    /* ===== FRAMEWORK FUNCTIONS ===== */
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active');
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode");
+        const btn = document.querySelector('.container-header-button-switch-theme');
+        btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        const iconGetMenu = document.getElementById('get-menu');
+        iconGetMenu.classList.toggle('opened');
+    }
+
+    /* ===== QUIZ LOGIC ===== */
+    const quizAnswers = {
+        'quiz0-1': 'Error saat kompilasi karena Java strongly-typed. Tipe <code>int</code> tidak bisa menerima nilai String.',
+        'quiz0-2': 'Betul! Package di Java = namespace di PHP. <code>package entity;</code> ≈ <code>namespace App\\Models;</code>',
+        'quiz1-1': 'Tepat! Service dan View layer seharusnya tidak tahu detail penyimpanan — mereka hanya berkomunikasi via interface Repository.',
+        'quiz2-1': 'Benar! Encapsulation memungkinkan kita menambahkan validasi di setter tanpa mengubah semua kode yang menggunakan class ini.',
+        'quiz2-2': 'Betul! Begitu kamu mendefinisikan satu constructor berparameter, Java tidak lagi menyediakan no-arg constructor secara otomatis.',
+        'quiz3-1': 'Benar! <code>int</code> = primitive type, tidak bisa null. <code>Integer</code> = wrapper class/object, bisa null. Java melakukan auto-boxing/unboxing antara keduanya.',
+        'quiz3-2': 'Tepat! Dengan shift kiri, nomor urut data selalu konsekutif (1, 2, 3...) tanpa "lubang" di tengah.',
+        'quiz4-1': 'Benar! Jika tidak semua method interface diimplementasikan, class tersebut dianggap abstract dan tidak bisa di-<code>new</code>.',
+        'quiz4-2': 'Tepat sekali! Ini adalah Dependency Inversion Principle — bergantung pada abstraksi (interface), bukan implementasi konkret.',
+        'quiz5-1': 'Tepat! Constructor injection membuat dependency eksplisit, memungkinkan penggunaan <code>final</code>, dan class bisa di-test dengan inject mock tanpa perlu Spring context.',
+        'quiz5-2': 'Benar! Field <code>todo</code> di class <code>Todolist</code> bersifat <code>private</code>, sehingga hanya bisa diakses dari luar class melalui getter <code>getTodo()</code>.',
+        'quiz6-1': 'Benar! <code>==</code> pada object (termasuk String) membandingkan apakah kedua variabel menunjuk ke lokasi memori yang sama, bukan isinya. Selalu gunakan <code>.equals()</code> untuk konten String.',
+        'quiz7-1': 'Tepat! Static method bagus untuk utility stateless, tapi menyulitkan unit testing karena tidak bisa di-mock dengan mudah (tidak ada interface untuk disubstitusi).',
+        'quiz8-1': 'Benar! Ini adalah "programming to interface" — dengan tipe interface di kiri, baris ini bisa tetap valid meski implementasi di kanan diganti dengan <code>new TodoListRepositoryDatabase()</code>.',
+    };
+
+    function checkQuiz(btn, isCorrect, quizId) {
+        // Nonaktifkan semua tombol dalam quiz yang sama
+        const allBtns = btn.parentElement.querySelectorAll('.quiz-option');
+        allBtns.forEach(b => {
+            b.disabled = true;
+            b.style.opacity = '0.6';
+            b.style.cursor = 'not-allowed';
+        });
+
+        // Tandai pilihan user
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.style.opacity = '1';
+        } else {
+            btn.classList.add('wrong');
+            btn.style.opacity = '1';
+            // Tandai jawaban benar
+            allBtns.forEach(b => {
+                if (b.onclick && b.onclick.toString().includes('true')) {
+                    b.classList.add('correct');
+                    b.style.opacity = '1';
+                }
+            });
+        }
+
+        // Tampilkan feedback
+        const feedback = document.getElementById(quizId);
+        if (feedback) {
+            feedback.classList.add('show');
+            feedback.style.background = isCorrect ? 'var(--transsuccess-color)' : 'var(--transdanger-color)';
+            feedback.style.borderLeft = isCorrect ? '4px solid var(--success-color)' : '4px solid var(--danger-color)';
+            feedback.style.padding = 'var(--s)';
+            feedback.style.borderRadius = '0 var(--radius-m) var(--radius-m) 0';
+            feedback.innerHTML = (isCorrect ? '✅ <strong>Benar!</strong> ' : '❌ <strong>Kurang tepat.</strong> ') + (quizAnswers[quizId] || '');
+        }
+    }
+
+    /* ===== SIDEBAR ACTIVE TRACKING ===== */
+    const sections = document.querySelectorAll('[id^="chapter-"]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item[href]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => observer.observe(section));
+</script>
+</body>
+</html>

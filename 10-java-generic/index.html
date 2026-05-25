@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>☕ Belajar Java Generics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <style>
+        .code-block {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow-x: auto;
+            border-radius: var(--radius-l);
+            margin: var(--m) 0;
+            font-size: var(--s);
+        }
+        .code-block pre { margin: 0; }
+        .code-block pre code {
+            border-radius: var(--radius-l);
+            font-size: var(--s);
+        }
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transprimary-color);
+            border-left: 4px solid var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .info-box.warning { background: var(--transwarning-color); border-left-color: var(--warning-color); }
+        .info-box.success { background: var(--transsuccess-color); border-left-color: var(--success-color); }
+        .info-box.danger  { background: var(--transdanger-color);  border-left-color: var(--danger-color);  }
+        .info-box.laravel { background: var(--transsecond-primary-color); border-left-color: var(--second-primary-color); }
+        .info-box.dark    { background: rgba(0,0,0,0.04); border-left-color: var(--text-color); }
+        .info-box-title { font-weight: 700; margin-bottom: var(--xs); color: var(--primary-color); }
+        .info-box.warning .info-box-title { color: var(--warning-color); }
+        .info-box.success .info-box-title { color: var(--success-color); }
+        .info-box.danger  .info-box-title { color: var(--danger-color);  }
+        .info-box.laravel .info-box-title { color: var(--second-primary-color); }
+        .info-box.dark    .info-box-title { color: var(--text-color); }
+
+        .line-explain { box-sizing: border-box; max-width: 77dvw; overflow: auto; margin: var(--m) 0; }
+        .line-explain-item {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: var(--s);
+            align-items: start;
+            padding: var(--xs) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .line-explain-item:last-child { border-bottom: none; }
+        .line-num {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: var(--xs);
+            padding: 2px var(--xs);
+            border-radius: var(--radius-s);
+            white-space: nowrap;
+            font-family: monospace;
+        }
+        .line-desc { font-size: var(--s); }
+
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transthird-primary-color);
+            border: 1px solid var(--third-primary-color);
+            border-radius: var(--radius-l);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .quiz-title { font-weight: 700; color: var(--third-primary-color); margin-bottom: var(--s); }
+        .quiz-option {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--s);
+            padding: var(--xs) var(--s);
+            margin: var(--xs) 0;
+            border-radius: var(--radius-m);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            transition: all 0.2s;
+        }
+        .quiz-option:hover { border-color: var(--third-primary-color); background: var(--transthird-primary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong   { background: var(--transdanger-color);  border-color: var(--danger-color);  }
+        .quiz-option input { margin-top: 3px; }
+        .quiz-feedback { margin-top: var(--s); padding: var(--xs) var(--s); border-radius: var(--radius-m); font-size: var(--s); display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.wrong   { background: var(--transdanger-color);  color: var(--danger-color);  }
+
+        .comparison-grid {
+            box-sizing: border-box; max-width: 77dvw; overflow: auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: var(--s); margin: var(--m) 0;
+        }
+        @media (max-width: 640px) { .comparison-grid { grid-template-columns: 1fr; } }
+        .comparison-wrong { background: var(--transdanger-color); border: 1px solid var(--danger-color); border-radius: var(--radius-m); padding: var(--s); }
+        .comparison-right { background: var(--transsuccess-color); border: 1px solid var(--success-color); border-radius: var(--radius-m); padding: var(--s); }
+        .comparison-label { font-weight: 700; font-size: var(--s); margin-bottom: var(--xs); }
+        .comparison-wrong .comparison-label { color: var(--danger-color); }
+        .comparison-right .comparison-label { color: var(--success-color); }
+
+        .chapter-intro {
+            box-sizing: border-box; max-width: 77dvw; overflow: auto;
+            background: linear-gradient(135deg, var(--transprimary-color) 0%, var(--transsecond-primary-color) 100%);
+            border-radius: var(--radius-x); padding: var(--x); margin-bottom: var(--m);
+        }
+        .chapter-intro-number { font-size: var(--xs); font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; }
+        .chapter-intro-title  { font-size: var(--xx); font-weight: 800; margin: var(--xs) 0; }
+        .chapter-intro-desc   { font-size: var(--s); opacity: 0.85; }
+
+        .badge-chapter {
+            display: inline-block;
+            background: var(--transprimary-color); color: var(--primary-color);
+            font-size: var(--xs); font-weight: 700; padding: 2px var(--s);
+            border-radius: 999px; margin-bottom: var(--s);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .summary-card {
+            box-sizing: border-box; max-width: 77dvw; overflow: auto;
+            background: var(--transprimary-color); border: 1px solid var(--border-color);
+            border-radius: var(--radius-l); padding: var(--m); margin: var(--s) 0;
+        }
+        .summary-card-title { font-weight: 700; color: var(--primary-color); margin-bottom: var(--xs); }
+
+        .variant-card {
+            box-sizing: border-box; border-radius: var(--radius-l);
+            padding: var(--m); flex: 1; min-width: 200px;
+        }
+        .variant-card.invariant  { background: var(--transdanger-color);  border: 1px solid var(--danger-color);  }
+        .variant-card.covariant  { background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .variant-card.contravariant { background: var(--transwarning-color); border: 1px solid var(--warning-color); }
+        .variant-card-title { font-weight: 700; font-size: var(--s); margin-bottom: var(--xs); }
+        .variant-card.invariant .variant-card-title     { color: var(--danger-color);  }
+        .variant-card.covariant .variant-card-title     { color: var(--success-color); }
+        .variant-card.contravariant .variant-card-title { color: var(--warning-color); }
+
+        .mt-xs { margin-top: var(--xs); } .mt-s { margin-top: var(--s); }
+        .mt-m  { margin-top: var(--m);  } .mt-l { margin-top: var(--l); }
+        .mb-xs { margin-bottom: var(--xs); } .mb-s { margin-bottom: var(--s); }
+        .mb-m  { margin-bottom: var(--m);  }
+        .text-sm { font-size: var(--s); }
+        .text-xs { font-size: var(--xs); }
+        .fw-bold { font-weight: 700; }
+        .divider { height: 1px; background: var(--border-color); margin: var(--l) 0; }
+
+        /* Diagram boxes */
+        .diagram-box {
+            box-sizing: border-box; max-width: 77dvw; overflow: auto;
+            border: 2px solid var(--border-color); border-radius: var(--radius-l);
+            padding: var(--m); margin: var(--m) 0; text-align: center; font-family: monospace; font-size: var(--s);
+        }
+        .diagram-arrow { font-size: var(--l); color: var(--primary-color); margin: 0 var(--xs); }
+        .diagram-type  { display: inline-block; background: var(--transprimary-color); border: 1px solid var(--primary-color); border-radius: var(--radius-m); padding: 2px var(--s); margin: var(--xs); }
+        .diagram-type.erased { background: var(--transdanger-color); border-color: var(--danger-color); color: var(--danger-color); text-decoration: line-through; }
+        .diagram-type.result { background: var(--transsuccess-color); border-color: var(--success-color); color: var(--success-color); }
+    </style>
+</head>
+<body>
+
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🧩 Intro</a>
+    <a class="bottom-nav-item" href="#chapter-1">📦 Class</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 More</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-4">🔒 Constraint</a>
+                <a class="bottom-nav-item" href="#chapter-6">🌀 Invariant</a>
+                <a class="bottom-nav-item" href="#chapter-7">❓ Wildcard</a>
+                <a class="bottom-nav-item" href="#chapter-10">🪄 Erasure</a>
+                <a class="bottom-nav-item" href="#chapter-11">⚖️ Comparable</a>
+                <a class="bottom-nav-item" href="#summary">📊 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java Generics</div>
+    </div>
+    <div class="sidebar-menu">
+
+        <a href="#intro" class="sidebar-menu-item active" data-title="Intro">
+            <div class="sidebar-menu-item-svg">🚀</div>
+            <span>Intro & Motivasi</span>
+        </a>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Generic Class & Method">
+                <strong class="sidebar-menu-item-svg">📦</strong>
+                <span>Generic Class & Method</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-1" class="sidebar-menu-item" data-title="Generic Class">
+                    <strong class="sidebar-menu-item-svg">1️⃣</strong>
+                    <span>Generic Class (MyData&lt;T&gt;)</span>
+                </a>
+                <a href="#chapter-2" class="sidebar-menu-item" data-title="Multiple Type Param">
+                    <strong class="sidebar-menu-item-svg">2️⃣</strong>
+                    <span>Multiple Type (Pair&lt;T,U&gt;)</span>
+                </a>
+                <a href="#chapter-3" class="sidebar-menu-item" data-title="Generic Method">
+                    <strong class="sidebar-menu-item-svg">3️⃣</strong>
+                    <span>Generic Method</span>
+                </a>
+            </div>
+        </details>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Constraint / Bounded">
+                <strong class="sidebar-menu-item-svg">🔒</strong>
+                <span>Constraint / Bounded</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-4" class="sidebar-menu-item" data-title="Bounded Type">
+                    <strong class="sidebar-menu-item-svg">4️⃣</strong>
+                    <span>Bounded Type Parameter</span>
+                </a>
+                <a href="#chapter-5" class="sidebar-menu-item" data-title="Multiple Constraint">
+                    <strong class="sidebar-menu-item-svg">5️⃣</strong>
+                    <span>Multiple Constraint</span>
+                </a>
+            </div>
+        </details>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Variance & Wildcard">
+                <strong class="sidebar-menu-item-svg">🌀</strong>
+                <span>Variance & Wildcard</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-6" class="sidebar-menu-item" data-title="Invariance">
+                    <strong class="sidebar-menu-item-svg">6️⃣</strong>
+                    <span>Invariance</span>
+                </a>
+                <a href="#chapter-7" class="sidebar-menu-item" data-title="Wildcard">
+                    <strong class="sidebar-menu-item-svg">7️⃣</strong>
+                    <span>Wildcard (?)</span>
+                </a>
+                <a href="#chapter-8" class="sidebar-menu-item" data-title="Covariance">
+                    <strong class="sidebar-menu-item-svg">8️⃣</strong>
+                    <span>Covariance (? extends)</span>
+                </a>
+                <a href="#chapter-9" class="sidebar-menu-item" data-title="Contravariance">
+                    <strong class="sidebar-menu-item-svg">9️⃣</strong>
+                    <span>Contravariance (? super)</span>
+                </a>
+            </div>
+        </details>
+
+        <a href="#chapter-10" class="sidebar-menu-item" data-title="Type Erasure">
+            <div class="sidebar-menu-item-svg">🪄</div>
+            <span>Type Erasure</span>
+        </a>
+
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Comparable & Comparator">
+                <strong class="sidebar-menu-item-svg">⚖️</strong>
+                <span>Comparable & Comparator</span>
+            </summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-11" class="sidebar-menu-item" data-title="Comparable">
+                    <strong class="sidebar-menu-item-svg">🔤</strong>
+                    <span>Comparable&lt;T&gt;</span>
+                </a>
+                <a href="#chapter-12" class="sidebar-menu-item" data-title="Comparator">
+                    <strong class="sidebar-menu-item-svg">📐</strong>
+                    <span>Comparator&lt;T&gt;</span>
+                </a>
+            </div>
+        </details>
+
+        <a href="#summary" class="sidebar-menu-item" data-title="Summary">
+            <div class="sidebar-menu-item-svg">📊</div>
+            <span>Summary</span>
+        </a>
+
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#intro">
+                <span class="container-header-nav-item-text">☕ Java Generics</span>
+            </a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-1"><span class="container-header-nav-item-text">📦 Generic Class</span></a>
+                    <a class="container-header-nav-item" href="#chapter-6"><span class="container-header-nav-item-text">🌀 Variance</span></a>
+                    <a class="container-header-nav-item" href="#summary"><span class="container-header-nav-item-text">📊 Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===== INTRO ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="intro">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">☕ Modul Pembelajaran Java</div>
+                    <div class="chapter-intro-title">Belajar Java Generics</div>
+                    <div class="chapter-intro-desc">Dari Generic Class sederhana sampai Variance & Type Erasure — panduan lengkap untuk PHP/Laravel developer yang ingin benar-benar paham type system Java.</div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">🤔 Masalah Tanpa Generics: Kode Tanpa Type Safety</div>
+                    <p>Bayangkan kamu punya kelas kotak yang bisa menyimpan data apapun:</p>
+                    <div class="code-block">
+                        <pre><code class="language-java">// Tanpa Generics — pakai Object
+public class MyData {
+    private Object data;
+
+    public Object getData() { return data; }
+    public void setData(Object data) { this.data = data; }
+}
+
+// Akibatnya:
+MyData box = new MyData();
+box.setData("Eko");
+
+String name = (String) box.getData(); // Harus casting manual — rawan ClassCastException!
+Integer number = (Integer) box.getData(); // ❌ Runtime error: String cannot be cast to Integer</code></pre>
+                    </div>
+                    <p class="mt-s text-sm">Dua masalah besar: <strong>(1)</strong> kamu harus casting manual di setiap pengambilan data, <strong>(2)</strong> error baru muncul saat runtime (bukan saat compile), artinya bug lolos ke production.</p>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <div class="info-box-title">✅ Solusi: Generics — Type Safety Saat Compile</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// Dengan Generics
+MyData&lt;String&gt; box = new MyData&lt;&gt;("Eko");
+String name = box.getData(); // Tidak perlu casting! Compiler sudah tahu tipenya String.
+
+MyData&lt;Integer&gt; numBox = new MyData&lt;&gt;(100);
+Integer num = numBox.getData(); // Aman, no casting needed
+
+// box.setData(1000); // ❌ Compile error langsung! Integer tidak bisa masuk ke MyData&lt;String&gt;</code></pre>
+                    </div>
+                    <p class="mt-s text-sm">Error sekarang terdeteksi <strong>saat kompilasi</strong> — jauh lebih aman. Tidak perlu casting manual. Kode lebih bersih dan self-documenting.</p>
+                </div>
+
+                <div class="info-box laravel mt-m">
+                    <div class="info-box-title">🐘 Analogi PHP/Laravel</div>
+                    <p>PHP adalah <em>loosely typed</em> — variabel bisa menyimpan tipe apapun dan kamu baru tahu ada bug saat runtime. Java Generics adalah cara Java menjamin type safety di kompilasi waktu. Ini mirip dengan PHP 8 <em>typed properties</em> atau <em>return type declarations</em>, tapi jauh lebih powerful karena diterapkan di level class dan method secara generik.</p>
+                    <div class="code-block">
+                        <pre><code class="language-php">// PHP: typed property (sejak PHP 7.4)
+class Box {
+    public string $data; // Hanya bisa String, tapi hanya untuk properti ini
+}
+
+// Java Generics jauh lebih fleksibel:
+// Satu class Box&lt;T&gt; bisa jadi Box&lt;String&gt;, Box&lt;Integer&gt;, Box&lt;User&gt;, dll.
+// Dengan jaminan type safety penuh di setiap varian!</code></pre>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <div class="text-title">🗺️ Peta Topik Generics</div>
+                <div class="display-grid mt-m">
+                    <div class="stepper">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">1</div>
+                            <div class="stepper-value">Generic Class</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">2</div>
+                            <div class="stepper-value">Multiple Type Param</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">3</div>
+                            <div class="stepper-value">Generic Method</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">4</div>
+                            <div class="stepper-value">Constraint</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">5</div>
+                            <div class="stepper-value">Multiple Constraint</div>
+                        </div>
+                    </div>
+                    <div class="stepper" style="margin-top: var(--m)">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">6</div>
+                            <div class="stepper-value">Invariance</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">7</div>
+                            <div class="stepper-value">Wildcard</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">8</div>
+                            <div class="stepper-value">Covariance</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">9</div>
+                            <div class="stepper-value">Contravariance</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">10</div>
+                            <div class="stepper-value">Type Erasure</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 1: Generic Class ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 1 • Generic Class</div>
+                    <div class="chapter-intro-title">📦 Generic Class — MyData&lt;T&gt;</div>
+                    <div class="chapter-intro-desc">Membuat kelas yang bisa bekerja dengan tipe data apapun — sambil tetap menjaga type safety.</div>
+                </div>
+
+                <p>Mari kita bedah kelas <code>MyData&lt;T&gt;</code> — contoh paling dasar dari Generic Class di Java.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: MyData.java
+package programmer.zaman.now.generic;
+
+public class MyData&lt;T&gt; {   // T = Type Parameter
+
+    private T data;          // field bertipe T
+
+    public MyData(T data) {  // konstruktor menerima T
+        this.data = data;
+    }
+
+    public T getData() {     // return type adalah T
+        return data;
+    }
+
+    public void setData(T data) { // parameter bertipe T
+        this.data = data;
+    }
+}
+</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">class MyData&lt;T&gt;</span>
+                        <div class="line-desc"><code>T</code> adalah <strong>Type Parameter</strong> — semacam "placeholder" untuk tipe data. Nama <code>T</code> adalah konvensi (singkatan Type). Saat class ini digunakan, <code>T</code> akan diganti dengan tipe konkret seperti <code>String</code>, <code>Integer</code>, <code>User</code>, dll.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">private T data</span>
+                        <div class="line-desc">Field bertipe <code>T</code>. Compiler akan memastikan field ini hanya bisa menampung tipe sesuai yang di-declare saat instantiasi. Jika <code>MyData&lt;String&gt;</code>, maka <code>data</code> hanya bisa menyimpan <code>String</code>.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">public T getData()</span>
+                        <div class="line-desc">Return type adalah <code>T</code>. Artinya: <code>MyData&lt;String&gt;.getData()</code> return <code>String</code>, <code>MyData&lt;Integer&gt;.getData()</code> return <code>Integer</code> — <strong>tanpa perlu casting!</strong></div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">💡 Cara Menggunakan MyData&lt;T&gt;</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// File: GenericClassApp.java
+public class GenericClassApp {
+    public static void main(String[] args) {
+
+        // Diamond operator &lt;&gt; — compiler menyimpulkan tipe dari context (Java 7+)
+        MyData&lt;String&gt; stringMyData = new MyData&lt;String&gt;("Eko");
+        MyData&lt;Integer&gt; integerMyData = new MyData&lt;Integer&gt;(10);
+
+        // Tidak perlu casting!
+        String stringValue = stringMyData.getData();   // Langsung String
+        Integer integerValue = integerMyData.getData(); // Langsung Integer
+
+        System.out.println(stringValue);  // Eko
+        System.out.println(integerValue); // 10
+
+        // ERROR compile: tipe tidak cocok
+        // stringMyData.setData(999); // ❌ Integer tidak bisa masuk ke MyData&lt;String&gt;
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">new MyData&lt;String&gt;("Eko")</span>
+                        <div class="line-desc"><strong>Type argument</strong>: di sini kamu "mengisi" type parameter <code>T</code> dengan <code>String</code>. Mulai sini, semua kemunculan <code>T</code> di dalam class akan menjadi <code>String</code>.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">new MyData&lt;&gt;("Eko") — Diamond Operator</span>
+                        <div class="line-desc">Java 7+ memperkenalkan <strong>diamond operator <code>&lt;&gt;</code></strong> — kamu bisa mengosongkan type argument di sisi kanan jika compiler bisa menyimpulkannya dari sisi kiri (<em>type inference</em>). Lebih ringkas.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📌 Konvensi Nama Type Parameter</div>
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Huruf</th><th>Konvensi</th><th>Contoh Penggunaan</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>T</code></td><td>Type (umum)</td><td><code>MyData&lt;T&gt;</code>, <code>List&lt;T&gt;</code></td></tr>
+                            <tr><td><code>E</code></td><td>Element (koleksi)</td><td><code>ArrayList&lt;E&gt;</code></td></tr>
+                            <tr><td><code>K</code></td><td>Key (map)</td><td><code>Map&lt;K, V&gt;</code></td></tr>
+                            <tr><td><code>V</code></td><td>Value (map)</td><td><code>Map&lt;K, V&gt;</code></td></tr>
+                            <tr><td><code>N</code></td><td>Number</td><td><code>NumberBox&lt;N extends Number&gt;</code></td></tr>
+                            <tr><td><code>R</code></td><td>Return type</td><td><code>Function&lt;T, R&gt;</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="comparison-grid mt-m">
+                    <div class="comparison-wrong">
+                        <div class="comparison-label">❌ Tanpa Generics (Berbahaya)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Raw type — hindari!
+MyData rawData = new MyData("Eko");
+
+// Casting manual, rawan error
+String name = (String) rawData.getData();
+
+// Ini compile tapi CRASH di runtime!
+Integer num = (Integer) rawData.getData();
+// ClassCastException!</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-right">
+                        <div class="comparison-label">✅ Dengan Generics (Aman)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Typed — aman!
+MyData&lt;String&gt; data = new MyData&lt;&gt;("Eko");
+
+// Tidak perlu casting, error terdeteksi compile time
+String name = data.getData();
+
+// COMPILE ERROR langsung:
+Integer num = data.getData(); // ❌</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel mt-m">
+                    <div class="info-box-title">🐘 Analogi Laravel: Generic Repository</div>
+                    <p>Di Laravel, kamu mungkin punya <code>BaseRepository</code> yang pakai <code>$model</code> bertipe <code>mixed</code>. Semua operasi dibungkus <code>Model</code> tapi tipe konkretnya hilang. Di Java, kamu bisa buat <code>Repository&lt;T&gt;</code> di mana <code>T</code> bisa jadi <code>User</code>, <code>Post</code>, dll., dan compiler akan memastikan kamu tidak meng-assign <code>Post</code> ke <code>Repository&lt;User&gt;</code>. Lebih type-safe dari PHP.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Apa yang terjadi jika kamu menggunakan <em>raw type</em> <code>MyData myData = new MyData("Eko")</code> lalu memanggil <code>Integer i = (Integer) myData.getData()</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q1', this, false)">
+                        <input type="radio" name="q1"><span>Compile error — Java tidak mengizinkan casting ke Integer</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q1', this, true)">
+                        <input type="radio" name="q1"><span>Compile berhasil, tapi runtime error: <code>ClassCastException</code></span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q1', this, false)">
+                        <input type="radio" name="q1"><span>Berjalan normal karena Java otomatis konversi String ke Integer</span>
+                    </div>
+                    <div class="quiz-feedback" id="q1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 2: Multiple Type Parameter ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 2 • Multiple Type Parameters</div>
+                    <div class="chapter-intro-title">🗝️ Pair&lt;T, U&gt; — Dua Type Parameter</div>
+                    <div class="chapter-intro-desc">Satu class bisa memiliki lebih dari satu type parameter — berguna untuk struktur data seperti pasangan key-value.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: Pair.java
+package programmer.zaman.now.generic;
+
+public class Pair&lt;T, U&gt; {   // Dua type parameter: T dan U
+
+    private T first;          // field pertama bertipe T
+    private U second;         // field kedua bertipe U
+
+    public Pair(T first, U second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public T getFirst() { return first; }
+    public void setFirst(T first) { this.first = first; }
+
+    public U getSecond() { return second; }
+    public void setSecond(U second) { this.second = second; }
+}
+</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: PairApp.java
+public class PairApp {
+    public static void main(String[] args) {
+
+        // T = String, U = Integer
+        Pair&lt;String, Integer&gt; pair = new Pair&lt;String, Integer&gt;("eko", 100);
+
+        System.out.println(pair.getFirst());   // "eko" — tipe String
+        System.out.println(pair.getSecond());  // 100 — tipe Integer
+
+        // Contoh penggunaan lain:
+        Pair&lt;String, String&gt; namePair = new Pair&lt;&gt;("firstName", "lastName");
+        Pair&lt;Integer, Boolean&gt; indexFlag = new Pair&lt;&gt;(1, true);
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Pair&lt;T, U&gt;</span>
+                        <div class="line-desc">Dua type parameter dipisahkan koma. <code>T</code> dan <code>U</code> adalah independent — bisa tipe yang sama (<code>Pair&lt;String, String&gt;</code>) atau berbeda (<code>Pair&lt;String, Integer&gt;</code>).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Pair&lt;String, Integer&gt;</span>
+                        <div class="line-desc">Saat instantiasi, kamu memberi dua type argument. <code>T</code> → <code>String</code>, <code>U</code> → <code>Integer</code>. Compiler akan enforce: <code>getFirst()</code> return <code>String</code>, <code>getSecond()</code> return <code>Integer</code>.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Pair di Java Standard Library</div>
+                    <p>Java standard library sebenarnya tidak punya class <code>Pair</code> built-in (berbeda dari Python tuple atau PHP array pasangan). Tapi konsep ini banyak muncul di library lain (JavaFX punya <code>javafx.util.Pair</code>), dan kamu bisa buat sendiri seperti contoh ini. Di Java 16+, ada <strong>Record</strong> yang lebih modern: <code>record Pair&lt;T, U&gt;(T first, U second) {}</code>.</p>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi PHP: Array Asosiatif vs Typed Pair</div>
+                    <p>Di PHP, kamu biasa pakai array: <code>['name' => 'Eko', 'age' => 25]</code>. Tidak ada jaminan type — bisa saja value 'age' diisi String. Di Java <code>Pair&lt;String, Integer&gt;</code> menjamin secara compile time bahwa first selalu String dan second selalu Integer.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 3: Generic Method ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 3 • Generic Method</div>
+                    <div class="chapter-intro-title">🔧 Generic Method — ArrayHelper</div>
+                    <div class="chapter-intro-desc">Method bisa punya type parameter sendiri, terpisah dari class-nya — membuat method yang bekerja untuk berbagai tipe array.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ArrayHelper.java
+package programmer.zaman.now.generic.util;
+
+public class ArrayHelper {
+
+    // Type parameter &lt;T&gt; dideklarasikan SEBELUM return type
+    //       ↓↓↓
+    public static &lt;T&gt; int count(T[] array) {
+        return array.length;
+    }
+    //                 ↑↑↑↑↑↑↑
+    // Menerima array dari tipe T apapun, return int
+}
+</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">public static &lt;T&gt; int count(T[] array)</span>
+                        <div class="line-desc">Posisi type parameter <code>&lt;T&gt;</code> ada di antara modifier (<code>public static</code>) dan return type (<code>int</code>). Ini menandakan bahwa <code>T</code> adalah type parameter milik method ini, bukan milik class. Method ini adalah <em>generic method</em>.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">T[] array</span>
+                        <div class="line-desc">Parameter bertipe array dari T. Satu method ini bisa menerima <code>String[]</code>, <code>Integer[]</code>, <code>Person[]</code>, atau array dari tipe apapun. Java secara otomatis menentukan <code>T</code> dari tipe argument yang diberikan (<em>type inference</em>).</div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ArrayHelperApp.java
+public class ArrayHelperApp {
+    public static void main(String[] args) {
+
+        String[] names = {"Eko", "Kurniawan", "Khannedy"};
+        Integer[] numbers = {1, 2, 3, 4, 5};
+
+        // Cara 1: Explicit type argument — T diisi secara eksplisit
+        System.out.println(
+            ArrayHelper.&lt;String&gt;count(names)    // T = String → return 3
+        );
+
+        // Cara 2: Type inference — compiler menyimpulkan T dari argument
+        System.out.println(
+            ArrayHelper.count(numbers)           // T = Integer (disimpulkan), return 5
+        );
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">ArrayHelper.&lt;String&gt;count(names)</span>
+                        <div class="line-desc"><strong>Explicit type argument</strong>: kamu secara manual mengisi <code>T = String</code>. Sintaks ini jarang dipakai karena Java biasanya bisa menyimpulkan sendiri, tapi berguna untuk dokumentasi atau saat inference gagal.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">ArrayHelper.count(numbers)</span>
+                        <div class="line-desc"><strong>Type inference</strong>: compiler melihat argument <code>numbers</code> adalah <code>Integer[]</code>, lalu otomatis menyimpulkan <code>T = Integer</code>. Ini cara yang lebih umum dipakai.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Generic Method vs Generic Class — Kapan Pakai Apa?</div>
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th></th><th>Generic Class</th><th>Generic Method</th></tr></thead>
+                            <tbody>
+                            <tr><td><strong>Deklarasi</strong></td><td><code>class Box&lt;T&gt;</code></td><td><code>public &lt;T&gt; void do(T t)</code></td></tr>
+                            <tr><td><strong>Scope T</strong></td><td>Seluruh class</td><td>Hanya method itu</td></tr>
+                            <tr><td><strong>Cocok untuk</strong></td><td>Struktur data (Box, List, Pair)</td><td>Utility method (count, sort, swap)</td></tr>
+                            <tr><td><strong>Contoh stdlib</strong></td><td><code>ArrayList&lt;E&gt;</code></td><td><code>Collections.sort()</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Helper Function Generic</div>
+                    <p>Di PHP, fungsi helper seperti <code>collect($array)</code> menerima array apapun. Tapi tipe element-nya hilang — <code>collect(['a','b'])</code> dan <code>collect([1,2])</code> sama-sama mengembalikan <code>Collection</code> tanpa tipe. Di Java, dengan generic method, kamu bisa buat <code>ArrayHelper.&lt;String&gt;count(names)</code> dan compiler tahu ini adalah <code>String[]</code>.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Di mana letak deklarasi type parameter <code>&lt;T&gt;</code> pada sebuah generic method?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q3', this, false)">
+                        <input type="radio" name="q3"><span>Setelah nama method, sebelum parameter</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q3', this, true)">
+                        <input type="radio" name="q3"><span>Setelah access modifier, sebelum return type</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q3', this, false)">
+                        <input type="radio" name="q3"><span>Di dalam parameter, bersamaan dengan tipe parameter</span>
+                    </div>
+                    <div class="quiz-feedback" id="q3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 4: Bounded Type Parameter ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 4 • Constraint / Bounded</div>
+                    <div class="chapter-intro-title">🔒 Bounded Type Parameter — T extends Number</div>
+                    <div class="chapter-intro-desc">Membatasi tipe yang bisa digunakan sebagai type argument — hanya subtype dari kelas/interface tertentu yang diizinkan.</div>
+                </div>
+
+                <p>Terkadang kamu tidak ingin generic class menerima <em>semua</em> tipe. Misalnya, kelas <code>NumberData</code> hanya boleh menerima angka (<code>Integer</code>, <code>Long</code>, <code>Double</code>), bukan <code>String</code> atau tipe lain.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ConstraintApp.java (inner class)
+public static class NumberData&lt;T extends Number&gt; {
+    //                          ^^^^^^^^^^^^^^^^
+    // Bounded type: T harus subtype dari Number
+    // Number adalah superclass dari: Integer, Long, Double, Float, Short, Byte
+
+    private T data;
+
+    public NumberData(T data) { this.data = data; }
+    public T getData()        { return data; }
+    public void setData(T data) { this.data = data; }
+}
+
+// Penggunaan:
+NumberData&lt;Integer&gt; intData  = new NumberData&lt;&gt;(1);   // ✅ Integer extends Number
+NumberData&lt;Long&gt;    longData = new NumberData&lt;&gt;(1L);   // ✅ Long extends Number
+NumberData&lt;Double&gt;  dblData  = new NumberData&lt;&gt;(1.5);  // ✅ Double extends Number
+
+// NumberData&lt;String&gt; strData = new NumberData&lt;&gt;("Eko"); // ❌ COMPILE ERROR!
+// String bukan subtype dari Number</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">T extends Number</span>
+                        <div class="line-desc"><strong>Upper Bounded Type Parameter</strong>. Keyword <code>extends</code> di sini berarti "T adalah subtype dari Number" — baik class yang meng-extend Number maupun interface yang meng-implement Number. <code>extends</code> digunakan untuk keduanya (bukan <code>implements</code>) dalam konteks generics.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Keuntungan bounded type</span>
+                        <div class="line-desc">Selain membatasi tipe, bounded type juga memberikan <em>akses ke method</em> dari bound-nya. Karena <code>T extends Number</code>, di dalam class kamu bisa panggil <code>data.intValue()</code>, <code>data.doubleValue()</code>, dll — method yang dimiliki <code>Number</code>!</div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Bonus: Akses Method dari Bound</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">public static class NumberData&lt;T extends Number&gt; {
+    private T data;
+
+    // Karena T extends Number, kita BISA akses method Number!
+    public double toDouble() {
+        return data.doubleValue(); // ✅ Method milik Number
+    }
+
+    public int toInt() {
+        return data.intValue();    // ✅ Juga bisa
+    }
+}
+
+// Tanpa bound (T saja), ini TIDAK bisa:
+public static class AnyData&lt;T&gt; {
+    private T data;
+    // public double toDouble() { return data.doubleValue(); } // ❌ COMPILE ERROR
+    // T bisa apa saja, tidak pasti punya method doubleValue()
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Type Hinting Interface</div>
+                    <p>Di PHP: <code>function process(Countable $item)</code> — hanya objek yang implement <code>Countable</code> yang bisa dikirim. Java bounded generics mirip, tapi bekerja di level tipe generik: <code>&lt;T extends Countable&gt;</code> membatasi class generik agar hanya menerima tipe yang implement <code>Countable</code>.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 4</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Dengan deklarasi <code>class Box&lt;T extends Number&gt;</code>, tipe apa saja yang valid untuk T?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q4', this, false)">
+                        <input type="radio" name="q4"><span>Hanya <code>Integer</code> dan <code>Long</code></span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q4', this, true)">
+                        <input type="radio" name="q4"><span>Semua subclass dari Number: Integer, Long, Double, Float, Short, Byte, dan subclass Number kustom</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q4', this, false)">
+                        <input type="radio" name="q4"><span>Semua tipe termasuk String dan Object</span>
+                    </div>
+                    <div class="quiz-feedback" id="q4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 5: Multiple Constraint ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 5 • Multiple Constraint</div>
+                    <div class="chapter-intro-title">🔐 Multiple Constraint — T extends A & B</div>
+                    <div class="chapter-intro-desc">Type parameter bisa memiliki lebih dari satu batasan — harus merupakan subtype dari class DAN mengimplementasikan interface tertentu.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: MultipleConstraintApp.java
+public class MultipleConstraintApp {
+
+    // Interface
+    public static interface CanSayHello {
+        void sayHello(String name);
+    }
+
+    // Abstract class
+    public static abstract class Employee { }
+
+    // Subclass Employee yang TIDAK implement CanSayHello
+    public static class Manager extends Employee { }
+
+    // Subclass Employee yang JUGA implement CanSayHello
+    public static class VicePresident extends Employee implements CanSayHello {
+        @Override
+        public void sayHello(String name) {
+            System.out.println("Hello " + name);
+        }
+    }
+
+    // Multiple constraint: T harus extends Employee DAN implements CanSayHello
+    //                                           ↓                ↓
+    public static class Data&lt;T extends Employee &amp; CanSayHello&gt; {
+        private T data;
+        public Data(T data) { this.data = data; }
+        public T getData()  { return data; }
+
+        // Bisa panggil method dari KEDUA bound!
+        public void greet(String name) {
+            data.sayHello(name); // ✅ Method dari CanSayHello
+        }
+    }
+
+    public static void main(String[] args) {
+        // ✅ VicePresident memenuhi KEDUA constraint
+        Data&lt;VicePresident&gt; vpData = new Data&lt;&gt;(new VicePresident());
+        vpData.getData().sayHello("Eko"); // Hello Eko
+
+        // ❌ COMPILE ERROR: Manager hanya extends Employee, tidak implement CanSayHello
+        // Data&lt;Manager&gt; mgrData = new Data&lt;&gt;(new Manager());
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">T extends Employee &amp; CanSayHello</span>
+                        <div class="line-desc">Operator <code>&amp;</code> menggabungkan multiple bound. Aturan: <strong>maksimal satu class</strong> (harus diletakkan pertama), diikuti satu atau lebih interface. Contoh: <code>T extends MyClass &amp; Interface1 &amp; Interface2</code> adalah valid. <code>T extends Interface1 &amp; MyClass</code> — class harus selalu pertama!</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Akses method dari semua bound</span>
+                        <div class="line-desc">Di dalam class <code>Data&lt;T&gt;</code>, kamu bisa memanggil method dari <code>Employee</code> DAN <code>CanSayHello</code> karena compiler menjamin <code>T</code> pasti memiliki keduanya.</div>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Aturan Multiple Bound</div>
+                    <p><strong>1 class (pertama) + beberapa interface</strong> — urutan penting!</p>
+                    <div class="code-block">
+                        <pre><code class="language-java">// ✅ Valid: class dulu, lalu interface
+&lt;T extends Employee &amp; CanSayHello &amp; Serializable&gt;
+
+// ❌ Invalid: dua class sekaligus (Java tidak support multiple inheritance class)
+&lt;T extends Employee &amp; Manager&gt; // Error!
+
+// ✅ Valid: hanya interface-interface
+&lt;T extends CanSayHello &amp; Serializable&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Multiple Interface Hinting</div>
+                    <p>Di PHP (union type PHP 8): <code>function process(Employee&CanSayHello $obj)</code> — sayangnya PHP tidak support intersection type seperti ini di semua versi. PHP 8.1 baru memperkenalkan intersection types. Java sudah bisa multiple constraint sejak Java 5.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 6: Invariance ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 6 • Variance</div>
+                    <div class="chapter-intro-title">🚫 Invariance — Generics Tidak Otomatis Mewarisi</div>
+                    <div class="chapter-intro-desc">Konsep paling membingungkan bagi developer baru: meski String adalah subtype dari Object, MyData&lt;String&gt; BUKAN subtype dari MyData&lt;Object&gt;.</div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Konsep Penting: Invariance</div>
+                    <p>Di Java, generics bersifat <strong>invariant</strong> secara default. Artinya: hubungan subtype antar class generic <strong>tidak mengikuti</strong> hubungan subtype antar type argument-nya.</p>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: InvariantApp.java
+
+public class InvariantApp {
+    public static void main(String[] args) {
+
+        // ── Subtype normal: String IS-A Object ──
+        Object obj = "Eko"; // ✅ String bisa masuk ke variabel Object
+
+        // ── Tapi dengan Generics: INVARIANT! ──
+        MyData&lt;String&gt; stringMyData = new MyData&lt;&gt;("Eko");
+
+        // doIt(stringMyData);           // ❌ COMPILE ERROR!
+        // MyData&lt;Object&gt; objectMyData = stringMyData; // ❌ COMPILE ERROR!
+
+        // Kenapa? Karena MyData&lt;String&gt; BUKAN subtype dari MyData&lt;Object&gt;!
+
+        MyData&lt;Object&gt; objectMyData = new MyData&lt;&gt;(1000);
+
+        // doItInteger(objectMyData);    // ❌ COMPILE ERROR!
+        // MyData&lt;Integer&gt; intMyData = objectMyData; // ❌ COMPILE ERROR!
+
+        // Meski 1000 adalah Integer dan Integer IS-A Object,
+        // MyData&lt;Object&gt; BUKAN subtype dari MyData&lt;Integer&gt;!
+    }
+
+    public static void doIt(MyData&lt;Object&gt; objectMyData) { /* ... */ }
+    public static void doItInteger(MyData&lt;Integer&gt; integerMyData) { /* ... */ }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Kenapa Invariant? — Alasan Keamanan</span>
+                        <div class="line-desc">Bayangkan jika <code>MyData&lt;String&gt;</code> bisa diassign ke <code>MyData&lt;Object&gt;</code>: seseorang bisa memanggil <code>objectMyData.setData(new Integer(100))</code> pada objek yang sebenarnya adalah <code>MyData&lt;String&gt;</code> — merusak type safety! Java sengaja melarang ini untuk menjaga keamanan.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Berbeda dengan Array!</span>
+                        <div class="line-desc">Menariknya, <strong>array di Java bersifat covariant</strong>: <code>String[]</code> bisa diassign ke <code>Object[]</code>. Tapi ini justru menjadi sumber bug potensial (<code>ArrayStoreException</code>). Generics diperbaiki untuk menghindari masalah yang sama.</div>
+                    </div>
+                </div>
+
+                <div class="diagram-box">
+                    <p class="fw-bold mb-s">Hubungan Subtype: Kelas vs Generic</p>
+                    <div>
+                        <span class="diagram-type">String</span>
+                        <span class="diagram-arrow">→ IS-A →</span>
+                        <span class="diagram-type">Object</span>
+                        <span style="margin: 0 var(--m); color: var(--success-color)">✅ Valid</span>
+                    </div>
+                    <div style="margin-top: var(--s)">
+                        <span class="diagram-type">MyData&lt;String&gt;</span>
+                        <span class="diagram-arrow">→ IS-A? →</span>
+                        <span class="diagram-type">MyData&lt;Object&gt;</span>
+                        <span style="margin: 0 var(--m); color: var(--danger-color)">❌ TIDAK! Invariant</span>
+                    </div>
+                    <div style="margin-top: var(--s)">
+                        <span class="diagram-type">MyData&lt;String&gt;</span>
+                        <span class="diagram-arrow">→ IS-A? →</span>
+                        <span class="diagram-type">MyData&lt;?&gt;</span>
+                        <span style="margin: 0 var(--m); color: var(--success-color)">✅ Valid (via Wildcard)</span>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi PHP: Tidak Ada Equivalent Langsung</div>
+                    <p>PHP tidak punya sistem generics yang di-enforce compiler, jadi konsep invariance tidak ada di PHP. Di PHP, kamu bisa pass <code>Collection</code> apapun ke fungsi yang expect <code>Collection</code> — type checking hanya melalui runtime type hints, bukan compile time. Invariance adalah trade-off Java untuk keamanan penuh di waktu kompilasi.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 6</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Mengapa Java membuat generics bersifat invariant (tidak mengikuti hubungan subtype class)?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q6', this, false)">
+                        <input type="radio" name="q6"><span>Karena limitasi teknis compiler Java yang tidak bisa mendeteksi relasi subtype</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q6', this, true)">
+                        <input type="radio" name="q6"><span>Untuk menjaga type safety — mencegah bug seperti memasukkan Integer ke dalam kontainer yang sebenarnya hanya untuk String</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q6', this, false)">
+                        <input type="radio" name="q6"><span>Karena generics di Java hanya untuk efisiensi performa, bukan type safety</span>
+                    </div>
+                    <div class="quiz-feedback" id="q6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 7: Wildcard ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 7 • Wildcard</div>
+                    <div class="chapter-intro-title">❓ Wildcard — MyData&lt;?&gt;</div>
+                    <div class="chapter-intro-desc">Tanda tanya <code>?</code> sebagai "tipe apapun" — solusi untuk menerima generic dengan type argument yang tidak diketahui.</div>
+                </div>
+
+                <p>Karena generics bersifat invariant, bagaimana caranya membuat method yang bisa menerima <code>MyData&lt;String&gt;</code>, <code>MyData&lt;Integer&gt;</code>, <code>MyData&lt;ApaAja&gt;</code> sekaligus? Jawabannya: <strong>Wildcard <code>?</code></strong>.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: WildcardApp.java
+public class WildcardApp {
+    public static void main(String[] args) {
+
+        // Method print() menerima MyData dari tipe APAPUN
+        print(new MyData&lt;Integer&gt;(100));          // ✅
+        print(new MyData&lt;String&gt;("Eko"));          // ✅
+        print(new MyData&lt;Manager&gt;(new Manager())); // ✅
+
+    }
+
+    // ? = Wildcard: "MyData dengan tipe apapun"
+    public static void print(MyData&lt;?&gt; myData) {
+        System.out.println(myData.getData()); // Return type: Object (tipe paling umum)
+        // Tapi perhatikan:
+        // myData.setData("something"); // ❌ COMPILE ERROR — tidak boleh write!
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">MyData&lt;?&gt;</span>
+                        <div class="line-desc"><strong>Unbounded Wildcard</strong>: tanda <code>?</code> berarti "tipe apapun yang tidak diketahui". Ini berbeda dari <code>MyData&lt;Object&gt;</code>! <code>MyData&lt;Object&gt;</code> hanya menerima <code>MyData</code> yang tepat bertipe Object. <code>MyData&lt;?&gt;</code> menerima <code>MyData</code> dari tipe apapun.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">getData() return Object</span>
+                        <div class="line-desc">Karena tipe tidak diketahui, <code>getData()</code> hanya bisa mengembalikan <code>Object</code> (tipe paling umum). Kamu kehilangan informasi tipe spesifik — ini trade-off dari wildcard.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">setData() dilarang — Read-Only!</span>
+                        <div class="line-desc">Karena tipe tidak diketahui, kamu <strong>tidak boleh menulis/mengirim data</strong> ke objek wildcard. Bayangkan kamu tidak tahu isinya apa — tidak aman untuk menambahkan data baru. Wildcard membuat kontainer menjadi <em>read-only</em>.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 MyData&lt;Object&gt; vs MyData&lt;?&gt; — Perbedaan Kritis</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-wrong">
+                            <div class="comparison-label">MyData&lt;Object&gt; — Sempit</div>
+                            <div class="code-block">
+                                <pre><code class="language-java">void process(MyData&lt;Object&gt; d) { }
+
+MyData&lt;String&gt; s = new MyData&lt;&gt;("Eko");
+process(s); // ❌ ERROR!
+// MyData&lt;String&gt; bukan MyData&lt;Object&gt;
+// (Invariance)</code></pre>
+                            </div>
+                        </div>
+                        <div class="comparison-right">
+                            <div class="comparison-label">MyData&lt;?&gt; — Fleksibel</div>
+                            <div class="code-block">
+                                <pre><code class="language-java">void process(MyData&lt;?&gt; d) { }
+
+MyData&lt;String&gt; s = new MyData&lt;&gt;("Eko");
+process(s); // ✅ OK!
+// Wildcard menerima tipe apapun</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi PHP: mixed type</div>
+                    <p>Di PHP 8, ada keyword <code>mixed</code> yang artinya "tipe apapun". <code>function process(mixed $data)</code> mirip dengan Java Wildcard <code>MyData&lt;?&gt;</code> dalam spirit — menerima semua. Bedanya: PHP tidak enforce apa-apa, sementara Java Wildcard masih type-safe (tidak boleh write, return sebagai Object).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 8: Covariance ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 8 • Variance</div>
+                    <div class="chapter-intro-title">📤 Covariance — MyData&lt;? extends T&gt;</div>
+                    <div class="chapter-intro-desc">"Aku bisa baca data ini, tapi tidak bisa tulis" — bounded wildcard upper bound untuk producer/read-only.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: CovariantApp.java
+public class CovariantApp {
+    public static void main(String[] args) {
+
+        MyData&lt;String&gt; stringMyData = new MyData&lt;&gt;("Eko");
+
+        // Kirim ke method yang menerima MyData&lt;? extends Object&gt;
+        process(stringMyData); // ✅ String IS-A Object, Covariant!
+
+        // Bisa juga: MyData&lt;? extends Object&gt; adalah "supertipe" dari MyData&lt;String&gt;
+        MyData&lt;? extends Object&gt; myData = stringMyData; // ✅
+        Object value = myData.getData();                  // ✅ Bisa READ
+
+        // myData.setData("value"); // ❌ TIDAK BOLEH WRITE!
+    }
+
+    public static void process(MyData&lt;? extends Object&gt; myData) {
+        // getData() return Object (bound atas)
+        Object value = myData.getData();
+        System.out.println(value);
+
+        // TIDAK BOLEH: myData.setData(1); // ❌ Dangerous! Kita tidak tau tipe persisnya
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">MyData&lt;? extends Object&gt;</span>
+                        <div class="line-desc"><strong>Upper Bounded Wildcard (Covariance)</strong>: <code>?</code> bisa tipe apapun yang <em>extends atau sama dengan</em> <code>Object</code>. Artinya <code>MyData&lt;String&gt;</code>, <code>MyData&lt;Integer&gt;</code>, <code>MyData&lt;User&gt;</code> — semua diterima. <code>Object</code> adalah upper bound (batas atas).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Hanya READ — tidak boleh WRITE</span>
+                        <div class="line-desc">Dengan covariance, kamu hanya bisa <em>membaca</em> (produce) data. Mengapa tidak boleh write? Karena kamu tidak tahu tipe persisnya — mungkin <code>MyData&lt;String&gt;</code>, tidak aman untuk memasukkan Integer. Ini dikenal sebagai <strong>Producer Extends</strong> dalam PECS principle.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">getData() return Object</span>
+                        <div class="line-desc">Upper bound menentukan return type getter. Karena bound adalah <code>Object</code>, maka <code>getData()</code> return <code>Object</code>. Jika bound-nya <code>Number</code> (<code>? extends Number</code>), maka <code>getData()</code> return <code>Number</code>.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Contoh Praktis: Covariance dengan Number</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// Menjumlahkan semua angka dari container apapun (Integer, Double, Float, dll)
+public static double sum(MyData&lt;? extends Number&gt; data) {
+    return data.getData().doubleValue(); // ✅ Bisa akses method Number
+    // data.setData(1); // ❌ Tidak bisa write
+}
+
+sum(new MyData&lt;Integer&gt;(100));  // ✅
+sum(new MyData&lt;Double&gt;(3.14));  // ✅
+sum(new MyData&lt;Float&gt;(2.5f));   // ✅</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi PHP: Covariant Return Types (PHP 7.4+)</div>
+                    <p>PHP 7.4+ mendukung covariant return types: jika parent mengembalikan <code>Animal</code>, child boleh mengembalikan <code>Dog</code> (subtype). Java Covariance wildcard adalah konsep serupa tapi untuk generic container — container yang lebih spesifik (<code>MyData&lt;String&gt;</code>) bisa dipakai sebagai yang lebih umum (<code>MyData&lt;? extends Object&gt;</code>).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 9: Contravariance ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 9 • Variance</div>
+                    <div class="chapter-intro-title">📥 Contravariance — MyData&lt;? super T&gt;</div>
+                    <div class="chapter-intro-desc">"Aku bisa tulis data ini, tapi tidak bisa baca dengan tipe spesifik" — bounded wildcard lower bound untuk consumer/write-only.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ContravariantApp.java
+public class ContravariantApp {
+    public static void main(String[] args) {
+
+        MyData&lt;Object&gt; objectMyData = new MyData&lt;&gt;("Eko");
+        objectMyData.setData(1000);
+
+        // MyData&lt;Object&gt; bisa diassign ke MyData&lt;? super String&gt;
+        // karena Object IS-A supertype dari String
+        MyData&lt;? super String&gt; myData = objectMyData; // ✅
+
+        process(objectMyData);                          // ✅ Juga bisa
+
+        System.out.println(objectMyData.getData()); // Eko Kurniawan (setelah process)
+    }
+
+    public static void process(MyData&lt;? super String&gt; myData) {
+        // getData() return Object (tidak tahu tipe pasti)
+        Object value = myData.getData();
+        System.out.println("Process parameter " + value);
+
+        // BOLEH setData() dengan String atau subtype-nya!
+        myData.setData("Eko Kurniawan"); // ✅ String aman untuk dimasukkan
+        // myData.setData(100); // ❌ Integer tidak aman — container mungkin hanya terima String
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">MyData&lt;? super String&gt;</span>
+                        <div class="line-desc"><strong>Lower Bounded Wildcard (Contravariance)</strong>: <code>?</code> bisa tipe apapun yang merupakan <em>supertype atau sama dengan</em> <code>String</code>. Untuk <code>String</code>, supertypenya adalah: <code>String</code>, <code>Comparable</code>, <code>CharSequence</code>, <code>Object</code>. Sehingga <code>MyData&lt;Object&gt;</code>, <code>MyData&lt;CharSequence&gt;</code> diterima.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Bisa WRITE, tidak bisa READ spesifik</span>
+                        <div class="line-desc">Dengan contravariance, kamu <em>bisa menulis/mengirim</em> data tipe T (String) atau subtype-nya. Tapi reading hanya mengembalikan <code>Object</code> karena tidak tahu tipe pasti. Ini dikenal sebagai <strong>Consumer Super</strong> dalam PECS principle.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Kenapa Object bisa masuk &lt;? super String&gt;?</span>
+                        <div class="line-desc"><code>MyData&lt;Object&gt;</code> valid untuk <code>MyData&lt;? super String&gt;</code> karena <code>Object</code> adalah supertype dari <code>String</code>. Logikanya: jika container bisa menyimpan Object, maka pasti bisa menyimpan String (karena String IS-A Object).</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 PECS — Producer Extends, Consumer Super</div>
+                    <p>Ini adalah mnemonic populer untuk mengingat kapan pakai apa:</p>
+                    <div class="flex-ais-jcs gap-m mt-s mb-s">
+                        <div class="variant-card covariant">
+                            <div class="variant-card-title">📤 PRODUCER — Extends</div>
+                            <p class="text-sm">Kamu <strong>membaca</strong> dari container ini.<br><code>&lt;? extends T&gt;</code><br>Read-only. getData() return T.</p>
+                        </div>
+                        <div class="variant-card contravariant">
+                            <div class="variant-card-title">📥 CONSUMER — Super</div>
+                            <p class="text-sm">Kamu <strong>menulis</strong> ke container ini.<br><code>&lt;? super T&gt;</code><br>Write-enabled. getData() return Object.</p>
+                        </div>
+                        <div class="variant-card invariant">
+                            <div class="variant-card-title">🔄 PRODUCER+CONSUMER</div>
+                            <p class="text-sm">Kamu <strong>baca DAN tulis</strong>.<br><code>&lt;T&gt;</code> (exact type)<br>Tidak bisa flexible.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi PHP: Contravariant Parameter Types (PHP 7.4+)</div>
+                    <p>PHP 7.4 mendukung contravariant parameter types: jika parent method menerima <code>Dog</code>, child boleh menerima <code>Animal</code> (supertype lebih luas). Java contravariance wildcard adalah konsep serupa: method yang expect parameter <code>MyData&lt;? super String&gt;</code> bisa menerima container yang lebih umum dari String.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 8 & 9</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Kamu membuat method yang hanya <em>membaca</em> elemen dari List. Wildcard mana yang paling tepat?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q89', this, true)">
+                        <input type="radio" name="q89"><span><code>List&lt;? extends Number&gt;</code> — Producer Extends, read-only</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q89', this, false)">
+                        <input type="radio" name="q89"><span><code>List&lt;? super Number&gt;</code> — Consumer Super, write-enabled</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q89', this, false)">
+                        <input type="radio" name="q89"><span><code>List&lt;?&gt;</code> — Unbounded, tapi kehilangan return type</span>
+                    </div>
+                    <div class="quiz-feedback" id="q89-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 10: Type Erasure ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 10 • Internals</div>
+                    <div class="chapter-intro-title">🪄 Type Erasure — Rahasia di Balik Generics</div>
+                    <div class="chapter-intro-desc">Saat runtime, informasi generic type dihapus oleh compiler — ini disebut type erasure, dan punya implikasi penting yang perlu kamu pahami.</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: TypeErasureApp.java
+public class TypeErasureApp {
+    public static void main(String[] args) {
+
+        // Raw type: tanpa type argument
+        MyData myData = new MyData("Eko"); // ⚠️ Warning: raw type
+
+        // Casting ke generic type — COMPILE OK tapi ada unchecked cast warning
+        MyData&lt;Integer&gt; integerMyData = (MyData&lt;Integer&gt;) myData;
+
+        // getData() → runtime ini sebenarnya return String "Eko"
+        // tapi kita "paksa" interpret sebagai Integer
+        Integer integer = integerMyData.getData(); // ❌ ClassCastException di runtime!
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">Apa itu Type Erasure?</span>
+                        <div class="line-desc">Java mengimplementasikan Generics dengan teknik <strong>type erasure</strong>: semua informasi type parameter (<code>&lt;T&gt;</code>, <code>&lt;String&gt;</code>, dll.) dihapus oleh compiler saat bytecode dikompilasi. Di runtime, <code>MyData&lt;String&gt;</code> dan <code>MyData&lt;Integer&gt;</code> adalah class yang sama: <code>MyData</code>. Compiler menambahkan casting secara otomatis.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Alasan Type Erasure</span>
+                        <div class="line-desc">Generics di Java ditambahkan di Java 5 (2004), sedangkan JVM dan library sebelumnya tidak kenal Generics. Type erasure memungkinkan kode generic berjalan di JVM lama tanpa perubahan bytecode — <strong>backward compatibility</strong>. Berbeda dengan C# yang menggunakan "reified generics" (informasi tipe ada di runtime).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(MyData&lt;Integer&gt;) myData — Unchecked Cast</span>
+                        <div class="line-desc">Compiler akan memberi <em>unchecked cast warning</em>. Ini artinya compiler tidak bisa memverifikasi keamanan cast ini. Bug hanya terlihat saat runtime ketika kamu mencoba menggunakan data tersebut — persis seperti masalah yang ingin dihindari oleh Generics!</div>
+                    </div>
+                </div>
+
+                <div class="diagram-box mt-m">
+                    <p class="fw-bold mb-s">🔍 Proses Type Erasure oleh Compiler</p>
+                    <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap: var(--m);">
+                        <div>
+                            <div class="text-xs text-muted mb-xs">Source Code</div>
+                            <div class="diagram-type">MyData&lt;String&gt;</div>
+                            <div class="diagram-type">T getData()</div>
+                        </div>
+                        <div style="font-size:1.5rem; color:var(--warning-color)">→ Compiler →</div>
+                        <div>
+                            <div class="text-xs text-muted mb-xs">Bytecode (Runtime)</div>
+                            <div class="diagram-type result">MyData</div>
+                            <div class="diagram-type result">Object getData()</div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-muted mt-s">Semua <code>&lt;T&gt;</code> diganti <code>Object</code> (atau bound tertinggi jika bounded). Compiler menyisipkan casting otomatis di tempat yang diperlukan.</p>
+                </div>
+
+                <div class="info-box warning mt-m">
+                    <div class="info-box-title">⚠️ Implikasi Type Erasure yang Perlu Diketahui</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// 1. Tidak bisa instanceof check generic
+MyData&lt;String&gt; data = new MyData&lt;&gt;("Eko");
+// if (data instanceof MyData&lt;String&gt;) // ❌ COMPILE ERROR!
+if (data instanceof MyData) { } // ✅ Hanya ini yang bisa
+
+// 2. Tidak bisa new T()
+public class Container&lt;T&gt; {
+    // T obj = new T(); // ❌ Tidak tahu tipe T saat runtime!
+}
+
+// 3. Tidak bisa T[] array = new T[10]
+// T[] arr = new T[10]; // ❌ Sama alasannya
+
+// 4. Tidak bisa method overload berbeda hanya di generic
+// void process(MyData&lt;String&gt; data) { }  // ❌ Setelah erasure, keduanya sama:
+// void process(MyData&lt;Integer&gt; data) { } // method(MyData) — duplicate!</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi PHP: Reflection</div>
+                    <p>Di PHP, kamu bisa tahu tipe objek saat runtime via <code>get_class($obj)</code> atau reflection. Di Java dengan type erasure, informasi generic type hilang di runtime — kamu tidak bisa tahu apakah suatu objek adalah <code>MyData&lt;String&gt;</code> atau <code>MyData&lt;Integer&gt;</code>. Ini trade-off dari desain backward-compatible Java.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 10</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Saat runtime, apa yang terjadi dengan informasi tipe dari <code>MyData&lt;String&gt;</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q10', this, true)">
+                        <input type="radio" name="q10"><span>Dihapus (erased) — runtime hanya mengenal <code>MyData</code> tanpa type argument</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q10', this, false)">
+                        <input type="radio" name="q10"><span>Tetap ada sebagai metadata — bisa diakses via reflection</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q10', this, false)">
+                        <input type="radio" name="q10"><span>Dikonversi menjadi array of type — JVM menyimpannya terpisah</span>
+                    </div>
+                    <div class="quiz-feedback" id="q10-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 11: Comparable ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 11 • Comparable</div>
+                    <div class="chapter-intro-title">⚖️ Comparable&lt;T&gt; — Natural Ordering</div>
+                    <div class="chapter-intro-desc">Interface generic built-in untuk mendefinisikan urutan "natural" dari suatu objek — agar bisa di-sort otomatis.</div>
+                </div>
+
+                <p><code>Comparable&lt;T&gt;</code> adalah contoh nyata pemakaian generics di Java standard library. Dengan mengimplementasikannya, kamu mendefinisikan bagaimana objek harus dibandingkan satu sama lain.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: Person.java
+package programmer.zaman.now.generic;
+
+public class Person implements Comparable&lt;Person&gt; {
+//                       ↑ Implementasi Comparable dengan type argument Person
+
+    private String name;
+    private String address;
+
+    public Person(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    // Getters & setters (omitted for brevity)
+
+    @Override
+    public int compareTo(Person o) {
+    //         ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ Signature dari Comparable&lt;Person&gt;
+        return this.name.compareTo(o.name);
+        // String.compareTo(): negatif = this lebih kecil, 0 = sama, positif = this lebih besar
+    }
+
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', address='" + address + "'}";
+    }
+}</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ComparableApp.java
+public class ComparableApp {
+    public static void main(String[] args) {
+
+        Person[] people = {
+            new Person("Eko", "Indonesia"),
+            new Person("Budi", "Indonesia"),
+            new Person("Joko", "Indonesia")
+        };
+
+        // Arrays.sort() memanggil compareTo() secara internal!
+        Arrays.sort(people);
+
+        // Output: Budi, Eko, Joko (urutan alphabetical by name)
+        System.out.println(Arrays.toString(people));
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">implements Comparable&lt;Person&gt;</span>
+                        <div class="line-desc">Type argument <code>Person</code> membuat <code>compareTo(Person o)</code> — bukan <code>compareTo(Object o)</code>. Ini type-safe: compiler memastikan kamu hanya membandingkan Person dengan Person. Tanpa generics, parameter-nya <code>Object</code> dan perlu casting manual.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">compareTo() return int</span>
+                        <div class="line-desc">Konvensi: <strong>negatif</strong> = this lebih kecil dari o, <strong>0</strong> = sama, <strong>positif</strong> = this lebih besar dari o. Bisa pakai <code>String.compareTo()</code>, <code>Integer.compare()</code>, atau hitung manual <code>return a - b</code> (hati-hati overflow untuk angka besar!).</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Arrays.sort() + Comparable</span>
+                        <div class="line-desc"><code>Arrays.sort()</code>, <code>Collections.sort()</code>, dan struktur data seperti <code>TreeSet/TreeMap</code> semua bergantung pada <code>Comparable</code>. Jika class tidak implement Comparable dan kamu coba sort, hasilnya <code>ClassCastException</code> di runtime.</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📝 Signature Comparable di Source Code Java</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// Interface Comparable di java.lang (sudah built-in)
+public interface Comparable&lt;T&gt; {
+    int compareTo(T o);
+    // Satu method saja — ini adalah Functional Interface!
+}</code></pre>
+                    </div>
+                    <p class="text-sm mt-xs">Semua wrapper class Java (<code>Integer</code>, <code>String</code>, <code>Double</code>, dll.) sudah mengimplementasikan <code>Comparable</code>. Makanya <code>Collections.sort(List&lt;String&gt;)</code> langsung bisa bekerja.</p>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: sortBy & usort PHP</div>
+                    <p>Di Laravel: <code>collect($people)->sortBy('name')</code> — sorting by string key, tapi tidak ada type checking. Di PHP: <code>usort($arr, fn($a,$b) => strcmp($a->name, $b->name))</code>. Di Java dengan Comparable, class mendefinisikan cara sort-nya sendiri, dan semua framework sorting (Arrays.sort, TreeSet) otomatis menggunakannya.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 12: Comparator ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-12">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-intro-number">Chapter 12 • Comparator</div>
+                    <div class="chapter-intro-title">📐 Comparator&lt;T&gt; — Custom Ordering</div>
+                    <div class="chapter-intro-desc">Ketika kamu butuh urutan berbeda dari natural ordering, atau class-nya tidak bisa dimodifikasi — Comparator adalah jawabannya.</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">🔄 Comparable vs Comparator</div>
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th></th><th>Comparable&lt;T&gt;</th><th>Comparator&lt;T&gt;</th></tr></thead>
+                            <tbody>
+                            <tr><td><strong>Lokasi logika</strong></td><td>Di dalam class (<code>compareTo()</code>)</td><td>Di luar class (class/lambda terpisah)</td></tr>
+                            <tr><td><strong>Jumlah urutan</strong></td><td>Satu (natural)</td><td>Banyak (fleksibel)</td></tr>
+                            <tr><td><strong>Modifikasi class</strong></td><td>Perlu modifikasi class asli</td><td>Tidak perlu modifikasi</td></tr>
+                            <tr><td><strong>Cocok untuk</strong></td><td>Urutan default (by name, by id)</td><td>Sort alternatif (by age, by address)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// File: ComparatorApp.java
+public class ComparatorApp {
+    public static void main(String[] args) {
+
+        Person[] people = {
+            new Person("Eko", "Indonesia"),
+            new Person("Budi", "Indonesia"),
+            new Person("Joko", "Indonesia")
+        };
+
+        // Buat Comparator menggunakan anonymous class
+        Comparator&lt;Person&gt; comparator = new Comparator&lt;Person&gt;() {
+            @Override
+            public int compare(Person o1, Person o2) {
+                return o1.getName().compareTo(o2.getName());
+                // Logika sort: alphabetical by name
+            }
+        };
+
+        // Inject comparator ke sort
+        Arrays.sort(people, comparator);
+        System.out.println(Arrays.toString(people)); // Budi, Eko, Joko
+
+        // ─────────────── Cara Modern: Lambda ───────────────
+        Arrays.sort(people, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+
+        // Atau lebih ringkas dengan method reference:
+        Arrays.sort(people, Comparator.comparing(Person::getName));
+
+        // Sort descending:
+        Arrays.sort(people, Comparator.comparing(Person::getName).reversed());
+    }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">new Comparator&lt;Person&gt;() { ... }</span>
+                        <div class="line-desc"><strong>Anonymous class</strong>: implementasi interface Comparator secara inline. Ini gaya lama (pre-Java 8). Di era modern, digantikan lambda karena <code>Comparator</code> hanya punya satu abstract method — termasuk <em>Functional Interface</em>.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(o1, o2) -&gt; o1.getName().compareTo(o2.getName())</span>
+                        <div class="line-desc"><strong>Lambda expression</strong> — gaya modern yang lebih ringkas. Karena <code>Comparator&lt;T&gt;</code> adalah Functional Interface (hanya satu abstract method: <code>compare()</code>), bisa ditulis sebagai lambda.</div>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">Comparator.comparing(Person::getName)</span>
+                        <div class="line-desc"><strong>Method reference + static factory</strong>: cara paling bersih. <code>Person::getName</code> adalah method reference (shortcut untuk <code>p -> p.getName()</code>). <code>Comparator.comparing()</code> adalah static factory yang otomatis membangun comparator dari key extractor.</div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Chaining Comparator (Multi-level Sort)</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// Sort by address dulu, jika address sama maka sort by name
+Comparator&lt;Person&gt; multiSort = Comparator
+    .comparing(Person::getAddress)
+    .thenComparing(Person::getName);
+
+Arrays.sort(people, multiSort);
+
+// Sort by name descending, then by address ascending
+Comparator&lt;Person&gt; complexSort = Comparator
+    .comparing(Person::getName).reversed()
+    .thenComparing(Person::getAddress);</code></pre>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <div class="info-box-title">🐘 Analogi Laravel: Collection sortBy</div>
+                    <p>Di Laravel: <code>$people->sortBy('name')</code> atau <code>$people->sortBy(fn($p) => $p->name)</code>. Di Java: <code>Arrays.sort(people, Comparator.comparing(Person::getName))</code>. Konsep identik — externalized ordering logic. Bedanya: Java versi ini type-safe dan compiler akan error jika <code>getName()</code> tidak ada di class Person.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 12</div>
+                    <p class="text-sm"><strong>Pertanyaan:</strong> Kamu perlu sort List&lt;Person&gt; berdasarkan address, tapi class Person sudah implement Comparable by name dan kamu tidak bisa modifikasi class-nya. Apa solusi yang tepat?</p>
+                    <div class="quiz-option" onclick="checkQuiz('q12', this, false)">
+                        <input type="radio" name="q12"><span>Override method <code>compareTo()</code> di Person</span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q12', this, true)">
+                        <input type="radio" name="q12"><span>Buat Comparator terpisah: <code>Comparator.comparing(Person::getAddress)</code></span>
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('q12', this, false)">
+                        <input type="radio" name="q12"><span>Tidak bisa — harus modifikasi class Person</span>
+                    </div>
+                    <div class="quiz-feedback" id="q12-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro" style="background: linear-gradient(135deg, var(--transprimary-color), var(--transsuccess-color));">
+                    <div class="chapter-intro-number">Summary</div>
+                    <div class="chapter-intro-title">📊 Rangkuman Java Generics</div>
+                    <div class="chapter-intro-desc">Semua yang telah dipelajari dalam satu halaman — referensi cepat untuk Java Generics.</div>
+                </div>
+
+                <!-- Timeline ringkasan -->
+                <div class="timeline mt-m">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">📦 Generic Class — MyData&lt;T&gt;</div>
+                        <div class="timeline-content-desc">Kelas dengan type parameter <code>&lt;T&gt;</code>. Membuat satu class bisa bekerja dengan banyak tipe secara type-safe. Constructor, field, method bisa menggunakan T. Gunakan diamond operator <code>&lt;&gt;</code> untuk type inference.</div>
+                    </div>
+
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🗝️ Multiple Type Parameters — Pair&lt;T, U&gt;</div>
+                        <div class="timeline-content-desc">Class dengan lebih dari satu type parameter, dipisah koma. Setiap parameter independent. Berguna untuk struktur data pasangan (key-value, result-error).</div>
+                    </div>
+
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🔧 Generic Method — &lt;T&gt; returnType method(T[] arr)</div>
+                        <div class="timeline-content-desc">Method punya type parameter sendiri. Deklarasi <code>&lt;T&gt;</code> di antara modifier dan return type. Bisa pakai explicit <code>Class.&lt;Type&gt;method()</code> atau biarkan type inference bekerja.</div>
+                    </div>
+
+                    <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🔒 Bounded Type — T extends Number</div>
+                        <div class="timeline-content-desc">Membatasi type argument ke subtype tertentu. Bonus: bisa akses method dari bound di dalam class. Keyword <code>extends</code> untuk keduanya (class maupun interface).</div>
+                    </div>
+
+                    <div><span class="timeline-key active">5</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🔐 Multiple Bound — T extends A &amp; B</div>
+                        <div class="timeline-content-desc">T harus subtype dari class A DAN implement interface B. Class selalu pertama, interface menyusul. Bisa akses method dari semua bound.</div>
+                    </div>
+
+                    <div><span class="timeline-key active">6</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🚫 Invariance — MyData&lt;String&gt; ≠ MyData&lt;Object&gt;</div>
+                        <div class="timeline-content-desc">Generics default invariant: relasi subtype class tidak mewarisi ke generic container. MyData&lt;String&gt; bukan subtype MyData&lt;Object&gt; meski String IS-A Object. Ini by-design untuk type safety.</div>
+                    </div>
+
+                    <div><span class="timeline-key active">7</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">❓ Wildcard — MyData&lt;?&gt;</div>
+                        <div class="timeline-content-desc">Unbounded wildcard: menerima generic dari tipe apapun. Read-only (tidak bisa setData). getData() return Object. Berbeda dari MyData&lt;Object&gt; yang lebih sempit.</div>
+                    </div>
+
+                    <div><span class="timeline-key active">8</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">📤 Covariance — MyData&lt;? extends T&gt; (PRODUCER)</div>
+                        <div class="timeline-content-desc">Upper bounded wildcard. Read-only. getData() return T. Menerima MyData dari T dan semua subtype-nya. Gunakan ketika kamu hanya MEMBACA dari container (Producer Extends dari PECS).</div>
+                    </div>
+
+                    <div><span class="timeline-key active">9</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">📥 Contravariance — MyData&lt;? super T&gt; (CONSUMER)</div>
+                        <div class="timeline-content-desc">Lower bounded wildcard. Write-enabled untuk T dan subtype-nya. getData() return Object. Menerima MyData dari T dan semua supertype-nya. Gunakan ketika kamu hanya MENULIS ke container (Consumer Super dari PECS).</div>
+                    </div>
+
+                    <div><span class="timeline-key active">10</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🪄 Type Erasure</div>
+                        <div class="timeline-content-desc">Compiler menghapus semua info generic saat kompilasi untuk backward compatibility. Runtime hanya kenal raw type. Implikasi: tidak bisa instanceof generic, new T(), atau T[], dan overloading hanya beda generic dilarang.</div>
+                    </div>
+
+                    <div><span class="timeline-key active">11</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">⚖️ Comparable&lt;T&gt;</div>
+                        <div class="timeline-content-desc">Built-in generic interface untuk natural ordering. Implement di class untuk mendefinisikan urutan default. compareTo() return int (negatif/0/positif). Digunakan otomatis oleh Arrays.sort, Collections.sort, TreeSet, TreeMap.</div>
+                    </div>
+
+                    <div><span class="timeline-key">12</span></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">📐 Comparator&lt;T&gt;</div>
+                        <div class="timeline-content-desc">External ordering — tidak perlu modifikasi class. Bisa multiple strategy sort. Functional Interface → bisa ditulis sebagai lambda. Gunakan Comparator.comparing() + method reference untuk kode paling bersih.</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="text-title">📋 Quick Reference: Variance & Wildcard</div>
+                <div class="table-content mt-m">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Sintaks</th>
+                            <th>Nama</th>
+                            <th>Read?</th>
+                            <th>Write?</th>
+                            <th>getData() Return</th>
+                            <th>Kegunaan</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>MyData&lt;T&gt;</code></td><td>Invariant (exact)</td><td>✅</td><td>✅</td><td><code>T</code></td><td>Read + Write dengan tipe pasti</td></tr>
+                        <tr><td><code>MyData&lt;?&gt;</code></td><td>Wildcard</td><td>✅</td><td>❌</td><td><code>Object</code></td><td>Accept tipe apapun, read-only</td></tr>
+                        <tr><td><code>MyData&lt;? extends T&gt;</code></td><td>Covariance (upper)</td><td>✅</td><td>❌</td><td><code>T</code></td><td>Producer — hanya baca</td></tr>
+                        <tr><td><code>MyData&lt;? super T&gt;</code></td><td>Contravariance (lower)</td><td>⚠️</td><td>✅</td><td><code>Object</code></td><td>Consumer — hanya tulis</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="divider"></div>
+                <div class="text-title">🧠 Key Insights untuk PHP Developer</div>
+                <div class="flex-ais-jcs gap-m mt-m">
+                    <div class="summary-card" style="flex:1; min-width:220px;">
+                        <div class="summary-card-title">🛡️ Compile-time Safety</div>
+                        <p class="text-sm">Generics memberi type safety saat kompilasi — bug terdeteksi sebelum kode berjalan. PHP PHP 8 typed properties mendekat tapi belum se-powerful Java Generics.</p>
+                    </div>
+                    <div class="summary-card" style="flex:1; min-width:220px;">
+                        <div class="summary-card-title">🎭 Type Erasure = Runtime = Object</div>
+                        <p class="text-sm">Saat runtime, semua generic menjadi <code>Object</code>. Jangan coba instanceof check terhadap generic type — tidak akan berhasil.</p>
+                    </div>
+                    <div class="summary-card" style="flex:1; min-width:220px;">
+                        <div class="summary-card-title">📦 PECS Rule</div>
+                        <p class="text-sm"><strong>P</strong>roducer <strong>E</strong>xtends, <strong>C</strong>onsumer <strong>S</strong>uper. Hafalkan ini untuk memilih wildcard yang tepat kapanpun.</p>
+                    </div>
+                    <div class="summary-card" style="flex:1; min-width:220px;">
+                        <div class="summary-card-title">⚖️ Comparable vs Comparator</div>
+                        <p class="text-sm">Comparable = natural order built-in di class (satu). Comparator = external, multiple strategy. Jika class milikmu → Comparable. Jika class orang lain / butuh multiple sort → Comparator.</p>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-l">
+                    <div class="info-box-title">🎉 Selamat! Kamu Telah Menyelesaikan Modul Java Generics</div>
+                    <p>Generics adalah fondasi penting untuk memahami Java Collections Framework, Stream API, dan banyak library modern seperti Spring. Dengan memahami invariance, covariance, contravariance, dan type erasure, kamu sudah selangkah lebih maju dari banyak Java developer pemula.</p>
+                    <p class="text-sm mt-s">Next step: coba pelajari Java Collections Framework (<code>List&lt;T&gt;</code>, <code>Map&lt;K,V&gt;</code>) — semua built di atas Generics! ☕</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer></footer>
+</main>
+
+<script>
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active');
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode");
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    // Quiz answers
+    const ANSWERS = {
+        q1:  'Compile berhasil, tapi runtime error: <code>ClassCastException</code>',
+        q3:  'Setelah access modifier, sebelum return type',
+        q4:  'Semua subclass dari Number: Integer, Long, Double, Float, Short, Byte, dan subclass Number kustom',
+        q6:  'Untuk menjaga type safety — mencegah bug seperti memasukkan Integer ke dalam kontainer yang sebenarnya hanya untuk String',
+        q89: '<code>List&lt;? extends Number&gt;</code> — Producer Extends, read-only',
+        q10: 'Dihapus (erased) — runtime hanya mengenal <code>MyData</code> tanpa type argument',
+        q12: 'Buat Comparator terpisah: <code>Comparator.comparing(Person::getAddress)</code>'
+    };
+
+    function checkQuiz(qid, el, isCorrect) {
+        const options = el.parentElement.querySelectorAll('.quiz-option');
+        options.forEach(o => o.classList.remove('correct', 'wrong'));
+        el.classList.add(isCorrect ? 'correct' : 'wrong');
+        if (!isCorrect) {
+            const ans = ANSWERS[qid];
+            options.forEach(o => {
+                if (o.querySelector('span') && o.querySelector('span').innerHTML.trim() === ans) {
+                    o.classList.add('correct');
+                }
+            });
+        }
+        const fb = document.getElementById(qid + '-feedback');
+        if (fb) {
+            fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+            fb.textContent = isCorrect ? '✅ Benar! Jawaban yang tepat.' : '❌ Belum tepat. Lihat jawaban hijau di atas.';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+    });
+</script>
+</body>
+</html>

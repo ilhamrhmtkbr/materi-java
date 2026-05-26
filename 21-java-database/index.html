@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Database (JDBC) — Modul Belajar Mandiri</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .chapter-badge {
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: var(--transprimary-color); color: var(--primary-color);
+            border-radius: var(--radius-m); padding: .25rem .65rem;
+            font-size: var(--xs); font-weight: 600; letter-spacing: .04em;
+            text-transform: uppercase; margin-bottom: .5rem;
+        }
+        .info-box {
+            box-sizing: border-box; max-width: 77dvw; overflow: auto;
+            border-left: 3px solid var(--primary-color); background: var(--transprimary-color);
+            border-radius: 0 var(--radius-m) var(--radius-m) 0; padding: var(--m); margin: var(--m) 0;
+        }
+        .info-box.warning { border-left-color: var(--warning-color); background: var(--transwarning-color); }
+        .info-box.success { border-left-color: var(--success-color); background: var(--transsuccess-color); }
+        .info-box.danger  { border-left-color: var(--danger-color);  background: var(--transdanger-color); }
+        .info-box .info-box-title { font-weight: 700; font-size: var(--s); margin-bottom: .4rem; color: var(--primary-color); }
+        .info-box.warning .info-box-title { color: var(--warning-color); }
+        .info-box.success .info-box-title { color: var(--success-color); }
+        .info-box.danger  .info-box-title { color: var(--danger-color); }
+        .code-block {
+            box-sizing: border-box; max-width: 77dvw; overflow: auto;
+            border-radius: var(--radius-m); margin: var(--m) 0;
+        }
+        .code-block pre { margin: 0 !important; border-radius: var(--radius-m) !important; font-size: .8rem !important; overflow-x: auto; }
+        .code-block pre code { white-space: pre !important; }
+        .line-explain { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: var(--transprimary-color); border-radius: var(--radius-m); padding: var(--m); margin: var(--m) 0; }
+        .line-explain .line-item { display: flex; gap: var(--s); padding: .4rem 0; border-bottom: 1px solid var(--translink-color); font-size: var(--s); }
+        .line-explain .line-item:last-child { border-bottom: none; }
+        .line-explain .line-num { min-width: 80px; font-weight: 700; color: var(--primary-color); font-family: monospace; font-size: .78rem; }
+        .compare-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; grid-template-columns: 1fr 1fr; gap: var(--m); margin: var(--m) 0; }
+        @media(max-width:600px){ .compare-box { grid-template-columns: 1fr; } }
+        .compare-box .compare-item { border-radius: var(--radius-m); padding: var(--m); }
+        .compare-box .compare-item.wrong { background: var(--transdanger-color); border: 1px solid var(--danger-color); }
+        .compare-box .compare-item.right { background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .compare-box .compare-label { font-weight: 700; font-size: var(--s); margin-bottom: .5rem; }
+        .compare-box .compare-item.wrong .compare-label { color: var(--danger-color); }
+        .compare-box .compare-item.right .compare-label { color: var(--success-color); }
+        .quiz-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border: 2px solid var(--border-color); border-radius: var(--radius-x); padding: var(--l); margin: var(--l) 0; background: var(--bg-color); }
+        .quiz-box .quiz-title { font-weight: 700; font-size: var(--m); margin-bottom: var(--m); color: var(--primary-color); }
+        .quiz-option { display: flex; align-items: center; gap: var(--s); padding: .6rem var(--m); border-radius: var(--radius-m); cursor: pointer; margin-bottom: .4rem; border: 1px solid var(--border-color); font-size: var(--s); transition: background .15s; user-select: none; }
+        .quiz-option:hover { background: var(--transprimary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong   { background: var(--transdanger-color);  border-color: var(--danger-color); }
+        .quiz-feedback { margin-top: var(--s); padding: var(--s) var(--m); border-radius: var(--radius-m); font-size: var(--s); display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.ko { background: var(--transdanger-color);  color: var(--danger-color); }
+        .progress-bar-wrap { background: var(--border-color); border-radius: 99px; height: 6px; margin: var(--s) 0 var(--m); overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--second-primary-color)); border-radius: 99px; transition: width .4s ease; }
+        .hero-banner { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%); border-radius: var(--radius-x); padding: var(--xx) var(--x); color: #fff; margin-bottom: var(--l); }
+        .hero-banner h1 { font-size: var(--xx); font-weight: 800; margin-bottom: .5rem; }
+        .hero-banner p { opacity: .88; font-size: var(--s); }
+        .analogy-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: var(--transsecond-primary-color); border: 1px dashed var(--second-primary-color); border-radius: var(--radius-m); padding: var(--m); margin: var(--m) 0; font-size: var(--s); }
+        .analogy-box .analogy-title { font-weight: 700; color: var(--second-primary-color); margin-bottom: .4rem; }
+        .arch-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: var(--transprimary-color); border: 1px solid var(--border-color); border-radius: var(--radius-x); padding: var(--l); margin: var(--m) 0; }
+        .arch-layer { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-m); padding: .6rem var(--m); text-align: center; font-weight: 600; font-size: var(--s); }
+        .arch-arrow { text-align: center; font-size: var(--l); color: var(--primary-color); margin: .4rem 0; }
+        .flow-box { box-sizing: border-box; max-width: 77dvw; overflow-x: auto; display: flex; align-items: center; gap: var(--s); padding: var(--m); background: var(--transprimary-color); border-radius: var(--radius-m); margin: var(--m) 0; }
+        .flow-node { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-m); padding: .4rem .8rem; font-size: var(--xs); font-weight: 600; white-space: nowrap; }
+        .flow-arrow { color: var(--primary-color); font-size: var(--l); flex-shrink: 0; }
+        .danger-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: #7f1d1d22; border: 2px solid #ef4444; border-radius: var(--radius-m); padding: var(--m); margin: var(--m) 0; }
+        .danger-box-title { font-weight: 800; color: #ef4444; font-size: var(--s); margin-bottom: .4rem; }
+        .pool-vis { display: flex; gap: .4rem; flex-wrap: wrap; margin: var(--s) 0; }
+        .pool-conn { width: 36px; height: 36px; border-radius: var(--radius-s); display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; border: 2px solid; }
+        .pool-conn.idle    { background: var(--transsuccess-color); border-color: var(--success-color); color: var(--success-color); }
+        .pool-conn.active  { background: var(--transprimary-color); border-color: var(--primary-color); color: var(--primary-color); }
+        .pool-conn.waiting { background: var(--transwarning-color); border-color: var(--warning-color); color: var(--warning-color); }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#pengantar">🏠 Home</a>
+    <a class="bottom-nav-item" href="#chapter-1">🔌 Koneksi</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-4">🛡️ SQL Injection</a>
+                <a class="bottom-nav-item" href="#chapter-6">🔄 Transaction</a>
+                <a class="bottom-nav-item" href="#chapter-9">🏛️ Repository</a>
+                <a class="bottom-nav-item" href="#summary">📝 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java Database</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#pengantar"  class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🏠</div><span>Pengantar</span></a>
+        <a href="#chapter-1"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔌</div><span>1. Driver &amp; Koneksi</span></a>
+        <a href="#chapter-2"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏊</div><span>2. Connection Pool</span></a>
+        <a href="#chapter-3"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📝</div><span>3. Statement &amp; CRUD</span></a>
+        <a href="#chapter-4"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🛡️</div><span>4. SQL Injection</span></a>
+        <a href="#chapter-5"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📊</div><span>5. ResultSet</span></a>
+        <a href="#chapter-6"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔄</div><span>6. Transaction</span></a>
+        <a href="#chapter-7"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚡</div><span>7. Batch Processing</span></a>
+        <a href="#chapter-8"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📅</div><span>8. Date &amp; MetaData</span></a>
+        <a href="#chapter-9"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏛️</div><span>9. Repository Pattern</span></a>
+        <a href="#summary"    class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📝</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#chapter-1"><span class="container-header-nav-item-text">Mulai Belajar</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Topik</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-4"><span class="container-header-nav-item-text">SQL Injection</span></a>
+                    <a class="container-header-nav-item" href="#chapter-6"><span class="container-header-nav-item-text">Transaction</span></a>
+                    <a class="container-header-nav-item" href="#chapter-9"><span class="container-header-nav-item-text">Repository</span></a>
+                    <a class="container-header-nav-item" href="#summary"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ========== PENGANTAR ========== -->
+        <div class="card-wrapper max-width-1000" id="pengantar">
+            <div class="hero-banner">
+                <h1>🗄️ Java Database (JDBC)</h1>
+                <p>JDBC · HikariCP · PreparedStatement · Transaction · Repository Pattern</p>
+                <p style="margin-top:.5rem;opacity:.7;font-size:.75rem;">9 Bab · Codebase Nyata · Mini Quiz · Analogi Laravel/PDO</p>
+            </div>
+            <div class="text-title">Tentang Modul Ini</div>
+            <p>Modul ini mengajarkan cara Java berkomunikasi dengan database secara langsung lewat <strong>JDBC</strong> (Java Database Connectivity). Kamu akan belajar dari raw connection sampai Repository Pattern — fondasi yang dipakai Spring Data JPA.</p>
+            <div class="info-box">
+                <div class="info-box-title">💡 JDBC = PDO-nya Java</div>
+                <p style="font-size:var(--s)">Jika di PHP/Laravel kamu kenal <strong>PDO</strong> (PHP Data Objects) sebagai abstraksi koneksi database, di Java padanannya adalah <strong>JDBC</strong>. Konsep seperti prepared statement, result set, dan transaction ada di keduanya — hanya sintaksnya yang berbeda.</p>
+            </div>
+            <div class="text-title" style="margin-top:var(--l)">📍 Learning Path</div>
+            <div class="display-grid">
+                <div class="stepper">
+                    <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value">Koneksi</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">2</div><div class="stepper-value">CRUD</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">3</div><div class="stepper-value">Keamanan</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Advanced</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Pattern</div></div>
+                </div>
+            </div>
+            <div style="margin-top:var(--l)">
+                <div class="text-title">📊 Progress Belajar</div>
+                <div id="progress-label" class="text-small" style="color:var(--primary-color);font-weight:600;">0 / 9 bab selesai</div>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 1: Driver & Koneksi ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 1 · Fundamental</div>
+                <div class="text-title">🔌 JDBC Driver &amp; Membuat Koneksi</div>
+                <p>Sebelum bisa query database, Java perlu tahu <em>bagaimana cara berbicara</em> dengan MySQL. Jawabannya: <strong>JDBC Driver</strong>.</p>
+
+                <div class="arch-box">
+                    <div class="arch-layer" style="background:var(--transprimary-color);border-color:var(--primary-color)">
+                        ☕ <strong>Kode Java kamu</strong> — pakai JDBC API standar
+                    </div>
+                    <div class="arch-arrow">⬇</div>
+                    <div class="arch-layer">
+                        🔌 <strong>JDBC API</strong> — interface standar Java (<code>java.sql.*</code>)
+                    </div>
+                    <div class="arch-arrow">⬇</div>
+                    <div class="arch-layer" style="background:var(--transsuccess-color);border-color:var(--success-color)">
+                        ⚙️ <strong>MySQL JDBC Driver</strong> (<code>com.mysql.cj.jdbc.Driver</code>) — implementasi untuk MySQL
+                    </div>
+                    <div class="arch-arrow">⬇</div>
+                    <div class="arch-layer">🐬 <strong>MySQL Server</strong></div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Langkah 1: Register Driver</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// DriverTest.java
+@Test
+void testRegister() {
+    try {
+        // Beri tahu Java: "Gunakan MySQL Driver ini"
+        Driver mysqlDriver = new com.mysql.cj.jdbc.Driver();
+        DriverManager.registerDriver(mysqlDriver);
+    } catch (SQLException exception) {
+        Assertions.fail(exception);
+    }
+}
+// Di Java modern (JDBC 4.0+), registrasi otomatis lewat ServiceLoader
+// Tidak perlu manual jika driver ada di classpath!</code></pre>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-title">💡 Auto-Registration di Java Modern</div>
+                    <p style="font-size:var(--s)">Sejak JDBC 4.0 (Java 6+), driver otomatis terdaftar saat JAR-nya ada di classpath. Kamu tidak perlu memanggil <code>DriverManager.registerDriver()</code> atau <code>Class.forName()</code> secara manual. Tapi tetap penting memahami ini agar tidak bingung saat baca kode lama.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Langkah 2: Membuat Koneksi</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// ConnectionTest.java
+@Test
+void testConnection() {
+    String jdbcUrl = "jdbc:mysql://localhost:3306/belajar_java_database"
+                   + "?serverTimezone=Asia/Jakarta";
+    String username = "root";
+    String password = "";
+
+    try {
+        Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+        System.out.println("Sukses konek ke database");
+        // ⚠️ Lupa close() → connection leak!
+    } catch (SQLException exception) {
+        Assertions.fail(exception);
+    }
+}</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">✅ Cara Benar: try-with-resources</div>
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Manual close — rawan lupa</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">Connection conn = DriverManager
+    .getConnection(url, user, pass);
+// ... kode ...
+conn.close(); // Bagaimana jika exception
+              // terjadi sebelum ini?</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ try-with-resources — otomatis close</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">try (Connection conn = DriverManager
+    .getConnection(url, user, pass)) {
+    // conn.close() dipanggil OTOMATIS
+    // bahkan jika ada exception!
+    System.out.println("Konek!");
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">JDBC URL</span><span>Format: <code>jdbc:[database]://[host]:[port]/[dbname]?[params]</code>. Untuk MySQL: <code>jdbc:mysql://localhost:3306/namadb</code>. Mirip DSN di Laravel (<code>mysql://root@127.0.0.1/namadb</code>).</span></div>
+                    <div class="line-item"><span class="line-num">try-with-resources</span><span>Sintaks Java sejak Java 7. Resource apapun yang implement <code>AutoCloseable</code> akan otomatis di-close, bahkan jika exception terjadi. Mirip dengan <code>use</code> statement di PHP 8.</span></div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel/PDO</div>
+                    <p>JDBC URL di Java = DSN di Laravel <code>.env</code>:<br>
+                    Laravel: <code>DB_CONNECTION=mysql DB_HOST=127.0.0.1 DB_PORT=3306 DB_DATABASE=namadb</code><br>
+                    Java JDBC: <code>jdbc:mysql://localhost:3306/namadb?serverTimezone=Asia/Jakarta</code><br>
+                    Konsepnya identik — string yang mendeskripsikan <em>di mana</em> database berada.</p>
+                </div>
+
+                <div class="quiz-box" id="quiz-1">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 1</div>
+                    <p style="font-size:var(--s)"><strong>Apa keuntungan utama menggunakan <code>try-with-resources</code> saat membuat koneksi database?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1',this,false)">A. Koneksi dibuat lebih cepat</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1',this,true)">B. Koneksi ditutup otomatis meskipun terjadi exception — mencegah connection leak</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1',this,false)">C. Tidak perlu JDBC Driver</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1',this,false)">D. Koneksi bisa dipakai ulang tanpa buka baru</div>
+                    <div class="quiz-feedback" id="quiz-1-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-1')">✅ Selesai — Lanjut ke Bab 2</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 2: Connection Pool ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 2 · Performance</div>
+                <div class="text-title">🏊 Connection Pool dengan HikariCP</div>
+                <p>Membuat koneksi database itu <strong>mahal</strong> — ada TCP handshake, autentikasi, dan alokasi resource di server. Membuat koneksi baru untuk setiap query adalah kesalahan besar di produksi.</p>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Masalah: Koneksi Baru per Request</div>
+                    <p style="font-size:var(--s)">Bayangkan 1000 request/detik. Tanpa connection pool, kamu buka+tutup 1000 koneksi per detik. Setiap koneksi butuh ~50-100ms. Sistem akan kolaps.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Solusi: Connection Pool</div>
+                <p style="font-size:var(--s)">Connection Pool menyimpan sejumlah koneksi yang sudah dibuka di awal (<em>idle connections</em>). Saat request datang, pinjam koneksi dari pool — tidak buat baru. Setelah selesai, kembalikan ke pool.</p>
+
+                <div class="arch-box">
+                    <p style="font-weight:700; font-size:var(--s); margin-bottom:var(--s)">Visualisasi Connection Pool (max=10, idle=5)</p>
+                    <div class="pool-vis">
+                        <div class="pool-conn active">A</div>
+                        <div class="pool-conn active">B</div>
+                        <div class="pool-conn active">C</div>
+                        <div class="pool-conn idle">D</div>
+                        <div class="pool-conn idle">E</div>
+                        <div class="pool-conn idle">F</div>
+                        <div class="pool-conn idle">G</div>
+                        <div class="pool-conn idle">H</div>
+                        <div class="pool-conn waiting">+</div>
+                        <div class="pool-conn waiting">+</div>
+                    </div>
+                    <div style="display:flex;gap:var(--m);margin-top:var(--s);flex-wrap:wrap;">
+                        <span style="font-size:var(--xs)"><span class="level-chip" style="background:var(--transprimary-color);color:var(--primary-color);border-radius:4px;padding:.1rem .4rem;border:1px solid var(--primary-color)">A-C</span> Sedang dipakai (active)</span>
+                        <span style="font-size:var(--xs)"><span class="level-chip" style="background:var(--transsuccess-color);color:var(--success-color);border-radius:4px;padding:.1rem .4rem;border:1px solid var(--success-color)">D-H</span> Siap pakai (idle)</span>
+                        <span style="font-size:var(--xs)"><span class="level-chip" style="background:var(--transwarning-color);color:var(--warning-color);border-radius:4px;padding:.1rem .4rem;border:1px solid var(--warning-color)">+</span> Bisa dibuat bila perlu (hingga max 10)</span>
+                    </div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Setup HikariCP</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// ConnectionPoolTest.java & ConnectionUtil.java
+HikariConfig config = new HikariConfig();
+
+// 1. Koneksi database
+config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+config.setJdbcUrl("jdbc:mysql://localhost:3306/belajar_java_database"
+                + "?serverTimezone=Asia/Jakarta");
+config.setUsername("root");
+config.setPassword("");
+
+// 2. Ukuran pool
+config.setMaximumPoolSize(10);   // Maksimum 10 koneksi bersamaan
+config.setMinimumIdle(5);        // Minimal 5 koneksi selalu siap (idle)
+
+// 3. Timeout management
+config.setIdleTimeout(60_000);       // Koneksi idle dihapus setelah 60 detik
+config.setMaxLifetime(10 * 60_000);  // Umur maksimum koneksi: 10 menit
+
+HikariDataSource dataSource = new HikariDataSource(config);
+
+// Cara pakai: ambil dari pool, bukan buat baru
+Connection connection = dataSource.getConnection(); // ← pinjam dari pool
+// ... query ...
+connection.close(); // ← kembalikan ke pool (BUKAN tutup sungguhan!)</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">MaximumPoolSize</span><span>Batas atas jumlah koneksi. Jika semua 10 sedang dipakai dan ada request baru, request akan <em>menunggu</em>. Terlalu besar → beban di MySQL server. Terlalu kecil → antrian panjang.</span></div>
+                    <div class="line-item"><span class="line-num">MinimumIdle</span><span>Jumlah koneksi yang selalu "hangat" dan siap pakai. Menghindari delay di saat pertama request datang.</span></div>
+                    <div class="line-item"><span class="line-num">IdleTimeout</span><span>Koneksi idle yang melebihi waktu ini akan ditutup — menjaga pool tetap segar, menghindari koneksi yang sudah expired di sisi MySQL.</span></div>
+                    <div class="line-item"><span class="line-num">MaxLifetime</span><span>Batas maksimum usia sebuah koneksi. Koneksi yang terlalu lama hidup bisa tidak stabil. Nilai ini harus lebih kecil dari <code>wait_timeout</code> di MySQL (<code>SHOW VARIABLES LIKE 'wait_timeout'</code>).</span></div>
+                    <div class="line-item"><span class="line-num">connection.close()</span><span><strong>Tidak benar-benar menutup koneksi!</strong> HikariCP meng-intercept pemanggilan <code>close()</code> dan mengembalikan koneksi ke pool untuk dipakai lagi.</span></div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Singleton Pattern: ConnectionUtil</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// ConnectionUtil.java — DataSource dibuat SATU KALI saja
+public class ConnectionUtil {
+
+  private static HikariDataSource dataSource;
+
+  // static block: dieksekusi SATU KALI saat class pertama kali diload
+  static {
+    HikariConfig config = new HikariConfig();
+    // ... konfigurasi ...
+    dataSource = new HikariDataSource(config);
+  }
+
+  // Method statis — bisa diakses dari mana saja
+  public static HikariDataSource getDataSource() {
+    return dataSource;
+  }
+}
+
+// Cara pakai di class lain:
+Connection conn = ConnectionUtil.getDataSource().getConnection();</code></pre>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Laravel sudah otomatis menggunakan connection pooling yang dikelola via konfigurasi <code>database.php</code> (<code>pool</code> section). Di Java, kamu harus setup sendiri dengan HikariCP. <strong>HikariCP adalah connection pool tercepat di ekosistem Java</strong> — dipakai secara default oleh Spring Boot.</p>
+                </div>
+
+                <div class="quiz-box" id="quiz-2">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 2</div>
+                    <p style="font-size:var(--s)"><strong>Apa yang sebenarnya terjadi ketika kamu memanggil <code>connection.close()</code> pada koneksi yang berasal dari HikariCP?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2',this,false)">A. Koneksi ke MySQL benar-benar ditutup dan TCP connection diputus</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2',this,true)">B. Koneksi dikembalikan ke pool untuk digunakan lagi oleh request berikutnya</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2',this,false)">C. Error — koneksi pool tidak bisa di-close</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2',this,false)">D. Koneksi dihapus dari pool</div>
+                    <div class="quiz-feedback" id="quiz-2-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-2')">✅ Selesai — Lanjut ke Bab 3</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 3: Statement & CRUD ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 3 · CRUD Dasar</div>
+                <div class="text-title">📝 Statement — Eksekusi SQL Dasar</div>
+                <p><code>Statement</code> adalah objek untuk mengirim SQL ke database. Ada dua jenis: <code>Statement</code> biasa (untuk SQL statis) dan <code>PreparedStatement</code> (untuk SQL dengan parameter).</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-3a" class="accordion-item-check" checked/>
+                    <label for="acc-3a" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 executeUpdate() — INSERT, UPDATE, DELETE</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Mengembalikan jumlah baris yang terpengaruh (int)</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// StatementTest.java — testExecuteUpdate
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+Statement statement = connection.createStatement();
+
+String sql = """
+    INSERT INTO customers(id, name, email)
+    VALUES ('khannedy', 'Khannedy', 'khannedy@test.com')
+    """;
+
+int rowsAffected = statement.executeUpdate(sql);
+System.out.println("Rows affected: " + rowsAffected); // → 1
+
+statement.close();
+connection.close();</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">Text Block</span><span>Tanda <code>"""..."""</code> adalah <em>text block</em> Java 15+ — multi-line string literal. Mirip heredoc di PHP (<code>&lt;&lt;&lt;SQL ... SQL</code>). Berguna untuk SQL panjang agar tetap terbaca.</span></div>
+                            <div class="line-item"><span class="line-num">executeUpdate()</span><span>Untuk DML: INSERT, UPDATE, DELETE. Return <code>int</code> = jumlah baris terpengaruh. Jika 0, tidak ada baris yang diubah.</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-3b" class="accordion-item-check"/>
+                    <label for="acc-3b" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 executeQuery() — SELECT</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Mengembalikan ResultSet — kumpulan baris hasil query</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// StatementTest.java — testExecuteQuery
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+Statement statement = connection.createStatement();
+
+String sql = "SELECT * FROM customers";
+ResultSet resultSet = statement.executeQuery(sql);
+
+// Iterasi hasil — seperti foreach di PHP
+while (resultSet.next()) {
+    // cursor bergerak ke baris berikutnya
+    String id   = resultSet.getString("id");
+    String name = resultSet.getString("name");
+}
+
+// Harus close semua resource dari dalam ke luar
+resultSet.close();
+statement.close();
+connection.close();</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">📌 Urutan close() yang Benar</div>
+                            <p style="font-size:var(--s)">Selalu close dari yang paling dalam ke paling luar: <strong>ResultSet → Statement → Connection</strong>. Atau lebih baik, gunakan try-with-resources untuk semua ketiganya sekaligus.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-3c" class="accordion-item-check"/>
+                    <label for="acc-3c" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 Nested try-with-resources — Pattern Terbaik</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Semua resource ditutup otomatis, bahkan saat exception</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Pattern terbaik — semua resource auto-close
+try (Connection connection = ConnectionUtil.getDataSource().getConnection()) {
+    String sql = "SELECT * FROM customers";
+    try (Statement statement = connection.createStatement()) {
+        try (ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("id"));
+            }
+        } // resultSet.close() otomatis
+    } // statement.close() otomatis
+} // connection.close() otomatis (kembalikan ke pool)</code></pre>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Di Laravel/PHP, <code>DB::select('SELECT * FROM customers')</code> mengembalikan array objek langsung — resource management diurus otomatis oleh framework. Di raw JDBC Java, kamu harus urus sendiri. Inilah mengapa ORM seperti <strong>Hibernate/Spring Data JPA</strong> sangat populer di Java — mereka menyembunyikan kompleksitas JDBC ini.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-box" id="quiz-3">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 3</div>
+                    <p style="font-size:var(--s)"><strong>Method apa yang digunakan untuk menjalankan query SELECT, dan apa return type-nya?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3',this,false)">A. <code>executeUpdate()</code> → <code>int</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3',this,true)">B. <code>executeQuery()</code> → <code>ResultSet</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3',this,false)">C. <code>execute()</code> → <code>boolean</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3',this,false)">D. <code>executeSelect()</code> → <code>List</code></div>
+                    <div class="quiz-feedback" id="quiz-3-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-3')">✅ Selesai — Lanjut ke Bab 4</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 4: SQL Injection ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 4 · Security 🔒</div>
+                <div class="text-title">🛡️ SQL Injection &amp; PreparedStatement</div>
+
+                <div class="danger-box">
+                    <div class="danger-box-title">🚨 SQL Injection — Ancaman Keamanan #1 Database</div>
+                    <p style="font-size:var(--s)">SQL Injection terjadi saat input pengguna dimasukkan langsung ke string SQL tanpa sanitasi. Penyerang bisa memanipulasi query untuk bypass autentikasi, mencuri data, bahkan menghapus seluruh tabel.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Demonstrasi SQL Injection</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// SqlInjectionTest.java — KODE BERBAHAYA, JANGAN DIPAKAI!
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+Statement statement = connection.createStatement();
+
+// Input jahat dari pengguna
+String username = "admin'; #";  // ← SQL Injection payload!
+String password = "salah";
+
+// String concatenation langsung → RENTAN INJECTION
+String sql = "SELECT * FROM admin WHERE username = '" + username +
+             "' AND PASSWORD = '" + password + "'";
+
+System.out.println(sql);
+// OUTPUT: SELECT * FROM admin WHERE username = 'admin'; #' AND PASSWORD = 'salah'
+// Yang dieksekusi:
+//   SELECT * FROM admin WHERE username = 'admin';
+//   #' AND PASSWORD = 'salah'  ← ini jadi KOMENTAR, diabaikan!
+// Hasilnya: login berhasil tanpa password yang benar!</code></pre>
+                </div>
+
+                <div class="info-box danger">
+                    <div class="info-box-title">🚨 Apa yang Terjadi?</div>
+                    <p style="font-size:var(--s)">Karakter <code>';</code> menutup string dan mengakhiri statement pertama. Karakter <code>#</code> di MySQL adalah komentar — semua yang setelahnya diabaikan. Sehingga kondisi <code>AND PASSWORD = '...'</code> tidak pernah diperiksa. <strong>Penyerang masuk tanpa password!</strong></p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">✅ Solusi: PreparedStatement</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// PrepareStatementTest.java — CARA YANG AMAN
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+
+// Input yang sama persis — coba injection lagi
+String username = "admin'; #";
+String password = "salah";
+
+// SQL dengan placeholder ? — BUKAN string concatenation
+String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
+PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+// Set nilai secara terpisah — AMAN dari injection
+preparedStatement.setString(1, username); // ? pertama
+preparedStatement.setString(2, password); // ? kedua
+
+ResultSet resultSet = preparedStatement.executeQuery();
+if (resultSet.next()) {
+    System.out.println("Sukses login");
+} else {
+    System.out.println("Gagal login"); // ← Ini yang terjadi! Injection GAGAL
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">?</span><span>Placeholder parameter. Tidak seperti SLF4J yang pakai <code>{}</code>, JDBC pakai <code>?</code>. Posisi parameter dihitung dari kiri, mulai dari angka 1 (bukan 0!).</span></div>
+                    <div class="line-item"><span class="line-num">setString(1, val)</span><span>Mengisi placeholder ke-1 dengan nilai. Database driver otomatis <em>escaping</em> karakter berbahaya. Input <code>admin'; #</code> diperlakukan sebagai string biasa, bukan SQL.</span></div>
+                    <div class="line-item"><span class="line-num">Compile sekali</span><span>PreparedStatement dikompilasi sekali oleh database, eksekusi bisa berkali-kali dengan parameter berbeda. Lebih efisien dari Statement biasa untuk query berulang.</span></div>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Statement — Rentan Injection</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// JANGAN PERNAH
+String sql = "SELECT * FROM admin " +
+  "WHERE username = '" + input + "'";
+// Input apapun masuk mentah ke SQL!</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ PreparedStatement — Aman</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// SELALU gunakan ini
+String sql = "SELECT * FROM admin " +
+  "WHERE username = ?";
+stmt.setString(1, input);
+// Input di-escape otomatis ✓</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, Query Builder dan Eloquent otomatis menggunakan parameter binding (prepared statement di balik layar). Itulah mengapa <code>DB::table('users')->where('id', $id)->get()</code> aman dari SQL Injection. <strong>Di JDBC Java, kamu harus melakukan ini secara eksplisit.</strong> Pelajaran penting: raw string concatenation SQL selalu berbahaya — baik di PHP maupun Java.</p>
+                </div>
+
+                <div class="quiz-box" id="quiz-4">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 4</div>
+                    <p style="font-size:var(--s)"><strong>Input <code>"admin'; #"</code> bisa bypass login saat menggunakan Statement biasa karena...</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4',this,false)">A. Username "admin" memang ada di database</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4',this,true)">B. <code>';</code> mengakhiri statement, <code>#</code> membuat kondisi password jadi komentar yang diabaikan</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4',this,false)">C. Password check dilewati karena ada kata "admin"</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4',this,false)">D. MySQL menerima semua karakter special</div>
+                    <div class="quiz-feedback" id="quiz-4-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-4')">✅ Selesai — Lanjut ke Bab 5</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 5: ResultSet & Auto Increment ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 5 · Query Results</div>
+                <div class="text-title">📊 ResultSet &amp; Auto Increment Key</div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-5a" class="accordion-item-check" checked/>
+                    <label for="acc-5a" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 Membaca ResultSet</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Cursor-based iteration — baris per baris</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// ResultSetTest.java
+ResultSet resultSet = statement.executeQuery("SELECT * FROM customers");
+
+// resultSet.next() → gerakkan cursor ke baris berikutnya
+// Return true jika ada baris, false jika sudah habis
+while (resultSet.next()) {
+    String id    = resultSet.getString("id");     // ambil by kolom name
+    String name  = resultSet.getString("name");
+    String email = resultSet.getString("email");
+
+    // Bisa juga by index (dimulai dari 1)
+    // String id = resultSet.getString(1);
+
+    System.out.println(String.join(", ", id, name, email));
+}
+
+// Metode lain sesuai tipe data kolom:
+// resultSet.getInt("age")
+// resultSet.getDouble("price")
+// resultSet.getBoolean("is_active")</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">Cursor</span><span>ResultSet menggunakan konsep <em>cursor</em> — pointer yang awalnya berada <em>sebelum</em> baris pertama. Setiap <code>next()</code> menggeser cursor satu baris ke bawah.</span></div>
+                            <div class="line-item"><span class="line-num">getString()</span><span>Selalu aman untuk tipe apapun — Java akan konversi otomatis. Tapi gunakan tipe yang tepat (<code>getInt</code>, <code>getDouble</code>) untuk efisiensi dan type safety.</span></div>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi PHP</div>
+                            <p>ResultSet di Java mirip seperti <code>PDOStatement</code> di PHP — kamu iterasi dengan <code>while ($row = $stmt->fetch())</code>. Di Laravel, <code>DB::select()</code> sudah wrap ini jadi array, tapi di raw PDO konsepnya identik.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-5b" class="accordion-item-check"/>
+                    <label for="acc-5b" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 Mendapatkan Auto Increment ID setelah INSERT</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">RETURN_GENERATED_KEYS — ambil ID yang baru dibuat</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// AutoIncrementTest.java
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+String sql = "INSERT INTO comments(email, comment) VALUES (?, ?)";
+
+// ⭐ Flag khusus: minta driver simpan generated keys
+PreparedStatement preparedStatement = connection.prepareStatement(
+    sql,
+    Statement.RETURN_GENERATED_KEYS  // ← ini kuncinya!
+);
+
+preparedStatement.setString(1, "eko@test.com");
+preparedStatement.setString(2, "hi");
+preparedStatement.executeUpdate();
+
+// Ambil ID yang baru di-generate database
+ResultSet resultSet = preparedStatement.getGeneratedKeys();
+if (resultSet.next()) {
+    int newId = resultSet.getInt(1); // kolom pertama = generated key
+    System.out.println("Id Comment : " + newId); // → e.g. 3308
+}
+
+resultSet.close();
+preparedStatement.close();
+connection.close();</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">RETURN_GENERATED_KEYS</span><span>Flag yang memberitahu driver untuk menyimpan nilai auto-increment yang dibuat. Tanpa flag ini, <code>getGeneratedKeys()</code> akan mengembalikan ResultSet kosong.</span></div>
+                            <div class="line-item"><span class="line-num">getGeneratedKeys()</span><span>Method di PreparedStatement yang mengembalikan ResultSet berisi key yang di-generate. Untuk MySQL dengan satu auto_increment, ambil kolom pertama dengan index 1.</span></div>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel/PDO</div>
+                            <p>Di Laravel: <code>DB::table('comments')->insertGetId(['email'=>'...', 'comment'=>'...'])</code> atau <code>$pdo->lastInsertId()</code> di PHP raw PDO. Bedanya di Java, kamu harus declare flag <code>RETURN_GENERATED_KEYS</code> di awal saat mempersiapkan statement.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-box" id="quiz-5">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 5</div>
+                    <p style="font-size:var(--s)"><strong>Apa yang perlu ditambahkan ke <code>connection.prepareStatement()</code> agar bisa mengambil auto-increment ID setelah INSERT?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5',this,false)">A. <code>Statement.EXECUTE_INSERT</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5',this,true)">B. <code>Statement.RETURN_GENERATED_KEYS</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5',this,false)">C. <code>ResultSet.AUTO_INCREMENT</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5',this,false)">D. <code>Connection.GET_KEYS</code></div>
+                    <div class="quiz-feedback" id="quiz-5-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-5')">✅ Selesai — Lanjut ke Bab 6</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 6: Transaction ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 6 · Data Integrity</div>
+                <div class="text-title">🔄 Transaction — Commit &amp; Rollback</div>
+                <p>Transaction memastikan sekelompok operasi database berjalan sebagai <strong>satu unit atom</strong> — semua berhasil, atau semua dibatalkan. Tidak boleh setengah-setengah.</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Sifat ACID Transaction</div>
+                    <ul style="font-size:var(--s);margin:.4rem 0 0 1.5rem">
+                        <li><strong>A</strong>tomicity — semua atau tidak sama sekali</li>
+                        <li><strong>C</strong>onsistency — data selalu dalam state valid</li>
+                        <li><strong>I</strong>solation — transaction tidak saling pengaruhi</li>
+                        <li><strong>D</strong>urability — data yang di-commit bertahan permanen</li>
+                    </ul>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Commit — Simpan Semua Perubahan</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// TransactionTest.java — testCommit
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+
+// 1. Matikan auto-commit (default: ON — setiap executeUpdate langsung commit)
+connection.setAutoCommit(false);
+
+String sql = "INSERT INTO comments(email, comment) VALUES (?, ?)";
+for (int i = 0; i < 100; i++) {
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, "eko@test.com");
+        ps.setString(2, "hi");
+        ps.executeUpdate(); // Belum masuk DB — hanya di memori!
+    }
+}
+
+// 2. Setelah semua 100 insert berhasil, baru commit sekaligus
+connection.commit(); // ← Semua 100 baris masuk DB dalam satu operasi atomik
+connection.close();</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Rollback — Batalkan Semua Perubahan</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// TransactionTest.java — testRollback
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+connection.setAutoCommit(false);
+
+String sql = "INSERT INTO comments(email, comment) VALUES (?, ?)";
+for (int i = 0; i < 100; i++) {
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, "eko@test.com");
+        ps.setString(2, "hi");
+        ps.executeUpdate();
+    }
+}
+
+// Batalkan SEMUA 100 insert — tidak ada satu pun yang masuk DB
+connection.rollback();
+connection.close();</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">✅ Pattern Transaction yang Benar di Produksi</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// Pattern terbaik: try-catch-finally dengan rollback on exception
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+try {
+    connection.setAutoCommit(false);
+
+    // ... semua operasi database ...
+    insertOrder(connection, order);
+    deductStock(connection, product);
+    chargePayment(connection, payment);
+
+    connection.commit(); // Semua sukses → simpan
+} catch (Exception e) {
+    connection.rollback(); // Ada yang gagal → batalkan semua
+    throw e;
+} finally {
+    connection.setAutoCommit(true); // Reset ke default
+    connection.close();             // Kembalikan ke pool
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">setAutoCommit(false)</span><span>Default JDBC: setiap statement langsung di-commit (<code>autoCommit=true</code>). Matikan ini untuk memulai transaction manual.</span></div>
+                    <div class="line-item"><span class="line-num">commit()</span><span>Semua perubahan yang belum di-commit sejak <code>setAutoCommit(false)</code> atau <code>commit()</code> terakhir, permanen disimpan ke database.</span></div>
+                    <div class="line-item"><span class="line-num">rollback()</span><span>Semua perubahan yang belum di-commit dibatalkan — seolah tidak pernah terjadi. Database kembali ke state sebelum transaction dimulai.</span></div>
+                    <div class="line-item"><span class="line-num">Reset autoCommit</span><span>Penting! Connection pool me-reuse koneksi. Jika kamu lupa reset <code>autoCommit</code> ke <code>true</code>, koneksi berikutnya yang pinjam dari pool akan masuk transaction mode secara tidak sengaja.</span></div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel: <code>DB::transaction(function () { ... })</code> otomatis handle commit dan rollback. Atau manual: <code>DB::beginTransaction()</code>, <code>DB::commit()</code>, <code>DB::rollBack()</code>. Konsepnya identik dengan JDBC — bedanya Laravel lebih ringkas karena framework yang handle boilerplate-nya.</p>
+                </div>
+
+                <div class="quiz-box" id="quiz-6">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 6</div>
+                    <p style="font-size:var(--s)"><strong>Default JDBC adalah <code>autoCommit=true</code>. Artinya apa?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6',this,false)">A. Setiap koneksi otomatis dibuat saat diperlukan</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6',this,true)">B. Setiap <code>executeUpdate()</code> langsung di-commit ke database tanpa perlu memanggil <code>commit()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6',this,false)">C. Transaction tidak bisa dirollback</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6',this,false)">D. Koneksi otomatis ditutup setelah setiap query</div>
+                    <div class="quiz-feedback" id="quiz-6-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-6')">✅ Selesai — Lanjut ke Bab 7</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 7: Batch Processing ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 7 · Performance</div>
+                <div class="text-title">⚡ Batch Processing — Insert Ribuan Baris dengan Efisien</div>
+                <p>Jika kamu perlu menyimpan 1000 baris data, mengirim 1000 query terpisah sangat tidak efisien. <strong>Batch processing</strong> mengumpulkan banyak operasi dan mengirimnya ke database sekaligus.</p>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Tanpa Batch — 1000 round-trip ke DB</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Setiap loop = 1 query terpisah ke DB
+// 1000 loop = 1000 network round-trip!
+for (int i = 0; i < 1000; i++) {
+    statement.executeUpdate(sql);
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Dengan Batch — 1 round-trip untuk 1000 query</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">for (int i = 0; i < 1000; i++) {
+    statement.addBatch(sql); // Kumpulkan dulu
+}
+statement.executeBatch(); // Kirim sekaligus!</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-7a" class="accordion-item-check" checked/>
+                    <label for="acc-7a" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 Batch dengan Statement biasa</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Untuk SQL statis — setiap entry bisa berbeda SQL</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// BatchTest.java — testStatement
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+Statement statement = connection.createStatement();
+
+String sql = "INSERT INTO comments(email, comment) VALUES ('eko@test.com', 'hi')";
+
+// Kumpulkan 1000 SQL
+for (int i = 0; i < 1000; i++) {
+    statement.addBatch(sql);
+}
+
+// Eksekusi semuanya sekaligus
+statement.executeBatch();
+
+statement.close();
+connection.close();</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-7b" class="accordion-item-check"/>
+                    <label for="acc-7b" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 Batch dengan PreparedStatement — Cara Terbaik</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">SQL dikompilasi sekali, parameter berbeda-beda — lebih efisien &amp; aman</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// BatchTest.java — testPreparedStatement
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+String sql = "INSERT INTO comments(email, comment) VALUES (?, ?)";
+PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+for (int i = 0; i < 1000; i++) {
+    preparedStatement.clearParameters(); // Reset parameter sebelumnya
+    preparedStatement.setString(1, "eko@test.com");
+    preparedStatement.setString(2, "hi");
+    preparedStatement.addBatch(); // Tambahkan ke batch (tanpa argumen)
+}
+
+// Semua 1000 insert dikirim dalam satu batch
+preparedStatement.executeBatch();
+
+preparedStatement.close();
+connection.close();</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">clearParameters()</span><span>Penting di awal setiap iterasi — bersihkan nilai parameter dari iterasi sebelumnya sebelum set nilai baru.</span></div>
+                            <div class="line-item"><span class="line-num">addBatch()</span><span>Di PreparedStatement, <code>addBatch()</code> tanpa argumen — menyimpan state parameter saat ini ke dalam batch queue.</span></div>
+                            <div class="line-item"><span class="line-num">executeBatch()</span><span>Mengirim semua query yang di-queue ke database dalam satu batch. Return <code>int[]</code> — array jumlah baris terpengaruh per operasi.</span></div>
+                        </div>
+                        <div class="info-box success">
+                            <div class="info-box-title">✅ Kombinasi Terbaik: Batch + Transaction</div>
+                            <p style="font-size:var(--s)">Untuk performa maksimal, kombinasikan batch dengan transaction: <code>setAutoCommit(false)</code> → loop <code>addBatch()</code> → <code>executeBatch()</code> → <code>commit()</code>. Ini adalah pattern yang dipakai framework seperti Spring Batch untuk memproses jutaan baris data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel: <code>DB::table('comments')->insert($arrayOf1000Rows)</code> — Laravel otomatis menggunakan batch insert di balik layar. Di Eloquent: <code>Comment::insert($data)</code>. Di JDBC Java, kamu handle batch secara eksplisit — memberikan kontrol penuh atas bagaimana dan kapan batch dieksekusi.</p>
+                </div>
+
+                <div class="quiz-box" id="quiz-7">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 7</div>
+                    <p style="font-size:var(--s)"><strong>Apa perbedaan <code>addBatch(sql)</code> di Statement vs <code>addBatch()</code> di PreparedStatement?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7',this,false)">A. Tidak ada perbedaan — keduanya identik</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7',this,true)">B. Statement perlu argument SQL string, PreparedStatement tidak perlu karena SQL sudah disiapkan sebelumnya dengan parameter</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7',this,false)">C. PreparedStatement.addBatch() langsung execute, Statement tidak</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7',this,false)">D. Hanya PreparedStatement yang mendukung batch</div>
+                    <div class="quiz-feedback" id="quiz-7-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-7')">✅ Selesai — Lanjut ke Bab 8</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 8: Date & MetaData ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 8 · Date &amp; Metadata</div>
+                <div class="text-title">📅 Tipe Date/Time &amp; Database MetaData</div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-8a" class="accordion-item-check" checked/>
+                    <label for="acc-8a" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 Tipe Date &amp; Time di JDBC</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">java.sql.Date, Time, Timestamp — berbeda dari java.util.Date!</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// DateTest.java
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+String sql = """
+    INSERT INTO sample_time(sample_time, sample_date, sample_timestamp)
+    VALUES (?, ?, ?)
+    """;
+PreparedStatement ps = connection.prepareStatement(sql);
+
+// System.currentTimeMillis() = milidetik sejak Unix epoch (1 Jan 1970)
+ps.setTime(1,      new Time(System.currentTimeMillis()));       // TIME di MySQL
+ps.setDate(2,      new Date(System.currentTimeMillis()));       // DATE di MySQL
+ps.setTimestamp(3, new Timestamp(System.currentTimeMillis())); // DATETIME/TIMESTAMP
+
+ps.executeUpdate();
+
+// Membaca kembali
+ResultSet rs = ps.executeQuery("SELECT * FROM sample_time");
+while (rs.next()) {
+    Time      time      = rs.getTime("sample_time");
+    Date      date      = rs.getDate("sample_date");
+    Timestamp timestamp = rs.getTimestamp("sample_timestamp");
+}</code></pre>
+                        </div>
+                        <div class="table-content">
+                            <table>
+                                <thead><tr><th>JDBC Class</th><th>MySQL Type</th><th>Informasi</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>java.sql.Date</code></td><td>DATE</td><td>Hanya tanggal (yyyy-MM-dd), tanpa jam</td></tr>
+                                    <tr><td><code>java.sql.Time</code></td><td>TIME</td><td>Hanya jam (HH:mm:ss), tanpa tanggal</td></tr>
+                                    <tr><td><code>java.sql.Timestamp</code></td><td>DATETIME / TIMESTAMP</td><td>Tanggal + jam + milidetik (paling lengkap)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="info-box warning">
+                            <div class="info-box-title">⚠️ java.sql vs java.util</div>
+                            <p style="font-size:var(--s)">Jangan bingung antara <code>java.util.Date</code> (general purpose) dengan <code>java.sql.Date</code> (khusus JDBC). Di Java modern (8+), lebih disarankan menggunakan <code>java.time.LocalDate</code>, <code>LocalDateTime</code>, dll. — lebih ekspresif dan timezone-aware. Spring JDBC dan JPA sudah support tipe-tipe modern ini.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-8b" class="accordion-item-check"/>
+                    <label for="acc-8b" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>🔹 DatabaseMetaData — Introspeksi Database</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Mengetahui informasi tentang database, tabel, dan kolom secara programatik</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// MetaDataTest.java
+Connection connection = ConnectionUtil.getDataSource().getConnection();
+DatabaseMetaData meta = connection.getMetaData();
+
+// Informasi tentang database server
+System.out.println(meta.getDatabaseProductName());    // → MySQL
+System.out.println(meta.getDatabaseProductVersion()); // → 8.0.xx
+
+// Daftar semua tabel dalam database
+ResultSet tables = meta.getTables("belajar_java_database", null, null, null);
+while (tables.next()) {
+    System.out.println("Table: " + tables.getString("TABLE_NAME"));
+}
+
+// Informasi kolom dari ResultSet
+ResultSet rs = stmt.executeQuery("SELECT * FROM sample_time");
+ResultSetMetaData rsMeta = rs.getMetaData();
+for (int i = 1; i <= rsMeta.getColumnCount(); i++) {
+    System.out.println("Name: " + rsMeta.getColumnName(i));
+    System.out.println("Type: " + rsMeta.getColumnTypeName(i)); // INT, VARCHAR, dll
+    if (rsMeta.getColumnType(i) == Types.INTEGER) {
+        System.out.println("INI INTEGER");
+    }
+}</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">💡 Kapan MetaData Digunakan?</div>
+                            <p style="font-size:var(--s)">MetaData berguna untuk membuat tools generic seperti: database browser, ORM framework (Hibernate menggunakan ini untuk mapping otomatis), migration tools, atau export data ke format lain tanpa tahu struktur tabel sebelumnya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-box" id="quiz-8">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 8</div>
+                    <p style="font-size:var(--s)"><strong>Tipe JDBC mana yang paling tepat untuk menyimpan kolom MySQL <code>DATETIME</code> (tanggal + jam)?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8',this,false)">A. <code>java.sql.Date</code> — sudah cukup</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8',this,false)">B. <code>java.sql.Time</code> — menyimpan waktu</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8',this,true)">C. <code>java.sql.Timestamp</code> — tanggal + jam + milidetik</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8',this,false)">D. <code>java.util.Date</code> — paling umum dipakai</div>
+                    <div class="quiz-feedback" id="quiz-8-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-8')">✅ Selesai — Lanjut ke Bab 9</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 9: Repository Pattern ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 9 · Design Pattern</div>
+                <div class="text-title">🏛️ Repository Pattern — Abstraksi Akses Data</div>
+                <p>Repository Pattern memisahkan logika akses database dari logika bisnis. Kode bisnis tidak perlu tahu apakah data disimpan di MySQL, PostgreSQL, atau bahkan file teks.</p>
+
+                <div class="flow-box">
+                    <div class="flow-node">Service / Controller</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">CommentRepository<br><small>(interface)</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">CommentRepositoryImpl<br><small>(JDBC implementation)</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MySQL Database</div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-9a" class="accordion-item-check" checked/>
+                    <label for="acc-9a" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 Entity: Comment.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">POJO yang merepresentasikan baris tabel comments</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Comment.java — Plain Old Java Object (POJO)
+public class Comment {
+
+  private Integer id;
+  private String email;
+  private String comment;
+
+  // 3 constructor: tanpa arg, tanpa ID (untuk insert), dengan ID (untuk select)
+  public Comment() {}
+
+  public Comment(String email, String comment) {
+    this.email = email;
+    this.comment = comment;
+  }
+
+  public Comment(Integer id, String email, String comment) {
+    this.id = id; this.email = email; this.comment = comment;
+  }
+
+  // Getter dan Setter untuk setiap field
+  public Integer getId() { return id; }
+  public void setId(Integer id) { this.id = id; }
+  // ... dst
+}</code></pre>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Mirip <strong>Eloquent Model</strong> tapi versi POJO (Plain Old Java Object) tanpa magic method. Di Java, kamu mendefinisikan semua getter/setter secara eksplisit. Di era modern Java, ini biasanya diganti dengan <code>record</code> (Java 14+) atau di-generate otomatis oleh library Lombok (<code>@Getter @Setter @AllArgsConstructor</code>).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-9b" class="accordion-item-check"/>
+                    <label for="acc-9b" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 Interface: CommentRepository.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Kontrak yang mendefinisikan operasi yang tersedia — tanpa implementasi</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// CommentRepository.java — Pure interface
+public interface CommentRepository {
+
+  void insert(Comment comment);              // CREATE
+
+  Comment findById(Integer id);             // READ by PK
+
+  List&lt;Comment&gt; findAll();                  // READ all
+
+  List&lt;Comment&gt; findAllByEmail(String email); // READ by email
+
+}</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">💡 Mengapa Interface?</div>
+                            <p style="font-size:var(--s)">Interface memisahkan <em>apa yang bisa dilakukan</em> (kontrak) dari <em>bagaimana caranya</em> (implementasi). Service bisa bergantung pada interface, bukan class konkret. Di testing, kamu bisa ganti implementasi JDBC dengan <em>mock</em> tanpa mengubah kode Service.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-9c" class="accordion-item-check"/>
+                    <label for="acc-9c" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 Implementasi: CommentRepositoryImpl.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Implementasi nyata menggunakan JDBC — semua konsep sebelumnya di sini</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">public class CommentRepositoryImpl implements CommentRepository {
+
+  @Override
+  public void insert(Comment comment) {
+    // try-with-resources: Connection → PreparedStatement → ResultSet
+    try (Connection conn = ConnectionUtil.getDataSource().getConnection()) {
+      String sql = "INSERT INTO comments(email, comment) VALUES (?, ?)";
+      try (PreparedStatement stmt = conn.prepareStatement(
+               sql, Statement.RETURN_GENERATED_KEYS)) {
+        stmt.setString(1, comment.getEmail());
+        stmt.setString(2, comment.getComment());
+        stmt.executeUpdate();
+
+        // Ambil ID yang di-generate dan set ke object
+        try (ResultSet rs = stmt.getGeneratedKeys()) {
+          if (rs.next()) comment.setId(rs.getInt(1));
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e); // Wrap ke unchecked exception
+    }
+  }
+
+  @Override
+  public Comment findById(Integer id) {
+    try (Connection conn = ConnectionUtil.getDataSource().getConnection()) {
+      String sql = "SELECT * FROM comments WHERE id = ?";
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, id);
+        try (ResultSet rs = stmt.executeQuery()) {
+          if (rs.next()) {
+            return new Comment(
+                rs.getInt("id"),
+                rs.getString("email"),
+                rs.getString("comment")
+            );
+          } else {
+            return null; // Tidak ditemukan
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public List&lt;Comment&gt; findAll() {
+    try (Connection conn = ConnectionUtil.getDataSource().getConnection()) {
+      String sql = "SELECT * FROM comments";
+      try (Statement stmt = conn.createStatement()) {
+        try (ResultSet rs = stmt.executeQuery(sql)) {
+          List&lt;Comment&gt; result = new ArrayList&lt;&gt;();
+          while (rs.next()) {
+            result.add(new Comment(
+                rs.getInt("id"),
+                rs.getString("email"),
+                rs.getString("comment")
+            ));
+          }
+          return result;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+}</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">implements</span><span>Kata kunci untuk "mengimplementasikan" interface. Class wajib menyediakan implementasi untuk semua method di interface.</span></div>
+                            <div class="line-item"><span class="line-num">@Override</span><span>Anotasi yang memberitahu compiler: "method ini adalah override dari interface/parent class". Jika signature salah, compiler akan error. Praktik terbaik — selalu pakai @Override.</span></div>
+                            <div class="line-item"><span class="line-num">RuntimeException</span><span>JDBC melempar <code>SQLException</code> (checked exception — harus di-handle). Karena boilerplate, Repository biasanya wrap ke <code>RuntimeException</code> (unchecked) agar caller tidak harus try-catch di mana-mana. Spring melakukan ini otomatis.</span></div>
+                            <div class="line-item"><span class="line-num">new ArrayList&lt;&gt;()</span><span>Membuat List yang bisa di-add. Di findAll(), kumpulkan semua baris ke List ini, lalu return. Mirip <code>$result = []</code> kemudian <code>$result[] = $row</code> di PHP.</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-9d" class="accordion-item-check"/>
+                    <label for="acc-9d" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 Test: RepositoryTest.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Cara pakai Repository yang bersih</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// RepositoryTest.java
+public class RepositoryTest {
+
+  private CommentRepository commentRepository; // Pakai interface, bukan impl!
+
+  @BeforeEach
+  void setUp() {
+    commentRepository = new CommentRepositoryImpl(); // Implementasi diset di sini
+  }
+
+  @Test
+  void testInsert() {
+    Comment comment = new Comment("eko@test.com", "hi");
+    commentRepository.insert(comment);
+    // Setelah insert, ID di-set oleh repository
+    Assertions.assertNotNull(comment.getId()); // ID harus ada!
+    System.out.println(comment.getId());
+  }
+
+  @Test
+  void testFindById() {
+    Comment found = commentRepository.findById(3307);
+    Assertions.assertNotNull(found);
+
+    Comment notFound = commentRepository.findById(10000000);
+    Assertions.assertNull(notFound); // ID tidak ada → null
+  }
+
+  @Test
+  void testFindAll() {
+    List&lt;Comment&gt; comments = commentRepository.findAll();
+    System.out.println(comments.size());
+  }
+}</code></pre>
+                        </div>
+                        <div class="info-box success">
+                            <div class="info-box-title">✅ Keunggulan Repository Pattern</div>
+                            <p style="font-size:var(--s)">Perhatikan test menggunakan <code>CommentRepository</code> (interface), bukan <code>CommentRepositoryImpl</code>. Untuk testing unit, bisa inject mock: <code>commentRepository = mock(CommentRepository.class)</code>. Tidak perlu koneksi database sungguhan!</p>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Repository Pattern di Java ini adalah fondasi dari yang Laravel/Laravel Repository Pattern lakukan: <code>interface CommentRepositoryInterface</code> → <code>class EloquentCommentRepository implements CommentRepositoryInterface</code>. Spring Data JPA bahkan tidak perlu implementasi — cukup definisikan interface, Spring buatkan implementasinya otomatis!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-box" id="quiz-9">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 9</div>
+                    <p style="font-size:var(--s)"><strong>Mengapa <code>SQLException</code> di-wrap menjadi <code>RuntimeException</code> di dalam Repository?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9',this,false)">A. RuntimeException lebih detail dalam menyimpan pesan error</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9',this,true)">B. SQLException adalah checked exception yang harus di-handle di setiap caller. Wrap ke RuntimeException (unchecked) agar caller tidak wajib try-catch</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9',this,false)">C. Database tidak mengenali SQLException</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9',this,false)">D. Untuk menyembunyikan error dari pengguna</div>
+                    <div class="quiz-feedback" id="quiz-9-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-9')">🎉 Semua Bab Selesai! Lihat Summary</button>
+            </div>
+        </div>
+
+        <!-- ========== SUMMARY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Ringkasan Arsitektur</div>
+                <div class="text-title">📝 Summary: Java Database dengan JDBC</div>
+                <p>Kamu telah menguasai JDBC dari awal sampai Repository Pattern. Berikut cheat sheet lengkapnya.</p>
+
+                <div class="text-title" style="margin-top:var(--l)">🗺️ Alur Lengkap: Aplikasi → Database</div>
+                <div class="flow-box">
+                    <div class="flow-node">Request</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Repository<br><small>interface</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">RepositoryImpl<br><small>JDBC code</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">ConnectionUtil<br><small>HikariCP pool</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MySQL Driver</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MySQL DB</div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">📋 Cheat Sheet JDBC Lengkap</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// ── KONEKSI ───────────────────────────────────────────────
+try (Connection conn = dataSource.getConnection()) {
+
+  // ── SELECT (executeQuery) ────────────────────────────
+  try (PreparedStatement ps = conn.prepareStatement(
+           "SELECT * FROM tabel WHERE id = ?")) {
+    ps.setInt(1, id);
+    try (ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) {
+        rs.getInt("id");
+        rs.getString("name");
+        rs.getTimestamp("created_at");
+      }
+    }
+  }
+
+  // ── INSERT / UPDATE / DELETE (executeUpdate) ─────────
+  try (PreparedStatement ps = conn.prepareStatement(
+           "INSERT INTO tabel(col1, col2) VALUES (?, ?)",
+           Statement.RETURN_GENERATED_KEYS)) {  // ← untuk auto_increment
+    ps.setString(1, "value1");
+    ps.setString(2, "value2");
+    int affected = ps.executeUpdate();
+    try (ResultSet keys = ps.getGeneratedKeys()) {
+      if (keys.next()) int newId = keys.getInt(1);
+    }
+  }
+
+  // ── TRANSACTION ──────────────────────────────────────
+  conn.setAutoCommit(false);
+  try {
+    // ... multiple operations ...
+    conn.commit();
+  } catch (Exception e) {
+    conn.rollback();
+    throw e;
+  } finally {
+    conn.setAutoCommit(true);
+  }
+
+  // ── BATCH ────────────────────────────────────────────
+  try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    for (Data d : dataList) {
+      ps.clearParameters();
+      ps.setString(1, d.getVal());
+      ps.addBatch();
+    }
+    ps.executeBatch();
+  }
+
+} // conn otomatis dikembalikan ke HikariCP pool</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">🔑 9 Golden Rules Java JDBC</div>
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Selalu pakai Connection Pool (HikariCP)</div>
+                        <div class="timeline-content-desc">Jangan buat koneksi baru per request. Setup HikariDataSource sekali via Singleton, gunakan terus.</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">try-with-resources untuk semua resource</div>
+                        <div class="timeline-content-desc">Connection, Statement, ResultSet harus selalu ditutup. try-with-resources memastikan ini terjadi otomatis.</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">PreparedStatement SELALU, Statement TIDAK PERNAH untuk input user</div>
+                        <div class="timeline-content-desc">Statement + string concatenation = SQL Injection. PreparedStatement dengan <code>?</code> adalah satu-satunya cara aman.</div>
+                    </div>
+                    <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Index parameter PreparedStatement mulai dari 1, bukan 0</div>
+                        <div class="timeline-content-desc"><code>setString(1, val)</code> untuk <code>?</code> pertama. Kesalahan umum developer PHP yang terbiasa dengan array 0-indexed.</div>
+                    </div>
+                    <div><span class="timeline-key active">5</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Transaction: matikan autoCommit, jangan lupa reset</div>
+                        <div class="timeline-content-desc"><code>setAutoCommit(false)</code> → operasi → <code>commit()</code> atau <code>rollback()</code> → <code>setAutoCommit(true)</code>. Connection pool me-reuse koneksi.</div>
+                    </div>
+                    <div><span class="timeline-key active">6</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Batch untuk insert massal</div>
+                        <div class="timeline-content-desc"><code>addBatch()</code> + <code>executeBatch()</code>. Jauh lebih cepat dari loop dengan <code>executeUpdate()</code> satu per satu.</div>
+                    </div>
+                    <div><span class="timeline-key active">7</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">RETURN_GENERATED_KEYS untuk ambil auto-increment ID</div>
+                        <div class="timeline-content-desc">Flag wajib di <code>prepareStatement()</code> jika perlu ID yang baru dibuat database.</div>
+                    </div>
+                    <div><span class="timeline-key active">8</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Gunakan java.sql.Timestamp untuk kolom DATETIME</div>
+                        <div class="timeline-content-desc">Bukan <code>java.util.Date</code>. Di Java modern, pertimbangkan <code>LocalDateTime</code> yang didukung JDBC 4.2+.</div>
+                    </div>
+                    <div><span class="timeline-key">9</span></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Repository Pattern untuk memisahkan akses data dari logika bisnis</div>
+                        <div class="timeline-content-desc">Interface + Implementasi. Ini fondasi dari Spring Data JPA yang akan meng-generate implementasinya secara otomatis.</div>
+                    </div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">🗺️ Perbandingan Java JDBC vs Laravel/PDO</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                            <tr><th>Konsep</th><th>Java JDBC</th><th>Laravel / PHP PDO</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Koneksi string</td><td><code>jdbc:mysql://host:port/db</code></td><td><code>mysql://user:pass@host/db</code> di .env</td></tr>
+                            <tr><td>Connection Pool</td><td>HikariCP (manual setup)</td><td>Otomatis oleh framework</td></tr>
+                            <tr><td>Parameter binding</td><td><code>?</code> dengan <code>setString(1, val)</code></td><td><code>?</code> atau <code>:name</code> dengan array</td></tr>
+                            <tr><td>Execute DML</td><td><code>executeUpdate()</code> → int</td><td><code>$pdo->exec()</code> → int</td></tr>
+                            <tr><td>Execute SELECT</td><td><code>executeQuery()</code> → ResultSet</td><td><code>$stmt->fetchAll()</code> → array</td></tr>
+                            <tr><td>Auto-increment ID</td><td><code>RETURN_GENERATED_KEYS</code> + <code>getGeneratedKeys()</code></td><td><code>$pdo->lastInsertId()</code></td></tr>
+                            <tr><td>Transaction</td><td><code>setAutoCommit(false)</code> → <code>commit()</code></td><td><code>DB::beginTransaction()</code></td></tr>
+                            <tr><td>Batch insert</td><td><code>addBatch()</code> + <code>executeBatch()</code></td><td><code>DB::table()->insert($array)</code></td></tr>
+                            <tr><td>Entity / Model</td><td>POJO + getter/setter (atau Lombok <code>@Data</code>)</td><td>Eloquent Model</td></tr>
+                            <tr><td>Repository</td><td>Interface + Impl (manual JDBC)</td><td>Laravel Repository / Eloquent</td></tr>
+                            <tr><td>ORM Level Berikutnya</td><td>Spring Data JPA / Hibernate</td><td>Eloquent ORM</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex-ais-jcs gap-m" style="margin-top:var(--l)">
+                    <div class="badge text-white" style="background:#064e3b"><p>🗄️ JDBC</p></div>
+                    <div class="badge text-white bg-primary"><p>🏊 HikariCP</p></div>
+                    <div class="badge text-white bg-danger"><p>🛡️ PreparedStatement</p></div>
+                    <div class="badge text-white bg-success"><p>🔄 Transaction</p></div>
+                    <div class="badge badge-small bg-warning"><p>🏛️ Repository Pattern</p></div>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--l)">
+                    <div class="info-box-title">🎉 Kamu sudah memahami Java Database JDBC!</div>
+                    <p style="font-size:var(--s)">Dengan fondasi JDBC ini, kamu siap naik ke level berikutnya. Langkah selanjutnya: pelajari <strong>Spring JDBC</strong> yang menyederhanakan boilerplate, kemudian <strong>Spring Data JPA + Hibernate</strong> yang meng-generate seluruh implementasi Repository otomatis — seperti versi canggih dari apa yang baru kamu tulis di Bab 9.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer style="padding:var(--l);text-align:center;font-size:var(--xs);color:var(--transtext-color);">
+        Java Database · JDBC &amp; HikariCP Learning Module · Untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script>
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() { document.getElementsByTagName("body")[0].classList.toggle("dark-mode"); }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    const TOTAL = 9;
+    const done = new Set(JSON.parse(localStorage.getItem('done_database') || '[]'));
+    function updateProgress() {
+        const pct = Math.round((done.size / TOTAL) * 100);
+        document.getElementById('progress-fill').style.width = pct + '%';
+        document.getElementById('progress-label').textContent = done.size + ' / ' + TOTAL + ' bab selesai';
+    }
+    function markDone(id) {
+        done.add(id);
+        try { localStorage.setItem('done_database', JSON.stringify([...done])); } catch(e){}
+        updateProgress();
+        const n = parseInt(id.replace('chapter-', '')) + 1;
+        const next = document.getElementById('chapter-' + n) || document.getElementById('summary');
+        if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    updateProgress();
+
+    const answered = {};
+    function answerQuiz(id, el, correct) {
+        if (answered[id]) return;
+        answered[id] = true;
+        const fb = document.getElementById(id + '-feedback');
+        el.parentElement.querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
+        if (correct) {
+            el.classList.add('correct');
+            fb.textContent = '✅ Benar! Jawaban kamu tepat.';
+            fb.className = 'quiz-feedback show ok';
+        } else {
+            el.classList.add('wrong');
+            el.parentElement.querySelectorAll('.quiz-option').forEach(o => {
+                if (o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+            });
+            fb.textContent = '❌ Kurang tepat. Perhatikan jawaban yang benar (hijau).';
+            fb.className = 'quiz-feedback show ko';
+        }
+    }
+
+    const items = document.querySelectorAll('.sidebar-menu-item[href]');
+    document.querySelectorAll('[id^="chapter-"], #summary, #pengantar').forEach(s => {
+        new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const id = e.target.getAttribute('id');
+                    items.forEach(i => i.classList.toggle('active', i.getAttribute('href') === '#' + id));
+                }
+            });
+        }, { threshold: 0.3 }).observe(s);
+    });
+</script>
+</body>
+</html>

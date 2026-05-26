@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Thread — Modul Belajar untuk Developer PHP/Laravel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .quiz-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);border-radius:var(--radius-m);padding:var(--m);margin-top:var(--m)}
+        .quiz-box .quiz-title{font-weight:700;color:var(--primary-color);margin-bottom:var(--s)}
+        .quiz-option{display:flex;align-items:center;gap:var(--s);padding:var(--xs) var(--s);border-radius:var(--radius-s);cursor:pointer;margin-bottom:var(--xs);border:1px solid var(--border-color);background:var(--bg-color)}
+        .quiz-option:hover{background:var(--sidebar-hover-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{margin-top:var(--s);font-size:var(--s);font-weight:600}
+        .quiz-feedback.ok{color:var(--success-color)}
+        .quiz-feedback.err{color:var(--danger-color)}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-m);padding:var(--m);margin:var(--s) 0}
+        .info-box.tip{background:var(--transsuccess-color);border-left:4px solid var(--success-color)}
+        .info-box.warn{background:var(--transwarning-color);border-left:4px solid var(--warning-color)}
+        .info-box.laravel{background:var(--transsecond-primary-color);border-left:4px solid var(--second-primary-color)}
+        .info-box.danger{background:var(--transdanger-color);border-left:4px solid var(--danger-color)}
+        .info-box strong{display:block;margin-bottom:var(--xs)}
+        .code-wrap{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-m);margin:var(--s) 0}
+        .code-wrap pre{margin:0}
+        .code-wrap code{font-size:.85em}
+        .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);max-width:77dvw;overflow:auto}
+        @media(max-width:600px){.compare-grid{grid-template-columns:1fr}}
+        .compare-grid .wrong-box{border-left:4px solid var(--danger-color);background:var(--transdanger-color);border-radius:var(--radius-m);padding:var(--s)}
+        .compare-grid .right-box{border-left:4px solid var(--success-color);background:var(--transsuccess-color);border-radius:var(--radius-m);padding:var(--s)}
+        .compare-label{font-weight:700;font-size:var(--s);margin-bottom:var(--xs)}
+        .chapter-intro{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m)}
+        .chapter-intro .chapter-num{color:var(--primary-color);font-weight:700;font-size:var(--s);letter-spacing:.08em;text-transform:uppercase}
+        .chapter-intro h2{margin:var(--xs) 0 var(--s);font-size:var(--xx)}
+        .line-table{width:100%;border-collapse:collapse;font-size:var(--s)}
+        .line-table th,.line-table td{padding:var(--xs) var(--s);text-align:left;border-bottom:1px solid var(--border-color)}
+        .line-table th{background:var(--transprimary-color);color:var(--primary-color);font-weight:700}
+        .line-table tr:hover td{background:var(--sidebar-hover-color)}
+        .section-divider{border:none;border-top:1px solid var(--border-color);margin:var(--x) 0}
+        .summary-item{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) 0;border-bottom:1px solid var(--border-color)}
+        .summary-item:last-child{border-bottom:none}
+        .summary-icon{font-size:1.4rem;flex-shrink:0}
+        #progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--primary-color);transition:width .2s;z-index:9999}
+        .thread-state-diagram{display:flex;flex-wrap:wrap;gap:var(--s);align-items:center;padding:var(--m) 0}
+        .state-badge{padding:var(--xs) var(--s);border-radius:var(--radius-s);font-weight:700;font-size:var(--s);white-space:nowrap}
+        .state-arrow{color:var(--primary-color);font-weight:700}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<div id="progress-bar"></div>
+
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-1">🧵 Thread</a>
+    <a class="bottom-nav-item" href="#chapter-3">⚠️ Race</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnav-check">☰ Lainnya</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnav-check">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnav-check">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-5">🔒 Lock</a>
+                <a class="bottom-nav-item" href="#chapter-7">⚡ Executor</a>
+                <a class="bottom-nav-item" href="#chapter-10">📬 Queue</a>
+                <a class="bottom-nav-item" href="#chapter-15">📝 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">🧵 Java Thread</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#chapter-1" class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🧵</div><span>Thread Dasar</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">😴</div><span>Sleep, Join &amp; Interrupt</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚠️</div><span>Race Condition</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔐</div><span>Synchronized &amp; Deadlock</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔒</div><span>Lock &amp; Condition</span></a>
+        <a href="#chapter-6" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚛️</div><span>Atomic</span></a>
+        <a href="#chapter-7" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏪</div><span>ThreadLocal</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">⚡</strong><span>Executor &amp; Future</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-8" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">⚡</strong><span>ExecutorService</span></a>
+                <a href="#chapter-9" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔮</strong><span>Future &amp; Callable</span></a>
+                <a href="#chapter-9b" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🚀</strong><span>CompletableFuture</span></a>
+            </div>
+        </details>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📬</strong><span>Queue &amp; Collections</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-10" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📬</strong><span>Blocking Queue</span></a>
+                <a href="#chapter-11" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🗺️</strong><span>Concurrent Collections</span></a>
+            </div>
+        </details>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🚦</strong><span>Sinkronisasi Lanjut</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-12" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">⬇️</strong><span>CountDownLatch &amp; Barrier</span></a>
+                <a href="#chapter-13" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🚦</strong><span>Semaphore &amp; Exchanger</span></a>
+            </div>
+        </details>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🍴</strong><span>Fork/Join &amp; Stream</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-14" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🍴</strong><span>ForkJoin &amp; Parallel Stream</span></a>
+                <a href="#chapter-14b" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📡</strong><span>Reactive Stream &amp; Timer</span></a>
+            </div>
+        </details>
+        <a href="#chapter-15" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📝</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">🧵 Java Thread</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-1"><span class="container-header-nav-item-text">Thread Dasar</span></a>
+                    <a class="container-header-nav-item" href="#chapter-4"><span class="container-header-nav-item-text">Sync &amp; Deadlock</span></a>
+                    <a class="container-header-nav-item" href="#chapter-8"><span class="container-header-nav-item-text">ExecutorService</span></a>
+                    <a class="container-header-nav-item" href="#chapter-15"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--x);">
+                <div class="flex-ais-jcs gap-m" style="align-items:center;">
+                    <span style="font-size:3rem;">🧵</span>
+                    <div>
+                        <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Modul Pembelajaran Mandiri</div>
+                        <h1 style="margin:var(--xs) 0 var(--s);">Java Thread untuk Developer PHP/Laravel</h1>
+                        <p>Di PHP (terutama dengan satu worker), kode berjalan <strong>sekuensial</strong> dan single-threaded. Di Java, kamu bisa menjalankan banyak tugas <strong>secara bersamaan</strong> menggunakan Thread. Modul ini membahas concurrency dari dasar hingga pola-pola advanced yang dipakai di production.</p>
+                    </div>
+                </div>
+                <hr style="border:none;border-top:1px solid var(--border-color);margin:var(--m) 0">
+                <div class="flex-ais-jcs gap-m">
+                    <div class="badge text-white bg-primary"><p>15 Chapter</p></div>
+                    <div class="badge text-white bg-success"><p>PHP/Laravel Analogy</p></div>
+                    <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+                    <div class="badge badge-small bg-danger"><p>Common Pitfalls</p></div>
+                </div>
+            </div>
+
+            <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">🧠 Mengapa Thread Penting?</div>
+            <div class="table-content">
+                <table>
+                    <thead><tr><th>Skenario</th><th>PHP (Tanpa Thread)</th><th>Java (Dengan Thread)</th></tr></thead>
+                    <tbody>
+                    <tr><td>Kirim 100 email</td><td>Tunggu 1 per 1 = lambat</td><td>Kirim paralel = cepat</td></tr>
+                    <tr><td>Proses gambar besar</td><td>Block request lain</td><td>Background thread, request tetap jalan</td></tr>
+                    <tr><td>Ambil data dari 5 API</td><td>Sekuensial = total waktu semua dijumlah</td><td>Paralel = waktu terlama dari semua</td></tr>
+                    <tr><td>Server load tinggi</td><td>Queue/horizon workaround</td><td>ThreadPool built-in</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="display-grid" style="margin-top:var(--m);">
+                <div class="stepper">
+                    <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value">Thread Dasar</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">2</div><div class="stepper-value">Race Condition</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">3</div><div class="stepper-value">Lock &amp; Atomic</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Executor</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Future</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">6</div><div class="stepper-value">Queue</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">7</div><div class="stepper-value">Advanced</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH1: THREAD DASAR -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 1</div>
+                    <h2>🧵 Thread — Unit Eksekusi Paralel</h2>
+                    <p>Thread adalah unit eksekusi terkecil dalam sebuah program. Setiap program Java sudah punya satu thread — <strong>main thread</strong>. Kamu bisa membuat thread tambahan untuk menjalankan kode secara paralel menggunakan <code>Runnable</code> + <code>Thread</code>.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ThreadTest.java
+public class ThreadTest {
+
+  @Test
+  void mainThread() {
+    // Setiap program Java punya main thread
+    var name = Thread.currentThread().getName();
+    System.out.println(name); // "main"
+  }
+
+  @Test
+  void createThread() {
+    // Runnable = interface yang punya satu method: run()
+    // Lambda () -> {} adalah implementasi Runnable
+    Runnable runnable = () -> {
+      System.out.println("Hello from thread : " + Thread.currentThread().getName());
+    };
+
+    var thread = new Thread(runnable); // buat thread, belum jalan
+    thread.start();                    // MULAI thread — ini non-blocking!
+
+    System.out.println("Program Selesai"); // mungkin muncul SEBELUM output thread!
+  }
+}</code></pre></div>
+
+                <div class="info-box danger">
+                    <strong>🚨 thread.start() ≠ thread.run()</strong>
+                    <ul style="margin:var(--xs) 0 0;padding-left:var(--m);">
+                        <li><code>thread.start()</code> → menjalankan thread di background (non-blocking), eksekusi paralel ✅</li>
+                        <li><code>thread.run()</code> → memanggil method <code>run()</code> di thread yang SAMA seperti method biasa ❌</li>
+                    </ul>
+                    Kesalahan paling umum pemula: memanggil <code>run()</code> dan heran kenapa tidak paralel!
+                </div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">🔄 Thread State — Siklus Hidup Thread</div>
+                <div class="thread-state-diagram">
+                    <span class="state-badge" style="background:var(--transprimary-color);color:var(--primary-color);">NEW</span>
+                    <span class="state-arrow">→ start() →</span>
+                    <span class="state-badge" style="background:var(--transwarning-color);color:var(--warning-color);">RUNNABLE</span>
+                    <span class="state-arrow">→ sleep/wait →</span>
+                    <span class="state-badge" style="background:var(--transsecond-primary-color);color:var(--second-primary-color);">BLOCKED/WAITING</span>
+                    <span class="state-arrow">→ wakeup →</span>
+                    <span class="state-badge" style="background:var(--transwarning-color);color:var(--warning-color);">RUNNABLE</span>
+                    <span class="state-arrow">→ selesai →</span>
+                    <span class="state-badge" style="background:var(--transsuccess-color);color:var(--success-color);">TERMINATED</span>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">@Test
+void threadState() throws InterruptedException {
+  var thread = new Thread(() -> {
+    System.out.println(Thread.currentThread().getState()); // RUNNABLE
+    System.out.println("Run in thread : " + Thread.currentThread().getName());
+  });
+  thread.setName("Eko"); // beri nama thread untuk debugging
+
+  System.out.println(thread.getState()); // NEW — belum di-start
+
+  thread.start();
+  thread.join(); // tunggu thread selesai
+
+  System.out.println(thread.getState()); // TERMINATED
+}</code></pre></div>
+
+                <div class="code-wrap"><pre><code class="language-java">// DaemonApp.java — Daemon Thread
+// Daemon thread otomatis mati saat semua non-daemon thread selesai
+// Cocok untuk background task seperti garbage collector
+var thread = new Thread(() -> {
+  try {
+    Thread.sleep(3000);
+    System.out.println("Run Thread"); // mungkin TIDAK dicetak!
+  } catch (InterruptedException e) {
+    e.printStackTrace();
+  }
+});
+
+thread.setDaemon(true); // jadikan daemon SEBELUM start!
+thread.start();
+// Kalau main thread selesai duluan → daemon thread ikut mati</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Jenis Thread</th><th>Perilaku</th><th>Kapan Dipakai</th></tr></thead>
+                        <tbody>
+                        <tr><td><strong>User Thread</strong> (default)</td><td>JVM menunggu semua user thread selesai sebelum keluar</td><td>Task penting yang harus selesai</td></tr>
+                        <tr><td><strong>Daemon Thread</strong></td><td>JVM langsung keluar meski daemon masih jalan</td><td>Background service, monitoring, GC</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Thread di Java seperti <strong>Queue Worker</strong> di Laravel — kamu bisa menjalankan beberapa worker secara paralel. Bedanya, di Java kamu kontrol langsung threadnya di kode, tanpa perlu Redis atau Supervisor. Daemon thread seperti worker yang bisa di-SIGKILL kapan saja tanpa menunggu job selesai.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1</div>
+                    <p><strong>Apa perbedaan antara memanggil <code>thread.start()</code> dan <code>thread.run()</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅐</span> Tidak ada bedanya, keduanya menjalankan thread baru</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',true)"><span>🅑</span> <code>start()</code> menjalankan thread baru secara paralel; <code>run()</code> hanya memanggil method seperti biasa di thread yang sama</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅒</span> <code>run()</code> lebih cepat karena langsung dieksekusi tanpa overhead thread</div>
+                    <div class="quiz-feedback" id="q1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2: SLEEP, JOIN, INTERRUPT -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 2</div>
+                    <h2>😴 Sleep, Join &amp; Interrupt</h2>
+                    <p>Tiga mekanisme penting untuk mengelola lifecycle thread: <strong>sleep</strong> (jeda sementara), <strong>join</strong> (tunggu thread lain selesai), dan <strong>interrupt</strong> (sinyal untuk menghentikan thread).</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// Thread.sleep() — Jeda eksekusi (melempar InterruptedException!)
+@Test
+void threadSleep() throws InterruptedException {
+  Runnable runnable = () -> {
+    try {
+      Thread.sleep(2_000L); // jeda 2 detik (dalam milidetik)
+      System.out.println("Hello from thread : " + Thread.currentThread().getName());
+    } catch (InterruptedException e) {
+      e.printStackTrace(); // sleep diinterrupt
+    }
+  };
+
+  var thread = new Thread(runnable);
+  thread.start();
+  System.out.println("Program Selesai"); // ini muncul DULU sebelum output thread
+  Thread.sleep(3_000L); // main thread nunggu 3 detik agar thread selesai
+}
+
+// thread.join() — Tunggu thread selesai, cara yang BENAR
+@Test
+void threadJoin() throws InterruptedException {
+  var thread = new Thread(() -> {
+    try {
+      Thread.sleep(2_000L);
+      System.out.println("Hello from thread : " + Thread.currentThread().getName());
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  });
+
+  thread.start();
+  System.out.println("Menunggu Selesai");
+  thread.join(); // BLOK main thread sampai 'thread' selesai
+  System.out.println("Program Selesai"); // dijamin setelah thread selesai
+}</code></pre></div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// thread.interrupt() — Kirim sinyal interrupt ke thread
+// PENTING: interrupt() tidak langsung menghentikan thread!
+// Itu hanya SET FLAG interrupted = true
+
+// ❌ Cara yang kurang tepat — InterruptedException tertangkap tapi loop jalan terus!
+@Test
+void threadInterrupt() throws InterruptedException {
+  Runnable runnable = () -> {
+    for (int i = 0; i < 10; i++) {
+      System.out.println("Runnable : " + i);
+      try {
+        Thread.sleep(1_000L);
+      } catch (InterruptedException e) {
+        e.printStackTrace(); // hanya print, loop tetap lanjut!
+      }
+    }
+  };
+  var thread = new Thread(runnable);
+  thread.start();
+  Thread.sleep(5_000);
+  thread.interrupt(); // set flag interrupted
+  thread.join();
+}
+
+// ✅ Cara yang benar — Cek flag interrupt dan return
+@Test
+void threadInterruptCorrect() throws InterruptedException {
+  Runnable runnable = () -> {
+    for (int i = 0; i < 10; i++) {
+      if (Thread.interrupted()) { // cek flag, dan RESET flag
+        return;                   // keluar dari runnable
+      }
+      System.out.println("Runnable : " + i);
+      try {
+        Thread.sleep(1_000L);
+      } catch (InterruptedException e) {
+        return; // saat sleep diinterrupt, langsung return
+      }
+    }
+  };
+  var thread = new Thread(runnable);
+  thread.start();
+  Thread.sleep(5_000);
+  thread.interrupt();
+  thread.join();
+}</code></pre></div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Interrupt bukan Kill!</strong>
+                    <code>thread.interrupt()</code> hanya mengirim "sinyal" — bukan memaksa thread berhenti. Thread yang menerima sinyal ini harus <em>secara aktif</em> memeriksa dan merespons. Kalau kamu tidak cek <code>Thread.interrupted()</code> atau tidak handle <code>InterruptedException</code> dengan benar, interrupt tidak akan berpengaruh apa-apa.
+                </div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Method</th><th>Deskripsi</th><th>Melempar Exception?</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>Thread.sleep(ms)</code></td><td>Jeda thread saat ini</td><td>✅ <code>InterruptedException</code></td></tr>
+                        <tr><td><code>thread.join()</code></td><td>Tunggu thread lain selesai</td><td>✅ <code>InterruptedException</code></td></tr>
+                        <tr><td><code>thread.interrupt()</code></td><td>Set flag interrupted</td><td>❌</td></tr>
+                        <tr><td><code>Thread.interrupted()</code></td><td>Cek &amp; RESET flag interrupted</td><td>❌</td></tr>
+                        <tr><td><code>thread.isInterrupted()</code></td><td>Cek flag interrupted (tidak reset)</td><td>❌</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>thread.join()</code> seperti menunggu semua job dalam queue selesai sebelum lanjut. Di Laravel kamu pakai <code>Bus::chain()</code> atau <code>Bus::batch()->then()</code> untuk ini. Di Java, <code>join()</code> langsung di thread level tanpa perlu middleware tambahan.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 2</div>
+                    <p><strong>Jika kamu memanggil <code>thread.interrupt()</code> saat thread sedang <code>Thread.sleep()</code>, apa yang terjadi?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅐</span> Thread langsung berhenti dan terminasi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',true)"><span>🅑</span> Sleep dibatalkan dan dilempar <code>InterruptedException</code> — thread lanjut atau berhenti tergantung kode catch-nya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅒</span> Tidak ada efek apa-apa karena interrupt tidak bisa mengganggu sleep</div>
+                    <div class="quiz-feedback" id="q2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3: RACE CONDITION -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3</div>
+                    <h2>⚠️ Race Condition — Bahaya Akses Bersamaan</h2>
+                    <p><strong>Race Condition</strong> terjadi ketika beberapa thread mengakses dan mengubah data yang sama secara bersamaan, menyebabkan hasil yang tidak terduga. Ini adalah bug yang sangat sulit direproduksi dan di-debug!</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// Counter.java — Counter TIDAK thread-safe
+public class Counter {
+  private Long value = 0L;
+
+  public void increment() {
+    value++; // TIDAK AMAN! value++ sebenarnya 3 operasi:
+             // 1. baca nilai value
+             // 2. tambah 1
+             // 3. tulis kembali
+             // Thread lain bisa menyela di antara langkah ini!
+  }
+
+  public Long getValue() { return value; }
+}
+
+// RaceConditionTest.java
+@Test
+void counter() throws InterruptedException {
+  var counter = new Counter();
+  Runnable runnable = () -> {
+    for (int i = 0; i < 1_000_000; i++) {
+      counter.increment();
+    }
+  };
+
+  var thread1 = new Thread(runnable);
+  var thread2 = new Thread(runnable);
+  var thread3 = new Thread(runnable);
+
+  thread1.start();
+  thread2.start();
+  thread3.start();
+
+  thread1.join();
+  thread2.join();
+  thread3.join();
+
+  // HARAPAN: 3_000_000
+  // KENYATAAN: angka acak lebih kecil, misal: 1_847_293
+  System.out.println(counter.getValue());
+}</code></pre></div>
+
+                <div class="info-box danger">
+                    <strong>🚨 Mengapa value++ Tidak Aman?</strong>
+                    Secara internal, <code>value++</code> adalah 3 instruksi terpisah di level bytecode/CPU. Thread bisa disela (preempted) di antara instruksi ini. Bayangkan: Thread1 baca value=100, Thread2 baca value=100, Thread1 tulis 101, Thread2 tulis 101 — padahal seharusnya 102. Dua increment hilang!
+                </div>
+
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Tidak Thread-Safe</div>
+                        <div class="code-wrap"><pre><code class="language-java">public class Counter {
+  private Long value = 0L;
+
+  public void increment() {
+    value++; // Race condition!
+  }
+}
+// 3 thread × 1jt increment
+// Hasil: ~1.8jt (tidak konsisten)</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Thread-Safe (3 solusi)</div>
+                        <div class="code-wrap"><pre><code class="language-java">// 1. synchronized
+synchronized (this) { value++; }
+
+// 2. AtomicLong
+AtomicLong val = new AtomicLong(0);
+val.incrementAndGet();
+
+// 3. ReentrantLock
+lock.lock();
+try { value++; } finally { lock.unlock(); }
+// Hasil: selalu 3_000_000 ✅</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Race condition di PHP jarang terjadi karena PHP biasanya single-threaded per request. Tapi kamu mungkin pernah alami ini di level database: dua request bersamaan increment stock dari 10 → keduanya baca 10, keduanya tulis 9 — stok harusnya 8. Solusinya: <code>DB::transaction()</code> + <code>lockForUpdate()</code>. Di Java, masalah yang sama terjadi di memory level, dan butuh solusi di level thread.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3</div>
+                    <p><strong>Mengapa operasi <code>value++</code> tidak thread-safe meski terlihat seperti satu operasi?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅐</span> Karena operator <code>++</code> tidak didukung di multi-threading</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',true)"><span>🅑</span> Karena <code>value++</code> sebenarnya terdiri dari 3 instruksi (baca, tambah, tulis) yang bisa disela oleh thread lain di tengah-tengah</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅒</span> Karena tipe <code>Long</code> tidak mendukung concurrency</div>
+                    <div class="quiz-feedback" id="q3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4: SYNCHRONIZED & DEADLOCK -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 4</div>
+                    <h2>🔐 Synchronized &amp; Deadlock</h2>
+                    <p>Keyword <code>synchronized</code> adalah cara paling dasar untuk membuat blok kode thread-safe — hanya satu thread yang bisa masuk ke blok tersebut pada satu waktu. Tapi penggunaannya yang salah bisa menyebabkan <strong>Deadlock</strong>.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// SynchronizedCounter.java — Thread-safe dengan synchronized
+public class SynchronizedCounter {
+  private Long value = 0L;
+
+  public void increment() {
+    synchronized (this) { // kunci objek 'this'
+      value++; // hanya 1 thread yang bisa masuk blok ini sekaligus
+    }
+  }
+
+  public Long getValue() { return value; }
+}
+
+// SynchronizationTest.java
+@Test
+void counter() throws InterruptedException {
+  var counter = new SynchronizedCounter();
+  Runnable runnable = () -> {
+    for (int i = 0; i < 1_000_000; i++) {
+      counter.increment();
+    }
+  };
+
+  var thread1 = new Thread(runnable);
+  var thread2 = new Thread(runnable);
+  var thread3 = new Thread(runnable);
+
+  thread1.start(); thread2.start(); thread3.start();
+  thread1.join(); thread2.join(); thread3.join();
+
+  System.out.println(counter.getValue()); // SELALU 3_000_000 ✅
+}</code></pre></div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">💀 Deadlock — Dua Thread Saling Menunggu Selamanya</div>
+
+                <div class="code-wrap"><pre><code class="language-java">// Balance.java — transferDeadlock() yang menyebabkan deadlock!
+public static void transferDeadlock(Balance from, Balance to, Long value)
+    throws InterruptedException {
+  synchronized (from) {         // Thread1 kunci 'balance1'
+    Thread.sleep(1000);         // Thread2 kunci 'balance2' saat ini
+    synchronized (to) {         // Thread1 tunggu 'balance2' (dipegang Thread2)
+      // Thread2 juga tunggu 'balance1' (dipegang Thread1)
+      // → DEADLOCK! Keduanya saling menunggu selamanya
+      from.setValue(from.getValue() - value);
+      to.setValue(to.getValue() + value);
+    }
+  }
+}
+
+// Cara AMAN — Kunci SATU objek dalam satu waktu
+public static void transfer(Balance from, Balance to, Long value)
+    throws InterruptedException {
+  synchronized (from) {
+    Thread.sleep(1000);
+    from.setValue(from.getValue() - value);
+  }
+  // Lepas kunci 'from' DULU, baru kunci 'to'
+  synchronized (to) {
+    Thread.sleep(1000);
+    to.setValue(to.getValue() + value);
+  }
+}</code></pre></div>
+
+                <div class="info-box danger">
+                    <strong>🚨 Deadlock — Cara Mengenalinya</strong>
+                    Deadlock adalah kondisi di mana dua atau lebih thread saling menunggu satu sama lain melepas kunci (lock) — sehingga semua thread terhenti selamanya. Programmu akan "hang" tanpa error message. Di production, kamu bisa detect ini dengan <strong>thread dump</strong>: <code>kill -3 &lt;pid&gt;</code> atau gunakan VisualVM/JStack.
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 Cara Mencegah Deadlock</strong>
+                    <ul style="margin:var(--xs) 0 0;padding-left:var(--m);">
+                        <li><strong>Urutan lock konsisten</strong>: selalu kunci objek dalam urutan yang sama (A dulu, baru B)</li>
+                        <li><strong>Kunci seminimal mungkin</strong>: jangan tahan lock lebih lama dari perlu</li>
+                        <li><strong>Gunakan tryLock()</strong>: dari <code>ReentrantLock</code>, bisa timeout jika gagal dapat lock</li>
+                        <li><strong>Hindari nested lock</strong>: jangan kunci objek baru saat masih memegang lock lain</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 4</div>
+                    <p><strong>Apa yang terjadi ketika terjadi Deadlock dalam sebuah program Java?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',false)"><span>🅐</span> Program melempar <code>DeadlockException</code> dan keluar</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',true)"><span>🅑</span> Thread-thread yang terlibat hang selamanya — program tidak crash tapi juga tidak maju</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',false)"><span>🅒</span> JVM otomatis mendeteksi dan memutus deadlock</div>
+                    <div class="quiz-feedback" id="q4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5: LOCK & CONDITION -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 5</div>
+                    <h2>🔒 Lock &amp; Condition</h2>
+                    <p><code>ReentrantLock</code> adalah alternatif <code>synchronized</code> yang lebih fleksibel: bisa <code>tryLock()</code> dengan timeout, bisa fairness, dan bisa punya banyak <code>Condition</code>. <code>ReadWriteLock</code> memungkinkan banyak pembaca atau satu penulis sekaligus.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// CounterLock.java — Menggunakan ReentrantLock
+public class CounterLock {
+  private Long value = 0L;
+  final private Lock lock = new ReentrantLock();
+
+  public void increment() {
+    try {
+      lock.lock();   // ambil kunci
+      value++;
+    } finally {
+      lock.unlock(); // SELALU unlock di finally — walaupun ada exception!
+    }
+  }
+}
+
+// CounterReadWriteLock.java — Banyak reader, satu writer
+public class CounterReadWriteLock {
+  private Long value = 0L;
+  final private ReadWriteLock lock = new ReentrantReadWriteLock();
+
+  public void increment() { // WRITE — exclusive
+    try {
+      lock.writeLock().lock();
+      value++;
+    } finally {
+      lock.writeLock().unlock();
+    }
+  }
+
+  public Long getValue() { // READ — bisa paralel dengan reader lain
+    try {
+      lock.readLock().lock();
+      return value;
+    } finally {
+      lock.readLock().unlock();
+    }
+  }
+}</code></pre></div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// LockTest.java — Condition: komunikasi antar thread yang lebih terstruktur
+// Condition menggantikan wait()/notify() dengan cara yang lebih eksplisit
+@Test
+void condition() throws InterruptedException {
+  var lock = new ReentrantLock();
+  var condition = lock.newCondition(); // satu lock bisa punya banyak condition
+
+  // Thread 1 & 3: MENUNGGU signal dari thread 2
+  var thread1 = new Thread(() -> {
+    try {
+      lock.lock();
+      condition.await();        // lepas lock dan tunggu signal
+      System.out.println(message);
+    } catch (InterruptedException e) { e.printStackTrace(); }
+    finally { lock.unlock(); }
+  });
+
+  // Thread 2: MEMBERI signal ke semua thread yang menunggu
+  var thread2 = new Thread(() -> {
+    try {
+      lock.lock();
+      Thread.sleep(2000);
+      message = "Eko Kurniawan";
+      condition.signalAll();    // bangunkan semua thread yang await
+    } catch (InterruptedException e) { e.printStackTrace(); }
+    finally { lock.unlock(); }
+  });
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Fitur</th><th>synchronized</th><th>ReentrantLock</th></tr></thead>
+                        <tbody>
+                        <tr><td>Syntax</td><td>Keyword bawaan Java</td><td>Object eksplisit</td></tr>
+                        <tr><td>tryLock (timeout)</td><td>❌</td><td>✅ <code>tryLock(1, SECONDS)</code></td></tr>
+                        <tr><td>Fairness</td><td>❌ (tidak dijamin urutan)</td><td>✅ <code>new ReentrantLock(true)</code></td></tr>
+                        <tr><td>Multiple Conditions</td><td>❌ (hanya wait/notify)</td><td>✅ <code>lock.newCondition()</code></td></tr>
+                        <tr><td>Unlock manual</td><td>Otomatis</td><td>⚠️ Harus manual di finally</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Selalu unlock di finally!</strong>
+                    Kalau kamu lupa <code>unlock()</code> dan ada exception sebelumnya, lock tidak akan pernah dilepas → program hang selamanya. Selalu taruh <code>lock.unlock()</code> dalam blok <code>finally</code> tanpa pengecualian!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 5</div>
+                    <p><strong>Apa keunggulan <code>ReadWriteLock</code> dibanding <code>synchronized</code> biasa untuk data yang lebih sering dibaca dari diubah?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5',false)"><span>🅐</span> Tidak ada bedanya, keduanya sama-sama hanya boleh satu thread sekaligus</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5',true)"><span>🅑</span> ReadWriteLock mengizinkan banyak thread membaca secara paralel — hanya operasi tulis yang eksklusif, sehingga throughput lebih tinggi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5',false)"><span>🅒</span> ReadWriteLock lebih lambat karena butuh dua lock terpisah</div>
+                    <div class="quiz-feedback" id="q5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH6: ATOMIC -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 6</div>
+                    <h2>⚛️ Atomic — Thread-Safe Tanpa Lock</h2>
+                    <p>Package <code>java.util.concurrent.atomic</code> menyediakan tipe data yang operasinya <strong>atomic</strong> — tidak bisa disela oleh thread lain. Lebih cepat dari <code>synchronized</code> karena menggunakan instruksi CPU khusus (CAS - Compare And Swap).</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// CounterAtomic.java — Thread-safe TANPA lock eksplisit
+import java.util.concurrent.atomic.AtomicLong;
+
+public class CounterAtomic {
+  private AtomicLong value = new AtomicLong(0L);
+
+  public void increment() {
+    value.incrementAndGet(); // atomic: baca + tambah + tulis = SATU operasi
+  }
+
+  public Long getValue() {
+    return value.get();
+  }
+}
+
+// AtomicTest.java
+@Test
+void counter() throws InterruptedException {
+  var counter = new CounterAtomic();
+  Runnable runnable = () -> {
+    for (int i = 0; i < 1_000_000; i++) {
+      counter.increment();
+    }
+  };
+
+  var thread1 = new Thread(runnable);
+  var thread2 = new Thread(runnable);
+  var thread3 = new Thread(runnable);
+
+  thread1.start(); thread2.start(); thread3.start();
+  thread1.join(); thread2.join(); thread3.join();
+
+  System.out.println(counter.getValue()); // SELALU 3_000_000 ✅
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Class Atomic</th><th>Tipe</th><th>Method Utama</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>AtomicInteger</code></td><td>int</td><td><code>incrementAndGet()</code>, <code>decrementAndGet()</code>, <code>addAndGet(n)</code></td></tr>
+                        <tr><td><code>AtomicLong</code></td><td>long</td><td><code>incrementAndGet()</code>, <code>getAndSet(val)</code></td></tr>
+                        <tr><td><code>AtomicBoolean</code></td><td>boolean</td><td><code>compareAndSet(expect, update)</code></td></tr>
+                        <tr><td><code>AtomicReference&lt;T&gt;</code></td><td>Object</td><td><code>compareAndSet(expect, update)</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Non-Atomic — Race Condition</div>
+                        <div class="code-wrap"><pre><code class="language-java">private Long value = 0L;
+public void increment() {
+  value++; // 3 operasi, tidak aman
+}</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Atomic — Tanpa Lock</div>
+                        <div class="code-wrap"><pre><code class="language-java">private AtomicLong value = new AtomicLong(0L);
+public void increment() {
+  value.incrementAndGet(); // 1 operasi atomik
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 Kapan pakai Atomic vs synchronized?</strong>
+                    Gunakan <strong>Atomic</strong> untuk operasi sederhana pada satu variabel (counter, flag, reference). Gunakan <strong>synchronized/Lock</strong> ketika kamu perlu mengamankan blok kode yang lebih kompleks atau beberapa variabel sekaligus.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 6</div>
+                    <p><strong>Mengapa <code>AtomicLong.incrementAndGet()</code> lebih cepat dari <code>synchronized</code> + <code>value++</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q6',false)"><span>🅐</span> Karena AtomicLong menggunakan thread pool internal</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q6',true)"><span>🅑</span> Karena Atomic menggunakan instruksi CPU khusus (CAS) yang tidak perlu blocking lock — lebih ringan untuk contention rendah</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q6',false)"><span>🅒</span> Atomic selalu lebih cepat dalam semua situasi</div>
+                    <div class="quiz-feedback" id="q6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH7: THREADLOCAL -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 7</div>
+                    <h2>🏪 ThreadLocal — Data Privat per Thread</h2>
+                    <p><code>ThreadLocal</code> memberikan setiap thread <strong>salinan datanya sendiri</strong>. Thread satu tidak bisa melihat/mengubah data ThreadLocal milik thread lain. Solusi elegan untuk masalah berbagi state tanpa synchronization.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// UserService.java
+public class UserService {
+  // ThreadLocal: setiap thread punya 'user' masing-masing
+  final ThreadLocal&lt;String&gt; threadLocal = new ThreadLocal&lt;&gt;();
+
+  public void setUser(String user) {
+    threadLocal.set(user); // simpan untuk thread ini saja
+  }
+
+  public void doAction() {
+    var user = threadLocal.get(); // ambil milik thread ini
+    System.out.println(user + " do action");
+  }
+}
+
+// ThreadLocalTest.java
+@Test
+void test() throws InterruptedException {
+  final var userService = new UserService();
+  final var executor = Executors.newFixedThreadPool(10);
+
+  for (int i = 0; i < 50; i++) {
+    final var index = i;
+    executor.execute(() -> {
+      userService.setUser("User-" + index); // simpan user untuk thread ini
+      Thread.sleep(1000 + random.nextInt(3000));
+      userService.doAction(); // akan mencetak user MILIK thread ini
+      // tidak ada campur aduk antar user!
+    });
+  }
+}</code></pre></div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>ThreadLocal</code> sangat mirip dengan konsep <strong>Request-scoped binding</strong> di Laravel Service Container, atau data dalam <code>session()</code> — setiap request (thread) punya datanya sendiri. Di Spring Boot, <code>ThreadLocal</code> dipakai untuk menyimpan user yang sedang login per request, database transaction context, dll. Framework Spring sendiri sangat banyak pakai ThreadLocal secara internal!
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Memory Leak dengan ThreadPool + ThreadLocal!</strong>
+                    Kalau kamu pakai ThreadLocal dalam ThreadPool, thread tidak mati setelah task selesai — thread di-reuse. Nilai ThreadLocal dari task sebelumnya <em>masih tersimpan</em>! Selalu panggil <code>threadLocal.remove()</code> setelah task selesai untuk mencegah memory leak dan data "bocor" ke task berikutnya.
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ThreadLocalRandomTest.java — Versi thread-safe dari Random
+// Random biasa tidak thread-safe; ThreadLocalRandom otomatis thread-safe dan lebih cepat!
+@Test
+void test() throws InterruptedException {
+  final var executor = Executors.newFixedThreadPool(100);
+
+  for (int i = 0; i &lt; 100; i++) {
+    executor.execute(() -> {
+      // ThreadLocalRandom — random per-thread, tidak perlu sinkronisasi
+      var number = ThreadLocalRandom.current().nextInt();
+      System.out.println(number);
+    });
+  }
+}
+
+// Bisa juga menghasilkan stream angka random
+ThreadLocalRandom.current().ints(1000, 0, 1000)
+    .forEach(System.out::println);</code></pre></div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 7</div>
+                    <p><strong>Masalah apa yang muncul jika kamu pakai <code>ThreadLocal</code> tanpa memanggil <code>remove()</code> dalam Thread Pool?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7',false)"><span>🅐</span> <code>NullPointerException</code> karena nilai ThreadLocal hilang</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7',true)"><span>🅑</span> Memory leak dan data dari task sebelumnya bisa "bocor" ke task berikutnya di thread yang sama</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7',false)"><span>🅒</span> Thread Pool crash karena terlalu banyak data tersimpan</div>
+                    <div class="quiz-feedback" id="q7-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH8: EXECUTOR SERVICE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 8</div>
+                    <h2>⚡ ExecutorService &amp; Thread Pool</h2>
+                    <p>Membuat thread baru setiap saat itu mahal (costly). <strong>Thread Pool</strong> adalah kumpulan thread yang sudah siap, di-reuse untuk menjalankan task. <code>ExecutorService</code> adalah interface utama untuk mengelola Thread Pool di Java.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ExecutorServiceTest.java
+@Test
+void testExecutorService() throws InterruptedException {
+  // Single thread executor — semua task antri, dieksekusi 1 per 1
+  var executor = Executors.newSingleThreadExecutor();
+
+  for (int i = 0; i &lt; 100; i++) {
+    executor.execute(() -> {
+      Thread.sleep(1000);
+      System.out.println("Runnable in thread : " + Thread.currentThread().getName());
+    });
+  }
+  executor.awaitTermination(1, TimeUnit.DAYS);
+}
+
+@Test
+void testExecutorServiceFix() throws InterruptedException {
+  // Fixed thread pool — maksimal 10 thread berjalan bersamaan
+  var executor = Executors.newFixedThreadPool(10);
+
+  for (int i = 0; i &lt; 100; i++) {
+    executor.execute(() -> {
+      Thread.sleep(1000);
+      System.out.println("Runnable in thread : " + Thread.currentThread().getName());
+    });
+  }
+
+  executor.shutdown();                        // tidak terima task baru
+  executor.awaitTermination(1, TimeUnit.DAYS); // tunggu semua task selesai
+}</code></pre></div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// ThreadpoolTest.java — ThreadPoolExecutor: kontrol penuh
+@Test
+void create() {
+  var minThread  = 10;   // core pool size — thread yang selalu hidup
+  var maxThread  = 100;  // max thread saat load tinggi
+  var alive      = 1;
+  var aliveTime  = TimeUnit.MINUTES; // thread idle > 1 menit → dihapus (jika > core)
+  var queue      = new ArrayBlockingQueue&lt;Runnable&gt;(100); // antrian task
+
+  var threadpool = new ThreadPoolExecutor(minThread, maxThread, alive, aliveTime, queue);
+}
+
+// Rejected Handler — apa yang terjadi kalau queue PENUH?
+@Test
+void rejected() throws InterruptedException {
+  var queue           = new ArrayBlockingQueue&lt;Runnable&gt;(10); // kecil!
+  var rejectedHandler = new LogRejectedExecutionHandler();
+  var executor        = new ThreadPoolExecutor(10, 100, 1, TimeUnit.MINUTES,
+                                              queue, rejectedHandler);
+
+  for (int i = 0; i &lt; 1000; i++) {
+    executor.execute(() -> { /* task */ });
+    // Setelah 10+100=110 task terisi, sisanya di-REJECT
+  }
+}
+
+// Custom RejectedExecutionHandler — log task yang ditolak
+public static class LogRejectedExecutionHandler implements RejectedExecutionHandler {
+  @Override
+  public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+    System.out.println("Task " + r + " is rejected");
+    // bisa juga: simpan ke database, kirim alert, dll.
+  }
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Factory Method</th><th>Karakteristik</th><th>Cocok untuk</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>newSingleThreadExecutor()</code></td><td>1 thread, task antri FIFO</td><td>Task yang harus berurutan</td></tr>
+                        <tr><td><code>newFixedThreadPool(n)</code></td><td>n thread tetap</td><td>Workload stabil dan terprediksi</td></tr>
+                        <tr><td><code>newCachedThreadPool()</code></td><td>Thread dibuat sesuai kebutuhan, idle 60s dihapus</td><td>Banyak task singkat, tidak terprediksi</td></tr>
+                        <tr><td><code>newScheduledThreadPool(n)</code></td><td>Bisa jadwal task di masa depan / periodik</td><td>Cron-like job, delayed task</td></tr>
+                        <tr><td><code>newWorkStealingPool()</code></td><td>ForkJoinPool berbasis jumlah CPU core</td><td>CPU-intensive parallel task</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ScheduledThreadPool — mirip cron job!
+var executor = Executors.newScheduledThreadPool(10);
+
+// Jalankan sekali setelah 2 detik
+executor.schedule(() -> System.out.println("Delayed!"), 2, TimeUnit.SECONDS);
+
+// Jalankan setiap 2 detik (setelah initial delay 2 detik)
+var future = executor.scheduleAtFixedRate(
+  () -> System.out.println("Hello Scheduled"),
+  2, 2, TimeUnit.SECONDS
+);
+
+System.out.println(future.getDelay(TimeUnit.MILLISECONDS)); // sisa waktu sampai eksekusi berikutnya</code></pre></div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>ExecutorService</code> di Java seperti gabungan <strong>Queue + Workers + Scheduler</strong> di Laravel dalam satu paket. <code>newFixedThreadPool(10)</code> seperti menjalankan 10 worker sekaligus. <code>newScheduledThreadPool()</code> seperti Laravel Scheduler (<code>$schedule->call()->everyTwoSeconds()</code>). Bedanya, di Java ini semua dalam memori — tidak butuh Redis, database queue, atau Supervisor!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 8</div>
+                    <p><strong>Apa yang terjadi ketika antrian (queue) ThreadPoolExecutor penuh dan semua thread sibuk?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q8',false)"><span>🅐</span> Program crash dengan OutOfMemoryError</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q8',true)"><span>🅑</span> Task baru di-reject dan diserahkan ke <code>RejectedExecutionHandler</code> — kamu bisa custom perilakunya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q8',false)"><span>🅒</span> Task baru menunggu otomatis sampai ada slot kosong</div>
+                    <div class="quiz-feedback" id="q8-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9: FUTURE & CALLABLE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 9A</div>
+                    <h2>🔮 Future &amp; Callable — Task yang Mengembalikan Nilai</h2>
+                    <p><code>Runnable</code> tidak bisa mengembalikan nilai dan tidak bisa melempar checked exception. <code>Callable&lt;T&gt;</code> bisa keduanya. Hasilnya dikemas dalam <code>Future&lt;T&gt;</code> yang bisa kamu ambil nanti — seperti "janji" bahwa hasilnya akan ada.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// FutureTest.java
+@Test
+void testFuture() throws ExecutionException, InterruptedException {
+  var executor = Executors.newSingleThreadExecutor();
+
+  // Callable = seperti Runnable, tapi bisa return value dan throw exception
+  Callable&lt;String&gt; callable = () -> {
+    Thread.sleep(5000);
+    return "hi"; // nilai yang akan dikembalikan
+  };
+
+  Future&lt;String&gt; future = executor.submit(callable); // submit task, dapat "janji"
+  System.out.println("Selesai Submit"); // langsung dieksekusi, tidak menunggu!
+
+  // Poll status future sambil menunggu
+  while (!future.isDone()) {
+    System.out.println("Waiting future...");
+    Thread.sleep(1000);
+  }
+
+  String value = future.get(); // BLOK sampai hasil tersedia
+  System.out.println(value);   // "hi"
+}
+
+// Cancel future
+@Test
+void testFutureCancel() throws ExecutionException, InterruptedException {
+  var executor = Executors.newSingleThreadExecutor();
+  Future&lt;String&gt; future = executor.submit(() -> {
+    Thread.sleep(5000);
+    return "hi";
+  });
+
+  Thread.sleep(2000);
+  future.cancel(true);            // batalkan! (true = interrupt jika sedang jalan)
+  System.out.println(future.isCancelled()); // true
+  // future.get(); // → CancellationException jika dipanggil setelah cancel!
+}
+
+// invokeAll — submit banyak callable, tunggu SEMUA selesai
+@Test
+void invokeAll() throws InterruptedException, ExecutionException {
+  var executor = Executors.newFixedThreadPool(10);
+  List&lt;Callable&lt;String&gt;&gt; callables = IntStream.range(1, 11)
+      .mapToObj(value -> (Callable&lt;String&gt;) () -> {
+        Thread.sleep(value * 500L);
+        return String.valueOf(value);
+      }).collect(Collectors.toList());
+
+  var futures = executor.invokeAll(callables); // tunggu semua selesai
+  for (Future&lt;String&gt; f : futures) {
+    System.out.println(f.get()); // ambil hasil masing-masing
+  }
+}
+
+// invokeAny — submit banyak callable, ambil hasil TERCEPAT
+@Test
+void invokeAny() throws InterruptedException, ExecutionException {
+  var executor = Executors.newFixedThreadPool(10);
+  // ... sama seperti invokeAll ...
+  var value = executor.invokeAny(callables); // hanya tunggu yang paling cepat
+  System.out.println(value); // "1" (callable paling singkat = 500ms)
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Interface</th><th>Return Value?</th><th>Throw Exception?</th><th>Cara Submit</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>Runnable</code></td><td>❌ void</td><td>❌ hanya unchecked</td><td><code>execute(runnable)</code></td></tr>
+                        <tr><td><code>Callable&lt;T&gt;</code></td><td>✅ tipe T</td><td>✅ checked exception</td><td><code>submit(callable)</code> → <code>Future&lt;T&gt;</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ future.get() memblokir!</strong>
+                    <code>future.get()</code> akan memblokir thread yang memanggilnya sampai hasil tersedia. Kalau kamu memanggil ini di main thread setelah submit banyak task, kamu kehilangan paralelisme. Solusi: gunakan <code>CompletableFuture</code> untuk chaining non-blocking!
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>Future</code> di Java seperti <code>Bus::dispatchSync()</code> + <code>return $value</code> yang di-wrap dalam Promise. Atau lebih dekat ke konsep <code>Http::async()</code> di Laravel HTTP Client — kamu kirim request, lanjut kerja lain, baru ambil hasilnya nanti. <code>invokeAny()</code> seperti race condition yang diinginkan: kirim query ke 3 replica database, pakai hasil dari yang pertama menjawab.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 9A</div>
+                    <p><strong>Apa perbedaan <code>invokeAll()</code> dan <code>invokeAny()</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9',false)"><span>🅐</span> <code>invokeAll</code> lebih cepat karena mengeksekusi semua secara paralel</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9',true)"><span>🅑</span> <code>invokeAll</code> menunggu SEMUA callable selesai; <code>invokeAny</code> hanya menunggu yang PALING CEPAT selesai dan membatalkan sisanya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9',false)"><span>🅒</span> Keduanya sama, hanya beda nama</div>
+                    <div class="quiz-feedback" id="q9-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9B: COMPLETABLE FUTURE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 9B</div>
+                    <h2>🚀 CompletableFuture — Async Non-Blocking</h2>
+                    <p><code>CompletableFuture</code> adalah evolusi dari <code>Future</code> yang mendukung <strong>chaining, composing, dan callback</strong> — mirip Promise di JavaScript. Kamu bisa buat pipeline async yang elegant tanpa memblokir thread manapun.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// CompletableFutureTest.java
+private ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+// Membuat CompletableFuture secara manual
+public CompletableFuture&lt;String&gt; getValue() {
+  CompletableFuture&lt;String&gt; future = new CompletableFuture&lt;&gt;();
+
+  executorService.execute(() -> {
+    try {
+      Thread.sleep(2000);
+      future.complete("Eko Kurniawan Khannedy"); // selesaikan dengan nilai
+    } catch (InterruptedException e) {
+      future.completeExceptionally(e); // selesaikan dengan exception
+    }
+  });
+
+  return future; // langsung return, tidak blocking!
+}
+
+@Test
+void create() throws ExecutionException, InterruptedException {
+  Future&lt;String&gt; future = getValue();
+  System.out.println(future.get()); // "Eko Kurniawan Khannedy"
+}
+
+// Pattern: Perlombaan — ambil hasil dari thread TERCEPAT
+private void execute(CompletableFuture&lt;String&gt; future, String value) {
+  executorService.execute(() -> {
+    Thread.sleep(1000 + random.nextInt(5000));
+    future.complete(value); // complete() hanya berpengaruh SEKALI (yang pertama menang!)
+  });
+}
+
+public Future&lt;String&gt; getFastest() {
+  CompletableFuture&lt;String&gt; future = new CompletableFuture&lt;&gt;();
+  execute(future, "Thread 1");
+  execute(future, "Thread 2");
+  execute(future, "Thread 3");
+  return future; // siapapun yang selesai duluan, itulah hasilnya
+}
+
+// CompletionStage — chaining transformasi non-blocking!
+@Test
+void completionStage() throws ExecutionException, InterruptedException {
+  CompletableFuture&lt;String&gt; future = getValue();
+
+  CompletableFuture&lt;String[]&gt; future2 = future
+      .thenApply(string -> string.toUpperCase()) // transform hasil
+      .thenApply(string -> string.split(" "));   // transform lagi
+
+  // Pipeline: getValue() → toUpperCase() → split() → selesai
+  String[] strings = future2.get();
+  for (var value : strings) {
+    System.out.println(value); // EKO, KURNIAWAN, KHANNEDY
+  }
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Method</th><th>Fungsi</th><th>Analogi JS Promise</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>thenApply(fn)</code></td><td>Transform hasil (sync)</td><td><code>.then(v => transform(v))</code></td></tr>
+                        <tr><td><code>thenApplyAsync(fn)</code></td><td>Transform hasil (async, thread baru)</td><td><code>.then(async v => ...)</code></td></tr>
+                        <tr><td><code>thenAccept(consumer)</code></td><td>Konsumsi hasil, tidak return baru</td><td><code>.then(v => { use(v); })</code></td></tr>
+                        <tr><td><code>exceptionally(fn)</code></td><td>Handle error</td><td><code>.catch(e => ...)</code></td></tr>
+                        <tr><td><code>thenCompose(fn)</code></td><td>Chain dengan Future lain (flatMap)</td><td><code>.then(v => anotherPromise(v))</code></td></tr>
+                        <tr><td><code>allOf(...futures)</code></td><td>Tunggu semua future</td><td><code>Promise.all([])</code></td></tr>
+                        <tr><td><code>anyOf(...futures)</code></td><td>Ambil yang paling cepat</td><td><code>Promise.race([])</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>CompletableFuture</code> dengan chaining <code>thenApply()</code> sangat mirip <strong>Promise chaining di JavaScript</strong>. Di PHP/Laravel, padanan terdekatnya adalah <code>Http::async()->then()</code> atau pipeline Guzzle dengan promises. Di backend service berbasis reactive (misal: Livewire + Volt, atau Octane), pola ini jadi fondasi throughput tinggi.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 9B</div>
+                    <p><strong>Jika 3 thread mencoba memanggil <code>future.complete(value)</code> pada CompletableFuture yang sama, apa yang terjadi?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9b',false)"><span>🅐</span> Exception karena double complete tidak diizinkan</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9b',true)"><span>🅑</span> Hanya panggilan <code>complete()</code> pertama yang berpengaruh — sisanya diabaikan (dipakai untuk pola "race")</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9b',false)"><span>🅒</span> Nilai terakhir yang di-complete yang menang</div>
+                    <div class="quiz-feedback" id="q9b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH10: BLOCKING QUEUE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 10</div>
+                    <h2>📬 Blocking Queue — Antrian Thread-Safe</h2>
+                    <p><strong>BlockingQueue</strong> adalah antrian thread-safe yang mem-blokir thread yang mencoba memasukkan data ke antrian yang penuh, atau mengambil data dari antrian yang kosong. Pattern <strong>Producer-Consumer</strong> yang sempurna.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// BlockingQueueTest.java — ArrayBlockingQueue: bounded, FIFO
+@Test
+void arrayBlockingQueue() throws InterruptedException {
+  final var queue    = new ArrayBlockingQueue&lt;String&gt;(5); // max 5 element
+  final var executor = Executors.newFixedThreadPool(20);
+
+  // Producer — 10 thread ingin PUT data
+  for (int i = 0; i &lt; 10; i++) {
+    executor.execute(() -> {
+      queue.put("Data"); // BLOK kalau queue penuh (kapasitas 5)!
+      System.out.println("Finish Put Data");
+    });
+  }
+
+  // Consumer — 1 thread mengambil data setiap 2 detik
+  executor.execute(() -> {
+    while (true) {
+      Thread.sleep(2000);
+      var value = queue.take(); // BLOK kalau queue kosong!
+      System.out.println("Receive data : " + value);
+    }
+  });
+
+  executor.awaitTermination(1, TimeUnit.DAYS);
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Implementasi</th><th>Karakteristik</th><th>Kapan Dipakai</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>ArrayBlockingQueue</code></td><td>Bounded, FIFO, array-based</td><td>Antrian dengan batas ukuran yang jelas</td></tr>
+                        <tr><td><code>LinkedBlockingQueue</code></td><td>Optionally bounded, FIFO</td><td>Antrian yang bisa sangat besar</td></tr>
+                        <tr><td><code>PriorityBlockingQueue</code></td><td>Tidak bounded, berdasar priority</td><td>Task penting duluan</td></tr>
+                        <tr><td><code>DelayQueue</code></td><td>Elemen diambil setelah delay tertentu</td><td>Scheduled task, cache expiry</td></tr>
+                        <tr><td><code>SynchronousQueue</code></td><td>Kapasitas 0 — transfer langsung producer→consumer</td><td>Handoff langsung antar thread</td></tr>
+                        <tr><td><code>LinkedBlockingDeque</code></td><td>Double-ended queue (FIFO &amp; LIFO)</td><td>Deque operations</td></tr>
+                        <tr><td><code>LinkedTransferQueue</code></td><td>Producer blok sampai consumer siap</td><td>Guaranteed delivery</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// PriorityBlockingQueue — data keluar berdasarkan priority (bukan urutan masuk)
+final var queue = new PriorityBlockingQueue&lt;Integer&gt;(10, Comparator.reverseOrder());
+// data dengan nilai TERBESAR diambil duluan
+
+// SynchronousQueue — tidak ada buffer, producer TUNGGU sampai consumer siap
+final var queue = new SynchronousQueue&lt;String&gt;();
+// queue.put("Data-0") → BLOK sampai ada yang queue.take()
+
+// LinkedTransferQueue — seperti SynchronousQueue tapi bisa juga buffered
+final var queue = new LinkedTransferQueue&lt;String&gt;();
+queue.transfer("Data"); // BLOK sampai consumer benar-benar menerima</code></pre></div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>BlockingQueue</code> adalah implementasi pattern <strong>Producer-Consumer</strong> yang persis sama dengan <strong>Laravel Queue</strong>! Producer = code yang <code>Job::dispatch()</code>, Consumer = Queue Worker. Bedanya, BlockingQueue semua ada di memory dalam satu JVM — tidak butuh Redis atau database. <code>ArrayBlockingQueue(100)</code> = queue dengan limit 100 jobs. Kalau penuh, producer (dispatch) ikut menunggu!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 10</div>
+                    <p><strong>Apa yang terjadi ketika thread memanggil <code>queue.take()</code> pada <code>BlockingQueue</code> yang kosong?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q10',false)"><span>🅐</span> Mengembalikan <code>null</code> langsung</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q10',true)"><span>🅑</span> Thread diblokir (di-pause) sampai ada elemen yang ditambahkan ke queue</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q10',false)"><span>🅒</span> Melempar <code>NoSuchElementException</code></div>
+                    <div class="quiz-feedback" id="q10-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH11: CONCURRENT COLLECTIONS -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 11</div>
+                    <h2>🗺️ Concurrent Collections &amp; CompletionService</h2>
+                    <p>Collections biasa (<code>HashMap</code>, <code>ArrayList</code>) <strong>tidak thread-safe</strong>. Java menyediakan versi thread-safe di package <code>java.util.concurrent</code>. <code>CompletionService</code> adalah kombinasi ExecutorService + BlockingQueue untuk mengambil hasil task sesuai urutan selesainya.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ConcurrentMapTest.java — ConcurrentHashMap: thread-safe HashMap
+@Test
+void concurrentMap() throws InterruptedException {
+  final var countDown = new CountDownLatch(100);
+  final var map       = new ConcurrentHashMap&lt;Integer, String&gt;();
+  final var executor  = Executors.newFixedThreadPool(100);
+
+  // 100 thread menulis ke map bersamaan — AMAN!
+  for (int i = 0; i &lt; 100; i++) {
+    final var index = i;
+    executor.execute(() -> {
+      map.putIfAbsent(index, "Data-" + index); // atomic: cek + put sekaligus
+      countDown.countDown();
+    });
+  }
+
+  executor.execute(() -> {
+    countDown.await(); // tunggu semua selesai
+    map.forEach((k, v) -> System.out.println(k + " : " + v));
+  });
+}
+
+// Collections.synchronizedList() — wrap List biasa menjadi thread-safe
+List&lt;String&gt; list = List.of("Eko", "Kurniawan", "Khannedy");
+List&lt;String&gt; synchronizedList = Collections.synchronizedList(list);</code></pre></div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// CompletionServiceTest.java — Ambil hasil sesuai urutan SELESAI (bukan urutan submit)
+@Test
+void test() throws InterruptedException {
+  var executor          = Executors.newFixedThreadPool(10);
+  var completionService = new ExecutorCompletionService&lt;String&gt;(executor);
+
+  // Submit 100 task dengan durasi random
+  Executors.newSingleThreadExecutor().execute(() -> {
+    for (int i = 0; i &lt; 100; i++) {
+      final var index = i;
+      completionService.submit(() -> {
+        Thread.sleep(random.nextInt(2000));
+        return "Task-" + index;
+      });
+    }
+  });
+
+  // Ambil hasil yang sudah selesai (tidak harus urut!)
+  Executors.newSingleThreadExecutor().execute(() -> {
+    while (true) {
+      Future&lt;String&gt; future = completionService.poll(5, TimeUnit.SECONDS);
+      if (future == null) break; // tidak ada task selesai dalam 5 detik → stop
+      System.out.println(future.get()); // Task-47, Task-3, Task-91, ... (urutan acak)
+    }
+  });
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Biasa (Tidak Thread-Safe)</th><th>Thread-Safe Versi Concurrent</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>HashMap</code></td><td><code>ConcurrentHashMap</code></td></tr>
+                        <tr><td><code>ArrayList</code></td><td><code>CopyOnWriteArrayList</code></td></tr>
+                        <tr><td><code>HashSet</code></td><td><code>ConcurrentSkipListSet</code> atau <code>Collections.synchronizedSet()</code></td></tr>
+                        <tr><td><code>LinkedList</code></td><td><code>ConcurrentLinkedQueue</code> / <code>LinkedBlockingQueue</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Collections.synchronizedXxx() vs ConcurrentXxx</strong>
+                    <code>Collections.synchronizedList()</code> membungkus semua method dengan <code>synchronized</code> — satu thread sekaligus untuk semua operasi. <code>ConcurrentHashMap</code> lebih canggih: menggunakan <em>segmented locking</em> — hanya bagian yang sedang diakses yang dikunci, throughput jauh lebih tinggi untuk banyak thread!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 11</div>
+                    <p><strong>Apa kelebihan <code>CompletionService</code> dibanding langsung menggunakan <code>Future</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q11',false)"><span>🅐</span> CompletionService lebih cepat karena menggunakan lebih sedikit thread</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q11',true)"><span>🅑</span> CompletionService memungkinkan kamu memproses hasil task sesuai urutan selesainya, bukan urutan submit — tidak perlu blocking menunggu task awal kalau task belakangan sudah selesai</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q11',false)"><span>🅒</span> CompletionService otomatis retry task yang gagal</div>
+                    <div class="quiz-feedback" id="q11-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH12: COUNTDOWN & BARRIER -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-12">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 12</div>
+                    <h2>⬇️ CountDownLatch, CyclicBarrier &amp; Phaser</h2>
+                    <p>Tiga mekanisme untuk <strong>koordinasi antar thread</strong> — menunggu beberapa thread mencapai titik tertentu sebelum melanjutkan eksekusi.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// CountDownLatchTest.java — Tunggu N thread selesai, lalu lanjut
+// CountDownLatch seperti "countdown": mulai dari N, hitung mundur ke 0, lanjut
+@Test
+void test() throws InterruptedException {
+  final var countDownLatch = new CountDownLatch(5); // tunggu 5 event
+  final var executor       = Executors.newFixedThreadPool(10);
+
+  // 5 task yang berjalan paralel
+  for (int i = 0; i &lt; 5; i++) {
+    executor.execute(() -> {
+      System.out.println("Start Task");
+      Thread.sleep(2000);
+      System.out.println("Finish Task");
+      countDownLatch.countDown(); // kurangi counter 1
+    });
+  }
+
+  // Task ini menunggu counter mencapai 0
+  executor.execute(() -> {
+    countDownLatch.await(); // BLOK sampai counter = 0
+    System.out.println("Finish All Tasks"); // setelah semua 5 task selesai
+  });
+}
+
+// CyclicBarrierTest.java — Semua thread tunggu di "garis start" yang sama
+// Setelah SEMUA thread tiba → semua boleh lanjut bersamaan
+@Test
+void test() throws InterruptedException {
+  final var cyclicBarrier = new CyclicBarrier(5); // butuh 5 thread
+  final var executor       = Executors.newFixedThreadPool(10);
+
+  for (int i = 0; i &lt; 5; i++) {
+    executor.execute(() -> {
+      System.out.println("Waiting");  // thread tiba di barrier
+      cyclicBarrier.await();          // tunggu 4 thread lain
+      System.out.println("Done Waiting"); // semua 5 thread lanjut bersamaan
+    });
+  }
+}
+
+// PhaserTest.java — Phaser: bisa sebagai CountDownLatch DAN CyclicBarrier
+// Lebih fleksibel: bisa dinamis tambah/kurang participant
+final var phaser = new Phaser();
+phaser.bulkRegister(10); // daftarkan 10 participant
+
+for (int i = 0; i &lt; 10; i++) {
+  executor.execute(() -> {
+    System.out.println("Start Task");
+    Thread.sleep(2000);
+    phaser.arrive(); // tandai selesai (tidak menunggu yang lain)
+    // ATAU: phaser.arriveAndAwaitAdvance() — tandai selesai DAN tunggu semua
+  });
+}
+phaser.awaitAdvance(0); // tunggu phase 0 selesai (semua arrive)</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Kelas</th><th>Dapat direset?</th><th>Participant dinamis?</th><th>Cocok untuk</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>CountDownLatch</code></td><td>❌ sekali pakai</td><td>❌</td><td>Tunggu N task selesai sebelum lanjut</td></tr>
+                        <tr><td><code>CyclicBarrier</code></td><td>✅ bisa dipakai ulang</td><td>❌</td><td>Sinkronisasi N thread di checkpoint berulang</td></tr>
+                        <tr><td><code>Phaser</code></td><td>✅ multi-phase</td><td>✅ bisa register/deregister</td><td>Koordinasi kompleks multi-fase</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>CountDownLatch</code> seperti <code>Bus::batch()->then(callback)</code> di Laravel — jalankan semua job, setelah semua selesai eksekusi callback. <code>CyclicBarrier</code> tidak ada analoginya langsung di PHP karena PHP single-threaded, tapi bayangkan: semua API call menunggu di "lobi" sampai semua siap, baru semua dilanjutkan bersamaan — seperti koordinasi microservices.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 12</div>
+                    <p><strong>Apa perbedaan utama <code>CountDownLatch</code> dan <code>CyclicBarrier</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q12',false)"><span>🅐</span> CountDownLatch untuk thread, CyclicBarrier untuk process</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q12',true)"><span>🅑</span> CountDownLatch sekali pakai (tidak bisa reset) dan satu thread menunggu yang lain; CyclicBarrier bisa dipakai ulang dan SEMUA thread saling menunggu di titik yang sama</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q12',false)"><span>🅒</span> CyclicBarrier lebih tua dan sudah deprecated</div>
+                    <div class="quiz-feedback" id="q12-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH13: SEMAPHORE & EXCHANGER -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-13">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 13</div>
+                    <h2>🚦 Semaphore &amp; Exchanger</h2>
+                    <p><strong>Semaphore</strong> membatasi berapa banyak thread yang bisa mengakses resource tertentu secara bersamaan. <strong>Exchanger</strong> memungkinkan dua thread bertukar data di titik tertentu.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// SemaphoreTest.java — Batasi concurrent access ke resource
+@Test
+void test() throws InterruptedException {
+  final var semaphore = new Semaphore(10); // hanya 10 "tiket" tersedia
+  final var executor  = Executors.newFixedThreadPool(100);
+
+  for (int i = 0; i &lt; 1000; i++) {
+    executor.execute(() -> {
+      semaphore.acquire(); // ambil 1 tiket — BLOK jika semua 10 tiket habis
+      try {
+        Thread.sleep(1000); // gunakan resource
+        System.out.println("Finish");
+      } finally {
+        semaphore.release(); // kembalikan tiket — thread lain bisa lanjut
+      }
+    });
+  }
+  // Meski ada 1000 task dan 100 thread, hanya 10 yang "di dalam" sekaligus
+}
+
+// ExchangerTest.java — Dua thread bertukar data
+@Test
+void test() throws InterruptedException {
+  final var exchanger = new Exchanger&lt;String&gt;();
+  final var executor  = Executors.newFixedThreadPool(10);
+
+  executor.execute(() -> {
+    System.out.println("Thread 1 : Send : First");
+    Thread.sleep(1000);
+    var result = exchanger.exchange("First"); // kirim "First", TUNGGU thread lain
+    System.out.println("Thread 1 : Receive : " + result); // dapat "Second"
+  });
+
+  executor.execute(() -> {
+    System.out.println("Thread 2 : Send : Second");
+    Thread.sleep(2000);
+    var result = exchanger.exchange("Second"); // kirim "Second", TUNGGU thread lain
+    System.out.println("Thread 2 : Receive : " + result); // dapat "First"
+  });
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Alat</th><th>Fungsi</th><th>Analogi Dunia Nyata</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>Semaphore(10)</code></td><td>Batasi max 10 akses concurrent</td><td>Parkir dengan 10 slot — mobil ke-11 menunggu</td></tr>
+                        <tr><td><code>Exchanger</code></td><td>Dua thread tukar data di titik pertemuan</td><td>Dua kurir bertemu dan tukar paket</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>Semaphore</code> persis seperti <strong>Laravel Rate Limiting</strong> atau <code>Cache::lock()</code> dengan batas concurrent — hanya X request yang bisa diproses sekaligus, sisanya menunggu atau ditolak. Di database connection pool, Semaphore juga dipakai untuk membatasi jumlah koneksi aktif ke database.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 13</div>
+                    <p><strong><code>Semaphore(10)</code> dengan 1000 thread yang semua mencoba <code>acquire()</code> — berapa thread yang bisa jalan bersamaan?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q13',false)"><span>🅐</span> Semua 1000 thread jalan bersamaan</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q13',true)"><span>🅑</span> Maksimal 10 thread yang bisa <code>acquire()</code> sekaligus — sisanya diblokir sampai ada yang <code>release()</code></div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q13',false)"><span>🅒</span> 10 thread berjalan, 990 thread dibuang (rejected)</div>
+                    <div class="quiz-feedback" id="q13-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH14: FORKJOIN & PARALLEL STREAM -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-14">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 14A</div>
+                    <h2>🍴 ForkJoin &amp; Parallel Stream</h2>
+                    <p><strong>ForkJoinPool</strong> adalah thread pool khusus untuk algoritma <em>divide and conquer</em> — bagi tugas jadi lebih kecil (<strong>fork</strong>), kerjakan paralel, gabungkan hasilnya (<strong>join</strong>). <strong>Parallel Stream</strong> menggunakan ForkJoinPool secara otomatis di balik layar.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ForkJoinTest.java — RecursiveAction (tidak return nilai)
+public static class SimpleForkJoinTask extends RecursiveAction {
+  private List&lt;Integer&gt; integers;
+
+  public SimpleForkJoinTask(List&lt;Integer&gt; integers) { this.integers = integers; }
+
+  @Override
+  protected void compute() {
+    if (integers.size() &lt;= 10) {
+      doExecute(); // cukup kecil → langsung kerjakan
+    } else {
+      forkCompute(); // terlalu besar → bagi dua
+    }
+  }
+
+  private void forkCompute() {
+    var half   = integers.size() / 2;
+    var left   = new SimpleForkJoinTask(integers.subList(0, half));
+    var right  = new SimpleForkJoinTask(integers.subList(half, integers.size()));
+    ForkJoinTask.invokeAll(left, right); // jalankan paralel dan tunggu
+  }
+
+  private void doExecute() {
+    integers.forEach(i -> System.out.println(Thread.currentThread().getName() + ":" + i));
+  }
+}
+
+// RecursiveTask — ForkJoin yang mengembalikan nilai
+public static class TotalRecursiveTask extends RecursiveTask&lt;Long&gt; {
+  @Override
+  protected Long compute() {
+    if (integers.size() &lt;= 10) {
+      return doCompute(); // hitung subtotal
+    } else {
+      var task1 = new TotalRecursiveTask(left);
+      var task2 = new TotalRecursiveTask(right);
+      ForkJoinTask.invokeAll(task1, task2);
+      return task1.join() + task2.join(); // gabungkan subtotal
+    }
+  }
+}
+
+// Menjalankan ForkJoin Task
+var pool = ForkJoinPool.commonPool(); // shared pool berbasis jumlah CPU core
+var task = new SimpleForkJoinTask(integers);
+pool.execute(task);
+
+// Parallel Stream — ForkJoin tanpa boilerplate!
+Stream&lt;Integer&gt; stream = IntStream.range(0, 1000).boxed();
+stream.parallel().forEach(integer -> {
+  System.out.println(Thread.currentThread().getName() + " : " + integer);
+  // Diproses oleh beberapa thread dari ForkJoinPool.commonPool() secara otomatis!
+});
+
+// Custom pool untuk parallel stream (agar tidak berbagi commonPool)
+var pool = new ForkJoinPool(4); // hanya 4 thread
+ForkJoinTask&lt;?&gt; task = pool.submit(() -> {
+  stream.parallel().forEach(integer -> { /* diproses oleh pool ini */ });
+});
+task.join();</code></pre></div>
+
+                <div class="info-box tip">
+                    <strong>💡 Kapan pakai Parallel Stream?</strong>
+                    Parallel Stream cocok untuk operasi yang: (1) <strong>CPU-intensive</strong> (bukan I/O), (2) <strong>data besar</strong> (ratusan ribu elemen+), (3) <strong>operasinya independen</strong> (tidak saling bergantung). Jangan pakai untuk stream kecil — overhead pembagian task lebih besar dari keuntungannya!
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Hati-hati dengan ForkJoinPool.commonPool()</strong>
+                    <code>stream.parallel()</code> menggunakan <code>ForkJoinPool.commonPool()</code> yang dipakai bersama seluruh aplikasi. Kalau kamu melakukan I/O blocking di parallel stream (HTTP call, DB query), kamu bisa <em>memblokir semua core CPU</em> untuk I/O wait. Untuk I/O, tetap pakai ExecutorService terpisah!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 14A</div>
+                    <p><strong>Kapan <em>tidak</em> sebaiknya menggunakan Parallel Stream?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q14',false)"><span>🅐</span> Ketika data sangat besar (jutaan elemen)</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q14',true)"><span>🅑</span> Ketika operasinya melibatkan I/O blocking (database, HTTP), atau ketika data terlalu kecil sehingga overhead lebih besar dari keuntungannya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q14',false)"><span>🅒</span> Ketika dijalankan di server dengan banyak CPU core</div>
+                    <div class="quiz-feedback" id="q14-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH14B: REACTIVE STREAM & TIMER -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-14b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 14B</div>
+                    <h2>📡 Reactive Stream &amp; Timer</h2>
+                    <p><strong>Reactive Stream</strong> (Java 9+) adalah standar untuk async stream dengan <em>backpressure</em> — consumer bisa memberi tahu producer untuk memperlambat kalau kewalahan. <strong>Timer</strong> adalah cara sederhana untuk menjalankan task setelah delay atau secara periodik.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// TimerTest.java — Timer: cara simpel untuk delayed/periodic task
+@Test
+void delayedJob() throws InterruptedException {
+  var task = new TimerTask() {
+    @Override
+    public void run() {
+      System.out.println("Delayed Job"); // dijalankan setelah 2 detik
+    }
+  };
+
+  var timer = new Timer();
+  timer.schedule(task, 2000); // jalankan SEKALI setelah 2000ms
+  Thread.sleep(3000L);
+}
+
+@Test
+void periodicJob() throws InterruptedException {
+  var task = new TimerTask() {
+    @Override
+    public void run() { System.out.println("Periodic Job"); }
+  };
+
+  var timer = new Timer();
+  timer.schedule(task, 2000, 2000); // mulai setelah 2 detik, lalu setiap 2 detik
+  Thread.sleep(10_000L); // lihat 4 kali output
+}
+
+// ReactiveStreamTest.java — Publisher-Subscriber dengan backpressure
+@Test
+void publish() throws InterruptedException {
+  var publisher   = new SubmissionPublisher&lt;String&gt;();
+  var subscriber1 = new PrintSubscriber("A", 1000L); // lambat, 1 item/detik
+  var subscriber2 = new PrintSubscriber("B", 500L);  // cepat, 2 item/detik
+
+  publisher.subscribe(subscriber1); // daftarkan subscriber
+  publisher.subscribe(subscriber2);
+
+  // Publish 100 item — SubmissionPublisher otomatis tangani backpressure
+  for (int i = 0; i &lt; 100; i++) {
+    publisher.submit("Eko-" + i); // kalau subscriber lambat, submit akan BLOK
+    System.out.println("Send Eko-" + i);
+  }
+}
+
+// Dengan Processor — transform data di pipeline
+@Test
+void processor() throws InterruptedException {
+  var publisher  = new SubmissionPublisher&lt;String&gt;();
+  var processor  = new HelloProcessor(); // transform String → String baru
+  var subscriber = new PrintSubscriber("A", 1000L);
+
+  publisher.subscribe(processor);  // publisher → processor
+  processor.subscribe(subscriber); // processor → subscriber
+  // Pipeline: publisher → [transform] → subscriber
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Komponen Reactive</th><th>Peran</th><th>Analogi</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>Publisher&lt;T&gt;</code></td><td>Menghasilkan data</td><td>Pengirim/Producer</td></tr>
+                        <tr><td><code>Subscriber&lt;T&gt;</code></td><td>Mengkonsumsi data</td><td>Penerima/Consumer</td></tr>
+                        <tr><td><code>Processor&lt;T,R&gt;</code></td><td>Transform data (Publisher + Subscriber)</td><td>Middleware/Transformer</td></tr>
+                        <tr><td><strong>Backpressure</strong></td><td>Consumer kontrol kecepatan producer</td><td>Subscriber bilang "kirim 10 dulu, jangan semua"</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">⚠️ Timer — Cara Lama</div>
+                        <div class="code-wrap"><pre><code class="language-java">var timer = new Timer();
+timer.schedule(task, delay, period);
+// Masalah: Exception di task tidak terlihat,
+// hanya 1 thread, tidak bisa dikombinasi
+// dengan ExecutorService</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ ScheduledExecutorService — Modern</div>
+                        <div class="code-wrap"><pre><code class="language-java">var exec = Executors.newScheduledThreadPool(1);
+exec.scheduleAtFixedRate(
+  () -> System.out.println("Hello"),
+  2, 2, TimeUnit.SECONDS
+);
+// Lebih robust, exception bisa di-handle,
+// bisa kombinasi dengan thread pool lain</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Reactive Stream dengan backpressure seperti konsep <strong>Laravel Octane + Swoole Coroutine</strong> atau <strong>ReactPHP</strong> di ekosistem PHP — event-driven, non-blocking, consumer kontrol flow data. Di Spring Boot modern, reactive programming diimplementasi via <strong>Project Reactor</strong> (<code>Mono</code>, <code>Flux</code>) yang merupakan implementasi Reactive Streams yang jauh lebih kaya fitur.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 14B</div>
+                    <p><strong>Apa tujuan dari konsep "backpressure" dalam Reactive Stream?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q14b',false)"><span>🅐</span> Mempercepat producer agar tidak ada data yang terlewat</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q14b',true)"><span>🅑</span> Memberi consumer kemampuan untuk memberi sinyal ke producer agar memperlambat pengiriman data, mencegah consumer kewalahan (overwhelmed)</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q14b',false)"><span>🅒</span> Memastikan data selalu dikirim dalam urutan yang benar</div>
+                    <div class="quiz-feedback" id="q14b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH15: SUMMARY -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-15">
+            <div class="card-wrapper max-width-1000">
+                <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m);">
+                    <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Final Chapter</div>
+                    <h2 style="margin:var(--xs) 0 var(--s);">📝 Summary — Concurrency Cheat Sheet</h2>
+                    <p>Kamu telah menyelesaikan Java Thread! Berikut rangkuman semua konsep dan panduan memilih solusi yang tepat.</p>
+                </div>
+
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🗺️ Decision Tree — Pilih Solusi yang Tepat</div>
+                <div class="table-content">
+                    <table>
+                        <thead><tr><th>Situasi</th><th>Gunakan</th></tr></thead>
+                        <tbody>
+                        <tr><td>Jalankan task di background, tidak butuh hasil</td><td><code>ExecutorService.execute(Runnable)</code></td></tr>
+                        <tr><td>Jalankan task, butuh hasil balik</td><td><code>ExecutorService.submit(Callable)</code> → <code>Future</code></td></tr>
+                        <tr><td>Async non-blocking dengan chaining/transform</td><td><code>CompletableFuture</code></td></tr>
+                        <tr><td>Lindungi satu variabel dari race condition</td><td><code>AtomicInteger/Long/Reference</code></td></tr>
+                        <tr><td>Lindungi blok kode dari race condition</td><td><code>synchronized</code> atau <code>ReentrantLock</code></td></tr>
+                        <tr><td>Data lebih sering dibaca dari diubah</td><td><code>ReadWriteLock</code></td></tr>
+                        <tr><td>Data privat per-thread (user session, request context)</td><td><code>ThreadLocal</code></td></tr>
+                        <tr><td>Antrian antar thread (producer-consumer)</td><td><code>BlockingQueue</code></td></tr>
+                        <tr><td>Map/List thread-safe</td><td><code>ConcurrentHashMap</code>, <code>CopyOnWriteArrayList</code></td></tr>
+                        <tr><td>Tunggu N task selesai, lanjut</td><td><code>CountDownLatch</code></td></tr>
+                        <tr><td>Semua thread sinkron di checkpoint</td><td><code>CyclicBarrier</code> atau <code>Phaser</code></td></tr>
+                        <tr><td>Batasi concurrent access ke resource</td><td><code>Semaphore</code></td></tr>
+                        <tr><td>Divide and conquer, CPU-intensive</td><td><code>ForkJoinPool</code></td></tr>
+                        <tr><td>Proses koleksi besar secara paralel</td><td><code>stream().parallel()</code></td></tr>
+                        <tr><td>Task berulang / terjadwal</td><td><code>ScheduledExecutorService</code></td></tr>
+                        <tr><td>Async stream dengan backpressure</td><td>Reactive Streams / Project Reactor (<code>Flux</code>)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">⚡ Thread Safety Cheat Sheet</div>
+                <div class="table-content">
+                    <table>
+                        <thead><tr><th>Pattern</th><th>Cara</th><th>Trade-off</th></tr></thead>
+                        <tbody>
+                        <tr><td><strong>Atomic</strong></td><td><code>AtomicLong</code>, <code>AtomicInteger</code></td><td>Cepat, hanya untuk 1 variabel sederhana</td></tr>
+                        <tr><td><strong>Synchronized</strong></td><td><code>synchronized(obj) { }</code></td><td>Mudah, tapi bisa deadlock &amp; bisa lambat jika banyak contention</td></tr>
+                        <tr><td><strong>Lock</strong></td><td><code>ReentrantLock</code></td><td>Fleksibel (tryLock, fairness), tapi harus unlock manual</td></tr>
+                        <tr><td><strong>Immutable</strong></td><td>Objek tidak bisa diubah setelah dibuat</td><td>Paling aman, tidak perlu synchronization sama sekali</td></tr>
+                        <tr><td><strong>Thread Confinement</strong></td><td><code>ThreadLocal</code></td><td>Data tidak dishare, tidak perlu sync</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🧠 Key Mindset — PHP vs Java Concurrency</div>
+                <div>
+                    <div class="summary-item"><div class="summary-icon">1️⃣</div><div><strong>PHP single-thread per request, Java multi-thread dalam satu proses.</strong> Race condition yang kamu anggap tidak mungkin di PHP, sangat mungkin terjadi di Java ketika beberapa thread mengakses shared state.</div></div>
+                    <div class="summary-item"><div class="summary-icon">2️⃣</div><div><strong>Jangan buat thread baru setiap saat.</strong> Selalu gunakan Thread Pool (<code>ExecutorService</code>). Membuat thread itu mahal — ada overhead memory dan CPU untuk context switching.</div></div>
+                    <div class="summary-item"><div class="summary-icon">3️⃣</div><div><strong>Prefer immutable objects.</strong> Data yang tidak bisa diubah tidak perlu synchronization. Di Java, gunakan <code>final</code> field dan desain class agar tidak mutable.</div></div>
+                    <div class="summary-item"><div class="summary-icon">4️⃣</div><div><strong>Gunakan class dari <code>java.util.concurrent</code>.</strong> Jangan re-invent the wheel. <code>AtomicLong</code>, <code>ConcurrentHashMap</code>, <code>BlockingQueue</code> sudah ditest dan dioptimasi oleh para ahli.</div></div>
+                    <div class="summary-item"><div class="summary-icon">5️⃣</div><div><strong>Deadlock lebih berbahaya dari race condition.</strong> Race condition menghasilkan data salah — masih bisa terdeteksi. Deadlock membuat aplikasi hang selamanya tanpa log error yang jelas.</div></div>
+                    <div class="summary-item"><div class="summary-icon">6️⃣</div><div><strong><code>ThreadLocal.remove()</code> selalu!</strong> Di Thread Pool, thread di-reuse. Data ThreadLocal lama akan "bocor" ke request berikutnya jika tidak di-remove — bug yang sangat sulit ditemukan!</div></div>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🗺️ Roadmap Selanjutnya</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Java Dasar</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Java Thread</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">3</div><div class="stepper-value">Spring Boot</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Spring WebFlux</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Microservices</div></div>
+                    </div>
+                </div>
+
+                <div class="info-box tip" style="margin-top:var(--m);">
+                    <strong>🎉 Selamat! Kamu sudah menguasai Java Thread!</strong>
+                    Concurrency adalah salah satu topik paling menantang dalam Java, dan kamu sudah berhasil melewatinya. Pemahaman thread ini sangat krusial untuk Spring Boot — terutama memahami bagaimana Spring mengelola request per thread, bagaimana @Transactional bekerja dengan ThreadLocal, dan bagaimana Spring WebFlux menggunakan Reactive Streams untuk throughput tinggi.
+                </div>
+            </div>
+        </div>
+
+        <div style="height:var(--x);"></div>
+    </section>
+    <footer></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+    });
+
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.body.classList.toggle("dark-mode");
+        const btn = document.querySelector('.container-header-button-switch-theme');
+        btn.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    function checkQuiz(el, quizId, isCorrect) {
+        const parent = el.parentElement;
+        parent.querySelectorAll('.quiz-option').forEach(o => {
+            o.classList.remove('correct', 'wrong');
+            o.style.pointerEvents = 'none';
+        });
+        el.classList.add(isCorrect ? 'correct' : 'wrong');
+        const fb = document.getElementById(quizId + '-feedback');
+        fb.textContent = isCorrect
+            ? '✅ Benar! Pemahaman kamu sudah tepat.'
+            : '❌ Belum tepat. Coba baca kembali penjelasannya ya!';
+        fb.className = 'quiz-feedback ' + (isCorrect ? 'ok' : 'err');
+    }
+
+    // Active sidebar tracking
+    const sections = document.querySelectorAll('[id^="chapter"]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item[href]');
+    new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                sidebarLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                });
+            }
+        });
+    }, { threshold: 0.2 }).observe && sections.forEach(s => {
+        new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    sidebarLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.2 }).observe(s);
+    });
+
+    // Progress bar
+    window.addEventListener('scroll', () => {
+        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+        document.getElementById('progress-bar').style.width = p + '%';
+    });
+</script>
+</body>
+</html>

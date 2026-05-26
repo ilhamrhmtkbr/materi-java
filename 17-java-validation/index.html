@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Belajar Java Validation — Modul Interaktif</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        pre {
+            background: #11111b; color: #cdd6f4;
+            border-radius: var(--radius-x); padding: var(--m);
+            max-width: 77dvw; overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: .71rem; line-height: 1.75;
+            box-sizing: border-box; border: 1px solid #313244;
+        }
+        code { font-family: 'JetBrains Mono', monospace; font-size: .72rem; }
+        pre .kw  { color: #cba6f7; }
+        pre .cls { color: #89dceb; }
+        pre .str { color: #a6e3a1; }
+        pre .num { color: #fab387; }
+        pre .ann { color: #f9e2af; }
+        pre .cmt { color: #585b70; font-style: italic; }
+        pre .met { color: #89b4fa; }
+        pre .typ { color: #94e2d5; }
+        pre .iface{ color: #f38ba8; }
+        pre .prop{ color: #f2cdcd; }
+
+        .info-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); }
+        .info-box.primary { background: var(--transprimary-color); border-left: 4px solid var(--primary-color); }
+        .info-box.success { background: var(--transsuccess-color); border-left: 4px solid var(--success-color); }
+        .info-box.warning { background: var(--transwarning-color); border-left: 4px solid var(--warning-color); }
+        .info-box.danger  { background: var(--transdanger-color);  border-left: 4px solid var(--danger-color);  }
+
+        .line-explain { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; gap: var(--s); margin-top: var(--m); }
+        .line-explain-item { display: flex; gap: var(--s); align-items: flex-start; }
+        .line-num { background: var(--transprimary-color); color: var(--primary-color); border-radius: var(--radius-s); padding: 2px var(--xs); font-family: 'JetBrains Mono', monospace; font-size: .63rem; white-space: nowrap; flex-shrink: 0; font-weight: 600; }
+        .line-desc { font-size: var(--s); }
+
+        .compare-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; grid-template-columns: 1fr 1fr; gap: var(--m); margin-top: var(--m); }
+        @media (max-width: 640px) { .compare-box { grid-template-columns: 1fr; } }
+        .compare-wrong { border-radius: var(--radius-x); padding: var(--m); background: var(--transdanger-color); border: 1px solid var(--danger-color); }
+        .compare-right { border-radius: var(--radius-x); padding: var(--m); background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .compare-label { font-weight: 700; margin-bottom: var(--s); font-size: var(--s); }
+        .compare-wrong .compare-label { color: var(--danger-color); }
+        .compare-right .compare-label { color: var(--success-color); }
+
+        .laravel-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); background: var(--transsecond-primary-color); border-left: 4px solid var(--second-primary-color); }
+        .laravel-box-title { font-weight: 700; color: var(--second-primary-color); margin-bottom: var(--xs); }
+
+        .quiz-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); background: var(--transprimary-color); border: 1px solid var(--primary-color); }
+        .quiz-title { font-weight: 700; color: var(--primary-color); margin-bottom: var(--s); }
+        .quiz-options { display: grid; gap: var(--xs); margin-top: var(--s); }
+        .quiz-option { display: flex; align-items: flex-start; gap: var(--xs); padding: var(--xs) var(--s); border-radius: var(--radius-m); cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-color); transition: all .2s; font-size: var(--s); line-height: 1.5; }
+        .quiz-option:hover { border-color: var(--primary-color); background: var(--transprimary-color); }
+        .quiz-option.correct { border-color: var(--success-color); background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-option.wrong   { border-color: var(--danger-color);  background: var(--transdanger-color);  color: var(--danger-color); }
+        .quiz-feedback { margin-top: var(--s); font-size: var(--s); padding: var(--xs) var(--s); border-radius: var(--radius-m); display: none; line-height: 1.6; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.no { background: var(--transdanger-color);  color: var(--danger-color); }
+
+        .chapter-banner { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--l) var(--m); background: linear-gradient(135deg, var(--primary-color) 0%, var(--second-primary-color) 100%); color: #fff; margin-bottom: var(--m); }
+        .chapter-banner.green  { background: linear-gradient(135deg,#16a34a 0%,#15803d 100%); }
+        .chapter-banner.orange { background: linear-gradient(135deg,#d97706 0%,#b45309 100%); }
+        .chapter-banner.red    { background: linear-gradient(135deg,#dc2626 0%,#991b1b 100%); }
+        .chapter-banner.teal   { background: linear-gradient(135deg,#0d9488 0%,#0f766e 100%); }
+        .chapter-banner.violet { background: linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%); }
+        .chapter-banner.slate  { background: linear-gradient(135deg,#475569 0%,#1e293b 100%); }
+        .chapter-banner.rose   { background: linear-gradient(135deg,#e11d48 0%,#9f1239 100%); }
+        .chapter-banner.sky    { background: linear-gradient(135deg,#0284c7 0%,#0369a1 100%); }
+        .chapter-num   { font-size: .63rem; opacity: .8; letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .chapter-title { font-size: var(--xx); font-weight: 700; margin-top: 4px; }
+        .chapter-sub   { font-size: var(--s); opacity: .85; margin-top: 4px; }
+
+        .hero { border-radius: var(--radius-x); padding: var(--xxxx) var(--xx); background: linear-gradient(135deg,#11111b 0%,#1e1e2e 60%,#181825 100%); color: #cdd6f4; text-align: center; margin-bottom: var(--x); box-sizing: border-box; max-width: 77dvw; overflow: auto; position: relative; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(166,227,161,.12) 0%, transparent 65%); border-radius: var(--radius-x); pointer-events: none; }
+        .hero h1 { font-size: var(--xx); font-weight: 800; color: #a6e3a1; font-family: 'JetBrains Mono', monospace; position: relative; }
+        .hero p { font-size: var(--s); color: #a6adc8; margin-top: var(--s); position: relative; line-height: 1.7; }
+        .hero .tag-row { display: flex; flex-wrap: wrap; gap: var(--xs); justify-content: center; margin-top: var(--m); position: relative; }
+        .hero-tag { background: rgba(166,227,161,.12); border: 1px solid rgba(166,227,161,.4); color: #a6e3a1; border-radius: 999px; padding: 3px var(--s); font-size: .63rem; font-family: 'JetBrains Mono', monospace; }
+
+        p code, li code, .line-desc code, td code, small code { background: var(--transprimary-color); color: var(--primary-color); padding: 1px 5px; border-radius: var(--radius-s); font-family: 'JetBrains Mono', monospace; }
+
+        .output-box { background: #1e1e2e; border: 1px dashed #45475a; border-radius: var(--radius-m); padding: var(--s) var(--m); font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: #a6e3a1; max-width: 77dvw; overflow-x: auto; margin-top: var(--s); line-height: 1.7; }
+        .output-box .out-label { color: #6c7086; font-size: .58rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .output-box .out-err { color: #f38ba8; }
+        .output-box .out-ok  { color: #a6e3a1; }
+        .output-box .out-dim { color: #585b70; }
+
+        /* flow diagram */
+        .flow-row { display: flex; align-items: center; gap: var(--xs); flex-wrap: wrap; margin-top: var(--s); }
+        .flow-box { background: var(--transprimary-color); border: 1px solid var(--primary-color); color: var(--primary-color); border-radius: var(--radius-m); padding: 4px var(--s); font-size: var(--xs); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+        .flow-box.green { background: var(--transsuccess-color); border-color: var(--success-color); color: var(--success-color); }
+        .flow-box.red   { background: var(--transdanger-color);  border-color: var(--danger-color);  color: var(--danger-color); }
+        .flow-box.dim   { background: transparent; border-color: var(--border-color); color: var(--text-color); opacity: .6; }
+        .flow-arrow { color: var(--transtext-color); font-size: var(--s); }
+
+        .badge { display: inline-block; border-radius: 999px; padding: 2px 10px; font-size: .63rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .badge-green  { background: var(--transsuccess-color); color: var(--success-color); border: 1px solid var(--success-color); }
+        .badge-orange { background: var(--transwarning-color); color: var(--warning-color); border: 1px solid var(--warning-color); }
+        .badge-red    { background: var(--transdanger-color);  color: var(--danger-color);  border: 1px solid var(--danger-color); }
+        .badge-blue   { background: var(--transprimary-color); color: var(--primary-color); border: 1px solid var(--primary-color); }
+
+        .mt-s{margin-top:var(--s)} .mt-m{margin-top:var(--m)} .mt-l{margin-top:var(--l)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠</a>
+    <a class="bottom-nav-item" href="#chapter-1">⚙️ Setup</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnav-check">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnav-check">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnav-check">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-2">✅ Violation</a>
+                <a class="bottom-nav-item" href="#chapter-3">🔧 Custom Constraint</a>
+                <a class="bottom-nav-item" href="#chapter-4">🔗 Composing</a>
+                <a class="bottom-nav-item" href="#chapter-5">🏷️ Groups</a>
+                <a class="bottom-nav-item" href="#chapter-6">🔄 Convert &amp; Sequence</a>
+                <a class="bottom-nav-item" href="#chapter-7">📦 Nested &amp; Container</a>
+                <a class="bottom-nav-item" href="#chapter-8">🏛️ Class-Level</a>
+                <a class="bottom-nav-item" href="#chapter-9">⚡ Method &amp; Constructor</a>
+                <a class="bottom-nav-item" href="#chapter-10">📦 Payload</a>
+                <a class="bottom-nav-item" href="#chapter-11">💬 Messages &amp; i18n</a>
+                <a class="bottom-nav-item" href="#chapter-12">📊 Metadata</a>
+                <a class="bottom-nav-item" href="#chapter-13">🧩 Value Extractor</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">Validation</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro"      class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🏠</div><span>Pengantar</span></a>
+        <a href="#chapter-1"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚙️</div><span>Setup Validator</span></a>
+        <a href="#chapter-2"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">✅</div><span>ConstraintViolation</span></a>
+        <a href="#chapter-3"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔧</div><span>Custom Constraint</span></a>
+        <a href="#chapter-4"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔗</div><span>Constraint Composition</span></a>
+        <a href="#chapter-5"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏷️</div><span>Validation Groups</span></a>
+        <a href="#chapter-6"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔄</div><span>ConvertGroup &amp; Sequence</span></a>
+        <a href="#chapter-7"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📦</div><span>Nested &amp; Container</span></a>
+        <a href="#chapter-8"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏛️</div><span>Class-Level Validation</span></a>
+        <a href="#chapter-9"  class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚡</div><span>Method &amp; Constructor</span></a>
+        <a href="#chapter-10" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📬</div><span>Payload</span></a>
+        <a href="#chapter-11" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">💬</div><span>Messages &amp; i18n</span></a>
+        <a href="#chapter-12" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📊</div><span>Metadata API</span></a>
+        <a href="#chapter-13" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🧩</div><span>Value Extractor</span></a>
+        <a href="#summary"    class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📋</div><span>Ringkasan</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#intro"><span class="container-header-nav-item-text">☕ Java Validation Course</span></a>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ============ HERO ============ -->
+        <div class="card-wrapper max-width-1000" id="intro">
+            <div class="hero">
+                <h1>✅ Java Bean Validation</h1>
+                <p>Modul pembelajaran interaktif untuk developer PHP/Laravel yang migrasi ke Java.<br>
+                    Materi: Jakarta Validation (JSR-380) + Hibernate Validator — dari setup dasar hingga custom constraint, groups, payload, method validation, dan value extractor.</p>
+                <div class="tag-row">
+                    <span class="hero-tag">jakarta.validation</span>
+                    <span class="hero-tag">Hibernate Validator</span>
+                    <span class="hero-tag">ConstraintViolation</span>
+                    <span class="hero-tag">Custom Constraint</span>
+                    <span class="hero-tag">Groups &amp; Sequence</span>
+                    <span class="hero-tag">Method Validation</span>
+                    <span class="hero-tag">Value Extractor</span>
+                </div>
+            </div>
+
+            <p>Bean Validation di Java adalah standar resmi (JSR-380 / Jakarta Validation) untuk memvalidasi object. Berbeda dengan validasi manual, kamu cukup menambahkan annotation pada field dan biarkan framework menangani sisanya.</p>
+
+            <div class="accordion-item mt-m">
+                <input type="checkbox" id="acc-arch" class="accordion-item-check"/>
+                <label for="acc-arch" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>🏗️ Arsitektur: Spec vs Implementation</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Mengapa ada dua nama: jakarta.validation vs hibernate-validator</div>
+                </label>
+                <div class="accordion-content">
+                    <p>Jakarta Validation adalah <strong>spesifikasi</strong> (JSR-380) — sekumpulan interface dan annotation standar, tapi tanpa implementasi. <strong>Hibernate Validator</strong> adalah implementasi resminya — library yang benar-benar menjalankan validasi. Keduanya dibutuhkan:</p>
+                    <div class="flow-row mt-s">
+                        <div class="flow-box">Your Code</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box">jakarta.validation API</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box green">Hibernate Validator</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box">ConstraintViolation Set</div>
+                    </div>
+                    <p class="mt-s">Ini mirip seperti JDBC (spec) vs MySQL Connector (driver) di Java. Kodenya ditulis terhadap API Jakarta, bukan langsung Hibernate Validator — sehingga bisa diganti implementasi lain kapan saja.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <input type="checkbox" id="acc-laravel-diff" class="accordion-item-check"/>
+                <label for="acc-laravel-diff" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>⚡ Perbedaan dengan Laravel Validation</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Mindset shift yang perlu diperhatikan</div>
+                </label>
+                <div class="accordion-content">
+                    <div class="table-content mt-s">
+                        <table>
+                            <thead><tr><th>Aspek</th><th>Laravel</th><th>Java Bean Validation</th></tr></thead>
+                            <tbody>
+                            <tr><td>Di mana aturan ditulis</td><td><code>rules()</code> method terpisah</td><td>Annotation langsung di field class</td></tr>
+                            <tr><td>Lokasi validasi</td><td>Biasanya di Controller/FormRequest</td><td>Bisa di mana saja via Validator</td></tr>
+                            <tr><td>Error format</td><td>Array key-value</td><td><code>Set&lt;ConstraintViolation&gt;</code></td></tr>
+                            <tr><td>Conditional validation</td><td><code>sometimes()</code>, <code>required_if</code></td><td>Validation Groups</td></tr>
+                            <tr><td>Custom rule</td><td><code>Rule::make()</code> / class Rule</td><td><code>ConstraintValidator</code> interface</td></tr>
+                            <tr><td>Nested object</td><td><code>'address.*' => 'required'</code></td><td><code>@Valid</code> pada field</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 1: SETUP ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 01</div>
+                    <div class="chapter-title">⚙️ Setup Validator</div>
+                    <div class="chapter-sub">ValidatorFactory · Validator · AbstractValidatorTest</div>
+                </div>
+
+                <p>Sebelum bisa memvalidasi apapun, kamu perlu membuat objek <strong><code>Validator</code></strong>. Caranya melalui <strong><code>ValidatorFactory</code></strong> — semacam pabrik yang mengkonfigurasi dan membangun validator.</p>
+
+                <div class="text-title mt-m">Cara Paling Sederhana</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testCreateValidator</span>() {
+    <span class="cls">ValidatorFactory</span> factory =
+        <span class="cls">Validation</span>.<span class="met">buildDefaultValidatorFactory</span>(); <span class="cmt">// (1)</span>
+
+    <span class="cls">Validator</span> validator = factory.<span class="met">getValidator</span>();     <span class="cmt">// (2)</span>
+
+    <span class="cls">Assertions</span>.<span class="met">assertNotNull</span>(validator);
+
+    factory.<span class="met">close</span>();                                  <span class="cmt">// (3)</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) buildDefaultValidatorFactory()</span>
+                        <span class="line-desc">Membuat factory dengan konfigurasi default — Hibernate Validator akan otomatis terdeteksi sebagai implementasi (via Java ServiceLoader). Ini adalah entry point utama ke seluruh ecosystem Bean Validation.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) getValidator()</span>
+                        <span class="line-desc">Mendapatkan instance <code>Validator</code> siap pakai. <code>Validator</code> adalah thread-safe dan bisa di-reuse — tidak perlu membuat baru setiap kali validasi.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) factory.close()</span>
+                        <span class="line-desc"><code>ValidatorFactory</code> mengimplementasikan <code>Closeable</code> — harus ditutup saat tidak digunakan untuk melepas resource. Di Spring Boot, factory ini dikelola oleh Spring container dan otomatis di-close.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Setup dengan Value Extractor (Konfigurasi Lanjut)</div>
+                <pre><span class="cmt">// AbstractValidatorTest.java — base class untuk semua test</span>
+<span class="ann">@BeforeEach</span>
+<span class="kw">void</span> <span class="met">setUp</span>() {
+    validatorFactory = <span class="cls">Validation</span>.<span class="met">byDefaultProvider</span>().<span class="met">configure</span>() <span class="cmt">// (A)</span>
+        .<span class="met">addValueExtractor</span>(<span class="kw">new</span> <span class="cls">DataValueExtractor</span>())         <span class="cmt">// (B)</span>
+        .<span class="met">addValueExtractor</span>(<span class="kw">new</span> <span class="cls">EntryValueExtractorKey</span>())
+        .<span class="met">addValueExtractor</span>(<span class="kw">new</span> <span class="cls">EntryValueExtractorValue</span>())
+        .<span class="met">addValueExtractor</span>(<span class="kw">new</span> <span class="cls">DataIntegerValueExtractor</span>())
+        .<span class="met">buildValidatorFactory</span>();
+
+    validator = validatorFactory.<span class="met">getValidator</span>();
+    executableValidator = validator.<span class="met">forExecutables</span>();       <span class="cmt">// (C)</span>
+    messageInterpolator = validatorFactory.<span class="met">getMessageInterpolator</span>(); <span class="cmt">// (D)</span>
+}
+
+<span class="ann">@AfterEach</span>
+<span class="kw">void</span> <span class="met">tearDown</span>() { validatorFactory.<span class="met">close</span>(); }             <span class="cmt">// selalu close!</span></pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) byDefaultProvider().configure()</span>
+                        <span class="line-desc">Cara konfigurasi lanjutan — Builder Pattern yang memungkinkan penambahan Value Extractor, Message Interpolator, dan pengaturan lain sebelum factory dibangun.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) addValueExtractor()</span>
+                        <span class="line-desc">Mendaftarkan custom Value Extractor untuk tipe container kustom (<code>Data&lt;T&gt;</code>, <code>Entry&lt;K,V&gt;</code>). Tanpa ini, validator tidak tahu cara "mengintip" ke dalam container custom untuk memvalidasi isinya. Dibahas detail di Chapter 13.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) forExecutables()</span>
+                        <span class="line-desc">Mendapatkan <code>ExecutableValidator</code> — sub-validator khusus untuk memvalidasi parameter dan return value dari method/constructor. Dibahas di Chapter 9.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(D) getMessageInterpolator()</span>
+                        <span class="line-desc">Mendapatkan engine interpolasi pesan — mengubah template seperti <code>{order.id.invalid}</code> menjadi pesan yang bisa dibaca manusia dengan dukungan i18n. Dibahas di Chapter 11.</span>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>ValidatorFactory</code> di Java ≈ <code>Validator::make()</code> facade di Laravel. Bedanya: di Laravel, kamu membuat validator baru setiap kali dengan data dan rules yang diberikan langsung. Di Java, <code>Validator</code> adalah objek stateless yang bisa di-reuse — kamu memberikan objek yang ingin divalidasi, dan ia membaca annotation dari class tersebut. Tidak ada "rules array" terpisah.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 1</div>
+                    <p><strong>Q:</strong> Mengapa <code>ValidatorFactory</code> harus ditutup dengan <code>.close()</code> setelah selesai digunakan?</p>
+                    <div class="quiz-options" id="q1">
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">A. Karena <code>Validator</code> tidak thread-safe dan bisa menyebabkan race condition</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,true)">B. Karena <code>ValidatorFactory</code> memegang resource (thread pool, cache) yang harus dilepas agar tidak terjadi memory/resource leak</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">C. Karena setelah close, validator tidak bisa membaca annotation lagi</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">D. Hanya formalitas coding style, tidak ada efek nyata</div>
+                    </div>
+                    <div class="quiz-feedback" id="q1-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 2: CONSTRAINT VIOLATION ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner orange">
+                    <div class="chapter-num">Chapter 02</div>
+                    <div class="chapter-title">✅ ConstraintViolation — Membaca Hasil Validasi</div>
+                    <div class="chapter-sub">ConstraintViolationTest.java · validator.validate() · ConstraintViolation API</div>
+                </div>
+
+                <p>Hasil validasi di Java adalah <code>Set&lt;ConstraintViolation&lt;T&gt;&gt;</code> — himpunan semua pelanggaran constraint yang ditemukan. Jika set kosong → semua valid. Jika tidak kosong → ada error.</p>
+
+                <div class="text-title mt-m">Anatomy: Model Person</div>
+                <pre><span class="kw">public class</span> <span class="cls">Person</span> {
+    <span class="ann">@Size</span>(max = <span class="num">20</span>, message = <span class="str">"first name length max must 20 characters"</span>)
+    <span class="ann">@NotBlank</span>(message = <span class="str">"first name can not blank"</span>)
+    <span class="kw">private</span> <span class="typ">String</span> firstName;
+
+    <span class="ann">@Size</span>(max = <span class="num">20</span>, message = <span class="str">"first name length max must 20 characters"</span>)
+    <span class="ann">@NotBlank</span>(message = <span class="str">"last name can not blank"</span>)
+    <span class="kw">private</span> <span class="typ">String</span> lastName;
+
+    <span class="ann">@NotNull</span>(message = <span class="str">"address can not null"</span>)
+    <span class="ann">@Valid</span>
+    <span class="kw">private</span> <span class="cls">Address</span> address;
+
+    <span class="kw">private</span> <span class="cls">List</span>&lt;<span class="ann">@NotBlank</span>(message = <span class="str">"hobby can not blank"</span>) <span class="typ">String</span>&gt; hobbies;
+}</pre>
+
+                <div class="text-title mt-l">Validasi Dasar & Membaca ConstraintViolation</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testValidationFailedNotBlank</span>() {
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>(); <span class="cmt">// firstName=null, lastName=null</span>
+
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Person</span>&gt;&gt; violations =
+        validator.<span class="met">validate</span>(person);        <span class="cmt">// (1)</span>
+
+    <span class="cls">Assertions</span>.<span class="met">assertEquals</span>(<span class="num">2</span>, violations.<span class="met">size</span>()); <span class="cmt">// (2)</span>
+
+    <span class="kw">for</span> (<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Person</span>&gt; v : violations) {
+        System.out.<span class="met">println</span>(<span class="str">"Message : "</span>    + v.<span class="met">getMessage</span>());             <span class="cmt">// (3)</span>
+        System.out.<span class="met">println</span>(<span class="str">"Bean : "</span>       + v.<span class="met">getLeafBean</span>());           <span class="cmt">// (4)</span>
+        System.out.<span class="met">println</span>(<span class="str">"Constraint : "</span> + v.<span class="met">getConstraintDescriptor</span>()
+                                            .<span class="met">getAnnotation</span>());           <span class="cmt">// (5)</span>
+        System.out.<span class="met">println</span>(<span class="str">"Value : "</span>      + v.<span class="met">getInvalidValue</span>());       <span class="cmt">// (6)</span>
+        System.out.<span class="met">println</span>(<span class="str">"Path : "</span>       + v.<span class="met">getPropertyPath</span>());      <span class="cmt">// (7)</span>
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) validator.validate(object)</span>
+                        <span class="line-desc">Satu method untuk memvalidasi seluruh object. Validator membaca semua annotation constraint dari class Person via Reflection, lalu menjalankan setiap constraint. Hasilnya adalah <code>Set</code> — urutan violations tidak dijamin (bukan List).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) violations.size() == 2</span>
+                        <span class="line-desc">Person baru (null firstName, null lastName) → 2 violations: satu untuk firstName, satu untuk lastName. <code>@NotBlank</code> juga menangani null — tidak perlu dua annotation terpisah seperti di Laravel (<code>required|string</code>).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) getMessage()</span>
+                        <span class="line-desc">Pesan error yang sudah diinterpolasi — siap ditampilkan ke user. Ini yang kamu set di atribut <code>message</code> annotation.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(4) getLeafBean()</span>
+                        <span class="line-desc">Object yang mengandung field yang invalid. Untuk validasi langsung, ini sama dengan object yang divalidasi. Berguna saat ada nested validation.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(5) getConstraintDescriptor().getAnnotation()</span>
+                        <span class="line-desc">Annotation constraint yang dilanggar — lengkap dengan semua atributnya. Berguna untuk membedakan apakah violation karena <code>@NotBlank</code> atau <code>@Size</code> pada field yang sama.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(6) getInvalidValue()</span>
+                        <span class="line-desc">Nilai aktual yang menyebabkan violation. Untuk null firstName → hasilnya <code>null</code>. Untuk string terlalu panjang → string aslinya.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(7) getPropertyPath()</span>
+                        <span class="line-desc">Path ke field yang bermasalah, dalam format dot notation. Untuk field langsung: <code>firstName</code>. Untuk nested: <code>address.street</code>. Untuk element list: <code>hobbies[0]</code>. Ini yang kamu gunakan untuk menampilkan error di posisi form yang tepat.</span>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 @NotNull vs @NotBlank vs @NotEmpty — Kapan Pakai Yang Mana?</strong>
+                    <div class="table-content mt-s">
+                        <table>
+                            <thead><tr><th>Annotation</th><th>null</th><th>""</th><th>"   " (whitespace)</th><th>Nilai Ada</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>@NotNull</code></td><td class="badge badge-red">FAIL</td><td class="badge badge-green">OK</td><td class="badge badge-green">OK</td><td class="badge badge-green">OK</td></tr>
+                            <tr><td><code>@NotEmpty</code></td><td class="badge badge-red">FAIL</td><td class="badge badge-red">FAIL</td><td class="badge badge-green">OK</td><td class="badge badge-green">OK</td></tr>
+                            <tr><td><code>@NotBlank</code></td><td class="badge badge-red">FAIL</td><td class="badge badge-red">FAIL</td><td class="badge badge-red">FAIL</td><td class="badge badge-green">OK</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-s">Untuk field String wajib diisi user → selalu gunakan <code>@NotBlank</code>. Untuk object reference yang boleh ada tapi harus terisi → <code>@NotNull</code>.</p>
+                </div>
+
+                <div class="text-title mt-l">Throw Exception jika Ada Violation</div>
+                <pre><span class="cmt">// AbstractValidatorTest.java</span>
+<span class="kw">void</span> <span class="met">validateWithException</span>(<span class="cls">Object</span> o) {
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Object</span>&gt;&gt; violations = validator.<span class="met">validate</span>(o);
+    <span class="kw">if</span> (!violations.<span class="met">isEmpty</span>()) {
+        <span class="kw">throw new</span> <span class="cls">ConstraintViolationException</span>(violations); <span class="cmt">// (A)</span>
+    }
+}
+
+<span class="cmt">// ExceptionTest.java — cara menggunakan di production code</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testException</span>() {
+    <span class="cls">Assertions</span>.<span class="met">assertThrows</span>(<span class="cls">ConstraintViolationException</span>.<span class="kw">class</span>, () -> {
+        <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>();
+        <span class="met">validateWithException</span>(person);
+    });
+}</pre>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ Pola Umum di Service Layer Spring Boot</strong><br>
+                    Di production Spring Boot, kamu tidak perlu menulis <code>validateWithException()</code> manual. Cukup tambahkan <code>@Validated</code> di class dan Spring akan otomatis melempar <code>ConstraintViolationException</code> jika ada violation. Atau di Controller, gunakan <code>@Valid</code> pada parameter — Spring akan melempar <code>MethodArgumentNotValidException</code> yang bisa di-handle oleh <code>@ExceptionHandler</code>.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Iterasi violation sebagai List</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// violations adalah SET, bukan LIST</span>
+<span class="cmt">// Urutan tidak dijamin!</span>
+violations.get(0); <span class="cmt">// → tidak ada method get()</span>
+<span class="cmt">// → CompileError: Set has no get(int)</span>
+
+<span class="cmt">// Jangan asumsikan firstName selalu index 0!</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Iterasi via for-each atau stream</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Iterasi semua violations</span>
+for (var v : violations) {
+    System.out.println(v.getPropertyPath()
+        + ": " + v.getMessage());
+}
+
+<span class="cmt">// Atau convert ke Map untuk API response</span>
+violations.stream().collect(
+    Collectors.groupingBy(v ->
+        v.getPropertyPath().toString()));</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>Set&lt;ConstraintViolation&gt;</code> di Java ≈ <code>MessageBag</code> di Laravel. <code>violation.getPropertyPath()</code> ≈ <code>$errors->keys()</code> (nama field). <code>violation.getMessage()</code> ≈ <code>$errors->first('field')</code>. Perbedaan: di Laravel MessageBag hasilnya sudah terstruktur per field; di Java kamu perlu group violations by property path sendiri jika ingin format yang sama.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q:</strong> Field <code>String email</code> punya dua annotation: <code>@NotBlank</code> dan <code>@Email</code>. User mengirim email = <code>""</code> (empty string). Berapa violations yang dihasilkan?</p>
+                    <div class="quiz-options" id="q2">
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">A. 1 violation — hanya @NotBlank yang gagal karena @Email skip untuk empty string</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,true)">B. 2 violations — @NotBlank gagal (empty string) DAN @Email gagal (bukan format email valid)</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">C. 0 violations — karena @Email tidak memvalidasi string kosong</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">D. Error exception, tidak bisa divalidasi</div>
+                    </div>
+                    <div class="quiz-feedback" id="q2-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 3: CUSTOM CONSTRAINT ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner teal">
+                    <div class="chapter-num">Chapter 03</div>
+                    <div class="chapter-title">🔧 Custom Constraint — Buat Validasi Sendiri</div>
+                    <div class="chapter-sub">CheckCase · CheckCaseValidator · ConstraintValidator interface</div>
+                </div>
+
+                <p>Annotation bawaan kadang tidak cukup. Ketika butuh logic validasi custom, kamu bisa membuat <strong>constraint annotation sendiri</strong> beserta <strong>validator</strong>-nya. Inilah cara Spring's <code>@UniqueEmail</code>, <code>@ValidPassword</code>, dll bekerja.</p>
+
+                <div class="text-title mt-m">Step 1 — Buat Annotation Constraint</div>
+                <pre><span class="cmt">// CheckCase.java — validasi apakah string semua UPPER atau LOWER case</span>
+<span class="ann">@Documented</span>
+<span class="ann">@Constraint</span>(validatedBy = { <span class="cls">CheckCaseValidator</span>.<span class="kw">class</span> })  <span class="cmt">// (1)</span>
+<span class="ann">@Target</span>({ <span class="cls">FIELD</span>, <span class="cls">ANNOTATION_TYPE</span> })
+<span class="ann">@Retention</span>(<span class="cls">RUNTIME</span>)
+<span class="kw">public</span> <span class="ann">@interface</span> <span class="cls">CheckCase</span> {
+
+    <span class="cls">CaseMode</span> <span class="met">mode</span>();                           <span class="cmt">// (2) required attribute</span>
+    <span class="typ">String</span>   <span class="met">message</span>() <span class="kw">default</span> <span class="str">"invalid case format"</span>; <span class="cmt">// (3) wajib ada</span>
+    <span class="cls">Class</span>&lt;?&gt;[] <span class="met">groups</span>() <span class="kw">default</span> {};             <span class="cmt">// (4) wajib ada</span>
+    <span class="cls">Class</span>&lt;? <span class="kw">extends</span> <span class="cls">Payload</span>&gt;[] <span class="met">payload</span>() <span class="kw">default</span> {}; <span class="cmt">// (5) wajib ada</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) @Constraint(validatedBy)</span>
+                        <span class="line-desc">Meta-annotation yang menandai ini sebagai constraint annotation. Wajib ada. <code>validatedBy</code> menunjuk ke class yang mengimplementasikan logic validasi. Bisa lebih dari satu (untuk berbagai tipe).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) CaseMode mode()</span>
+                        <span class="line-desc">Custom attribute yang wajib diisi saat menggunakan annotation: <code>@CheckCase(mode = CaseMode.UPPER)</code>. Ini seperti parameter di PHP rule custom.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3-5) message, groups, payload</span>
+                        <span class="line-desc"><strong>Ketiga atribut ini WAJIB ada di setiap custom constraint</strong> — ini adalah kontrak yang ditetapkan oleh Jakarta Validation spec. Tanpa salah satunya, validator factory akan throw exception saat startup.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Step 2 — Implementasi ConstraintValidator</div>
+                <pre><span class="kw">public class</span> <span class="cls">CheckCaseValidator</span>
+    <span class="kw">implements</span> <span class="iface">ConstraintValidator</span>&lt;<span class="cls">CheckCase</span>, <span class="typ">String</span>&gt; { <span class="cmt">// (A)</span>
+
+    <span class="kw">private</span> <span class="cls">CaseMode</span> caseMode;
+
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> <span class="met">initialize</span>(<span class="cls">CheckCase</span> constraintAnnotation) {  <span class="cmt">// (B)</span>
+        caseMode = constraintAnnotation.<span class="met">mode</span>();
+    }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public boolean</span> <span class="met">isValid</span>(<span class="typ">String</span> value,
+                            <span class="cls">ConstraintValidatorContext</span> context) { <span class="cmt">// (C)</span>
+        <span class="kw">if</span> (value == <span class="kw">null</span>) <span class="kw">return</span> <span class="kw">true</span>;  <span class="cmt">// (D) null ditangani @NotNull</span>
+
+        <span class="kw">if</span> (caseMode == <span class="cls">CaseMode</span>.UPPER) {
+            <span class="kw">return</span> value.<span class="met">equals</span>(value.<span class="met">toUpperCase</span>());
+        } <span class="kw">else if</span> (caseMode == <span class="cls">CaseMode</span>.LOWER) {
+            <span class="kw">return</span> value.<span class="met">equals</span>(value.<span class="met">toLowerCase</span>());
+        }
+        <span class="kw">return</span> <span class="kw">false</span>;
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) ConstraintValidator&lt;A,T&gt;</span>
+                        <span class="line-desc">Interface generik dengan dua type parameter: <code>A</code> = annotation yang divalidasi (<code>CheckCase</code>), <code>T</code> = tipe nilai yang divalidasi (<code>String</code>). Kamu bisa membuat beberapa validator untuk annotation yang sama dengan tipe berbeda.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) initialize()</span>
+                        <span class="line-desc">Dipanggil sekali saat validator diinisialisasi. Tempat yang tepat untuk membaca atribut annotation (seperti <code>mode</code>) dan menyimpannya sebagai field untuk digunakan di <code>isValid()</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) isValid(value, context)</span>
+                        <span class="line-desc">Dipanggil setiap kali validasi dijalankan. Return <code>true</code> = valid, <code>false</code> = violation. <code>context</code> digunakan untuk kustomisasi pesan violation (dibahas di Chapter 8).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(D) if null → return true</span>
+                        <span class="line-desc"><strong>Best practice Jakarta Validation:</strong> Biarkan <code>null</code> lolos di custom constraint — biarkan <code>@NotNull</code>/<code>@NotBlank</code> yang menanganinya. Ini memisahkan tanggung jawab dengan bersih dan menghindari duplikasi logic.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Step 3 — Menggunakan Custom Constraint</div>
+                <pre><span class="cmt">// Di Payment.java</span>
+<span class="ann">@CheckCase</span>(mode = <span class="cls">CaseMode</span>.UPPER, message = <span class="str">"order id must be uppercase"</span>,
+    groups = { <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span> })
+<span class="kw">private</span> <span class="typ">String</span> orderId;</pre>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Validasi null di dalam custom constraint</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="kw">public boolean</span> isValid(String value, ...) {
+    <span class="cmt">// Validasi null di sini = duplikasi</span>
+    if (value == null) {
+        return false; <span class="cmt">// ← jangan lakukan ini!</span>
+    }
+    <span class="cmt">// Sekarang butuh DUA annotation: @NotNull + @CheckCase
+    // Padahal @CheckCase sudah "menggantikan" @NotNull</span>
+}</pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Biarkan null lolos, delegate ke @NotNull</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="kw">public boolean</span> isValid(String value, ...) {
+    if (value == null) return true; <span class="cmt">// ← delegate</span>
+    <span class="cmt">// Logic sebenarnya di sini</span>
+}
+
+<span class="cmt">// Di field: kombinasikan annotation</span>
+<span class="ann">@NotBlank</span>  <span class="cmt">// tangani null + empty</span>
+<span class="ann">@CheckCase</span>(mode = UPPER) <span class="cmt">// tangani case</span>
+<span class="kw">private</span> String orderId;</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Membuat <code>CheckCaseValidator</code> di Java persis seperti membuat custom Rule class di Laravel: <br><code>php artisan make:rule CheckCase</code> → mengimplementasikan method <code>passes($attribute, $value)</code> dan <code>message()</code>. Di Java, <code>isValid()</code> ≈ <code>passes()</code>, dan pesan dikonfigurasi di annotation bukan di validator class. Kelebihan Java: satu validator bisa digunakan di banyak class hanya dengan annotation, tanpa perlu mendaftarkan rule secara manual.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q:</strong> Kamu membuat <code>@UniqueEmail</code> constraint. Di mana sebaiknya logic pengecekan ke database ditulis?</p>
+                    <div class="quiz-options" id="q3">
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">A. Di dalam annotation <code>@interface UniqueEmail</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,true)">B. Di class validator yang mengimplementasikan <code>ConstraintValidator&lt;UniqueEmail, String&gt;</code>, method <code>isValid()</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">C. Di method <code>initialize()</code> validator</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">D. Langsung di field class, bukan di validator terpisah</div>
+                    </div>
+                    <div class="quiz-feedback" id="q3-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 4: CONSTRAINT COMPOSITION ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner violet">
+                    <div class="chapter-num">Chapter 04</div>
+                    <div class="chapter-title">🔗 Constraint Composition — Menggabungkan Constraint</div>
+                    <div class="chapter-sub">CheckOrderId · @ReportAsSingleViolation · Composed Annotation</div>
+                </div>
+
+                <p>Daripada menumpuk banyak annotation di setiap field, kamu bisa membuat <strong>satu annotation yang menggabungkan beberapa constraint</strong>. Ini prinsip DRY (Don't Repeat Yourself) di level annotation.</p>
+
+                <div class="text-title mt-m">Masalah: Annotation Berulang di Banyak Field</div>
+                <pre><span class="cmt">// Tanpa composition — harus repeat di setiap field orderId di seluruh project</span>
+<span class="ann">@CheckCase</span>(mode = <span class="cls">CaseMode</span>.UPPER, message = <span class="str">"order id must be uppercase"</span>, ...)
+<span class="ann">@NotBlank</span>(message = <span class="str">"order id cannot be blank"</span>, ...)
+<span class="ann">@Size</span>(min = <span class="num">1</span>, max = <span class="num">10</span>, message = <span class="str">"order id size 1-10"</span>, ...)
+<span class="kw">private</span> <span class="typ">String</span> orderId; <span class="cmt">// → 3 annotation setiap kali pakai orderId!</span></pre>
+
+                <div class="text-title mt-l">Solusi: @CheckOrderId — Composed Constraint</div>
+                <pre><span class="cmt">// CheckOrderId.java — menggabungkan 3 constraint menjadi 1</span>
+<span class="ann">@CheckCase</span>(groups = {...}, mode = <span class="cls">CaseMode</span>.UPPER, message = <span class="str">"{order.id.upper}"</span>)
+<span class="ann">@NotBlank</span>(groups = {...}, message = <span class="str">"{order.id.notblank}"</span>)
+<span class="ann">@Size</span>(groups = {...}, min = <span class="num">1</span>, max = <span class="num">10</span>, message = <span class="str">"{order.id.size}"</span>)
+<span class="ann">@Documented</span>
+<span class="ann">@Constraint</span>(validatedBy = {})     <span class="cmt">// (1) kosong — pakai constraint di atas</span>
+<span class="ann">@Target</span>({FIELD})
+<span class="ann">@Retention</span>(RUNTIME)
+<span class="ann">@ReportAsSingleViolation</span>          <span class="cmt">// (2) semua error jadi satu</span>
+<span class="kw">public</span> <span class="ann">@interface</span> <span class="cls">CheckOrderId</span> {
+    <span class="typ">String</span>   <span class="met">message</span>() <span class="kw">default</span> <span class="str">"invalid order id"</span>;
+    <span class="cls">Class</span>&lt;?&gt;[] <span class="met">groups</span>() <span class="kw">default</span> {};
+    <span class="cls">Class</span>&lt;? <span class="kw">extends</span> <span class="cls">Payload</span>&gt;[] <span class="met">payload</span>() <span class="kw">default</span> {};
+}
+
+<span class="cmt">// Sekarang di Payment.java cukup:</span>
+<span class="ann">@CheckOrderId</span>(groups = {...}, message = <span class="str">"{order.id.invalid}"</span>)
+<span class="kw">private</span> <span class="typ">String</span> orderId; <span class="cmt">// ← 1 annotation, 3 validasi berjalan</span></pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) @Constraint(validatedBy = {})</span>
+                        <span class="line-desc">Array kosong — annotation ini tidak punya validator sendiri. Validasinya dilakukan oleh annotation-annotation yang menempel di atasnya (<code>@CheckCase</code>, <code>@NotBlank</code>, <code>@Size</code>).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) @ReportAsSingleViolation</span>
+                        <span class="line-desc">Jika salah satu dari 3 constraint gagal, hanya <strong>satu violation</strong> yang dilaporkan — violation dari <code>@CheckOrderId</code> itu sendiri (menggunakan pesan dari <code>message()</code>). Tanpa ini, bisa ada 3 violations terpisah yang membingungkan user. Pilihan yang lebih user-friendly.</span>
+                    </div>
+                </div>
+
+                <div class="output-box mt-m">
+                    <span class="out-label">Tanpa @ReportAsSingleViolation (orderId = "eko-yang-sangat-panjang")</span>
+                    <span class="out-err">checkCase: order id must be uppercase</span><br>
+                    <span class="out-err">size: order id size 1-10</span><br>
+                    <span class="out-dim">→ 2 violations terpisah</span>
+                </div>
+                <div class="output-box mt-s">
+                    <span class="out-label">Dengan @ReportAsSingleViolation</span>
+                    <span class="out-ok">checkOrderId: invalid order id</span><br>
+                    <span class="out-dim">→ 1 violation gabungan</span>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Constraint Composition di Java ≈ membuat custom Rule yang di dalamnya memanggil banyak rule lain, atau membuat macro validasi dengan <code>Validator::extend()</code>. Keuntungan Java: tidak perlu kode PHP apapun — cukup susun annotation. <code>@ReportAsSingleViolation</code> seperti mengembalikan satu pesan error yang dirangkum, bukan satu per rule.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 5: GROUPS ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner red">
+                    <div class="chapter-num">Chapter 05</div>
+                    <div class="chapter-title">🏷️ Validation Groups — Validasi Bersyarat</div>
+                    <div class="chapter-sub">GroupTest.java · CreditCardPaymentGroup · VirtualAccountPaymentGroup</div>
+                </div>
+
+                <p>Sebuah object sering perlu divalidasi secara berbeda tergantung konteks. Contoh: field <code>creditCard</code> hanya relevan saat metode pembayaran adalah kartu kredit. <strong>Validation Groups</strong> memungkinkan ini dengan cara yang elegan.</p>
+
+                <div class="text-title mt-m">Mendefinisikan Groups (Cukup Interface Kosong)</div>
+                <pre><span class="cmt">// Cukup interface kosong — bertindak sebagai marker/tag</span>
+<span class="kw">public interface</span> <span class="cls">CreditCardPaymentGroup</span> {}
+<span class="kw">public interface</span> <span class="cls">VirtualAccountPaymentGroup</span> {}</pre>
+
+                <div class="text-title mt-l">Menggunakan Groups pada Annotation</div>
+                <pre><span class="kw">public class</span> <span class="cls">Payment</span> {
+
+    <span class="cmt">// orderId: wajib valid di KEDUA metode pembayaran</span>
+    <span class="ann">@CheckOrderId</span>(groups = { <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span>,
+                              <span class="cls">VirtualAccountPaymentGroup</span>.<span class="kw">class</span> })
+    <span class="kw">private</span> <span class="typ">String</span> orderId;
+
+    <span class="cmt">// creditCard: HANYA divalidasi untuk group CreditCard</span>
+    <span class="ann">@LuhnCheck</span>(groups = { <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span> })
+    <span class="ann">@NotBlank</span>(groups = { <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span> })
+    <span class="kw">private</span> <span class="typ">String</span> creditCard;
+
+    <span class="cmt">// virtualAccount: HANYA divalidasi untuk group VirtualAccount</span>
+    <span class="ann">@NotBlank</span>(groups = { <span class="cls">VirtualAccountPaymentGroup</span>.<span class="kw">class</span> })
+    <span class="kw">private</span> <span class="typ">String</span> virtualAccount;
+}</pre>
+
+                <div class="text-title mt-l">Menjalankan Validasi dengan Group Tertentu</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testCreditCardGroup</span>() {
+    <span class="cls">Payment</span> payment = <span class="kw">new</span> <span class="cls">Payment</span>();
+    payment.<span class="met">setOrderId</span>(<span class="str">"0111"</span>);
+    payment.<span class="met">setAmount</span>(<span class="num">20_000L</span>);
+    payment.<span class="met">setCreditCard</span>(<span class="str">"123"</span>);   <span class="cmt">// nomor CC tidak valid (Luhn check)</span>
+
+    <span class="cmt">// Validasi HANYA constraint yang punya group CreditCardPaymentGroup</span>
+    validateWithGroups(payment, <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span>); <span class="cmt">// (1)</span>
+    <span class="cmt">// → violation: creditCard (LuhnCheck gagal)
+    // → virtualAccount TIDAK divalidasi (beda group)</span>
+}
+
+<span class="cmt">// Implementasi validateWithGroups:</span>
+<span class="kw">void</span> <span class="met">validateWithGroups</span>(<span class="cls">Object</span> o, <span class="cls">Class</span>&lt;?&gt;... groups) {
+    <span class="cls">Set</span>&lt;...&gt; violations = validator.<span class="met">validate</span>(o, groups); <span class="cmt">// (2) varargs!</span>
+    <span class="cmt">// ...</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) validateWithGroups(obj, Group.class)</span>
+                        <span class="line-desc">Dengan menyertakan group, hanya constraint yang memiliki group tersebut yang akan dijalankan. Constraint tanpa group (Default group) TIDAK ikut dijalankan kecuali kamu include <code>Default.class</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) validator.validate(o, groups)</span>
+                        <span class="line-desc">Parameter kedua varargs — bisa menyertakan lebih dari satu group: <code>validator.validate(o, GroupA.class, GroupB.class)</code>. Semua constraint dari kedua group akan dijalankan.</span>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Default Group</strong><br>
+                    Constraint yang tidak mendeklarasikan <code>groups</code> secara otomatis masuk ke <code>Default.class</code> (dari <code>jakarta.validation.groups.Default</code>). Saat kamu memanggil <code>validator.validate(obj)</code> tanpa group → hanya constraint dengan <code>Default</code> group yang dijalankan. Constraint dengan custom group (seperti <code>CreditCardPaymentGroup</code>) tidak akan dijalankan.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Lupa sertakan group saat validasi</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Payment punya constraint dengan group CreditCard
+// Tapi divalidasi tanpa group:</span>
+validator.validate(payment); <span class="cmt">// ← tidak ada group!</span>
+<span class="cmt">// → 0 violations, meski creditCard kosong!
+// → karena @NotBlank(groups=CreditCard) tidak ikut</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Sertakan group yang sesuai konteks</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Saat user memilih pembayaran CC:</span>
+validator.validate(payment,
+    CreditCardPaymentGroup.class);
+<span class="cmt">// → constraint dengan group CreditCard dijalankan ✓
+
+// Saat user memilih VA:</span>
+validator.validate(payment,
+    VirtualAccountPaymentGroup.class);</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Validation Groups di Java ≈ <code>sometimes()</code> dan <code>required_if</code> di Laravel, tapi jauh lebih terstruktur. Di Laravel kamu menulis kondisi di dalam <code>rules()</code> method: <code>'credit_card' => 'required_if:method,credit_card'</code>. Di Java, kondisi itu dikodekan sebagai "group" — terpisah dari annotation itu sendiri. Keuntungan: annotation lebih bersih dan reusable, logic kondisional ada di layer service yang memanggil <code>validate()</code>.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 5</div>
+                    <p><strong>Q:</strong> Kamu memanggil <code>validator.validate(payment)</code> tanpa group pada object Payment yang semua constraint-nya menggunakan custom group. Apa yang terjadi?</p>
+                    <div class="quiz-options" id="q5">
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,false)">A. Exception karena semua constraint punya group dan tidak ada yang bisa dijalankan</div>
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,true)">B. 0 violations — constraint dengan custom group tidak dijalankan, hanya Default group yang dijalankan</div>
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,false)">C. Semua constraint dijalankan, group diabaikan jika tidak ada group parameter</div>
+                        <div class="quiz-option" onclick="checkQuiz('q5',this,false)">D. Validator melempar ConstraintViolationException otomatis</div>
+                    </div>
+                    <div class="quiz-feedback" id="q5-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 6: GROUP CONVERT & SEQUENCE ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner sky">
+                    <div class="chapter-num">Chapter 06</div>
+                    <div class="chapter-title">🔄 Group Convert &amp; Group Sequence</div>
+                    <div class="chapter-sub">@ConvertGroup · @GroupSequence · validasi berurutan &amp; cascade</div>
+                </div>
+
+                <p>Dua fitur lanjutan Groups: <strong>Group Sequence</strong> untuk menjalankan group secara berurutan (berhenti di error pertama), dan <strong>Group Convert</strong> untuk mengubah group saat cascade ke nested object.</p>
+
+                <div class="text-title mt-m">@GroupSequence — Validasi Berurutan</div>
+                <pre><span class="cmt">// PaymentGroup.java — mendefinisikan urutan validasi</span>
+<span class="ann">@GroupSequence</span>(value = {
+    <span class="cls">Default</span>.<span class="kw">class</span>,                   <span class="cmt">// (1) jalankan Default group dulu</span>
+    <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span>,   <span class="cmt">// (2) jika OK, jalankan ini</span>
+    <span class="cls">VirtualAccountPaymentGroup</span>.<span class="kw">class</span> <span class="cmt">// (3) jika OK, jalankan ini</span>
+})
+<span class="kw">public interface</span> <span class="cls">PaymentGroup</span> {}
+
+<span class="cmt">// Penggunaan — cukup gunakan PaymentGroup sebagai group</span>
+validateWithGroups(payment, <span class="cls">PaymentGroup</span>.<span class="kw">class</span>);</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Behavior Group Sequence: Short-circuit pada Error</strong><br>
+                    Jika ada violation di group pertama (<code>Default</code>), validator <strong>berhenti dan tidak melanjutkan</strong> ke group berikutnya. Ini berguna untuk memvalidasi "prasyarat" dulu sebelum validasi yang lebih kompleks — mirip seperti validation chain di Laravel yang berhenti di <code>bail</code>.
+                </div>
+
+                <div class="text-title mt-l">@ConvertGroup — Ubah Group Saat Cascade</div>
+                <pre><span class="cmt">// Payment.java — cascade ke Customer dengan group conversion</span>
+<span class="ann">@Valid</span>
+<span class="ann">@NotNull</span>(groups = { <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span>,
+                     <span class="cls">VirtualAccountPaymentGroup</span>.<span class="kw">class</span> })
+<span class="ann">@ConvertGroup</span>(from = <span class="cls">VirtualAccountPaymentGroup</span>.<span class="kw">class</span>,
+              to = <span class="cls">Default</span>.<span class="kw">class</span>)                 <span class="cmt">// (A)</span>
+<span class="ann">@ConvertGroup</span>(from = <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span>,
+              to = <span class="cls">Default</span>.<span class="kw">class</span>)                 <span class="cmt">// (B)</span>
+<span class="kw">private</span> <span class="cls">Customer</span> customer;</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A-B) @ConvertGroup</span>
+                        <span class="line-desc">Saat validasi Payment menggunakan group <code>VirtualAccountPaymentGroup</code> (atau <code>CreditCard</code>), dan validator melakukan cascade ke object <code>Customer</code> via <code>@Valid</code>, group akan dikonversi menjadi <code>Default</code>. Ini penting karena Customer tidak tahu tentang Payment groups — ia hanya punya constraint dengan <code>Default</code> group. Tanpa ini, cascade tidak akan memvalidasi apapun di Customer (karena tidak ada constraint Customer dengan Payment groups).</span>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>@GroupSequence</code> ≈ Laravel's <code>bail</code> rule — berhenti di error pertama. Contoh Laravel: <code>'email' => 'bail|required|email|unique:users'</code> — jika <code>required</code> gagal, <code>email</code> dan <code>unique</code> tidak dicek. Di Java, group sequence melakukan hal yang sama tapi di level group, bukan field individual. <code>@ConvertGroup</code> tidak ada padanan langsung di Laravel.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 7: NESTED & CONTAINER ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Chapter 07</div>
+                    <div class="chapter-title">📦 Nested &amp; Container Validation</div>
+                    <div class="chapter-sub">@Valid · NestedValidationTest · ContainerDataTest · List&lt;@NotBlank&gt;</div>
+                </div>
+
+                <p>Validation otomatis berhenti di batas object — tidak otomatis masuk ke nested object atau elemen collection. Untuk itu, ada <strong><code>@Valid</code></strong> (cascade validation) dan <strong>container element constraints</strong>.</p>
+
+                <div class="text-title mt-m">@Valid — Cascade ke Nested Object</div>
+                <pre><span class="cmt">// Person.java</span>
+<span class="ann">@NotNull</span>(message = <span class="str">"address can not null"</span>)
+<span class="ann">@Valid</span>        <span class="cmt">// (1) tanpa ini, Address tidak divalidasi lebih dalam</span>
+<span class="kw">private</span> <span class="cls">Address</span> address;
+
+<span class="cmt">// NestedValidationTest.java</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testNested</span>() {
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>();
+    person.<span class="met">setFirstName</span>(<span class="str">"Eko"</span>);
+    person.<span class="met">setLastName</span>(<span class="str">"Kurniawan"</span>);
+
+    <span class="cls">Address</span> address = <span class="kw">new</span> <span class="cls">Address</span>();  <span class="cmt">// street, city, country = null</span>
+    person.<span class="met">setAddress</span>(address);
+
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Person</span>&gt;&gt; violations = validator.<span class="met">validate</span>(person);
+    <span class="cmt">// Violations: address.street, address.city, address.country (null → NotBlank gagal)</span>
+    <span class="cmt">// propertyPath: "address.street", "address.city", "address.country"</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) @Valid</span>
+                        <span class="line-desc">Tanpa <code>@Valid</code>: validator hanya mengecek <em>apakah</em> <code>address</code> null atau tidak (via <code>@NotNull</code>). Dengan <code>@Valid</code>: jika address tidak null, validator akan <em>masuk ke dalam</em> object Address dan menjalankan constraint-constraintnya. <code>@Valid</code> bisa diletakkan di field, parameter method, atau constructor parameter.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Container Element Constraints — Validasi di Dalam Collection</div>
+                <pre><span class="cmt">// Person.java — validasi SETIAP ELEMEN di dalam List</span>
+<span class="kw">private</span> <span class="cls">List</span>&lt;<span class="ann">@NotBlank</span>(message = <span class="str">"hobby can not blank"</span>) <span class="typ">String</span>&gt; hobbies;
+
+<span class="cmt">// ContainerDataTest.java</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testContainerData</span>() {
+    person.<span class="met">setHobbies</span>(<span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;());
+    person.<span class="met">getHobbies</span>().<span class="met">add</span>(<span class="str">""</span>);       <span class="cmt">// → violation: hobbies[0]</span>
+    person.<span class="met">getHobbies</span>().<span class="met">add</span>(<span class="str">"   "</span>);    <span class="cmt">// → violation: hobbies[1]</span>
+    person.<span class="met">getHobbies</span>().<span class="met">add</span>(<span class="str">"Gaming"</span>); <span class="cmt">// → OK</span>
+
+    validate(person);
+    <span class="cmt">// propertyPath: "hobbies[0]", "hobbies[1]"</span>
+}</pre>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ Container Element Constraints — Didukung Secara Bawaan</strong><br>
+                    Sejak Jakarta Validation 2.0+, annotation di dalam type argument generic (<code>List&lt;@NotBlank String&gt;</code>, <code>Map&lt;String, @Size(min=3) String&gt;</code>, <code>Optional&lt;@Email String&gt;</code>) didukung secara native. Validator otomatis mengiterasi elemen dan menvalidasi tiap elemen. Property path bahkan menyertakan index: <code>hobbies[0]</code>.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Tanpa @Valid pada nested object</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Address kosong (street, city = null)</span>
+<span class="ann">@NotNull</span>
+<span class="cmt">// @Valid tidak ada!</span>
+private Address address;
+
+Person p = new Person();
+Address a = new Address(); <span class="cmt">// semua null</span>
+p.setAddress(a);
+
+validator.validate(p);
+<span class="cmt">// → 0 violations!
+// address tidak null → @NotNull OK
+// tapi isi Address tidak dicek</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Gunakan @Valid untuk cascade</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="ann">@NotNull</span>
+<span class="ann">@Valid</span>  <span class="cmt">// ← tambahkan ini</span>
+private Address address;
+
+Person p = new Person();
+Address a = new Address(); <span class="cmt">// semua null</span>
+p.setAddress(a);
+
+validator.validate(p);
+<span class="cmt">// → violations: address.street,
+//   address.city, address.country ✓</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>@Valid</code> pada nested object ≈ validasi nested di Laravel: <code>'address.street' => 'required'</code>. Container element constraint <code>List&lt;@NotBlank&gt;</code> ≈ <code>'hobbies.*' => 'required|string'</code> di Laravel. Di Java lebih deklaratif — annotation ditulis langsung di definisi field, bukan di file validasi terpisah.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 8: CLASS-LEVEL ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner slate">
+                    <div class="chapter-num">Chapter 08</div>
+                    <div class="chapter-title">🏛️ Class-Level Validation — Validasi Antar Field</div>
+                    <div class="chapter-sub">@CheckPassword · CheckPasswordValidator · ClassLevelValidationTest</div>
+                </div>
+
+                <p>Kadang validasi membutuhkan perbandingan antara lebih dari satu field — misalnya memastikan <code>password</code> dan <code>retypePassword</code> sama. Ini tidak bisa dilakukan di field level. Solusinya: <strong>class-level constraint</strong>.</p>
+
+                <div class="text-title mt-m">Annotation di Level Class</div>
+                <pre><span class="cmt">// Register.java — annotation di class, bukan di field</span>
+<span class="ann">@CheckPassword</span>(message = <span class="str">"password and retype password must same"</span>)
+<span class="kw">public class</span> <span class="cls">Register</span> {
+    <span class="ann">@NotBlank</span> <span class="kw">private</span> <span class="typ">String</span> username;
+    <span class="ann">@NotBlank</span> <span class="kw">private</span> <span class="typ">String</span> password;
+    <span class="ann">@NotBlank</span> <span class="kw">private</span> <span class="typ">String</span> retypePassword;
+}
+
+<span class="cmt">// @CheckPassword annotation — @Target include TYPE</span>
+<span class="ann">@Constraint</span>(validatedBy = { <span class="cls">CheckPasswordValidator</span>.<span class="kw">class</span> })
+<span class="ann">@Target</span>({ <span class="cls">FIELD</span>, <span class="cls">ANNOTATION_TYPE</span>, <span class="cls">TYPE</span> }) <span class="cmt">// ← TYPE penting!</span>
+<span class="ann">@Retention</span>(<span class="cls">RUNTIME</span>)
+<span class="kw">public</span> <span class="ann">@interface</span> <span class="cls">CheckPassword</span> { ... }</pre>
+
+                <div class="text-title mt-l">Validator dengan Custom Violation Node</div>
+                <pre><span class="kw">public class</span> <span class="cls">CheckPasswordValidator</span>
+    <span class="kw">implements</span> <span class="iface">ConstraintValidator</span>&lt;<span class="cls">CheckPassword</span>, <span class="cls">Register</span>&gt; { <span class="cmt">// (A)</span>
+
+    <span class="ann">@Override</span>
+    <span class="kw">public boolean</span> <span class="met">isValid</span>(<span class="cls">Register</span> value,
+                            <span class="cls">ConstraintValidatorContext</span> context) {
+        <span class="kw">if</span> (value.<span class="met">getPassword</span>() == <span class="kw">null</span>
+            || value.<span class="met">getRetypePassword</span>() == <span class="kw">null</span>) {
+            <span class="kw">return</span> <span class="kw">true</span>; <span class="cmt">// skip — @NotBlank yang tangani</span>
+        }
+
+        <span class="kw">boolean</span> isValid = value.<span class="met">getPassword</span>()
+                               .<span class="met">equals</span>(value.<span class="met">getRetypePassword</span>());
+
+        <span class="kw">if</span> (!isValid) {
+            context.<span class="met">disableDefaultConstraintViolation</span>();         <span class="cmt">// (B)</span>
+
+            context.<span class="met">buildConstraintViolationWithTemplate</span>(
+                    context.<span class="met">getDefaultConstraintMessageTemplate</span>())
+                .<span class="met">addPropertyNode</span>(<span class="str">"password"</span>)                    <span class="cmt">// (C)</span>
+                .<span class="met">addConstraintViolation</span>();
+
+            context.<span class="met">buildConstraintViolationWithTemplate</span>(
+                    context.<span class="met">getDefaultConstraintMessageTemplate</span>())
+                .<span class="met">addPropertyNode</span>(<span class="str">"retypePassword"</span>)
+                .<span class="met">addConstraintViolation</span>();
+        }
+        <span class="kw">return</span> isValid;
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) ConstraintValidator&lt;CheckPassword, Register&gt;</span>
+                        <span class="line-desc">Type parameter kedua adalah <code>Register</code> (bukan <code>String</code>) — karena kita memvalidasi seluruh object. Dari dalam <code>isValid()</code>, kita bisa mengakses semua field Register.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) disableDefaultConstraintViolation()</span>
+                        <span class="line-desc">Menonaktifkan violation default (yang property path-nya mengacu ke root object / class). Tanpa ini, violation akan muncul di level class tanpa property path yang jelas — menyulitkan frontend untuk menampilkan error di field yang tepat.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) addPropertyNode("password")</span>
+                        <span class="line-desc">Membuat violation dengan property path yang spesifik. Hasil: violation dengan path <code>password</code> dan <code>retypePassword</code> — frontend tahu persis di field mana harus menampilkan error.</span>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Class-level validation ≈ rule <code>confirmed</code> di Laravel (<code>'password' => 'confirmed'</code>) yang otomatis mengecek field <code>password_confirmation</code>. Bedanya: di Java, logikanya kamu tulis sendiri dan bisa dikustomisasi sepenuhnya. Fungsi <code>addPropertyNode("password")</code> ≈ menambahkan pesan error ke key spesifik di MessageBag Laravel: <code>$validator->errors()->add('password', 'message')</code>.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 8</div>
+                    <p><strong>Q:</strong> Mengapa di <code>CheckPasswordValidator</code> kita memanggil <code>context.disableDefaultConstraintViolation()</code> sebelum menambahkan violation baru?</p>
+                    <div class="quiz-options" id="q8">
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,false)">A. Untuk menghindari exception saat menambahkan property node</div>
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,true)">B. Agar violation default (di level class tanpa property path) tidak muncul — kita ingin violation hanya di field "password" dan "retypePassword" saja</div>
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,false)">C. Karena tanpa ini, constraint validator akan dijalankan dua kali</div>
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,false)">D. Untuk menonaktifkan semua violation sebelumnya dari constraint lain</div>
+                    </div>
+                    <div class="quiz-feedback" id="q8-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 9: METHOD & CONSTRUCTOR VALIDATION ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner rose">
+                    <div class="chapter-num">Chapter 09</div>
+                    <div class="chapter-title">⚡ Method &amp; Constructor Validation</div>
+                    <div class="chapter-sub">ExecutableValidator · validateParameters · validateReturnValue · CrossParameter</div>
+                </div>
+
+                <p>Bean Validation tidak hanya untuk field — kamu juga bisa memvalidasi <strong>parameter method</strong>, <strong>return value method</strong>, dan <strong>parameter constructor</strong>. Ini adalah fondasi dari Spring's <code>@Validated</code> yang otomatis memvalidasi parameter service method.</p>
+
+                <div class="text-title mt-m">Model: Person dengan Method yang Divalidasi</div>
+                <pre><span class="kw">public class</span> <span class="cls">Person</span> {
+    <span class="cmt">// Validasi PARAMETER method</span>
+    <span class="kw">public void</span> <span class="met">sayHello</span>(<span class="ann">@NotBlank</span>(message = <span class="str">"name can not blank"</span>) <span class="typ">String</span> name) {
+        System.out.<span class="met">println</span>(<span class="str">"Hello "</span> + name);
+    }
+
+    <span class="cmt">// Validasi RETURN VALUE method</span>
+    <span class="ann">@NotBlank</span>(message = <span class="str">"full name can not blank"</span>)
+    <span class="kw">public</span> <span class="typ">String</span> <span class="met">fullName</span>() {
+        <span class="kw">return</span> firstName + <span class="str">" "</span> + lastName;
+    }
+}</pre>
+
+                <div class="text-title mt-l">Validasi Parameter Method</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testSayHello</span>() <span class="kw">throws</span> <span class="cls">NoSuchMethodException</span> {
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>();
+    <span class="typ">String</span> name = <span class="str">""</span>; <span class="cmt">// invalid</span>
+
+    <span class="cls">Method</span> method = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getMethod</span>(<span class="str">"sayHello"</span>, <span class="typ">String</span>.<span class="kw">class</span>); <span class="cmt">// (1)</span>
+
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Person</span>&gt;&gt; violations = executableValidator
+        .<span class="met">validateParameters</span>(person, method, <span class="kw">new</span> <span class="cls">Object</span>[]{ name }); <span class="cmt">// (2)</span>
+
+    <span class="cmt">// violations: sayHello.arg0 → "name can not blank"</span>
+}</pre>
+
+                <div class="text-title mt-l">Validasi Return Value</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testFullName</span>() <span class="kw">throws</span> <span class="cls">NoSuchMethodException</span> {
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>();
+    person.<span class="met">setFirstName</span>(<span class="str">""</span>);
+    person.<span class="met">setLastName</span>(<span class="str">""</span>);
+
+    <span class="typ">String</span> returnValue = person.<span class="met">fullName</span>(); <span class="cmt">// " " (spasi doang)</span>
+
+    <span class="cls">Method</span> method = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getMethod</span>(<span class="str">"fullName"</span>);
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Person</span>&gt;&gt; violations = executableValidator
+        .<span class="met">validateReturnValue</span>(person, method, returnValue); <span class="cmt">// (3)</span>
+
+    <span class="cmt">// violations: fullName.&lt;return value&gt; → "full name can not blank"</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) Reflection untuk Method</span>
+                        <span class="line-desc">Method validation menggunakan Reflection — perlu mendapatkan <code>Method</code> object terlebih dahulu. Ini karena <code>ExecutableValidator</code> perlu membaca annotation yang ada di parameter/return type method tersebut.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) validateParameters(obj, method, args[])</span>
+                        <span class="line-desc">Memvalidasi argumen yang akan diberikan ke method, <em>sebelum method dipanggil</em>. Argumen pertama: instance. Kedua: Method object. Ketiga: array argumen yang ingin divalidasi.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) validateReturnValue(obj, method, returnValue)</span>
+                        <span class="line-desc">Memvalidasi nilai yang dikembalikan method, <em>setelah method dipanggil</em>. Di production dengan Spring <code>@Validated</code>, ini dijalankan otomatis via AOP setelah method selesai.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Cross-Parameter Validation — Password vs RetypePassword di Method</div>
+                <pre><span class="cmt">// UserService.java</span>
+<span class="ann">@CheckPasswordParameter</span>(passwordParam = <span class="num">1</span>, retypePasswordParam = <span class="num">2</span>)
+<span class="kw">public void</span> <span class="met">register</span>(
+    <span class="ann">@NotBlank</span> <span class="typ">String</span> username,
+    <span class="ann">@NotBlank</span> <span class="typ">String</span> password,
+    <span class="ann">@NotBlank</span> <span class="typ">String</span> retypePassword) { ... }
+
+<span class="cmt">// CheckPasswordParameterValidator — validator untuk SEMUA parameter sekaligus</span>
+<span class="ann">@SupportedValidationTarget</span>(<span class="cls">ValidationTarget</span>.PARAMETERS)   <span class="cmt">// (A)</span>
+<span class="kw">public class</span> <span class="cls">CheckPasswordParameterValidator</span>
+    <span class="kw">implements</span> <span class="iface">ConstraintValidator</span>&lt;<span class="cls">CheckPasswordParameter</span>, <span class="cls">Object</span>[]&gt; { <span class="cmt">// (B)</span>
+
+    <span class="ann">@Override</span>
+    <span class="kw">public boolean</span> <span class="met">isValid</span>(<span class="cls">Object</span>[] value, ...) {
+        <span class="cmt">// value[0] = username, value[1] = password, value[2] = retypePassword</span>
+        <span class="typ">String</span> password       = (<span class="typ">String</span>) value[passwordParam];
+        <span class="typ">String</span> retypePassword = (<span class="typ">String</span>) value[retypePasswordParam];
+        <span class="kw">if</span> (password == <span class="kw">null</span> || retypePassword == <span class="kw">null</span>) <span class="kw">return</span> <span class="kw">true</span>;
+        <span class="kw">return</span> password.<span class="met">equals</span>(retypePassword);
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) @SupportedValidationTarget(PARAMETERS)</span>
+                        <span class="line-desc">Menandai bahwa validator ini bekerja pada array parameter method (bukan pada satu nilai field). Tanpa ini, Jakarta Validation tidak tahu bahwa ini adalah cross-parameter validator dan akan error.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) ConstraintValidator&lt;..., Object[]&gt;</span>
+                        <span class="line-desc">Type parameter kedua adalah <code>Object[]</code> — menerima array semua parameter method. Index di dalam array sesuai urutan parameter method: <code>value[0]</code> = username, <code>value[1]</code> = password, dst.</span>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ Di Production Spring Boot: Tidak Perlu Manual!</strong><br>
+                    Semua ini dilakukan secara otomatis saat kamu menggunakan <code>@Validated</code> di Spring:
+                    <pre style="margin-top:8px;background:#0d1117;"><span class="ann">@Service</span>
+<span class="ann">@Validated</span>  <span class="cmt">// ← aktifkan method validation via AOP</span>
+<span class="kw">public class</span> <span class="cls">UserService</span> {
+    <span class="kw">public void</span> <span class="met">register</span>(<span class="ann">@NotBlank</span> String username, ...) {
+        <span class="cmt">// Spring otomatis validateParameters sebelum method ini berjalan
+        // Jika ada violation → ConstraintViolationException dilempar otomatis</span>
+    }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 10: PAYLOAD ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner violet">
+                    <div class="chapter-num">Chapter 10</div>
+                    <div class="chapter-title">📬 Payload — Metadata Tambahan pada Violation</div>
+                    <div class="chapter-sub">EmailErrorPayload · PayloadTest.java · violation.getConstraintDescriptor().getPayload()</div>
+                </div>
+
+                <p><strong>Payload</strong> adalah cara menambahkan metadata tambahan ke sebuah constraint — tanpa mengubah logic validasinya. Payload digunakan oleh consumer violation (bukan validator itu sendiri) untuk memutuskan tindakan apa yang harus diambil saat violation terjadi.</p>
+
+                <div class="text-title mt-m">Mendefinisikan Payload Class</div>
+                <pre><span class="cmt">// EmailErrorPayload.java — action yang diambil saat ada violation</span>
+<span class="kw">public class</span> <span class="cls">EmailErrorPayload</span> <span class="kw">implements</span> <span class="iface">Payload</span> {
+
+    <span class="kw">public void</span> <span class="met">sendEmail</span>(<span class="cls">ConstraintViolation</span>&lt;?&gt; violation) {
+        System.out.<span class="met">println</span>(<span class="str">"Sending alert email for: "</span>
+            + violation.<span class="met">getMessage</span>());
+    }
+}</pre>
+
+                <div class="text-title mt-l">Menggunakan Payload di Annotation</div>
+                <pre><span class="cmt">// Payment.java</span>
+<span class="ann">@LuhnCheck</span>(
+    groups  = { <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span> },
+    message = <span class="str">"invalid credit card number"</span>,
+    payload = { <span class="cls">EmailErrorPayload</span>.<span class="kw">class</span> }  <span class="cmt">// (1)</span>
+)
+<span class="kw">private</span> <span class="typ">String</span> creditCard;</pre>
+
+                <div class="text-title mt-l">Membaca Payload saat Memproses Violations</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testPayload</span>() {
+    <span class="cmt">// ... setup payment ...</span>
+
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Object</span>&gt;&gt; violations = validator.<span class="met">validate</span>(payment, ...);
+
+    <span class="kw">for</span> (<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Object</span>&gt; violation : violations) {
+        <span class="cls">Set</span>&lt;<span class="cls">Class</span>&lt;? <span class="kw">extends</span> <span class="cls">Payload</span>&gt;&gt; payloads =
+            violation.<span class="met">getConstraintDescriptor</span>().<span class="met">getPayload</span>(); <span class="cmt">// (2)</span>
+
+        <span class="kw">for</span> (<span class="cls">Class</span>&lt;? <span class="kw">extends</span> <span class="cls">Payload</span>&gt; p : payloads) {
+            <span class="kw">if</span> (p == <span class="cls">EmailErrorPayload</span>.<span class="kw">class</span>) {                  <span class="cmt">// (3)</span>
+                <span class="kw">new</span> <span class="cls">EmailErrorPayload</span>().<span class="met">sendEmail</span>(violation);
+            }
+        }
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) payload = {EmailErrorPayload.class}</span>
+                        <span class="line-desc">Mendaftarkan payload ke constraint. Payload tidak mempengaruhi logika validasi — ia adalah "tag" yang memberi tahu consumer "jika constraint ini dilanggar, lakukan sesuatu yang spesifik".</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) getConstraintDescriptor().getPayload()</span>
+                        <span class="line-desc">Membaca payload yang terdaftar dari violation. Mengembalikan <code>Set</code> class payload — bisa ada lebih dari satu payload per constraint.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) instanceof check via ==</span>
+                        <span class="line-desc">Cek apakah payload adalah tipe yang kamu tangani, lalu buat instance-nya dan jalankan action. Pattern ini memisahkan "apa yang salah" (constraint) dari "apa yang harus dilakukan" (payload action).</span>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Use Case Payload di Dunia Nyata</strong><br>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs);">
+                        <li><code>ErrorSeverityPayload</code> — menandai apakah ini error kritis, warning, atau info</li>
+                        <li><code>AlertEmailPayload</code> — kirim email notifikasi ke admin jika constraint ini dilanggar</li>
+                        <li><code>AuditLogPayload</code> — catat ke audit log saat ada pelanggaran constraint tertentu</li>
+                    </ul>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Payload tidak ada padanan langsung di Laravel standar. Konsep yang paling dekat adalah membuat event khusus (<code>Event::dispatch(new ValidationFailed(...))</code>) saat validasi gagal, lalu listener yang melakukan berbagai tindakan. Di Java, payload adalah cara yang lebih deklaratif: kamu "tag" constraint dengan tindakan yang harus dilakukan, lalu consumer yang membacanya — tanpa perlu event system terpisah.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 11: MESSAGES & I18N ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner orange">
+                    <div class="chapter-num">Chapter 11</div>
+                    <div class="chapter-title">💬 Messages, Interpolation &amp; i18n</div>
+                    <div class="chapter-sub">ValidationMessages.properties · {key} syntax · MessageInterpolator · Locale</div>
+                </div>
+
+                <p>Pesan error tidak harus di-hardcode di dalam annotation. Dengan sistem pesan Bean Validation, pesan bisa diambil dari file <code>.properties</code>, mendukung variabel dinamis, dan bahkan dilocalize ke berbagai bahasa.</p>
+
+                <div class="text-title mt-m">Sistem Pesan: Dari Annotation ke File Properties</div>
+                <pre><span class="cmt">// 1. Di annotation: gunakan {key} syntax</span>
+<span class="ann">@CheckOrderId</span>(message = <span class="str">"{order.id.invalid}"</span>)
+<span class="kw">private</span> <span class="typ">String</span> orderId;
+
+<span class="cmt">// 2. File: src/main/resources/ValidationMessages.properties</span>
+<span class="prop">order.id.invalid</span>=invalid order id
+<span class="prop">order.id.notblank</span>=order id cannot be blank
+<span class="prop">order.id.size</span>=order id size must be between {min} and {max} characters <span class="cmt">← variabel!</span>
+<span class="prop">order.id.upper</span>=order id must be uppercase
+<span class="prop">order.amount.range</span>=amount must be between {min} and {max}</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Tiga Sumber Pesan (Prioritas Tertinggi ke Terendah)</strong><br>
+                    <ol style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs);">
+                        <li><strong>Atribut <code>message</code> langsung</strong>: <code>@NotBlank(message = "Cannot be blank")</code></li>
+                        <li><strong>File <code>ValidationMessages.properties</code> custom</strong>: <code>{my.custom.key}</code></li>
+                        <li><strong>Pesan default dari library</strong>: <code>{jakarta.validation.constraints.NotBlank.message}</code></li>
+                    </ol>
+                    <p class="mt-s">Variabel dinamis seperti <code>{min}</code> dan <code>{max}</code> otomatis diisi dari atribut annotation — kamu tidak perlu menulis ulang nilainya.</p>
+                </div>
+
+                <div class="text-title mt-l">Internationalization — Pesan Berbeda per Bahasa</div>
+                <pre><span class="cmt">// File: ValidationMessages_in_ID.properties (Bahasa Indonesia)</span>
+<span class="prop">order.id.invalid</span>=id pesanan tidak valid
+<span class="prop">order.amount.range</span>=jumlah harus antara {min} dan {max}
+
+<span class="cmt">// MessageInternationalizationTest.java</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testI18N</span>() {
+    <span class="cls">Locale</span>.<span class="met">setDefault</span>(<span class="kw">new</span> <span class="cls">Locale</span>(<span class="str">"in"</span>, <span class="str">"ID"</span>));   <span class="cmt">// (1) set locale Indonesia</span>
+
+    <span class="cls">Payment</span> payment = <span class="kw">new</span> <span class="cls">Payment</span>();
+    payment.<span class="met">setOrderId</span>(<span class="str">"324098239...terlalu panjang"</span>);
+    payment.<span class="met">setAmount</span>(<span class="num">10L</span>);
+
+    validateWithGroups(payment, <span class="cls">CreditCardPaymentGroup</span>.<span class="kw">class</span>);
+    <span class="cmt">// Pesan muncul dalam Bahasa Indonesia ✓</span>
+}</pre>
+
+                <div class="text-title mt-l">Manual Interpolation per Locale</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testMessageInterpolator</span>() {
+    <span class="cls">Locale</span> locale = <span class="kw">new</span> <span class="cls">Locale</span>(<span class="str">"in"</span>, <span class="str">"ID"</span>);
+
+    <span class="cls">Set</span>&lt;<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Object</span>&gt;&gt; violations = validator.<span class="met">validate</span>(payment, ...);
+    <span class="kw">for</span> (<span class="cls">ConstraintViolation</span>&lt;<span class="cls">Object</span>&gt; violation : violations) {
+        <span class="cls">MessageInterpolator</span>.<span class="cls">Context</span> context = <span class="kw">new</span> <span class="cls">MessageInterpolatorContext</span>(
+            violation.<span class="met">getConstraintDescriptor</span>(),
+            violation.<span class="met">getInvalidValue</span>(),
+            violation.<span class="met">getRootBeanClass</span>(),
+            violation.<span class="met">getPropertyPath</span>(),
+            violation.<span class="met">getConstraintDescriptor</span>().<span class="met">getAttributes</span>(),
+            violation.<span class="met">getConstraintDescriptor</span>().<span class="met">getAttributes</span>(),
+            <span class="cls">ExpressionLanguageFeatureLevel</span>.VARIABLES, <span class="kw">true</span>
+        );
+        <span class="typ">String</span> message = messageInterpolator
+            .<span class="met">interpolate</span>(violation.<span class="met">getMessageTemplate</span>(), context, locale); <span class="cmt">// (2)</span>
+        System.out.<span class="met">println</span>(message); <span class="cmt">// pesan dalam bahasa Indonesia</span>
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) Locale.setDefault()</span>
+                        <span class="line-desc">Cara paling sederhana — set locale global untuk seluruh JVM. Cocok untuk aplikasi single-language. Untuk multi-language (misalnya API yang melayani banyak negara sekaligus), gunakan manual interpolation per request seperti di (2).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) messageInterpolator.interpolate(template, context, locale)</span>
+                        <span class="line-desc">Interpolasi pesan secara manual dengan locale spesifik. Ini adalah cara yang benar untuk aplikasi multi-language — setiap request bisa menyertakan locale preferensi user (dari header <code>Accept-Language</code>) tanpa mengubah setting global.</span>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>File <code>ValidationMessages.properties</code> di Java ≈ file <code>lang/en/validation.php</code> di Laravel. Syntax <code>{order.id.invalid}</code> ≈ <code>:custom.order_id.required</code> di Laravel. Variabel dinamis seperti <code>{min}</code> ≈ <code>:min</code> di Laravel validation messages. Perbedaan: di Laravel translasi diatur via <code>app()->setLocale()</code>; di Java via <code>Locale.setDefault()</code> atau per-request interpolation.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 12: METADATA ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-12">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner sky">
+                    <div class="chapter-num">Chapter 12</div>
+                    <div class="chapter-title">📊 Metadata API — Introspeksi Constraint</div>
+                    <div class="chapter-sub">BeanDescriptor · PropertyDescriptor · ConstraintDescriptor · MetadataTest</div>
+                </div>
+
+                <p>Bean Validation menyediakan API untuk <strong>menginspeksi constraint yang terdaftar</strong> pada sebuah class — tanpa harus melakukan validasi. Berguna untuk generate dokumentasi API, UI form generation, atau tooling lainnya.</p>
+
+                <div class="text-title mt-m">Membaca Metadata Constraint</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testPerson</span>() {
+    <span class="cls">BeanDescriptor</span> beanDescriptor =
+        validator.<span class="met">getConstraintsForClass</span>(<span class="cls">Person</span>.<span class="kw">class</span>);  <span class="cmt">// (1)</span>
+
+    <span class="kw">for</span> (<span class="cls">PropertyDescriptor</span> property :
+            beanDescriptor.<span class="met">getConstrainedProperties</span>()) {  <span class="cmt">// (2)</span>
+
+        System.out.<span class="met">println</span>(property.<span class="met">getPropertyName</span>());     <span class="cmt">// "firstName", "lastName", "address"</span>
+
+        <span class="kw">for</span> (<span class="cls">ConstraintDescriptor</span>&lt;?&gt; constraint :
+                property.<span class="met">getConstraintDescriptors</span>()) {    <span class="cmt">// (3)</span>
+            System.out.<span class="met">println</span>(constraint);
+            <span class="cmt">// @NotBlank(message=..., groups=[...], payload=[...])</span>
+        }
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) getConstraintsForClass()</span>
+                        <span class="line-desc">Mendapatkan deskriptor bean — overview semua constraint yang ada di class tersebut. Tidak menjalankan validasi, hanya membaca metadata.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) getConstrainedProperties()</span>
+                        <span class="line-desc">Hanya property yang memiliki constraint yang dikembalikan (bukan semua field). Berguna untuk generate form validation di frontend secara otomatis berdasarkan model Java.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) getConstraintDescriptors()</span>
+                        <span class="line-desc">Semua constraint di property ini, lengkap dengan atributnya (message, groups, payload, custom attributes). <code>ConstraintDescriptor</code> ini sama dengan yang bisa kamu baca dari <code>violation.getConstraintDescriptor()</code>.</span>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ Use Case: Auto-generate OpenAPI Validation Schema</strong><br>
+                    Dengan Metadata API, kamu bisa scan semua constraint di request DTO dan otomatis menghasilkan schema validasi untuk dokumentasi Swagger/OpenAPI — tanpa menduplikasi informasi. Library seperti Springdoc OpenAPI sudah melakukan ini secara otomatis.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 13: VALUE EXTRACTOR ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-13">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Chapter 13</div>
+                    <div class="chapter-title">🧩 Value Extractor — Validasi di Container Custom</div>
+                    <div class="chapter-sub">DataValueExtractor · DataIntegerValueExtractor · EntryValueExtractor · @UnwrapByDefault</div>
+                </div>
+
+                <p>Secara default, Bean Validation tahu cara mengekstrak nilai dari <code>List</code>, <code>Set</code>, <code>Map</code>, dan <code>Optional</code>. Tapi untuk container custom seperti <code>Data&lt;T&gt;</code> atau <code>Entry&lt;K,V&gt;</code>? Kamu perlu membuat <strong>Value Extractor</strong> sendiri.</p>
+
+                <div class="text-title mt-m">Masalah: Container Custom Tidak Dikenali Validator</div>
+                <pre><span class="cmt">// SampleData.java</span>
+<span class="kw">public class</span> <span class="cls">SampleData</span> {
+    <span class="ann">@NotNull</span>
+    <span class="kw">private</span> <span class="cls">Data</span>&lt;<span class="ann">@NotBlank</span> <span class="ann">@Size</span>(min = <span class="num">10</span>) <span class="typ">String</span>&gt; data;
+    <span class="cmt">// → Tanpa ValueExtractor, @NotBlank dan @Size pada String TIDAK dijalankan!</span>
+}</pre>
+
+                <div class="text-title mt-l">Solusi: Implementasi ValueExtractor</div>
+                <pre><span class="cmt">// DataValueExtractor.java — mengajarkan validator cara "buka" Data&lt;T&gt;</span>
+<span class="kw">public class</span> <span class="cls">DataValueExtractor</span>
+    <span class="kw">implements</span> <span class="iface">ValueExtractor</span>&lt;<span class="cls">Data</span>&lt;<span class="ann">@ExtractedValue</span> ?&gt;&gt; {   <span class="cmt">// (1)</span>
+
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> <span class="met">extractValues</span>(<span class="cls">Data</span>&lt;?&gt; originalValue,
+                               <span class="cls">ValueReceiver</span> receiver) {
+        <span class="cls">Object</span> data = originalValue.<span class="met">getData</span>();
+        receiver.<span class="met">value</span>(<span class="kw">null</span>, data);                            <span class="cmt">// (2)</span>
+    }
+}
+
+<span class="cmt">// DataIntegerValueExtractor.java — untuk tipe non-generic (DataInteger)</span>
+<span class="ann">@UnwrapByDefault</span>                                             <span class="cmt">// (3)</span>
+<span class="kw">public class</span> <span class="cls">DataIntegerValueExtractor</span>
+    <span class="kw">implements</span> <span class="iface">ValueExtractor</span>&lt;<span class="ann">@ExtractedValue</span>(type = <span class="cls">Integer</span>.<span class="kw">class</span>) <span class="cls">DataInteger</span>&gt; {
+
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> <span class="met">extractValues</span>(<span class="cls">DataInteger</span> originalValue,
+                               <span class="cls">ValueReceiver</span> receiver) {
+        receiver.<span class="met">value</span>(<span class="kw">null</span>, originalValue.<span class="met">getData</span>());
+    }
+}
+
+<span class="cmt">// EntryValueExtractorKey.java — extractor untuk KEY dari Entry&lt;K,V&gt;</span>
+<span class="kw">public class</span> <span class="cls">EntryValueExtractorKey</span>
+    <span class="kw">implements</span> <span class="iface">ValueExtractor</span>&lt;<span class="cls">Entry</span>&lt;<span class="ann">@ExtractedValue</span> ?, ?&gt;&gt; {
+
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> <span class="met">extractValues</span>(<span class="cls">Entry</span>&lt;?, ?&gt; originalValue,
+                               <span class="cls">ValueReceiver</span> receiver) {
+        receiver.<span class="met">keyedValue</span>(<span class="kw">null</span>, <span class="str">"key"</span>,
+                            originalValue.<span class="met">getKey</span>());          <span class="cmt">// (4)</span>
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) @ExtractedValue</span>
+                        <span class="line-desc">Menandai type argument mana yang akan diekstrak untuk divalidasi. <code>Data&lt;@ExtractedValue ?&gt;</code> berarti "ekstrak nilai dari type parameter pertama <code>T</code>".</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) receiver.value(node, value)</span>
+                        <span class="line-desc">Memberikan nilai yang diekstrak ke validator. Parameter pertama adalah nama node (untuk property path) — <code>null</code> berarti gunakan nama field aslinya. Parameter kedua adalah nilai yang akan divalidasi.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) @UnwrapByDefault</span>
+                        <span class="line-desc">Untuk container non-generic (<code>DataInteger</code> yang selalu berisi <code>Integer</code>), tandai dengan ini agar validator otomatis "membuka" container dan langsung memvalidasi nilai di dalamnya. Constraint di field langsung diterapkan ke Integer yang diekstrak — bukan ke object DataInteger.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(4) receiver.keyedValue("key", value)</span>
+                        <span class="line-desc">Untuk container multi-nilai seperti <code>Entry&lt;K,V&gt;</code>, gunakan <code>keyedValue</code> dengan identifier (seperti <code>"key"</code> atau <code>"value"</code>) yang akan muncul di property path violation: <code>entry[key]</code>, <code>entry[value]</code>.</span>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Mendaftarkan Value Extractor</strong><br>
+                    Value Extractor harus didaftarkan ke <code>ValidatorFactory</code>:
+                    <pre style="margin-top:8px;background:#0d1117;">Validation.byDefaultProvider().configure()
+    .addValueExtractor(new DataValueExtractor())
+    .addValueExtractor(new DataIntegerValueExtractor())
+    .buildValidatorFactory();</pre>
+                    Atau otomatis via Java ServiceLoader: buat file <code>META-INF/services/jakarta.validation.valueextraction.ValueExtractor</code> berisi nama fully qualified class extractor-mu.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Value Extractor tidak ada padanan langsung di Laravel karena PHP tidak punya sistem container generic yang se-kompleks Java. Konsep yang paling dekat: kamu menulis custom rule yang tahu cara "membuka" sebuah object khusus dan mengekstrak nilai di dalamnya untuk divalidasi. Bedanya: di Java, ini adalah extension point resmi yang terintegrasi dengan ekosistem validasi.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 13</div>
+                    <p><strong>Q:</strong> Field <code>Data&lt;@NotBlank String&gt; data</code> divalidasi tapi <code>@NotBlank</code> tidak pernah berjalan meskipun nilai di dalam Data kosong. Apa yang paling mungkin menyebabkan ini?</p>
+                    <div class="quiz-options" id="q13">
+                        <div class="quiz-option" onclick="checkQuiz('q13',this,false)">A. <code>@NotBlank</code> tidak bisa digunakan dalam type argument generic</div>
+                        <div class="quiz-option" onclick="checkQuiz('q13',this,true)">B. Tidak ada <code>ValueExtractor</code> untuk tipe <code>Data&lt;T&gt;</code> yang terdaftar di <code>ValidatorFactory</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q13',this,false)">C. <code>@NotBlank</code> di type argument hanya bekerja untuk <code>List</code>, bukan custom container</div>
+                        <div class="quiz-option" onclick="checkQuiz('q13',this,false)">D. Perlu menambahkan <code>@Valid</code> pada field <code>data</code></div>
+                    </div>
+                    <div class="quiz-feedback" id="q13-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SUMMARY ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Summary</div>
+                    <div class="chapter-title">📋 Ringkasan Arsitektur &amp; Cheat Sheet</div>
+                    <div class="chapter-sub">Semua komponen dan hubungan antar class</div>
+                </div>
+
+                <div class="text-title mt-m">Peta Arsitektur Project</div>
+                <div class="arch-diagram">
+                    <span style="color:#f9e2af">// === Model Layer ===</span>
+                    <span style="color:#89dceb">Person</span>    → @NotBlank firstName/lastName · @NotNull @Valid Address · List&lt;@NotBlank&gt; hobbies · method constraints
+                    <span style="color:#89dceb">Address</span>   → @NotBlank street/city/country
+                    <span style="color:#89dceb">Customer</span>  → @Email @NotBlank email · @NotBlank name
+                    <span style="color:#89dceb">Payment</span>   → @CheckOrderId orderId · @Range @NotNull amount · @LuhnCheck creditCard · @Valid @ConvertGroup Customer
+                    <span style="color:#89dceb">Register</span>  → @CheckPassword(class-level) · @NotBlank username/password/retypePassword
+
+                    <span style="color:#f9e2af">// === Constraint Layer ===</span>
+                    <span style="color:#f9e2af">@CheckCase</span>            → CheckCaseValidator (UPPER/LOWER check)
+                    <span style="color:#f9e2af">@CheckPassword</span>        → CheckPasswordValidator (class-level, password match)
+                    <span style="color:#f9e2af">@CheckPasswordParam</span>   → CheckPasswordParameterValidator (cross-parameter)
+                    <span style="color:#f9e2af">@CheckOrderId</span>         → Composed: @CheckCase + @NotBlank + @Size + @ReportAsSingleViolation
+
+                    <span style="color:#f9e2af">// === Groups Layer ===</span>
+                    <span style="color:#89b4fa">CreditCardPaymentGroup</span>    → interface kosong (marker)
+                    <span style="color:#89b4fa">VirtualAccountPaymentGroup</span> → interface kosong (marker)
+                    <span style="color:#89b4fa">PaymentGroup</span>              → @GroupSequence(Default, CreditCard, VirtualAccount)
+
+                    <span style="color:#f9e2af">// === Infrastructure Layer ===</span>
+                    <span style="color:#89dceb">ValidatorFactory</span>       → dikonfigurasi sekali, dikunci dengan ValueExtractors
+                    <span style="color:#89dceb">Validator</span>              → thread-safe, reusable, .validate(obj, groups...)
+                    <span style="color:#89dceb">ExecutableValidator</span>    → validateParameters / validateReturnValue / validateConstructorParameters
+                    <span style="color:#89dceb">MessageInterpolator</span>    → {key} → string dari ValidationMessages.properties + Locale support
+
+                    <span style="color:#f9e2af">// === Value Extractor Layer ===</span>
+                    <span style="color:#89dceb">DataValueExtractor</span>          → Data&lt;@ExtractedValue ?&gt; → Data.getData()
+                    <span style="color:#89dceb">DataIntegerValueExtractor</span>   → @UnwrapByDefault DataInteger → DataInteger.getData()
+                    <span style="color:#89dceb">EntryValueExtractorKey</span>      → Entry&lt;@ExtractedValue ?, ?&gt; → Entry.getKey()
+                    <span style="color:#89dceb">EntryValueExtractorValue</span>    → Entry&lt;?, @ExtractedValue ?&gt; → Entry.getValue()
+
+                    <span style="color:#f9e2af">// === Payload Layer ===</span>
+                    <span style="color:#89dceb">EmailErrorPayload</span>      → implements Payload, sendEmail(violation) action
+                </div>
+
+                <div class="text-title mt-l">Cheat Sheet: Annotation Bawaan</div>
+                <div class="table-content mt-s">
+                    <table>
+                        <thead><tr><th>Annotation</th><th>Package</th><th>Fungsi</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>@NotNull</code></td><td>jakarta.validation</td><td>Tidak boleh null (izinkan empty string)</td></tr>
+                        <tr><td><code>@NotEmpty</code></td><td>jakarta.validation</td><td>Tidak boleh null atau kosong</td></tr>
+                        <tr><td><code>@NotBlank</code></td><td>jakarta.validation</td><td>Tidak boleh null, kosong, atau whitespace saja</td></tr>
+                        <tr><td><code>@Email</code></td><td>jakarta.validation</td><td>Harus format email valid</td></tr>
+                        <tr><td><code>@Size(min, max)</code></td><td>jakarta.validation</td><td>Panjang String / ukuran Collection</td></tr>
+                        <tr><td><code>@Min(value)</code></td><td>jakarta.validation</td><td>Nilai numerik minimal</td></tr>
+                        <tr><td><code>@Max(value)</code></td><td>jakarta.validation</td><td>Nilai numerik maksimal</td></tr>
+                        <tr><td><code>@Pattern(regexp)</code></td><td>jakarta.validation</td><td>Harus cocok dengan regex</td></tr>
+                        <tr><td><code>@Past / @Future</code></td><td>jakarta.validation</td><td>Tanggal di masa lalu / masa depan</td></tr>
+                        <tr><td><code>@Valid</code></td><td>jakarta.validation</td><td>Cascade validation ke nested object</td></tr>
+                        <tr><td><code>@Range(min, max)</code></td><td>hibernate.validator</td><td>Range numerik (min ≤ value ≤ max)</td></tr>
+                        <tr><td><code>@Length(min, max)</code></td><td>hibernate.validator</td><td>Panjang String (Hibernate-specific)</td></tr>
+                        <tr><td><code>@LuhnCheck</code></td><td>hibernate.validator</td><td>Validasi nomor kartu kredit (Luhn algorithm)</td></tr>
+                        <tr><td><code>@URL</code></td><td>hibernate.validator</td><td>Harus URL valid</td></tr>
+                        <tr><td><code>@CreditCardNumber</code></td><td>hibernate.validator</td><td>Validasi format nomor CC</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title mt-l">Decision Guide: Pakai Apa?</div>
+                <div class="display-grid mt-s">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value">Validasi field tunggal dengan rule standar → <strong>Jakarta Validation annotations</strong> (<code>@NotBlank</code>, <code>@Email</code>, dll)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">2</div><div class="stepper-value">Validasi field dengan rule non-standar → <strong>Custom ConstraintValidator</strong> (Chapter 3)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">3</div><div class="stepper-value">Validasi antar-field dalam satu object → <strong>Class-level constraint</strong> (Chapter 8)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">4</div><div class="stepper-value">Validasi berbeda-beda tergantung kondisi → <strong>Validation Groups</strong> (Chapter 5)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">5</div><div class="stepper-value">Reuse kombinasi constraint → <strong>Constraint Composition</strong> dengan <code>@ReportAsSingleViolation</code> (Chapter 4)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">6</div><div class="stepper-value">Validasi parameter method/service → <strong><code>@Validated</code> di Spring</strong> atau <strong>ExecutableValidator</strong> (Chapter 9)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">7</div></div>
+                        <div class="stepper-value">Validasi di dalam container custom (bukan List/Map bawaan) → <strong>Value Extractor</strong> (Chapter 13)</div>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-l">
+                    <strong>🚀 Langkah Berikutnya</strong><br>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs);">
+                        <li><strong>Spring Boot @Validated</strong> — integrasi otomatis Bean Validation ke Service layer via AOP</li>
+                        <li><strong>@ExceptionHandler(ConstraintViolationException.class)</strong> — handle validation error di REST Controller</li>
+                        <li><strong>MethodArgumentNotValidException</strong> — validasi di <code>@RequestBody</code> dengan <code>@Valid</code></li>
+                        <li><strong>Hibernate Validator Programmatic API</strong> — mendefinisikan constraint tanpa annotation</li>
+                        <li><strong>Bean Validation dengan Spring Data</strong> — constraint otomatis dicheck sebelum save ke database</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="height:4rem;"></div>
+    </section>
+
+    <footer>
+        <p style="text-align:center;padding:var(--m);color:var(--transtext-color);font-size:var(--xs);">
+            Modul Interaktif Java Bean Validation · Untuk developer PHP/Laravel yang migrasi ke Java &amp; Spring Boot
+        </p>
+    </footer>
+</main>
+
+<script>
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() { document.getElementsByTagName("body")[0].classList.toggle("dark-mode"); }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    const QUIZ_FEEDBACK = {
+        q1:  { ok: 'Benar! ValidatorFactory menggunakan thread pool untuk memproses constraint, menyimpan constraint descriptor dalam cache, dan memegang resource lain. Tidak memanggil close() → resource leak yang bisa menyebabkan memory issue di production.', no: 'Validator memang thread-safe (bisa di-reuse). Masalahnya adalah di FACTORY, bukan Validator. Factory memegang resource yang harus dilepas.' },
+        q2:  { ok: 'Tepat! Bean Validation menjalankan SEMUA constraint pada satu field secara independen (kecuali pakai @GroupSequence). Dua annotation = kemungkinan dua violations. Kecuali satu constraint bergantung pada yang lain, keduanya akan dievaluasi terpisah.', no: 'Secara default, semua constraint pada satu field dijalankan. @Email tidak skip untuk empty string — ia tetap mengevaluasi apakah "" adalah format email valid (tidak valid → violation).' },
+        q3:  { ok: 'Tepat! Semua business logic validasi ada di method isValid() milik class ConstraintValidator. initialize() hanya untuk membaca konfigurasi dari annotation. Di isValid(), kamu bisa inject repository via Spring untuk query ke database.', no: 'Annotation hanya mendeklarasikan constraint, bukan mengimplementasikan. initialize() dipanggil sekali untuk setup konfigurasi, bukan untuk menjalankan validasi.' },
+        q5:  { ok: 'Tepat! validate(obj) tanpa group = validate(obj, Default.class). Constraint dengan custom group tidak masuk Default group, sehingga tidak dieksekusi. Hasilnya 0 violations meskipun data tidak valid — bug yang sering tidak disadari!', no: 'Tidak ada exception. Tapi hasilnya juga tidak melempar violation — karena semua constraint Payment berada di custom group, dan tanpa group parameter hanya Default yang dijalankan.' },
+        q8:  { ok: 'Benar! Tanpa disableDefaultConstraintViolation(), akan ada violation di level class (property path = Register object) DAN violation di field password dan retypePassword. Violation di level class sulit ditampilkan di UI karena tidak punya field reference yang jelas.', no: 'addPropertyNode() bisa dipanggil tanpa disable default. Tujuan disableDefaultConstraintViolation() adalah menghilangkan violation default yang tidak informatif di level class.' },
+        q13: { ok: 'Tepat! Tanpa ValueExtractor, validator tidak tahu cara mengekstrak nilai dari container Data<T>. Ia hanya bisa memvalidasi apakah field data itu sendiri null atau tidak (via @NotNull). Untuk memvalidasi isi genericsnya, WAJIB ada ValueExtractor yang terdaftar.', no: '@NotBlank bisa digunakan di type argument generic (itu fitur Bean Validation 2.0+). Masalahnya adalah validator tidak tahu cara "membuka" container Data<T> — itu tugas ValueExtractor.' },
+    };
+
+    function checkQuiz(groupId, clickedEl, isCorrect) {
+        const container = document.getElementById(groupId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = '1';
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.style.pointerEvents = 'none');
+        const fbEl = document.getElementById(groupId + '-fb');
+        if (isCorrect) {
+            clickedEl.classList.add('correct');
+            fbEl.textContent = '✅ ' + QUIZ_FEEDBACK[groupId].ok;
+            fbEl.className = 'quiz-feedback show ok';
+        } else {
+            clickedEl.classList.add('wrong');
+            fbEl.textContent = '❌ ' + QUIZ_FEEDBACK[groupId].no;
+            fbEl.className = 'quiz-feedback show no';
+            options.forEach(opt => {
+                if (opt.onclick && opt.onclick.toString().includes(',true)')) opt.classList.add('correct');
+            });
+        }
+    }
+
+    // arch-diagram style
+    document.querySelectorAll('.arch-diagram').forEach(el => {
+        el.style.cssText += 'box-sizing:border-box;max-width:77dvw;overflow:auto;';
+    });
+
+    const sectionIds = ['intro','chapter-1','chapter-2','chapter-3','chapter-4','chapter-5',
+        'chapter-6','chapter-7','chapter-8','chapter-9','chapter-10','chapter-11','chapter-12','chapter-13','summary'];
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + e.target.id) link.classList.add('active');
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sectionIds.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+</script>
+</body>
+</html>

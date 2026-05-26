@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Resilience4j | Fault Tolerance untuk Developer PHP/Laravel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .cb{max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin:var(--m) 0;box-sizing:border-box}
+        .cb pre{margin:0;border-radius:var(--radius-l)}.cb code{font-size:var(--s);line-height:1.65}
+        .ch{background:linear-gradient(135deg,var(--primary-color),var(--second-primary-color));border-radius:var(--radius-x);padding:var(--x);color:white;max-width:77dvw;overflow:auto;box-sizing:border-box;margin-bottom:var(--m)}
+        .ch.red{background:linear-gradient(135deg,#dc2626,#9333ea)}
+        .ch.green{background:linear-gradient(135deg,var(--success-color),var(--third-primary-color))}
+        .ch.teal{background:linear-gradient(135deg,#0d9488,#0891b2)}
+        .ch.amber{background:linear-gradient(135deg,#d97706,#dc2626)}
+        .ch.indigo{background:linear-gradient(135deg,#4f46e5,#0d9488)}
+        .ch-n{font-size:var(--xs);opacity:.8;margin-bottom:var(--xs)}
+        .ch-t{font-size:var(--xx);font-weight:bold;margin-bottom:var(--xs)}
+        .ch-d{opacity:.9;font-size:var(--s)}
+        .ab,.ib,.eb,.sb{border-radius:var(--radius-m);padding:var(--m);max-width:77dvw;overflow:auto;box-sizing:border-box;margin:var(--m) 0}
+        .ab{background:var(--transprimary-color);border-left:4px solid var(--primary-color)}
+        .ib{background:var(--transsecond-primary-color);border-left:4px solid var(--second-primary-color)}
+        .eb{background:var(--transdanger-color);border-left:4px solid var(--danger-color)}
+        .sb{background:var(--transsuccess-color);border-left:4px solid var(--success-color)}
+        .abt{font-weight:bold;color:var(--primary-color);margin-bottom:var(--xs)}
+        .ibt{font-weight:bold;color:var(--second-primary-color);margin-bottom:var(--xs)}
+        .le{max-width:77dvw;overflow-x:auto;box-sizing:border-box;display:grid;gap:var(--s);margin:var(--s) 0}
+        .li{display:flex;gap:var(--s);align-items:flex-start}
+        .ln{background:var(--primary-color);color:white;padding:2px 8px;border-radius:var(--radius-s);font-size:var(--xs);font-weight:bold;white-space:nowrap;flex-shrink:0;margin-top:3px}
+        .qb{background:var(--transthird-primary-color);border:var(--border);border-radius:var(--radius-l);padding:var(--m);max-width:77dvw;overflow:auto;box-sizing:border-box;margin:var(--m) 0}
+        .qt{font-weight:bold;color:var(--third-primary-color);margin-bottom:var(--s)}
+        .qo{display:block;padding:var(--xs) var(--s);margin:var(--xs) 0;border-radius:var(--radius-m);cursor:pointer;border:var(--border);background:var(--bg-color);transition:background .2s;font-size:var(--s)}
+        .qo:hover{background:var(--transprimary-color)}
+        .qo.correct{background:var(--transsuccess-color);border-color:var(--success-color);color:var(--success-color);font-weight:bold}
+        .qo.wrong{background:var(--transdanger-color);border-color:var(--danger-color);color:var(--danger-color)}
+        .qo.disabled{pointer-events:none}
+        .qf{margin-top:var(--s);padding:var(--xs) var(--s);border-radius:var(--radius-m);font-size:var(--s);display:none}
+        .qf.show{display:block}.qf.correct{background:var(--transsuccess-color);color:var(--success-color)}
+        .qf.wrong{background:var(--transdanger-color);color:var(--danger-color)}
+        .mt{margin-top:var(--l)}.mm{margin-top:var(--m)}.mb{margin-bottom:var(--m)}
+        ul{padding-left:1.4em;line-height:2}
+        .pill-grid{display:flex;flex-wrap:wrap;gap:var(--s);margin:var(--m) 0}
+        .pill{padding:var(--xs) var(--s);border-radius:999px;font-size:var(--xs);font-weight:bold;border:2px solid}
+        .pill.retry{background:#fef3c7;border-color:#d97706;color:#92400e}
+        .pill.cb2{background:#fce7f3;border-color:#db2777;color:#831843}
+        .pill.rl{background:#e0f2fe;border-color:#0284c7;color:#0c4a6e}
+        .pill.bk{background:#f0fdf4;border-color:#16a34a;color:#14532d}
+        .pill.tl{background:#ede9fe;border-color:#7c3aed;color:#4c1d95}
+        .pill.dec{background:#fff7ed;border-color:#ea580c;color:#7c2d12}
+        .pill.ev{background:#f0f9ff;border-color:#0369a1;color:#0c4a6e}
+        .state-diagram{display:flex;align-items:center;gap:var(--s);flex-wrap:wrap;margin:var(--m) 0}
+        .state-box{padding:var(--s) var(--m);border-radius:var(--radius-m);font-weight:bold;font-size:var(--s);text-align:center;min-width:100px}
+        .state-closed{background:#dcfce7;border:2px solid #16a34a;color:#14532d}
+        .state-open{background:#fee2e2;border:2px solid #dc2626;color:#991b1b}
+        .state-half{background:#fef9c3;border:2px solid #ca8a04;color:#713f12}
+        .state-arrow{font-size:var(--m);color:var(--transtext-color);font-weight:bold}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a href="#ch1" class="bottom-nav-item active">&#128257; Retry</a>
+    <a href="#ch4" class="bottom-nav-item">&#9196; Circuit</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">&#128218; More</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a href="#ch2" class="bottom-nav-item">&#9881; RetryConfig</a>
+                <a href="#ch3" class="bottom-nav-item">&#128230; Registry</a>
+                <a href="#ch4" class="bottom-nav-item">&#9196; Circuit Breaker</a>
+                <a href="#ch5" class="bottom-nav-item">&#9201; Time Limiter</a>
+                <a href="#ch6" class="bottom-nav-item">&#128683; Rate Limiter</a>
+                <a href="#ch7" class="bottom-nav-item">&#128268; Bulkhead</a>
+                <a href="#ch8" class="bottom-nav-item">&#127981; Decorators</a>
+                <a href="#ch9" class="bottom-nav-item">&#128202; Events &amp; Metrics</a>
+                <a href="#ch10" class="bottom-nav-item">&#127942; Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">Resilience4j</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#ch1" class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">&#128257;</div><span>Retry Dasar</span></a>
+        <a href="#ch2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#9881;</div><span>RetryConfig</span></a>
+        <a href="#ch3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#128230;</div><span>Registry Pattern</span></a>
+        <a href="#ch4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#9196;</div><span>Circuit Breaker</span></a>
+        <a href="#ch5" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#9201;</div><span>Time Limiter</span></a>
+        <a href="#ch6" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#128683;</div><span>Rate Limiter</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">&#128268;</strong><span>Bulkhead</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#ch7" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">&#128268;</strong><span>Semaphore &amp; ThreadPool</span></a>
+            </div>
+        </details>
+        <a href="#ch8" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#127981;</div><span>Decorators (Chaining)</span></a>
+        <a href="#ch9" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#128202;</div><span>Events &amp; Metrics</span></a>
+        <a href="#ch10" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#127942;</div><span>Summary &amp; Best Practice</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 20 20" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">Resilience4j Course</span></a>
+        </div>
+        <div class="container-header-button-show-sidebar" onclick="showMenu()">
+            <svg id="get-menu" viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div class="ch">
+                <div class="ch-n">&#128218; Self-Paced Learning Module</div>
+                <div class="ch-t">Java Resilience4j — Fault Tolerance Patterns</div>
+                <div class="ch-d">Panduan lengkap untuk developer PHP/Laravel yang ingin membangun aplikasi Java yang tangguh. Pelajari Retry, Circuit Breaker, Rate Limiter, Bulkhead, Time Limiter, dan cara menyusunnya bersama dengan Decorators!</div>
+            </div>
+            <div class="pill-grid">
+                <span class="pill retry">&#128257; Retry</span>
+                <span class="pill cb2">&#9196; Circuit Breaker</span>
+                <span class="pill rl">&#128683; Rate Limiter</span>
+                <span class="pill bk">&#128268; Bulkhead</span>
+                <span class="pill tl">&#9201; Time Limiter</span>
+                <span class="pill dec">&#127981; Decorators</span>
+                <span class="pill ev">&#128202; Events &amp; Metrics</span>
+            </div>
+            <p class="mm">Project: <strong>belajar-java-resilience4j</strong> — package <code>programmerzamannow.resilience4j</code>. Semua fitur Resilience4j didemonstrasikan dengan pola yang konsisten: <strong>ofDefaults &#8594; Config &#8594; Registry</strong>.</p>
+            <div class="ib"><div class="ibt">&#128161; Apa itu Resilience4j?</div>
+                <p>Resilience4j adalah library <strong>fault tolerance</strong> untuk Java yang terinspirasi dari Netflix Hystrix. "Fault tolerance" berarti aplikasi tetap berfungsi (atau gagal dengan anggun) meskipun dependency eksternal (API pihak ketiga, database, microservice lain) mengalami masalah. Di PHP/Laravel, kita sering pakai <code>try-catch</code> manual atau package seperti <code>guzzle-retry-middleware</code>. Di Java, Resilience4j menyediakan solusi yang jauh lebih terstruktur dan powerful!</p></div>
+        </div>
+
+        <!-- CH1: Retry Dasar -->
+        <div class="padding-top-ideal-distance-to-header" id="ch1">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch">
+                    <div class="ch-n">Chapter 1</div>
+                    <div class="ch-t">&#128257; Retry: Coba Lagi Otomatis</div>
+                    <div class="ch-d">Saat sebuah operasi gagal karena masalah sementara (network fluke, temporary outage), Retry otomatis mencoba ulang tanpa kode manual. Ini adalah pattern paling dasar dan paling sering dipakai!</div>
+                </div>
+                <div class="text-title">Retry dengan Defaults</div>
+                <p>Pola Resilience4j selalu sama: <strong>buat resilience object &#8594; wrap kode kamu &#8594; jalankan</strong>. Default Retry: maksimal 3 percobaan, tunggu 500ms antar percobaan.</p>
+                <div class="cb"><pre><code class="language-java">// FILE: RetryTest.java
+
+// Contoh 1: Retry untuk Runnable (void, tidak return nilai)
+@Test
+void createNewRetry() {
+    Retry retry = Retry.ofDefaults("pzn");           // Line 1
+
+    Runnable runnable = Retry.decorateRunnable(      // Line 2
+        retry,
+        () -> callMe()                               // Lambda yang akan di-retry
+    );
+
+    runnable.run();                                  // Line 3
+}
+
+// Contoh 2: Retry untuk Supplier (return nilai)
+@Test
+void createRetrySupplier() {
+    Retry retry = Retry.ofDefaults("pzn");
+
+    Supplier&lt;String&gt; supplier = Retry.decorateSupplier(  // Line 4
+        retry,
+        () -> hello()
+    );
+
+    supplier.get();                                  // Line 5
+}
+
+// Method yang selalu gagal (simulasi unstable service)
+void callMe() {
+    log.info("Try call me");
+    throw new IllegalArgumentException("Ups error");
+}
+
+String hello() {
+    log.info("Call say hello");
+    throw new IllegalArgumentException("Ups error say hello");
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>Retry.ofDefaults("pzn")</code> — Buat instance Retry dengan konfigurasi default. <code>"pzn"</code> adalah nama unik (identifier) instance ini — penting untuk logging dan registry. Default: <strong>maxAttempts=3</strong>, <strong>waitDuration=500ms</strong>, retry untuk semua Exception.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>Retry.decorateRunnable(retry, lambda)</code> — "Bungkus" kode kamu dengan Retry. Ini adalah pola <strong>Decorator</strong> — kode asli (<code>() -&gt; callMe()</code>) dibungkus dengan logika retry. Jika lambda throw exception, Retry otomatis coba lagi sesuai konfigurasi.</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>runnable.run()</code> — Eksekusi! Jika <code>callMe()</code> throw exception: tunggu 500ms, coba lagi. Setelah 3 kali gagal semua, exception terakhir di-propagate ke pemanggil.</p></div>
+                    <div class="li"><span class="ln">Line 4</span><p><code>Retry.decorateSupplier(retry, lambda)</code> — Seperti <code>decorateRunnable</code> tapi untuk operasi yang <strong>mengembalikan nilai</strong> (<code>String</code>). <code>Supplier&lt;String&gt;</code> = fungsi tanpa parameter yang return String.</p></div>
+                    <div class="li"><span class="ln">Line 5</span><p><code>supplier.get()</code> — Panggil supplier. Jika berhasil, return nilainya. Jika semua retry gagal, throw exception. Kode pemanggil bisa tangkap exception ini dengan try-catch.</p></div>
+                </div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel/PHP</div>
+                    <div class="cb"><pre><code class="language-php">// PHP tanpa library — retry manual (verbose & error-prone)
+$maxAttempts = 3;
+$attempt = 0;
+while ($attempt &lt; $maxAttempts) {
+    try {
+        $result = $this->callExternalApi();
+        break; // sukses, keluar loop
+    } catch (Exception $e) {
+        $attempt++;
+        if ($attempt >= $maxAttempts) throw $e;
+        sleep(1); // tunggu 1 detik
+    }
+}
+
+// Java dengan Resilience4j — jauh lebih bersih!
+Retry retry = Retry.ofDefaults("api");
+Supplier&lt;String&gt; supplier = Retry.decorateSupplier(retry, () -> callExternalApi());
+String result = supplier.get(); // Retry otomatis! Tidak ada loop manual</code></pre></div></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 1</div>
+                    <p class="mb"><strong>Q:</strong> Dengan <code>Retry.ofDefaults()</code>, berapa kali total <code>callMe()</code> dipanggil jika selalu throw exception?</p>
+                    <div id="q1-o">
+                        <div class="qo" onclick="AQ('q1','a',this)">a) 1 kali — exception langsung di-propagate</div>
+                        <div class="qo" onclick="AQ('q1','b',this)">b) 3 kali — default maxAttempts=3 (1 percobaan awal + 2 retry)</div>
+                        <div class="qo" onclick="AQ('q1','c',this)">c) 5 kali — default maxAttempts=5</div>
+                        <div class="qo" onclick="AQ('q1','d',this)">d) Tak terbatas sampai berhasil</div>
+                    </div>
+                    <div id="q1-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2: RetryConfig -->
+        <div class="padding-top-ideal-distance-to-header" id="ch2">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch">
+                    <div class="ch-n">Chapter 2</div>
+                    <div class="ch-t">&#9881; RetryConfig: Konfigurasi Custom</div>
+                    <div class="ch-d">Default seringkali tidak cukup. Pelajari cara mengkustomisasi Retry: berapa kali coba, berapa lama tunggu, exception apa yang perlu di-retry.</div>
+                </div>
+                <div class="text-title">Membuat RetryConfig</div>
+                <div class="cb"><pre><code class="language-java">// FILE: RetryConfigTest.java
+
+@Test
+void retryConfig() {
+    RetryConfig config = RetryConfig.custom()         // Line 1
+        .maxAttempts(5)                               // Line 2
+        .waitDuration(Duration.ofSeconds(2))          // Line 3
+        // .ignoreExceptions(IllegalArgumentException.class) // Line 4
+        // .retryExceptions(IllegalArgumentException.class)  // Line 5
+        .build();                                     // Line 6
+
+    Retry retry = Retry.of("pzn", config);            // Line 7
+
+    Supplier&lt;String&gt; supplier = Retry.decorateSupplier(retry, () -> hello());
+    supplier.get();
+    // Output log:
+    // Call hello()         ← percobaan 1
+    // Call hello()         ← retry 1 (setelah 2 detik)
+    // Call hello()         ← retry 2 (setelah 2 detik)
+    // Call hello()         ← retry 3 (setelah 2 detik)
+    // Call hello()         ← retry 4 (setelah 2 detik)
+    // MaxRetriesExceededException! (total 5 percobaan)
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>RetryConfig.custom()</code> — Builder pattern untuk konfigurasi. Ini idiom Java yang sangat umum: buat builder, chain method konfigurasi, akhiri dengan <code>.build()</code>. Setara dengan array config di PHP: <code>['max_attempts' =&gt; 5, 'wait' =&gt; 2]</code>.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>.maxAttempts(5)</code> — Total percobaan (termasuk yang pertama). Artinya: 1 percobaan awal + 4 retry = 5 total. Default: 3.</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>.waitDuration(Duration.ofSeconds(2))</code> — Tunggu 2 detik antar percobaan. <code>Duration</code> adalah class Java modern untuk merepresentasikan durasi waktu. Bisa: <code>Duration.ofMillis(500)</code>, <code>Duration.ofMinutes(1)</code>, dll. Default: 500ms.</p></div>
+                    <div class="li"><span class="ln">Line 4</span><p><code>.ignoreExceptions(Class...)</code> — Exception yang <strong>tidak perlu</strong> di-retry (langsung throw). Misalnya: <code>IllegalArgumentException</code> biasanya berarti input salah — tidak ada gunanya retry.</p></div>
+                    <div class="li"><span class="ln">Line 5</span><p><code>.retryExceptions(Class...)</code> — Kebalikan: hanya retry untuk exception ini. Misalnya: <code>IOException</code>, <code>TimeoutException</code> — ini masalah sementara yang layak di-retry.</p></div>
+                    <div class="li"><span class="ln">Line 6</span><p><code>.build()</code> — Selesaikan builder dan buat object <code>RetryConfig</code>. Tanpa ini, konfigurasi tidak tersimpan.</p></div>
+                    <div class="li"><span class="ln">Line 7</span><p><code>Retry.of("pzn", config)</code> — Buat Retry dengan config custom. Beda dengan <code>ofDefaults()</code> yang pakai default settings.</p></div>
+                </div>
+                <div class="ib"><div class="ibt">&#128161; ignoreExceptions vs retryExceptions</div>
+                    <div class="table-content"><table>
+                        <thead><tr><th>Setting</th><th>Behavior</th><th>Kapan Dipakai</th></tr></thead>
+                        <tbody>
+                        <tr><td>Tidak di-set (default)</td><td>Retry semua Exception</td><td>Saat semua error dianggap transient</td></tr>
+                        <tr><td><code>retryExceptions(A.class)</code></td><td>Hanya retry Exception tipe A</td><td>Saat hanya error tertentu yang transient (network, timeout)</td></tr>
+                        <tr><td><code>ignoreExceptions(B.class)</code></td><td>Retry semua kecuali tipe B</td><td>Saat error tipe B tidak perlu di-retry (validation error, not found)</td></tr>
+                        </tbody>
+                    </table></div></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel</div>
+                    <p>Di Laravel Queue, kamu bisa set <code>$tries = 5</code> dan <code>$backoff = 2</code> di Job class. <code>RetryConfig</code> melakukan hal yang sama tapi untuk operasi programatik (bukan queue job). Konsepnya identik: berapa kali coba, berapa lama tunggu, dan exception apa yang harus di-retry.</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 2</div>
+                    <p class="mb"><strong>Q:</strong> Kamu ingin retry <em>hanya</em> untuk <code>NetworkException</code>, tapi <em>tidak</em> retry untuk <code>ValidationException</code>. Konfigurasi mana yang tepat?</p>
+                    <div id="q2-o">
+                        <div class="qo" onclick="AQ('q2','a',this)">a) <code>.maxAttempts(3)</code> saja — retry semua exception</div>
+                        <div class="qo" onclick="AQ('q2','b',this)">b) <code>.retryExceptions(NetworkException.class)</code> — hanya retry NetworkException, semua lainnya langsung throw</div>
+                        <div class="qo" onclick="AQ('q2','c',this)">c) <code>.ignoreExceptions(NetworkException.class)</code> — abaikan NetworkException</div>
+                        <div class="qo" onclick="AQ('q2','d',this)">d) Retry tidak bisa dikonfigurasi per tipe exception</div>
+                    </div>
+                    <div id="q2-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3: Registry -->
+        <div class="padding-top-ideal-distance-to-header" id="ch3">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch">
+                    <div class="ch-n">Chapter 3</div>
+                    <div class="ch-t">&#128230; Registry Pattern: Manajemen Terpusat</div>
+                    <div class="ch-d">Registry adalah pusat manajemen semua instance Resilience4j. Sama seperti Singleton pattern — Registry memastikan kamu menggunakan instance yang sama untuk nama yang sama.</div>
+                </div>
+                <div class="text-title">RetryRegistry: Satu Instance per Nama</div>
+                <div class="cb"><pre><code class="language-java">// FILE: RetryRegistryTest.java
+
+@Test
+void testRetryRegistry() {
+    RetryRegistry registry = RetryRegistry.ofDefaults();  // Line 1
+
+    Retry retry1 = registry.retry("pzn");                 // Line 2
+    Retry retry2 = registry.retry("pzn");                 // Line 3
+
+    Assertions.assertSame(retry1, retry2);                // Line 4 — SAMA!
+}
+
+@Test
+void testRetryRegistryConfig() {
+    RetryConfig config = RetryConfig.custom()
+        .maxAttempts(5)
+        .waitDuration(Duration.ofSeconds(2))
+        .build();
+
+    RetryRegistry registry = RetryRegistry.ofDefaults();
+    registry.addConfiguration("config", config);          // Line 5
+
+    Retry retry1 = registry.retry("pzn", "config");       // Line 6
+    Retry retry2 = registry.retry("pzn", "config");
+
+    Assertions.assertSame(retry1, retry2);                // Masih sama!
+
+    Runnable runnable = Retry.decorateRunnable(retry1, () -> callMe());
+    runnable.run();
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>RetryRegistry.ofDefaults()</code> — Buat Registry dengan konfigurasi default. Di Spring Boot, Registry biasanya dikonfigurasi sebagai Bean dan di-inject ke seluruh aplikasi — satu Registry untuk semua.</p></div>
+                    <div class="li"><span class="ln">Line 2-3</span><p><code>registry.retry("pzn")</code> dipanggil dua kali dengan nama yang sama. Registry menggunakan pola <strong>flyweight/cache</strong>: jika sudah ada instance dengan nama itu, kembalikan yang lama. Jika belum, buat baru.</p></div>
+                    <div class="li"><span class="ln">Line 4</span><p><code>assertSame(retry1, retry2)</code> — Membuktikan bahwa keduanya adalah <strong>objek yang sama persis</strong> (bukan hanya nilainya sama, tapi referensinya sama). Inilah manfaat Registry: satu instance per nama = monitoring metrics terpusat.</p></div>
+                    <div class="li"><span class="ln">Line 5</span><p><code>registry.addConfiguration("config", config)</code> — Daftarkan konfigurasi dengan nama <code>"config"</code>. Nama ini bisa digunakan saat membuat instance: <code>registry.retry("nama-instance", "nama-config")</code>.</p></div>
+                    <div class="li"><span class="ln">Line 6</span><p><code>registry.retry("pzn", "config")</code> — Buat (atau ambil) instance Retry bernama <code>"pzn"</code> menggunakan konfigurasi bernama <code>"config"</code> yang sudah didaftarkan sebelumnya.</p></div>
+                </div>
+                <div class="sb"><p><strong>&#9989; Pola yang Sama untuk Semua Komponen Resilience4j:</strong></p>
+                    <div class="cb"><pre><code class="language-java">// POLA UNIVERSAL: ofDefaults → addConfiguration → ambil instance
+XxxRegistry registry = XxxRegistry.ofDefaults();
+registry.addConfiguration("nama-config", config);
+Xxx instance = registry.xxx("nama-instance", "nama-config");
+
+// Contoh nyata untuk semua komponen:
+BulkheadRegistry.ofDefaults()    → registry.bulkhead("name", "config")
+CircuitBreakerRegistry.ofDefaults() → registry.circuitBreaker("name", "config")
+RateLimiterRegistry.ofDefaults()  → registry.rateLimiter("name", "config")
+TimeLimiterRegistry.ofDefaults()  → registry.timeLimiter("name", "config")
+RetryRegistry.ofDefaults()        → registry.retry("name", "config")</code></pre></div></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel</div>
+                    <p>Registry mirip dengan <strong>Service Container/IoC Container</strong> di Laravel (<code>app()->bind()</code> / <code>app()->singleton()</code>). Container memastikan kamu mendapat instance yang benar berdasarkan nama/interface. Perbedaannya: Registry Resilience4j khusus untuk fault tolerance components, bukan general-purpose DI container.</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 3</div>
+                    <p class="mb"><strong>Q:</strong> Jika kamu memanggil <code>registry.retry("api-client")</code> 100 kali dalam aplikasi, berapa instance Retry yang dibuat?</p>
+                    <div id="q3-o">
+                        <div class="qo" onclick="AQ('q3','a',this)">a) 100 instance — satu per pemanggilan</div>
+                        <div class="qo" onclick="AQ('q3','b',this)">b) 1 instance — Registry cache dan return instance yang sama untuk nama yang sama</div>
+                        <div class="qo" onclick="AQ('q3','c',this)">c) 2 instance — satu untuk pemanggilan pertama, satu untuk sisanya</div>
+                        <div class="qo" onclick="AQ('q3','d',this)">d) Tergantung pada jumlah thread yang aktif</div>
+                    </div>
+                    <div id="q3-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4: Circuit Breaker -->
+        <div class="padding-top-ideal-distance-to-header" id="ch4">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch red">
+                    <div class="ch-n">Chapter 4</div>
+                    <div class="ch-t">&#9196; Circuit Breaker: Pemutus Arus Otomatis</div>
+                    <div class="ch-d">Pattern paling penting dalam fault tolerance. Seperti MCB listrik di rumah — jika terlalu banyak kegagalan, "arus diputus" agar sistem tidak terus-terusan mencoba sesuatu yang sudah pasti gagal!</div>
+                </div>
+                <div class="text-title">Tiga State Circuit Breaker</div>
+                <div class="state-diagram">
+                    <div class="state-box state-closed">CLOSED<br><small>Normal, request lewat</small></div>
+                    <div class="state-arrow">&#8594; terlalu banyak error &#8594;</div>
+                    <div class="state-box state-open">OPEN<br><small>Semua request ditolak langsung</small></div>
+                    <div class="state-arrow">&#8594; setelah wait duration &#8594;</div>
+                    <div class="state-box state-half">HALF-OPEN<br><small>Beberapa request dicoba</small></div>
+                </div>
+                <div class="ib mm"><div class="ibt">&#128161; Analogi MCB Listrik</div>
+                    <p><strong>CLOSED</strong> (arus mengalir): Semua request dijalankan normal. CB mencatat berapa banyak yang gagal. &#8594; <strong>OPEN</strong> (arus diputus): Jika error rate melewati threshold, CB terbuka — semua request LANGSUNG ditolak tanpa mencoba (<code>CallNotPermittedException</code>). Ini melindungi service yang sudah kewalahan dari banjir request tambahan. &#8594; <strong>HALF-OPEN</strong> (coba sedikit dulu): Setelah waktu tunggu, CB izinkan beberapa request masuk untuk menguji apakah service sudah pulih. Jika berhasil &#8594; kembali CLOSED. Jika masih gagal &#8594; kembali OPEN.</p></div>
+
+                <div class="text-title mm">Circuit Breaker dengan Defaults</div>
+                <div class="cb"><pre><code class="language-java">// FILE: CircuitBreakerTest.java
+
+public void callMe() {
+    log.info("Call Me");
+    throw new IllegalArgumentException("Ups");  // Selalu gagal!
+}
+
+@Test
+void circuitBreaker() {
+    CircuitBreaker cb = CircuitBreaker.ofDefaults("pzn");  // Line 1
+    // Default: failureRateThreshold=50%, slidingWindowSize=100
+
+    for (int i = 0; i < 200; i++) {
+        try {
+            Runnable runnable = CircuitBreaker.decorateRunnable(cb, () -> callMe()); // Line 2
+            runnable.run();
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            // Perhatikan: setelah 50+ errors, pesan error berubah!
+            // "Ups" → IllegalArgumentException (CB CLOSED, request dijalankan)
+            // "CircuitBreaker 'pzn' is OPEN" (CB OPEN, request langsung ditolak)
+        }
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>CircuitBreaker.ofDefaults("pzn")</code> — Default config: <strong>failureRateThreshold=50%</strong> (CB OPEN jika 50% dari 100 request terakhir gagal), <strong>slidingWindowSize=100</strong>, <strong>waitDurationInOpenState=60 detik</strong>.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>CircuitBreaker.decorateRunnable(cb, lambda)</code> — Sama dengan Retry, tapi kali ini CB yang membungkus. Perbedaan kunci: jika CB OPEN, lambda tidak dieksekusi sama sekali — langsung throw <code>CallNotPermittedException</code>. Ini yang membuat CB efisien!</p></div>
+                </div>
+
+                <div class="text-title mm">Circuit Breaker dengan Config Custom</div>
+                <div class="cb"><pre><code class="language-java">@Test
+void circuitBreakerConfig() {
+    CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+        .slidingWindowType(                                       // Line A
+            CircuitBreakerConfig.SlidingWindowType.COUNT_BASED   // Hitung per N request
+        )
+        .failureRateThreshold(10f)                               // Line B — 10% error = OPEN
+        .slidingWindowSize(10)                                   // Line C — lihat 10 request terakhir
+        .minimumNumberOfCalls(10)                                // Line D
+        .build();
+
+    CircuitBreaker cb = CircuitBreaker.of("pzn", config);
+
+    for (int i = 0; i < 200; i++) {
+        try {
+            CircuitBreaker.decorateRunnable(cb, () -> callMe()).run();
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+        }
+    }
+    // CB akan OPEN lebih cepat karena threshold hanya 10%!
+    // Dari 200 request: ~10 pertama dijalankan (mengumpulkan data),
+    // lalu CB OPEN — 190 request sisanya langsung ditolak tanpa eksekusi
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line A</span><p><strong>COUNT_BASED</strong> vs <strong>TIME_BASED</strong>: COUNT_BASED menghitung N request terakhir. TIME_BASED menghitung request dalam N detik terakhir. COUNT_BASED lebih mudah diprediksi, TIME_BASED lebih cocok untuk traffic tidak merata.</p></div>
+                    <div class="li"><span class="ln">Line B</span><p><code>.failureRateThreshold(10f)</code> — CB OPEN jika 10% dari sliding window adalah error. Di sini: dari 10 request terakhir, jika 1 atau lebih gagal (10%) &#8594; CB OPEN! Threshold yang sangat sensitif — cocok untuk service yang harus sangat reliabel.</p></div>
+                    <div class="li"><span class="ln">Line C</span><p><code>.slidingWindowSize(10)</code> — Hitung 10 request terakhir untuk menentukan error rate. Makin kecil window, makin cepat CB bereaksi (tapi juga makin sensitif terhadap spike sesaat).</p></div>
+                    <div class="li"><span class="ln">Line D</span><p><code>.minimumNumberOfCalls(10)</code> — CB tidak akan OPEN sebelum menerima setidaknya 10 request. Ini mencegah CB langsung OPEN hanya karena 1 dari 2 request pertama gagal (yang akan jadi 50% error rate).</p></div>
+                </div>
+                <div class="table-content mm"><table>
+                    <thead><tr><th>Config</th><th>Default</th><th>Penjelasan</th></tr></thead>
+                    <tbody>
+                    <tr><td><code>failureRateThreshold</code></td><td>50%</td><td>% error rate untuk buka circuit</td></tr>
+                    <tr><td><code>slidingWindowSize</code></td><td>100</td><td>Jumlah request/detik untuk dihitung</td></tr>
+                    <tr><td><code>minimumNumberOfCalls</code></td><td>100</td><td>Min request sebelum CB bisa OPEN</td></tr>
+                    <tr><td><code>waitDurationInOpenState</code></td><td>60s</td><td>Berapa lama di state OPEN sebelum HALF-OPEN</td></tr>
+                    <tr><td><code>permittedCallsInHalfOpenState</code></td><td>10</td><td>Berapa request yang diizinkan di HALF-OPEN</td></tr>
+                    <tr><td><code>slidingWindowType</code></td><td>COUNT_BASED</td><td>COUNT_BASED atau TIME_BASED</td></tr>
+                    </tbody>
+                </table></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel</div>
+                    <p>Bayangkan kamu punya kode di Laravel yang call ke payment gateway. Tanpa Circuit Breaker: setiap request user tetap mencoba call payment gateway meskipun payment gateway down — setiap request butuh 30 detik timeout, user menunggu 30 detik sebelum dapat error. Dengan Circuit Breaker: setelah beberapa request gagal, CB OPEN dan request berikutnya langsung dapat error dalam milidetik tanpa menunggu timeout. Pengalaman user jauh lebih baik!</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 4</div>
+                    <p class="mb"><strong>Q:</strong> CB dikonfigurasi: <code>slidingWindowSize(10)</code>, <code>minimumNumberOfCalls(10)</code>, <code>failureRateThreshold(50f)</code>. Setelah 10 request dan semuanya gagal, apa yang terjadi pada request ke-11?</p>
+                    <div id="q4-o">
+                        <div class="qo" onclick="AQ('q4','a',this)">a) Request ke-11 tetap dijalankan seperti biasa (error rate baru 50% setelah 20 request)</div>
+                        <div class="qo" onclick="AQ('q4','b',this)">b) Request ke-11 langsung ditolak dengan <code>CallNotPermittedException</code> karena CB sudah OPEN (error rate 100% &gt; threshold 50%)</div>
+                        <div class="qo" onclick="AQ('q4','c',this)">c) CB wait 60 detik dulu sebelum memutuskan membuka circuit</div>
+                        <div class="qo" onclick="AQ('q4','d',this)">d) Request ke-11 di-retry otomatis 3 kali</div>
+                    </div>
+                    <div id="q4-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5: Time Limiter -->
+        <div class="padding-top-ideal-distance-to-header" id="ch5">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch teal">
+                    <div class="ch-n">Chapter 5</div>
+                    <div class="ch-t">&#9201; Time Limiter: Batas Waktu Eksekusi</div>
+                    <div class="ch-d">Time Limiter memastikan operasi async tidak berjalan selamanya. Jika melewati batas waktu, operasi dibatalkan dan <code>TimeoutException</code> dilempar.</div>
+                </div>
+                <div class="text-title">Time Limiter dengan Future</div>
+                <div class="cb"><pre><code class="language-java">// FILE: TimeLimiterTest.java
+
+@SneakyThrows
+public String slow() {
+    log.info("Slow");
+    Thread.sleep(5000L);  // Simulasi operasi lambat 5 detik
+    return "Eko";
+}
+
+@Test
+void timeLimiter() throws Exception {
+    ExecutorService executorService =                          // Line 1
+        Executors.newSingleThreadExecutor();
+
+    Future&lt;String&gt; future = executorService.submit(           // Line 2
+        () -> slow()
+    );
+
+    TimeLimiter timeLimiter = TimeLimiter.ofDefaults("pzn"); // Line 3
+    // Default: timeoutDuration = 1 detik
+
+    Callable&lt;String&gt; callable =                              // Line 4
+        TimeLimiter.decorateFutureSupplier(
+            timeLimiter,
+            () -> future
+        );
+
+    callable.call();  // Line 5 — TIMEOUT! slow() butuh 5s, limit 1s
+}
+
+@Test
+void timeLimiterConfig() throws Exception {
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    Future&lt;String&gt; future = executorService.submit(() -> slow());
+
+    TimeLimiterConfig config = TimeLimiterConfig.custom()
+        .timeoutDuration(Duration.ofSeconds(10))             // Line 6 — beri 10 detik
+        .cancelRunningFuture(true)                           // Line 7
+        .build();
+
+    TimeLimiter timeLimiter = TimeLimiter.of("pzn", config);
+    Callable&lt;String&gt; callable =
+        TimeLimiter.decorateFutureSupplier(timeLimiter, () -> future);
+
+    String result = callable.call(); // Berhasil! slow() selesai dalam 5s &lt; 10s
+    System.out.println(result); // "Eko"
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>ExecutorService</code> — Thread pool untuk menjalankan task secara async. <code>Executors.newSingleThreadExecutor()</code> membuat pool dengan 1 thread. Time Limiter bekerja dengan <strong>Future</strong> (async task), bukan synchronous method biasa.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>executorService.submit(() -&gt; slow())</code> — Kirim task <code>slow()</code> ke thread pool untuk dijalankan async. Return <code>Future&lt;String&gt;</code> yang bisa kita pantau.</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>TimeLimiter.ofDefaults("pzn")</code> — Default timeout: <strong>1 detik</strong>. <code>slow()</code> butuh 5 detik &#8594; pasti timeout!</p></div>
+                    <div class="li"><span class="ln">Line 4</span><p><code>TimeLimiter.decorateFutureSupplier(timeLimiter, () -&gt; future)</code> — Bungkus Future dengan Time Limiter. Parameter kedua adalah <code>Supplier&lt;Future&gt;</code> — fungsi yang mengembalikan Future.</p></div>
+                    <div class="li"><span class="ln">Line 5</span><p><code>callable.call()</code> — Eksekusi dengan batas waktu. Jika <code>slow()</code> tidak selesai dalam 1 detik &#8594; throw <code>TimeoutException</code>.</p></div>
+                    <div class="li"><span class="ln">Line 6</span><p><code>.timeoutDuration(Duration.ofSeconds(10))</code> — Beri 10 detik. Karena <code>slow()</code> hanya butuh 5 detik, ini berhasil.</p></div>
+                    <div class="li"><span class="ln">Line 7</span><p><code>.cancelRunningFuture(true)</code> — Jika timeout, otomatis cancel Future yang masih berjalan di background. Ini penting untuk resource cleanup! Jika <code>false</code>, task tetap jalan di background meskipun sudah timeout (buang-buang resource).</p></div>
+                </div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel/PHP</div>
+                    <p>Di PHP, kamu bisa set <code>set_time_limit(30)</code> untuk batas waktu script, atau <code>CURLOPT_TIMEOUT</code> untuk HTTP request. Time Limiter di Java bekerja pada level yang lebih granular: per-operasi async, bukan per-script. Ini sangat berguna saat calling external API — kamu tidak mau satu API yang lambat menghambat seluruh request handling.</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 5</div>
+                    <p class="mb"><strong>Q:</strong> Apa yang terjadi jika <code>cancelRunningFuture(false)</code> dan timeout terjadi?</p>
+                    <div id="q5-o">
+                        <div class="qo" onclick="AQ('q5','a',this)">a) Task langsung berhenti, tidak ada resource yang terbuang</div>
+                        <div class="qo" onclick="AQ('q5','b',this)">b) <code>TimeoutException</code> dilempar ke pemanggil, tapi task di background thread TETAP berjalan sampai selesai — membuang thread dan resource</div>
+                        <div class="qo" onclick="AQ('q5','c',this)">c) Task di-retry otomatis setelah timeout</div>
+                        <div class="qo" onclick="AQ('q5','d',this)">d) Timeout diabaikan dan menunggu task selesai</div>
+                    </div>
+                    <div id="q5-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH6: Rate Limiter -->
+        <div class="padding-top-ideal-distance-to-header" id="ch6">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch amber">
+                    <div class="ch-n">Chapter 6</div>
+                    <div class="ch-t">&#128683; Rate Limiter: Batasi Laju Request</div>
+                    <div class="ch-d">Rate Limiter membatasi berapa banyak request yang boleh dijalankan dalam periode waktu tertentu. Berguna untuk mematuhi API quota pihak ketiga atau melindungi service kamu dari overload.</div>
+                </div>
+                <div class="text-title">Rate Limiter: N Request per Periode</div>
+                <div class="cb"><pre><code class="language-java">// FILE: RateLimiterTest.java
+
+private final AtomicLong counter = new AtomicLong(0L);
+
+@Test
+void testRateLimiter() {
+    RateLimiter rateLimiter = RateLimiter.ofDefaults("pzn");
+    // Default: 50 request per 500ns (sangat longgar untuk test)
+
+    for (int i = 0; i < 10_000; i++) {
+        Runnable runnable = RateLimiter.decorateRunnable(rateLimiter, () -> {
+            long result = counter.incrementAndGet();
+            log.info("Result: {}", result);
+        });
+        runnable.run();
+    }
+}
+
+@Test
+void testRateLimiterConfig() {
+    RateLimiterConfig config = RateLimiterConfig.custom()
+        .limitForPeriod(100)                          // Line 1 — max 100 request
+        .limitRefreshPeriod(Duration.ofMinutes(1))    // Line 2 — per 1 menit
+        .timeoutDuration(Duration.ofSeconds(2))       // Line 3
+        .build();
+
+    RateLimiter rateLimiter = RateLimiter.of("pzn", config);
+
+    for (int i = 0; i < 10_000; i++) {
+        Runnable runnable = RateLimiter.decorateRunnable(rateLimiter, () -> {
+            long result = counter.incrementAndGet();
+            log.info("Result: {}", result);
+        });
+        runnable.run();
+        // 100 request pertama langsung jalan,
+        // request ke-101 dst: TUNGGU sampai period refresh atau timeout
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>.limitForPeriod(100)</code> — Izinkan maksimal 100 request dalam satu periode. Request ke-101 harus menunggu periode berikutnya.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>.limitRefreshPeriod(Duration.ofMinutes(1))</code> — Setiap 1 menit, quota di-reset kembali ke 100. Jadi: 100 request/menit.</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>.timeoutDuration(Duration.ofSeconds(2))</code> — Jika sudah mencapai limit, request berikutnya MENUNGGU maksimal 2 detik untuk quota tersedia. Jika dalam 2 detik tidak ada quota &#8594; throw <code>RequestNotPermitted</code>. Jika <code>Duration.ofSeconds(0)</code>, langsung throw exception tanpa tunggu.</p></div>
+                </div>
+                <div class="ib mm"><div class="ibt">&#128161; Perbedaan Rate Limiter vs Bulkhead</div>
+                    <div class="table-content"><table>
+                        <thead><tr><th>Aspek</th><th>Rate Limiter</th><th>Bulkhead</th></tr></thead>
+                        <tbody>
+                        <tr><td><strong>Membatasi</strong></td><td>Request per periode waktu (throughput)</td><td>Request yang berjalan bersamaan (concurrency)</td></tr>
+                        <tr><td><strong>Contoh</strong></td><td>Max 100 request/menit</td><td>Max 10 request berjalan bersamaan</td></tr>
+                        <tr><td><strong>Use case</strong></td><td>Mematuhi API quota, mencegah overload</td><td>Isolasi resource, mencegah resource exhaustion</td></tr>
+                        <tr><td><strong>Error jika limit</strong></td><td><code>RequestNotPermitted</code></td><td><code>BulkheadFullException</code></td></tr>
+                        </tbody>
+                    </table></div></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel</div>
+                    <p>Di Laravel, kamu pakai <code>RateLimiter::for()</code> dan <code>throttle</code> middleware untuk membatasi API request dari client. Rate Limiter Resilience4j bekerja di sisi <strong>outbound</strong> — membatasi seberapa sering aplikasimu memanggil service eksternal, bukan seberapa sering client memanggil aplikasimu. Keduanya adalah rate limiting, tapi arahnya berbeda!</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 6</div>
+                    <p class="mb"><strong>Q:</strong> Rate Limiter dikonfigurasi: <code>limitForPeriod(5)</code>, <code>limitRefreshPeriod(1 menit)</code>, <code>timeoutDuration(0)</code>. Request ke-6 dalam 1 menit pertama akan menghasilkan apa?</p>
+                    <div id="q6-o">
+                        <div class="qo" onclick="AQ('q6','a',this)">a) Request ke-6 menunggu sampai menit berikutnya lalu berjalan</div>
+                        <div class="qo" onclick="AQ('q6','b',this)">b) Langsung throw <code>RequestNotPermitted</code> karena <code>timeoutDuration(0)</code> — tidak ada waktu tunggu</div>
+                        <div class="qo" onclick="AQ('q6','c',this)">c) Request ke-6 tetap berjalan — limit hanya untuk monitoring</div>
+                        <div class="qo" onclick="AQ('q6','d',this)">d) Circuit Breaker otomatis aktif</div>
+                    </div>
+                    <div id="q6-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH7: Bulkhead -->
+        <div class="padding-top-ideal-distance-to-header" id="ch7">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch indigo">
+                    <div class="ch-n">Chapter 7</div>
+                    <div class="ch-t">&#128268; Bulkhead: Isolasi Concurrency</div>
+                    <div class="ch-d">Bulkhead membatasi jumlah request yang <em>berjalan bersamaan</em>. Ada dua jenis: Semaphore (membatasi concurrent calls) dan ThreadPool (dedicated thread pool per service).</div>
+                </div>
+                <div class="text-title">Semaphore Bulkhead: Batasi Concurrent Calls</div>
+                <div class="cb"><pre><code class="language-java">// FILE: BulkheadTest.java
+
+private AtomicLong counter = new AtomicLong(0L);
+
+@SneakyThrows
+public void slow() {
+    long value = counter.incrementAndGet();
+    log.info("Slow : " + value);
+    Thread.sleep(1_000L); // Simulasi operasi 1 detik
+}
+
+// Semaphore Bulkhead dengan defaults
+@Test
+void testSemaphore() throws InterruptedException {
+    Bulkhead bulkhead = Bulkhead.ofDefaults("pzn");
+    // Default: maxConcurrentCalls=25, maxWaitDuration=0
+
+    for (int i = 0; i < 1000; i++) {
+        Runnable runnable = Bulkhead.decorateRunnable(bulkhead, () -> slow());
+        new Thread(runnable).start();    // Line 1 — 1000 thread!
+    }
+
+    Thread.sleep(10_000L);
+    // Dengan default max 25 concurrent: hanya 25 yang jalan bersamaan,
+    // sisanya langsung throw BulkheadFullException
+}
+
+// Semaphore Bulkhead dengan config custom
+@Test
+void testSemaphoreConfig() throws InterruptedException {
+    BulkheadConfig config = BulkheadConfig.custom()
+        .maxConcurrentCalls(5)                          // Line 2 — max 5 bersamaan
+        .maxWaitDuration(Duration.ofSeconds(5))         // Line 3 — tunggu 5 detik jika penuh
+        .build();
+
+    Bulkhead bulkhead = Bulkhead.of("pzn", config);
+
+    for (int i = 0; i < 10; i++) {
+        Runnable runnable = Bulkhead.decorateRunnable(bulkhead, () -> slow());
+        new Thread(runnable).start();
+    }
+
+    Thread.sleep(10_000L);
+    // 5 thread pertama langsung jalan
+    // Thread 6-10: tunggu sampai ada slot kosong (max 5 detik)
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p>1000 thread dibuat sekaligus! Tanpa Bulkhead, semua 1000 thread akan mencoba mengakses service secara bersamaan — ini bisa menyebabkan resource exhaustion (OOM, connection pool habis, dll). Bulkhead membatasi hanya 25 yang bisa masuk bersamaan.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>.maxConcurrentCalls(5)</code> — Hanya 5 request boleh berjalan bersamaan. Request ke-6 harus menunggu salah satu dari 5 yang berjalan selesai.</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>.maxWaitDuration(Duration.ofSeconds(5))</code> — Jika Bulkhead penuh, request baru menunggu maksimal 5 detik. Jika dalam 5 detik tidak ada slot yang kosong &#8594; throw <code>BulkheadFullException</code>. Default: 0 (langsung throw).</p></div>
+                </div>
+
+                <div class="text-title mm">ThreadPool Bulkhead: Dedicated Thread Pool</div>
+                <div class="cb"><pre><code class="language-java">@Test
+void testThreadPoolConfig() throws InterruptedException {
+    ThreadPoolBulkheadConfig config = ThreadPoolBulkheadConfig.custom()
+        .maxThreadPoolSize(5)       // Line A — max 5 thread aktif
+        .coreThreadPoolSize(5)      // Line B — selalu siap 5 thread
+        .queueCapacity(1)           // Line C — queue hanya 1 item
+        .build();
+
+    ThreadPoolBulkhead bulkhead = ThreadPoolBulkhead.of("pzn", config);
+
+    for (int i = 0; i < 20; i++) {
+        Supplier&lt;CompletionStage&lt;Void&gt;&gt; supplier =
+            ThreadPoolBulkhead.decorateRunnable(bulkhead, () -> slow());
+        supplier.get(); // Kirim ke thread pool
+    }
+    // Thread pool penuh (5 thread + 1 queue = max 6 bisa ditampung)
+    // Request ke-7 dst: BulkheadFullException!
+
+    Thread.sleep(10_000L);
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line A</span><p><code>.maxThreadPoolSize(5)</code> — Maksimal 5 thread aktif secara bersamaan di pool. Thread ke-6 tidak dibuat — request yang datang masuk ke queue.</p></div>
+                    <div class="li"><span class="ln">Line B</span><p><code>.coreThreadPoolSize(5)</code> — JVM selalu menjaga 5 thread siap di pool (tidak di-terminate saat idle). Jika core=5 dan max=5, tidak ada thread baru yang dibuat saat beban naik.</p></div>
+                    <div class="li"><span class="ln">Line C</span><p><code>.queueCapacity(1)</code> — Queue sangat kecil (hanya 1 item). Jadi: max 5 thread aktif + 1 di queue = 6 request bisa ditampung. Request ke-7 &#8594; <code>BulkheadFullException</code> langsung.</p></div>
+                </div>
+                <div class="ib mm"><div class="ibt">&#128161; Semaphore vs ThreadPool Bulkhead</div>
+                    <div class="table-content"><table>
+                        <thead><tr><th>Aspek</th><th>Semaphore</th><th>ThreadPool</th></tr></thead>
+                        <tbody>
+                        <tr><td><strong>Cara kerja</strong></td><td>Counter semaphore — izin masuk jika slot tersedia</td><td>Dedicated thread pool — task dijalankan di thread pool khusus</td></tr>
+                        <tr><td><strong>Thread</strong></td><td>Pakai thread pemanggil</td><td>Pakai thread dari pool yang terpisah</td></tr>
+                        <tr><td><strong>Return type</strong></td><td>Sync (Runnable/Supplier)</td><td>Async (CompletionStage/Future)</td></tr>
+                        <tr><td><strong>Cocok untuk</strong></td><td>Operasi sync yang ingin dibatasi concurrent-nya</td><td>Isolasi penuh — call ke service lain tidak mempengaruhi main thread</td></tr>
+                        <tr><td><strong>Overhead</strong></td><td>Rendah</td><td>Lebih tinggi (context switching)</td></tr>
+                        </tbody>
+                    </table></div></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel/Nginx</div>
+                    <p>Semaphore Bulkhead mirip dengan setting <code>pm.max_children</code> di PHP-FPM: membatasi berapa PHP process yang bisa berjalan bersamaan. ThreadPool Bulkhead mirip dengan dedicated worker queue di Laravel Horizon dengan <code>processes</code> setting per queue — tiap service/queue punya worker pool sendiri sehingga satu service yang lambat tidak "mencuri" worker dari service lain.</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 7</div>
+                    <p class="mb"><strong>Q:</strong> ThreadPool Bulkhead dikonfigurasi: <code>maxThreadPoolSize(3)</code>, <code>coreThreadPoolSize(3)</code>, <code>queueCapacity(2)</code>. Berapa total request yang bisa ditampung sebelum <code>BulkheadFullException</code>?</p>
+                    <div id="q7-o">
+                        <div class="qo" onclick="AQ('q7','a',this)">a) 3 request — hanya sesuai maxThreadPoolSize</div>
+                        <div class="qo" onclick="AQ('q7','b',this)">b) 5 request — 3 di thread aktif + 2 di queue</div>
+                        <div class="qo" onclick="AQ('q7','c',this)">c) 6 request — 3 thread + 2 queue + 1 extra</div>
+                        <div class="qo" onclick="AQ('q7','d',this)">d) Tidak terbatas — queue bisa menerima request sebanyak apapun</div>
+                    </div>
+                    <div id="q7-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH8: Decorators -->
+        <div class="padding-top-ideal-distance-to-header" id="ch8">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch">
+                    <div class="ch-n">Chapter 8</div>
+                    <div class="ch-t">&#127981; Decorators: Gabungkan Semua Pattern</div>
+                    <div class="ch-d">Di dunia nyata, kamu butuh lebih dari satu pattern sekaligus. Decorators API memungkinkan kamu chain Retry + Rate Limiter + Circuit Breaker + Fallback dalam satu baris kode yang elegan!</div>
+                </div>
+                <div class="text-title">Chain Multiple Patterns dengan Decorators</div>
+                <div class="cb"><pre><code class="language-java">// FILE: DecoratorsTest.java
+
+@SneakyThrows
+public void slow() {
+    log.info("Slow");
+    Thread.sleep(1_000L);
+    throw new IllegalArgumentException("Error");
+}
+
+@SneakyThrows
+public String sayHello() {
+    log.info("Say hello");
+    Thread.sleep(1_000L);
+    throw new IllegalArgumentException("Ups");
+}
+
+// Contoh 1: Retry + RateLimiter untuk Runnable
+@Test
+void decorators() throws InterruptedException {
+    RateLimiter rateLimiter = RateLimiter.of("pzn-ratelimiter",
+        RateLimiterConfig.custom()
+            .limitForPeriod(5)
+            .limitRefreshPeriod(Duration.ofMinutes(1))
+            .build());
+
+    Retry retry = Retry.of("pzn-retry",
+        RetryConfig.custom()
+            .maxAttempts(10)
+            .waitDuration(Duration.ofMillis(10))
+            .build());
+
+    Runnable runnable = Decorators.ofRunnable(() -> slow()) // Line 1
+        .withRetry(retry)                                   // Line 2
+        .withRateLimiter(rateLimiter)                       // Line 3
+        .decorate();                                        // Line 4
+
+    for (int i = 0; i < 100; i++) {
+        new Thread(runnable).start();
+    }
+    Thread.sleep(10_000L);
+}
+
+// Contoh 2: Retry + RateLimiter + Fallback untuk Supplier
+@Test
+void fallback() throws InterruptedException {
+    RateLimiter rateLimiter = RateLimiter.of("pzn-ratelimiter",
+        RateLimiterConfig.custom()
+            .limitForPeriod(5)
+            .limitRefreshPeriod(Duration.ofMinutes(1))
+            .build());
+
+    Retry retry = Retry.of("pzn-retry",
+        RetryConfig.custom()
+            .maxAttempts(10)
+            .waitDuration(Duration.ofMillis(10))
+            .build());
+
+    Supplier&lt;String&gt; supplier = Decorators.ofSupplier(() -> sayHello()) // Line 5
+        .withRetry(retry)
+        .withRateLimiter(rateLimiter)
+        .withFallback(throwable -> "Hello Guest")                        // Line 6
+        .decorate();
+
+    System.out.println(supplier.get());
+    // Output: "Hello Guest" — semua retry gagal, fallback digunakan
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>Decorators.ofRunnable(() -&gt; slow())</code> — Mulai chain dengan kode yang ingin diproteksi. <code>ofRunnable</code> untuk void, <code>ofSupplier</code> untuk return value, <code>ofCallable</code> untuk callable yang throw checked exception.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>.withRetry(retry)</code> — Tambahkan layer Retry. Jika <code>slow()</code> throw exception, Retry coba lagi sampai maxAttempts.</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>.withRateLimiter(rateLimiter)</code> — Tambahkan Rate Limiter. <strong>Urutan penting!</strong> Di sini Retry diterapkan lebih dalam dari Rate Limiter — artinya setiap "percobaan" dari Retry masing-masing dihitung sebagai 1 request untuk Rate Limiter.</p></div>
+                    <div class="li"><span class="ln">Line 4</span><p><code>.decorate()</code> — Selesaikan chain dan buat Runnable yang sudah dibungkus semua protection. Runnable ini bisa disimpan dan dijalankan kapan saja.</p></div>
+                    <div class="li"><span class="ln">Line 5</span><p><code>Decorators.ofSupplier(() -&gt; sayHello())</code> — Sama tapi untuk operasi yang return nilai (<code>String</code>).</p></div>
+                    <div class="li"><span class="ln">Line 6</span><p><code>.withFallback(throwable -&gt; "Hello Guest")</code> — Jika semua retry gagal dan semua protection sudah dilewati, gunakan nilai fallback. Lambda menerima throwable (exception terakhir) sehingga kamu bisa logging atau return nilai berbeda tergantung tipe error.</p></div>
+                </div>
+                <div class="ib mm"><div class="ibt">&#128161; Urutan Decorator Matters!</div>
+                    <div class="cb"><pre><code class="language-java">// Skenario A: Retry luar, RateLimiter dalam
+Decorators.ofRunnable(() -> call())
+    .withRateLimiter(rateLimiter)  // dalam
+    .withRetry(retry);             // luar
+
+// Flow: Retry (luar) → RateLimiter (dalam) → call()
+// Setiap attempt Retry mengalami RateLimiting
+// Jika RateLimiter throw → Retry TIDAK coba lagi (RateLimiter bukan transient error)
+
+// Skenario B: RateLimiter luar, Retry dalam
+Decorators.ofRunnable(() -> call())
+    .withRetry(retry)              // dalam
+    .withRateLimiter(rateLimiter); // luar
+
+// Flow: RateLimiter (luar) → Retry (dalam) → call()
+// Retry dianggap 1 "slot" dari RateLimiter — semua percobaan retry dihitung sebagai 1 request
+// Lebih hemat quota RateLimiter, tapi mungkin retry lebih banyak melewati rate limit</code></pre></div></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel Middleware</div>
+                    <p>Di Laravel, middleware dieksekusi secara berlapis (onion model). <code>Decorators</code> bekerja persis sama — setiap <code>.with*()</code> menambah satu layer middleware di sekeliling kode kamu. Urutan <code>.with*()</code> menentukan urutan eksekusi, seperti urutan middleware di Laravel routes. <code>.withFallback()</code> seperti exception handler di middleware yang mencegah error propagate ke atas.</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 8</div>
+                    <p class="mb"><strong>Q:</strong> Dalam <code>fallback()</code> test, <code>sayHello()</code> selalu throw exception. Apa yang dikembalikan oleh <code>supplier.get()</code>?</p>
+                    <div id="q8-o">
+                        <div class="qo" onclick="AQ('q8','a',this)">a) Throw exception — fallback tidak mencegah exception</div>
+                        <div class="qo" onclick="AQ('q8','b',this)">b) <code>"Hello Guest"</code> — setelah semua retry habis, fallback mengembalikan nilai default</div>
+                        <div class="qo" onclick="AQ('q8','c',this)">c) <code>null</code> — method mengembalikan null saat gagal</div>
+                        <div class="qo" onclick="AQ('q8','d',this)">d) Menunggu selamanya sampai berhasil</div>
+                    </div>
+                    <div id="q8-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9: Events & Metrics -->
+        <div class="padding-top-ideal-distance-to-header" id="ch9">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch">
+                    <div class="ch-n">Chapter 9</div>
+                    <div class="ch-t">&#128202; Events &amp; Metrics: Observability</div>
+                    <div class="ch-d">Resilience4j menyediakan event listener dan metrics API untuk monitoring. Tanpa observability, kamu "buta" terhadap apa yang terjadi di production!</div>
+                </div>
+                <div class="text-title">Event Publisher: Listen ke Kejadian</div>
+                <div class="cb"><pre><code class="language-java">// FILE: EventPublisherTest.java
+
+@Test
+void retry() {
+    Retry retry = Retry.ofDefaults("pzn");
+
+    // Pasang event listener SEBELUM menjalankan operasi
+    retry.getEventPublisher().onRetry(event -> {       // Line 1
+        log.info("try to retry");
+    });
+
+    try {
+        Supplier&lt;String&gt; supplier =
+            Retry.decorateSupplier(retry, () -> hello());
+        supplier.get();
+    } catch (Exception e) {
+        // Metrics setelah semua selesai
+        System.out.println(
+            retry.getMetrics()
+                 .getNumberOfFailedCallsWithRetryAttempt()        // Line 2
+        );
+        System.out.println(
+            retry.getMetrics()
+                 .getNumberOfFailedCallsWithoutRetryAttempt()     // Line 3
+        );
+        System.out.println(
+            retry.getMetrics()
+                 .getNumberOfSuccessfulCallsWithRetryAttempt()    // Line 4
+        );
+        System.out.println(
+            retry.getMetrics()
+                 .getNumberOfSuccessfulCallsWithoutRetryAttempt() // Line 5
+        );
+    }
+}
+
+// Event Publisher pada Registry
+@Test
+void registry() {
+    RetryRegistry registry = RetryRegistry.ofDefaults();
+
+    registry.getEventPublisher().onEntryAdded(event -> { // Line 6
+        log.info("Add new entry {}",
+                 event.getAddedEntry().getName());
+    });
+
+    registry.retry("pzn");   // → log: "Add new entry pzn"
+    registry.retry("pzn");   // → tidak ada log (sudah ada)
+    registry.retry("pzn2");  // → log: "Add new entry pzn2"
+}</code></pre></div>
+                <div class="le">
+                    <div class="li"><span class="ln">Line 1</span><p><code>retry.getEventPublisher().onRetry(callback)</code> — Subscribe ke event "sedang retry". Callback dipanggil setiap kali retry terjadi. Event lain yang tersedia: <code>onSuccess()</code>, <code>onError()</code>, <code>onIgnoredError()</code>. Berguna untuk logging, alerting, atau increment custom metrics.</p></div>
+                    <div class="li"><span class="ln">Line 2</span><p><code>getNumberOfFailedCallsWithRetryAttempt()</code> — Jumlah call yang akhirnya gagal setelah semua retry habis. Misal: 5 maxAttempts, semua gagal &#8594; ini = 1 (satu "call" secara keseluruhan).</p></div>
+                    <div class="li"><span class="ln">Line 3</span><p><code>getNumberOfFailedCallsWithoutRetryAttempt()</code> — Jumlah call yang gagal di percobaan pertama dan TIDAK di-retry (misalnya karena exception masuk di <code>ignoreExceptions</code>).</p></div>
+                    <div class="li"><span class="ln">Line 4</span><p><code>getNumberOfSuccessfulCallsWithRetryAttempt()</code> — Jumlah call yang akhirnya berhasil setelah beberapa kali retry (gagal di awal, berhasil belakangan).</p></div>
+                    <div class="li"><span class="ln">Line 5</span><p><code>getNumberOfSuccessfulCallsWithoutRetryAttempt()</code> — Jumlah call yang berhasil di percobaan pertama tanpa perlu retry (happy path!).</p></div>
+                    <div class="li"><span class="ln">Line 6</span><p><code>registry.getEventPublisher().onEntryAdded(callback)</code> — Event saat instance baru ditambahkan ke registry. Berguna untuk audit: tahu kapan dan instance apa yang dibuat dalam aplikasi.</p></div>
+                </div>
+
+                <div class="text-title mm">MetricTest: Membaca Metrics Sederhana</div>
+                <div class="cb"><pre><code class="language-java">// FILE: MetricTest.java
+
+@Test
+void retry() {
+    Retry retry = Retry.ofDefaults("pzn");
+    // Default: maxAttempts=3
+
+    try {
+        Supplier&lt;String&gt; supplier =
+            Retry.decorateSupplier(retry, () -> hello());
+        supplier.get();
+        // hello() selalu throw IllegalArgumentException
+        // Coba 3 kali → semua gagal → MaxRetriesExceededException
+    } catch (Exception e) {
+        // Sekarang baca metrics
+        System.out.println(
+            retry.getMetrics().getNumberOfFailedCallsWithRetryAttempt()
+        );
+        // Output: 1 (satu "panggilan" yang berakhir gagal setelah semua retry)
+
+        System.out.println(
+            retry.getMetrics().getNumberOfFailedCallsWithoutRetryAttempt()
+        );
+        // Output: 0 (tidak ada yang gagal tanpa retry)
+
+        System.out.println(
+            retry.getMetrics().getNumberOfSuccessfulCallsWithRetryAttempt()
+        );
+        // Output: 0 (tidak ada yang berhasil setelah retry)
+
+        System.out.println(
+            retry.getMetrics().getNumberOfSuccessfulCallsWithoutRetryAttempt()
+        );
+        // Output: 0 (tidak ada yang berhasil tanpa perlu retry)
+    }
+}
+
+private String hello() {
+    throw new IllegalArgumentException("Ups");
+}</code></pre></div>
+                <div class="ib mm"><div class="ibt">&#128161; Integrasi dengan Monitoring System</div>
+                    <p>Di production, metrics Resilience4j biasanya diekspos ke sistem monitoring seperti:</p>
+                    <ul>
+                        <li><strong>Micrometer + Prometheus + Grafana</strong>: Resilience4j punya modul <code>resilience4j-micrometer</code> untuk auto-export metrics ke Prometheus. Setup dashboard Grafana untuk visualisasi Circuit Breaker state, retry rate, dll.</li>
+                        <li><strong>Spring Boot Actuator</strong>: Dengan dependency <code>resilience4j-spring-boot3</code>, semua metrics otomatis diekspos di <code>/actuator/metrics</code>.</li>
+                        <li><strong>Alerting</strong>: Set alert di Grafana saat Circuit Breaker sering OPEN atau retry rate tinggi — tanda bahwa dependency kamu sedang bermasalah.</li>
+                    </ul></div>
+                <div class="ab"><div class="abt">&#128024; Analogi Laravel</div>
+                    <p>Di Laravel, kamu mungkin pakai <code>Log::info()</code> atau <code>event(new RetryAttemptEvent(...))</code> untuk mencatat retry attempts secara manual. Event Publisher Resilience4j melakukan hal ini secara otomatis — kamu tinggal subscribe dan define apa yang mau dilakukan (log, metrics, alert). Jauh lebih bersih dari try-catch-log manual di setiap tempat!</p></div>
+                <div class="qb">
+                    <div class="qt">&#129504; Mini Quiz — Chapter 9</div>
+                    <p class="mb"><strong>Q:</strong> Retry <code>maxAttempts(3)</code>. <code>hello()</code> gagal 2 kali lalu berhasil di percobaan ke-3. Apa nilai <code>getNumberOfSuccessfulCallsWithRetryAttempt()</code>?</p>
+                    <div id="q9-o">
+                        <div class="qo" onclick="AQ('q9','a',this)">a) 0 — hanya dihitung jika berhasil tanpa retry</div>
+                        <div class="qo" onclick="AQ('q9','b',this)">b) 1 — satu "call" berhasil setelah melalui retry (gagal 2x, berhasil 1x)</div>
+                        <div class="qo" onclick="AQ('q9','c',this)">c) 3 — total percobaan yang dilakukan</div>
+                        <div class="qo" onclick="AQ('q9','d',this)">d) 2 — jumlah retry yang dilakukan sebelum berhasil</div>
+                    </div>
+                    <div id="q9-f" class="qf"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH10: Summary -->
+        <div class="padding-top-ideal-distance-to-header" id="ch10">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch green">
+                    <div class="ch-n">Chapter 10 — Final</div>
+                    <div class="ch-t">&#127942; Summary, Best Practice &amp; Kapan Pakai Apa</div>
+                    <div class="ch-d">Rekap semua pattern Resilience4j, kapan menggunakannya, pola registry yang konsisten, dan panduan langkah selanjutnya.</div>
+                </div>
+
+                <div class="text-title">Arsitektur Pola Resilience4j</div>
+                <div class="display-grid">
+                    <div class="timeline">
+                        <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#128257; Retry — Coba Lagi Otomatis</div>
+                            <div class="timeline-content-desc">Untuk: masalah sementara (transient faults) — network blip, temporary service unavailability. Config: maxAttempts, waitDuration, retryExceptions, ignoreExceptions. Jangan gunakan untuk: validation error, not found (bukan masalah transient).</div>
+                            <div class="timeline-content-time">Transient Fault Handling</div>
+                        </div>
+                        <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#9196; Circuit Breaker — Pemutus Arus</div>
+                            <div class="timeline-content-desc">Untuk: dependency yang sering gagal / lambat. Mencegah cascade failure — jika payment gateway down, stop panggil payment gateway, jangan biarkan semua user thread menunggu timeout 30 detik. Config: failureRateThreshold, slidingWindowSize, waitDurationInOpenState.</div>
+                            <div class="timeline-content-time">Cascade Failure Prevention</div>
+                        </div>
+                        <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#128683; Rate Limiter — Batas Throughput</div>
+                            <div class="timeline-content-desc">Untuk: mematuhi API quota pihak ketiga (contoh: Stripe API 100 req/s), melindungi service dari overload. Config: limitForPeriod, limitRefreshPeriod, timeoutDuration. Beda dengan Bulkhead: Rate Limiter mengontrol throughput (per waktu), Bulkhead mengontrol concurrency (bersamaan).</div>
+                            <div class="timeline-content-time">Throughput Control</div>
+                        </div>
+                        <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#128268; Bulkhead — Isolasi Concurrency</div>
+                            <div class="timeline-content-desc">Untuk: mencegah satu service lambat menghabiskan semua thread/connection pool. Semaphore untuk concurrency limit sederhana. ThreadPool untuk isolasi penuh — service A tidak bisa "mencuri" thread dari service B. Config: maxConcurrentCalls (Semaphore) atau maxThreadPoolSize + queueCapacity (ThreadPool).</div>
+                            <div class="timeline-content-time">Concurrency Isolation</div>
+                        </div>
+                        <div><span class="timeline-key active">5</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#9201; Time Limiter — Batas Waktu</div>
+                            <div class="timeline-content-desc">Untuk: operasi async yang harus selesai dalam batas waktu. Bekerja dengan Future/CompletableFuture. Config: timeoutDuration, cancelRunningFuture. Gunakan bersama ThreadPool Bulkhead untuk isolasi dan timeout dalam satu paket.</div>
+                            <div class="timeline-content-time">Async Timeout</div>
+                        </div>
+                        <div><span class="timeline-key active">6</span></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#127981; Decorators — Gabungkan Semua</div>
+                            <div class="timeline-content-desc">API builder untuk chain multiple pattern. withRetry + withCircuitBreaker + withRateLimiter + withFallback dalam satu deklarasi yang mudah dibaca. Urutan penting! Komponen yang didaftarkan pertama adalah yang "paling luar" dalam eksekusi.</div>
+                            <div class="timeline-content-time">Pattern Composition</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title mm">Pola Registry yang Konsisten — Ringkasan</div>
+                <div class="cb"><pre><code class="language-java">// TEMPLATE UNIVERSAL — berlaku untuk semua komponen Resilience4j
+
+// 1. Buat Config
+XxxConfig config = XxxConfig.custom()
+    .settingA(valueA)
+    .settingB(valueB)
+    .build();
+
+// 2. Buat Registry dan daftarkan Config
+XxxRegistry registry = XxxRegistry.ofDefaults();
+registry.addConfiguration("nama-config", config);
+
+// 3. Ambil instance (singleton per nama)
+Xxx instance = registry.xxx("nama-instance", "nama-config");
+
+// 4. Dekorasi kode kamu
+Runnable protected = Xxx.decorateRunnable(instance, () -> yourCode());
+
+// 5. Eksekusi
+protected.run();
+
+// =====================================================
+// ATAU gunakan Decorators untuk chain multiple pattern:
+// =====================================================
+Supplier&lt;String&gt; result = Decorators.ofSupplier(() -> yourCode())
+    .withRetry(retryInstance)
+    .withCircuitBreaker(cbInstance)
+    .withRateLimiter(rlInstance)
+    .withFallback(ex -> "default value")
+    .decorate();</code></pre></div>
+
+                <div class="text-title mm">Kapan Pakai Pattern Apa? — Decision Tree</div>
+                <div class="table-content"><table>
+                    <thead><tr><th>Situasi</th><th>Pattern yang Tepat</th><th>Alasan</th></tr></thead>
+                    <tbody>
+                    <tr><td>External API kadang gagal sesaat</td><td>&#128257; Retry</td><td>Masalah transient — coba ulang biasanya berhasil</td></tr>
+                    <tr><td>External API sering down / lambat</td><td>&#9196; Circuit Breaker</td><td>Hentikan request saat service jelas bermasalah</td></tr>
+                    <tr><td>API pihak ketiga ada rate limit (e.g. 100/menit)</td><td>&#128683; Rate Limiter</td><td>Patuhi quota, jangan sampai di-ban</td></tr>
+                    <tr><td>Satu service lambat bikin service lain ikut lambat</td><td>&#128268; Bulkhead</td><td>Isolasi resource agar satu service tidak "mencuri" semua</td></tr>
+                    <tr><td>Operasi async harus selesai dalam N detik</td><td>&#9201; Time Limiter</td><td>Timeout eksplisit untuk async task</td></tr>
+                    <tr><td>API sering error, butuh retry + jangan overload</td><td>&#127981; Decorators: Retry + RateLimiter</td><td>Gabungkan dua protection sekaligus</td></tr>
+                    <tr><td>Butuh fallback nilai default saat semua gagal</td><td>&#127981; Decorators + withFallback</td><td>Graceful degradation — user tetap dapat respons</td></tr>
+                    <tr><td>Butuh monitoring berapa kali retry terjadi</td><td>&#128202; EventPublisher + Metrics</td><td>Observability untuk alert dan debugging</td></tr>
+                    </tbody>
+                </table></div>
+
+                <div class="text-title mm">Checklist Production-Ready Resilience4j</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">&#10003;</div><div class="stepper-value"><strong>Gunakan Registry</strong> — Semua instance dikelola via Registry agar singleton dan metrics terpusat. Di Spring Boot, konfigurasi via <code>application.yml</code> dan auto-inject Registry.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">&#10003;</div><div class="stepper-value"><strong>retryExceptions yang tepat</strong> — Jangan retry untuk semua exception. Retry hanya untuk transient fault (network error, timeout). Jangan retry validation error atau 404 Not Found.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">&#10003;</div><div class="stepper-value"><strong>Circuit Breaker untuk semua external call</strong> — Setiap call ke database, API eksternal, atau microservice lain idealnya dilindungi Circuit Breaker untuk mencegah cascade failure.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">&#10003;</div><div class="stepper-value"><strong>cancelRunningFuture(true)</strong> — Selalu cancel Future yang timeout agar thread tidak bocor di background dan memakan resource.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">&#10003;</div><div class="stepper-value"><strong>Pasang EventPublisher untuk monitoring</strong> — Subscribe onRetry, onError, onStateTransition (Circuit Breaker) untuk logging dan alerting di production.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">&#10003;</div><div class="stepper-value"><strong>Sediakan Fallback</strong> — Untuk use case critical, selalu ada fallback: cache, default value, atau degraded response. User lebih baik dapat respons lambat/terbatas daripada error!</div></div>
+                    </div>
+                </div>
+
+                <div class="text-title mm">Tabel Referensi: PHP/Laravel vs Resilience4j</div>
+                <div class="table-content"><table>
+                    <thead><tr><th>Kebutuhan</th><th>PHP/Laravel</th><th>Java Resilience4j</th></tr></thead>
+                    <tbody>
+                    <tr><td>Retry otomatis</td><td>Loop manual / <code>guzzle-retry-middleware</code></td><td><code>Retry.ofDefaults()</code> + <code>decorateRunnable()</code></td></tr>
+                    <tr><td>Konfigurasi retry</td><td><code>$tries</code> di Job class (untuk queue)</td><td><code>RetryConfig.custom().maxAttempts().waitDuration()</code></td></tr>
+                    <tr><td>Circuit Breaker</td><td>Tidak ada native — pakai custom / <code>php-circuit-breaker</code></td><td><code>CircuitBreaker.of()</code> dengan 3 state otomatis</td></tr>
+                    <tr><td>Rate limiting outbound</td><td><code>sleep()</code> manual / middleware Guzzle</td><td><code>RateLimiter.of().limitForPeriod()</code></td></tr>
+                    <tr><td>Concurrency limit</td><td>PHP-FPM <code>pm.max_children</code> (global, bukan per-service)</td><td><code>Bulkhead</code> per-service (Semaphore/ThreadPool)</td></tr>
+                    <tr><td>Timeout async</td><td><code>CURLOPT_TIMEOUT</code> untuk HTTP</td><td><code>TimeLimiter</code> untuk Future</td></tr>
+                    <tr><td>Chain multiple protection</td><td>Nested try-catch manual (verbose)</td><td><code>Decorators.ofSupplier().withRetry().withRateLimiter()</code></td></tr>
+                    <tr><td>Fallback value</td><td><code>try { } catch { return $default; }</code></td><td><code>.withFallback(ex -&gt; defaultValue)</code></td></tr>
+                    <tr><td>Monitoring retry events</td><td><code>Log::info()</code> manual di catch block</td><td><code>retry.getEventPublisher().onRetry(callback)</code></td></tr>
+                    <tr><td>Metrics retry</td><td>Manual counter / StatsD</td><td><code>retry.getMetrics().getNumberOfFailed...</code></td></tr>
+                    <tr><td>Singleton instance</td><td>Service Container / Singleton pattern</td><td>Registry pattern — <code>XxxRegistry.ofDefaults()</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <div class="ib mt"><div class="ibt">&#127881; Selamat! Kamu Telah Menguasai Java Resilience4j!</div>
+                    <p>Langkah selanjutnya yang disarankan:</p>
+                    <ul>
+                        <li>&#127758; <strong>Spring Boot Integration</strong> — Gunakan <code>resilience4j-spring-boot3</code> dependency untuk auto-configuration via <code>application.yml</code>. Tidak perlu buat Registry manual!</li>
+                        <li>&#128064; <strong>Micrometer + Prometheus + Grafana</strong> — Dashboard monitoring Circuit Breaker state, retry rate, bulkhead usage secara real-time.</li>
+                        <li>&#127981; <strong>@CircuitBreaker, @Retry Annotations</strong> — Di Spring Boot, kamu bisa pakai annotations AOP langsung di method: <code>@CircuitBreaker(name="myService", fallbackMethod="fallback")</code>.</li>
+                        <li>&#128301; <strong>Testing Resilience4j</strong> — Gunakan <code>CircuitBreaker.transitionToOpenState()</code> untuk force state di test, atau pakai <code>WireMock</code> untuk simulasi service yang lambat/error.</li>
+                        <li>&#128268; <strong>Feign + Resilience4j</strong> — Jika pakai Feign untuk HTTP client di microservice, integrasi Resilience4j sangat mudah via Spring Cloud Circuit Breaker.</li>
+                        <li>&#127926; <strong>Kombinasi Pattern Optimal</strong>: Untuk external API call: Bulkhead (ThreadPool) + TimeLimiter + CircuitBreaker + Retry + RateLimiter. Ini adalah "stack" fault tolerance yang komprehensif!</li>
+                    </ul></div>
+            </div>
+        </div>
+
+    </section>
+    <footer style="padding:var(--l);text-align:center;color:var(--transtext-color);font-size:var(--xs);">
+        <p>&#127475; Java Resilience4j — Fault Tolerance Patterns — Self-Paced Learning Module</p>
+        <p>Dibuat untuk developer PHP/Laravel yang membangun aplikasi Java yang tangguh di production</p>
+    </footer>
+</main>
+
+<script>
+    function sidebarMinify(){document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");document.getElementsByClassName("container")[0].classList.toggle("expanded");}
+    function switchTheme(){document.getElementsByTagName("body")[0].classList.toggle("dark-mode");const b=document.querySelector(".container-header-button-switch-theme");if(b)b.textContent=document.body.classList.contains("dark-mode")?"Light Mode":"Dark Mode";}
+    function showMenu(){document.getElementsByClassName("sidebar")[0].classList.toggle("show");document.getElementById("get-menu").classList.toggle("opened");}
+
+    const QD={
+        q1:{c:"b",ok:"Benar! Default maxAttempts=3 artinya 1 percobaan awal + 2 retry = 3 total. Setelah 3 kali gagal semua, MaxRetriesExceededException dilempar. Jeda antar percobaan default 500ms.",ng:"Belum tepat. Default Retry.ofDefaults() menggunakan maxAttempts=3 — artinya total 3 percobaan (1 awal + 2 retry). Setelah itu, exception terakhir di-propagate."},
+        q2:{c:"b",ok:"Tepat! .retryExceptions(NetworkException.class) berarti HANYA NetworkException yang di-retry. Semua exception lain (termasuk ValidationException) langsung di-throw tanpa retry. Ini pola yang benar untuk memisahkan transient fault dari permanent error.",ng:"Belum tepat. .retryExceptions(X.class) berarti hanya exception tipe X yang di-retry. .ignoreExceptions(X.class) berarti exception X TIDAK di-retry (semua lainnya tetap di-retry)."},
+        q3:{c:"b",ok:"Tepat! Registry menggunakan cache internal — nama yang sama selalu menghasilkan instance yang sama (assertSame membuktikan ini). Ini penting agar metrics tidak terfragmentasi dan instance tidak redundan.",ng:"Belum tepat. Registry memastikan singleton per nama — registry.retry('api-client') selalu mengembalikan instance yang sama, tidak peduli dipanggil berapa kali."},
+        q4:{c:"b",ok:"Benar! Setelah minimumNumberOfCalls(10) terpenuhi (10 request), CB menghitung error rate: 10/10 = 100% > threshold 50%. CB langsung OPEN. Request ke-11 mendapat CallNotPermittedException tanpa eksekusi — jauh lebih cepat dari menunggu timeout!",ng:"Belum tepat. Setelah minimumNumberOfCalls terpenuhi, CB evaluasi error rate. 10 dari 10 gagal = 100% > 50% threshold → CB OPEN. Request ke-11 langsung ditolak dengan CallNotPermittedException."},
+        q5:{c:"b",ok:"Tepat! cancelRunningFuture(false) berarti task di background thread TETAP berjalan meski sudah timeout. TimeoutException dilempar ke pemanggil, tapi thread di background terus consume resource sampai task selesai atau JVM berhenti — ini resource leak!",ng:"Belum tepat. cancelRunningFuture(false) artinya task di background TIDAK dibatalkan saat timeout. TimeoutException tetap dilempar, tapi thread di background terus berjalan membuang resource. Selalu gunakan cancelRunningFuture(true) di production!"},
+        q6:{c:"b",ok:"Benar! timeoutDuration(0) berarti tidak ada waktu tunggu sama sekali. Request ke-6 langsung mendapat RequestNotPermitted karena quota 5 sudah habis dan tidak ada waktu untuk menunggu refresh. Inilah fail-fast behavior.",ng:"Belum tepat. timeoutDuration(0) artinya tidak ada waktu tunggu — langsung throw RequestNotPermitted jika quota habis. Request tidak menunggu periode berikutnya."},
+        q7:{c:"b",ok:"Tepat! Total kapasitas = maxThreadPoolSize + queueCapacity = 3 + 2 = 5 request. Request ke-6 langsung mendapat BulkheadFullException karena tidak ada slot di thread aktif maupun queue.",ng:"Belum tepat. ThreadPool Bulkhead menampung: maxThreadPoolSize (thread aktif) + queueCapacity (antrian). 3 + 2 = 5 total. Request ke-6 mendapat BulkheadFullException."},
+        q8:{c:"b",ok:"Tepat! .withFallback() adalah safety net terakhir. Jika semua retry habis dan semua protection sudah dilewati, fallback mengembalikan nilai default tanpa melempar exception. Inilah graceful degradation!",ng:"Belum tepat. .withFallback(throwable -> 'Hello Guest') memastikan bahwa jika semua retry dan protection gagal, nilai default dikembalikan alih-alih melempar exception. Supplier.get() mengembalikan 'Hello Guest'."},
+        q9:{c:"b",ok:"Tepat! getNumberOfSuccessfulCallsWithRetryAttempt() menghitung 'call' (bukan percobaan individu) yang akhirnya berhasil setelah melalui retry. Di sini 1 call berhasil di percobaan ke-3. Angkanya adalah 1 meskipun ada 2 retry sebelumnya.",ng:"Belum tepat. Metrics menghitung per 'call' (satu set percobaan), bukan per percobaan individual. Satu call yang gagal 2x lalu berhasil = 1 di getNumberOfSuccessfulCallsWithRetryAttempt()."}
+    };
+
+    function AQ(qid,sel,el){
+        const d=QD[qid];
+        document.querySelectorAll("#"+qid+"-o .qo").forEach(o=>o.classList.add("disabled"));
+        const ok=sel===d.c;
+        el.classList.add(ok?"correct":"wrong");
+        if(!ok) document.querySelectorAll("#"+qid+"-o .qo").forEach(o=>{
+            if(o.getAttribute("onclick").includes("'"+d.c+"'"))o.classList.add("correct");
+        });
+        const f=document.getElementById(qid+"-f");
+        f.textContent=(ok?"✅ ":"❌ ")+(ok?d.ok:d.ng);
+        f.className="qf show "+(ok?"correct":"wrong");
+    }
+
+    document.addEventListener("DOMContentLoaded",()=>{
+        document.querySelectorAll("pre code").forEach(b=>hljs.highlightElement(b));
+        const secs=document.querySelectorAll("[id^=ch]");
+        const items=document.querySelectorAll(".sidebar-menu-item");
+        secs.forEach(s=>{
+            new IntersectionObserver(entries=>{
+                entries.forEach(e=>{
+                    if(e.isIntersecting){
+                        items.forEach(i=>{i.classList.remove("active");if(i.getAttribute("href")==="#"+e.target.id)i.classList.add("active");});
+                    }
+                });
+            },{rootMargin:"-20% 0px -70% 0px"}).observe(s);
+        });
+    });
+</script>
+</body>
+</html>

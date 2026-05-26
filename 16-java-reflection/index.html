@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Belajar Java Reflection — Modul Interaktif</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        pre {
+            background: #11111b;
+            color: #cdd6f4;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            max-width: 77dvw;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            line-height: 1.75;
+            box-sizing: border-box;
+            border: 1px solid #313244;
+        }
+        code { font-family: 'JetBrains Mono', monospace; font-size: .72rem; }
+        /* syntax colors */
+        pre .kw  { color: #cba6f7; }
+        pre .cls { color: #89dceb; }
+        pre .str { color: #a6e3a1; }
+        pre .num { color: #fab387; }
+        pre .ann { color: #f9e2af; }
+        pre .cmt { color: #585b70; font-style: italic; }
+        pre .met { color: #89b4fa; }
+        pre .typ { color: #94e2d5; }
+        pre .iface{ color: #f38ba8; }
+
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            margin-top: var(--m);
+        }
+        .info-box.primary { background: var(--transprimary-color); border-left: 4px solid var(--primary-color); }
+        .info-box.success { background: var(--transsuccess-color); border-left: 4px solid var(--success-color); }
+        .info-box.warning { background: var(--transwarning-color); border-left: 4px solid var(--warning-color); }
+        .info-box.danger  { background: var(--transdanger-color);  border-left: 4px solid var(--danger-color);  }
+
+        .line-explain { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; gap: var(--s); margin-top: var(--m); }
+        .line-explain-item { display: flex; gap: var(--s); align-items: flex-start; }
+        .line-num {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border-radius: var(--radius-s);
+            padding: 2px var(--xs);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .65rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+        .line-desc { font-size: var(--s); }
+
+        .compare-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--m);
+            margin-top: var(--m);
+        }
+        @media (max-width: 640px) { .compare-box { grid-template-columns: 1fr; } }
+        .compare-wrong { border-radius: var(--radius-x); padding: var(--m); background: var(--transdanger-color); border: 1px solid var(--danger-color); }
+        .compare-right { border-radius: var(--radius-x); padding: var(--m); background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .compare-label { font-weight: 700; margin-bottom: var(--s); font-size: var(--s); }
+        .compare-wrong .compare-label { color: var(--danger-color); }
+        .compare-right .compare-label { color: var(--success-color); }
+
+        .laravel-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            margin-top: var(--m);
+            background: var(--transsecond-primary-color);
+            border-left: 4px solid var(--second-primary-color);
+        }
+        .laravel-box-title { font-weight: 700; color: var(--second-primary-color); margin-bottom: var(--xs); }
+
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--m);
+            margin-top: var(--m);
+            background: var(--transprimary-color);
+            border: 1px solid var(--primary-color);
+        }
+        .quiz-title { font-weight: 700; color: var(--primary-color); margin-bottom: var(--s); }
+        .quiz-options { display: grid; gap: var(--xs); margin-top: var(--s); }
+        .quiz-option {
+            display: flex; align-items: flex-start; gap: var(--xs);
+            padding: var(--xs) var(--s); border-radius: var(--radius-m); cursor: pointer;
+            border: 1px solid var(--border-color); background: var(--bg-color);
+            transition: all .2s; font-size: var(--s); line-height: 1.5;
+        }
+        .quiz-option:hover { border-color: var(--primary-color); background: var(--transprimary-color); }
+        .quiz-option.correct { border-color: var(--success-color); background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-option.wrong   { border-color: var(--danger-color);  background: var(--transdanger-color);  color: var(--danger-color); }
+        .quiz-feedback { margin-top: var(--s); font-size: var(--s); padding: var(--xs) var(--s); border-radius: var(--radius-m); display: none; line-height: 1.6; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.no { background: var(--transdanger-color);  color: var(--danger-color); }
+
+        .chapter-banner {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            padding: var(--l) var(--m);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--second-primary-color) 100%);
+            color: #fff;
+            margin-bottom: var(--m);
+        }
+        .chapter-banner.green { background: linear-gradient(135deg,#16a34a 0%,#15803d 100%); }
+        .chapter-banner.orange { background: linear-gradient(135deg,#d97706 0%,#b45309 100%); }
+        .chapter-banner.red { background: linear-gradient(135deg,#dc2626 0%,#991b1b 100%); }
+        .chapter-banner.teal { background: linear-gradient(135deg,#0d9488 0%,#0f766e 100%); }
+        .chapter-banner.dark { background: linear-gradient(135deg,#1e293b 0%,#0f172a 100%); }
+        .chapter-num { font-size: .65rem; opacity: .8; letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .chapter-title { font-size: var(--xx); font-weight: 700; margin-top: 4px; }
+        .chapter-sub { font-size: var(--s); opacity: .85; margin-top: 4px; }
+
+        .hero {
+            border-radius: var(--radius-x);
+            padding: var(--xxxx) var(--xx);
+            background: linear-gradient(135deg,#11111b 0%,#1e1e2e 60%,#181825 100%);
+            color: #cdd6f4;
+            text-align: center;
+            margin-bottom: var(--x);
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(203,166,247,.15) 0%, transparent 65%);
+            border-radius: var(--radius-x);
+            pointer-events: none;
+        }
+        .hero h1 { font-size: var(--xx); font-weight: 800; color: #cba6f7; font-family: 'JetBrains Mono', monospace; position: relative; }
+        .hero p { font-size: var(--s); color: #a6adc8; margin-top: var(--s); position: relative; line-height: 1.7; }
+        .hero .tag-row { display: flex; flex-wrap: wrap; gap: var(--xs); justify-content: center; margin-top: var(--m); position: relative; }
+        .hero-tag { background: rgba(203,166,247,.12); border: 1px solid rgba(203,166,247,.4); color: #cba6f7; border-radius: 999px; padding: 3px var(--s); font-size: .65rem; font-family: 'JetBrains Mono', monospace; }
+
+        p code, li code, .line-desc code, small code, td code {
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            padding: 1px 5px;
+            border-radius: var(--radius-s);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .arch-diagram {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-x);
+            background: #11111b;
+            border: 1px solid #313244;
+            padding: var(--m);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .7rem;
+            color: #cdd6f4;
+            line-height: 1.9;
+            margin-top: var(--m);
+        }
+        .arch-diagram .d-kw   { color: #cba6f7; }
+        .arch-diagram .d-cls  { color: #89dceb; }
+        .arch-diagram .d-ann  { color: #f9e2af; }
+        .arch-diagram .d-arr  { color: #6c7086; }
+
+        .highlight-row { background: rgba(203,166,247,.07); border-radius: var(--radius-s); padding: 2px 6px; }
+
+        .mt-s { margin-top: var(--s); }
+        .mt-m { margin-top: var(--m); }
+        .mt-l { margin-top: var(--l); }
+
+        /* output box */
+        .output-box {
+            background: #1e1e2e;
+            border: 1px dashed #45475a;
+            border-radius: var(--radius-m);
+            padding: var(--s) var(--m);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .68rem;
+            color: #a6e3a1;
+            max-width: 77dvw;
+            overflow-x: auto;
+            margin-top: var(--s);
+            line-height: 1.7;
+        }
+        .output-box .out-label { color: #6c7086; font-size: .6rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<!-- Bottom Nav (Mobile) -->
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠</a>
+    <a class="bottom-nav-item" href="#chapter-1">🔍 Class</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnav-check">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnav-check">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnav-check">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-2">🧩 Fields</a>
+                <a class="bottom-nav-item" href="#chapter-3">⚡ Methods</a>
+                <a class="bottom-nav-item" href="#chapter-4">🏗️ Constructor</a>
+                <a class="bottom-nav-item" href="#chapter-5">🏷️ Modifiers</a>
+                <a class="bottom-nav-item" href="#chapter-6">📦 Interface &amp; Super</a>
+                <a class="bottom-nav-item" href="#chapter-7">🔖 Annotations</a>
+                <a class="bottom-nav-item" href="#chapter-8">🧬 Generics</a>
+                <a class="bottom-nav-item" href="#chapter-9">🎲 Enum &amp; Array &amp; Record</a>
+                <a class="bottom-nav-item" href="#chapter-10">🪆 Dynamic Proxy</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <a href="../" class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Reflection</div>
+    </a>
+    <div class="sidebar-menu">
+        <a href="#intro"     class="sidebar-menu-item active" data-title="Pengantar"><div class="sidebar-menu-item-svg">🏠</div><span>Pengantar</span></a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Class Object"><div class="sidebar-menu-item-svg">🔍</div><span>Class Object</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Fields"><div class="sidebar-menu-item-svg">🧩</div><span>Fields</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="Methods & Parameters"><div class="sidebar-menu-item-svg">⚡</div><span>Methods &amp; Parameters</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="Constructors"><div class="sidebar-menu-item-svg">🏗️</div><span>Constructors</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="Modifiers & Package"><div class="sidebar-menu-item-svg">🏷️</div><span>Modifiers &amp; Package</span></a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Interface & Superclass"><div class="sidebar-menu-item-svg">📦</div><span>Interface &amp; Superclass</span></a>
+        <a href="#chapter-7" class="sidebar-menu-item" data-title="Annotations & Validator"><div class="sidebar-menu-item-svg">🔖</div><span>Annotations &amp; Validator</span></a>
+        <a href="#chapter-8" class="sidebar-menu-item" data-title="Generics & ParameterizedType"><div class="sidebar-menu-item-svg">🧬</div><span>Generics &amp; Types</span></a>
+        <a href="#chapter-9" class="sidebar-menu-item" data-title="Enum, Array & Record"><div class="sidebar-menu-item-svg">🎲</div><span>Enum, Array &amp; Record</span></a>
+        <a href="#chapter-10" class="sidebar-menu-item" data-title="Dynamic Proxy"><div class="sidebar-menu-item-svg">🪆</div><span>Dynamic Proxy</span></a>
+        <a href="#summary"   class="sidebar-menu-item" data-title="Ringkasan Arsitektur"><div class="sidebar-menu-item-svg">📋</div><span>Ringkasan Arsitektur</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#intro">
+                <span class="container-header-nav-item-text">☕ Java Reflection Course</span>
+            </a>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ========== HERO ========== -->
+        <div class="card-wrapper max-width-1000" id="intro">
+            <div class="hero">
+                <h1>🔍 Java Reflection API</h1>
+                <p>Modul pembelajaran interaktif untuk developer PHP / Laravel yang migrasi ke Java.<br>
+                    Reflection adalah kemampuan program untuk <em>memeriksa dan memanipulasi dirinya sendiri</em> saat runtime — fondasi dari framework seperti Spring, Hibernate, dan JUnit.</p>
+                <div class="tag-row">
+                    <span class="hero-tag">java.lang.reflect</span>
+                    <span class="hero-tag">Class&lt;T&gt;</span>
+                    <span class="hero-tag">Field / Method / Constructor</span>
+                    <span class="hero-tag">Annotation Processing</span>
+                    <span class="hero-tag">Dynamic Proxy</span>
+                    <span class="hero-tag">Generics at Runtime</span>
+                </div>
+            </div>
+
+            <p>Sebelum masuk ke kode, kamu perlu memahami <strong>mengapa Reflection ada</strong> dan kapan kamu boleh (dan tidak boleh) menggunakannya.</p>
+
+            <div class="accordion-item mt-m">
+                <input type="checkbox" id="acc-what" class="accordion-item-check"/>
+                <label for="acc-what" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>🤔 Apa itu Reflection dan mengapa perlu ada?</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Konsep paling fundamental sebelum belajar kode apapun</div>
+                </label>
+                <div class="accordion-content">
+                    <p>Secara normal, Java adalah bahasa yang <strong>sangat statis</strong> — semua tipe data harus diketahui saat kompilasi. Tapi bagaimana jika kamu ingin menulis kode yang bisa bekerja dengan <em>class manapun</em> tanpa tahu class-nya terlebih dahulu?</p>
+                    <p class="mt-s">Contoh nyata: Spring saat startup tidak tahu class-class mana yang akan kamu buat. Tapi ia bisa scan, inject dependency, dan menjalankan semua <code>@Service</code>-mu secara otomatis. Caranya? <strong>Reflection.</strong></p>
+                    <p class="mt-s">Reflection memungkinkan program untuk bertanya pada dirinya sendiri saat runtime: "Kelas ini punya method apa saja? Field-nya apa? Ada annotation-nya tidak?" — lalu bertindak berdasarkan jawaban tersebut.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <input type="checkbox" id="acc-usecase" class="accordion-item-check"/>
+                <label for="acc-usecase" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>🏭 Framework mana saja yang menggunakan Reflection?</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Reflection adalah tulang punggung ekosistem Java modern</div>
+                </label>
+                <div class="accordion-content">
+                    <div class="table-content mt-s">
+                        <table>
+                            <thead><tr><th>Framework</th><th>Penggunaan Reflection</th></tr></thead>
+                            <tbody>
+                            <tr><td><strong>Spring Boot</strong></td><td>Component scanning, Dependency Injection, <code>@Autowired</code></td></tr>
+                            <tr><td><strong>Hibernate / JPA</strong></td><td>Membaca <code>@Entity</code>, <code>@Column</code> untuk mapping ORM</td></tr>
+                            <tr><td><strong>JUnit 5</strong></td><td>Menemukan dan menjalankan semua method <code>@Test</code></td></tr>
+                            <tr><td><strong>Jackson / Gson</strong></td><td>Serialisasi JSON ↔ Java Object secara otomatis</td></tr>
+                            <tr><td><strong>Lombok</strong></td><td>Generate getter/setter/builder via Annotation Processing</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <input type="checkbox" id="acc-warning" class="accordion-item-check"/>
+                <label for="acc-warning" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>⚠️ Kapan TIDAK boleh menggunakan Reflection?</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Reflection punya trade-off yang harus dipahami</div>
+                </label>
+                <div class="accordion-content">
+                    <p>Reflection memiliki tiga kelemahan utama:</p>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--s);">
+                        <li><strong>Performa:</strong> Jauh lebih lambat dari pemanggilan method biasa — JVM tidak bisa mengoptimasi.</li>
+                        <li><strong>Type Safety hilang:</strong> Error tipe data baru ketahuan saat runtime, bukan saat kompilasi.</li>
+                        <li><strong>Keamanan:</strong> <code>setAccessible(true)</code> bisa bypass <code>private</code> — melanggar enkapsulasi.</li>
+                    </ul>
+                    <p class="mt-s"><strong>Aturan praktis:</strong> Gunakan Reflection di dalam <em>framework / library / infrastructure code</em>, bukan di <em>business logic</em> sehari-hari. Kalau ada cara biasa untuk melakukannya, pakai cara biasa.</p>
+                </div>
+            </div>
+
+            <div class="laravel-box">
+                <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                <p>Di PHP, Reflection digunakan oleh Laravel Service Container untuk melakukan <strong>automatic dependency resolution</strong> — saat kamu type-hint sebuah class di constructor, Laravel membaca type hint tersebut via <code>ReflectionClass</code> PHP dan secara otomatis meng-inject instance yang tepat. Java melakukan hal yang sama dengan cara yang lebih eksplisit dan type-safe.</p>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 1: CLASS OBJECT ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-num">Chapter 01</div>
+                    <div class="chapter-title">🔍 Class Object — Gerbang Utama Reflection</div>
+                    <div class="chapter-sub">ClassTest.java · 3 cara mendapat Class&lt;T&gt; · inspeksi metadata</div>
+                </div>
+
+                <p>Semua Reflection di Java dimulai dari satu objek: <strong><code>Class&lt;T&gt;</code></strong>. Ini adalah representasi sebuah class Java di dalam memory — semacam "kartu identitas" dari sebuah class yang menyimpan semua informasi tentangnya.</p>
+
+                <div class="text-title mt-m">3 Cara Mendapatkan Class Object</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testCreateClass</span>() <span class="kw">throws</span> <span class="cls">ClassNotFoundException</span> {
+
+    <span class="cmt">// Cara 1: Class literal — paling umum dan aman (compile-time check)</span>
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass1 = <span class="cls">Person</span>.<span class="kw">class</span>;               <span class="cmt">// (A)</span>
+
+    <span class="cmt">// Cara 2: Class.forName() — dari string nama class (runtime)</span>
+    <span class="cls">Class</span>&lt;?&gt; personClass2 = <span class="cls">Class</span>.<span class="met">forName</span>(                    <span class="cmt">// (B)</span>
+        <span class="str">"programmerzamannow.reflection.data.Person"</span>);
+
+    <span class="cmt">// Cara 3: Dari instance yang sudah ada</span>
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>();
+    <span class="cls">Class</span>&lt;? <span class="kw">extends</span> <span class="cls">Person</span>&gt; personClass3 = person.<span class="met">getClass</span>(); <span class="cmt">// (C)</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) .class literal</span>
+                        <span class="line-desc">Cara paling direkomendasikan. <code>Person.class</code> adalah ekspresi yang dievaluasi saat kompilasi — jika class tidak ada, compiler langsung error. Type parameter <code>&lt;Person&gt;</code> terjaga sepenuhnya, memberikan type safety maksimal.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) Class.forName()</span>
+                        <span class="line-desc">Menerima nama class sebagai <code>String</code> — artinya class baru dicari saat runtime. Sangat berguna ketika nama class tidak diketahui saat kompilasi (misalnya dari konfigurasi file, database, atau plugin system). Tipe kembalinya adalah <code>Class&lt;?&gt;</code> (wildcard) karena compiler tidak tahu class apa yang dimaksud. Melempar <code>ClassNotFoundException</code> jika nama class salah.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) .getClass()</span>
+                        <span class="line-desc">Mendapat Class dari instance yang sudah ada. Tipe kembalinya adalah <code>Class&lt;? extends Person&gt;</code> bukan <code>Class&lt;Person&gt;</code>, karena objek di runtime bisa jadi subclass dari Person. Ini penting di polymorphism.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Inspeksi Metadata Class</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testClassMethod</span>() {
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass = <span class="cls">Person</span>.<span class="kw">class</span>;
+
+    personClass.<span class="met">getSuperclass</span>();           <span class="cmt">// → class java.lang.Object</span>
+    personClass.<span class="met">getInterfaces</span>();           <span class="cmt">// → [Nameable, Serializable]</span>
+    personClass.<span class="met">getDeclaredConstructors</span>(); <span class="cmt">// → semua constructor Person</span>
+    personClass.<span class="met">getDeclaredMethods</span>();      <span class="cmt">// → semua method Person</span>
+    personClass.<span class="met">getDeclaredFields</span>();       <span class="cmt">// → semua field Person</span>
+    personClass.<span class="met">getModifiers</span>();            <span class="cmt">// → angka bitmask (public=1, final=16, ...)</span>
+    personClass.<span class="met">getPackage</span>();              <span class="cmt">// → programmerzamannow.reflection.data</span>
+    personClass.<span class="met">getName</span>();                 <span class="cmt">// → fully qualified: programmerzamannow...Person</span>
+    personClass.<span class="met">getSimpleName</span>();           <span class="cmt">// → "Person" saja</span>
+}</pre>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ getDeclared* vs get* — Perbedaan Krusial!</strong><br>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--s);">
+                        <li><code>getDeclaredFields()</code> → semua field di class <strong>ini saja</strong> (termasuk private), tapi <strong>tidak termasuk warisan dari superclass</strong></li>
+                        <li><code>getFields()</code> → hanya field <strong>public</strong>, tapi termasuk yang diwarisi dari superclass</li>
+                        <li>Aturan yang sama berlaku untuk <code>getDeclaredMethods()</code> vs <code>getMethods()</code> dan <code>getDeclaredConstructors()</code> vs <code>getConstructors()</code></li>
+                    </ul>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>Class&lt;T&gt;</code> di Java adalah ekuivalen dari <code>ReflectionClass</code> di PHP. Operasi seperti <code>Person.class</code> → <code>new ReflectionClass(Person::class)</code>, dan <code>Class.forName("nama.class")</code> → <code>new ReflectionClass('NamaClass')</code>. Di Java, setiap class otomatis memiliki "Class object"-nya sendiri yang diload oleh JVM — tidak perlu membuat instance Reflection secara manual seperti di PHP.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 1</div>
+                    <p><strong>Q:</strong> Kamu sedang menulis sebuah plugin system di mana nama class dikonfigurasi lewat file YAML. Cara mana yang paling tepat untuk mendapatkan <code>Class</code> object-nya?</p>
+                    <div class="quiz-options" id="q1">
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">A. <code>NamaClass.class</code> — class literal</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,true)">B. <code>Class.forName(namaClassDariYaml)</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">C. <code>instance.getClass()</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">D. Tidak mungkin, harus pakai cara lain</div>
+                    </div>
+                    <div class="quiz-feedback" id="q1-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 2: FIELDS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner orange">
+                    <div class="chapter-num">Chapter 02</div>
+                    <div class="chapter-title">🧩 Fields — Membaca & Memanipulasi Properti</div>
+                    <div class="chapter-sub">FieldTest.java · PrimitiveTypeTest.java · setAccessible · get/set</div>
+                </div>
+
+                <p>Setelah bisa mendapatkan <code>Class</code> object, langkah berikutnya adalah mengakses <strong>field</strong> (properti/attribute) dari class tersebut. Ini adalah fondasi dari fitur seperti serialisasi JSON, ORM mapping, dan validasi otomatis.</p>
+
+                <div class="text-title mt-m">Membaca Nama & Tipe Semua Field</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetFields</span>() {
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass = <span class="cls">Person</span>.<span class="kw">class</span>;
+
+    <span class="cls">Field</span>[] fields = personClass.<span class="met">getDeclaredFields</span>();    <span class="cmt">// (1)</span>
+    <span class="kw">for</span> (<span class="cls">Field</span> field : fields) {
+        System.out.<span class="met">println</span>(field.<span class="met">getName</span>()                 <span class="cmt">// (2)</span>
+            + <span class="str">" : "</span> + field.<span class="met">getType</span>().<span class="met">getName</span>());          <span class="cmt">// (3)</span>
+    }
+}</pre>
+
+                <div class="output-box mt-s">
+                    <span class="out-label">Output</span>
+                    firstName : java.lang.String<br>
+                    lastName : java.lang.String<br>
+                    hobbies : java.util.List<br>
+                    age : int
+                </div>
+
+                <div class="text-title mt-l">Membaca Nilai Field (termasuk private)</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetFieldValue</span>() <span class="kw">throws</span> <span class="cls">NoSuchFieldException</span>, <span class="cls">IllegalAccessException</span> {
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass = <span class="cls">Person</span>.<span class="kw">class</span>;
+    <span class="cls">Field</span> firstName = personClass.<span class="met">getDeclaredField</span>(<span class="str">"firstName"</span>); <span class="cmt">// (A)</span>
+    firstName.<span class="met">setAccessible</span>(<span class="kw">true</span>);                              <span class="cmt">// (B)</span>
+
+    <span class="cls">Person</span> person1 = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Eko"</span>, <span class="str">"Kurniawan"</span>);
+    <span class="typ">String</span> result = (<span class="typ">String</span>) firstName.<span class="met">get</span>(person1);            <span class="cmt">// (C)</span>
+    System.out.<span class="met">println</span>(result); <span class="cmt">// Eko</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) getDeclaredField("nama")</span>
+                        <span class="line-desc">Mencari satu field berdasarkan nama. Akan melempar <code>NoSuchFieldException</code> jika nama salah — ini adalah tanda bahwa type safety sedang dikompromikan (nama field sebagai string tidak dicek compiler). Perhatikan bahwa field ini bersifat <code>private</code> di class Person.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) setAccessible(true)</span>
+                        <span class="line-desc"><strong>Kunci utama Reflection.</strong> Secara default, JVM menegakkan aturan akses (<code>private</code>, <code>protected</code>). <code>setAccessible(true)</code> <em>menonaktifkan pengecekan akses</em> untuk field ini, memungkinkan kita membaca/menulis nilai <code>private</code> dari luar class. Ini adalah "bypass keamanan" yang harus digunakan dengan sangat hati-hati.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) field.get(instance)</span>
+                        <span class="line-desc">Membaca nilai field dari sebuah instance objek. Mengembalikan <code>Object</code>, sehingga kamu perlu melakukan <strong>casting</strong> ke tipe yang benar. Jika salah cast → <code>ClassCastException</code> saat runtime.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Mengubah Nilai Field</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testSetFieldValue</span>() <span class="kw">throws</span> <span class="cls">NoSuchFieldException</span>, <span class="cls">IllegalAccessException</span> {
+    <span class="cls">Field</span> firstName = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getDeclaredField</span>(<span class="str">"firstName"</span>);
+    firstName.<span class="met">setAccessible</span>(<span class="kw">true</span>);
+
+    <span class="cls">Person</span> person1 = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Eko"</span>, <span class="str">"Kurniawan"</span>);
+    firstName.<span class="met">set</span>(person1, <span class="str">"Joko"</span>); <span class="cmt">// ekuivalen: person1.setFirstName("Joko")</span>
+    System.out.<span class="met">println</span>(person1.<span class="met">getFirstName</span>()); <span class="cmt">// Joko</span>
+}</pre>
+
+                <div class="text-title mt-l">Primitive Types — Field Khusus</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetFieldValue</span>() <span class="kw">throws</span> <span class="cls">NoSuchFieldException</span>, <span class="cls">IllegalAccessException</span> {
+    <span class="cls">Field</span> age = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getDeclaredField</span>(<span class="str">"age"</span>);
+
+    System.out.<span class="met">println</span>(age.<span class="met">getType</span>().<span class="met">isPrimitive</span>()); <span class="cmt">// true</span>
+
+    age.<span class="met">setAccessible</span>(<span class="kw">true</span>);
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>);
+    person.<span class="met">setAge</span>(<span class="num">25</span>);
+
+    System.out.<span class="met">println</span>(age.<span class="met">getInt</span>(person)); <span class="cmt">// (!) bukan .get() biasa</span>
+}</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Primitive vs Object — Cara Akses Berbeda</strong><br>
+                    Untuk field bertipe primitif (<code>int</code>, <code>long</code>, <code>boolean</code>, dll), gunakan method khusus seperti <code>field.getInt()</code>, <code>field.getLong()</code>, <code>field.getBoolean()</code> — bukan <code>field.get()</code> biasa. Ini karena tipe primitif bukan <code>Object</code> di Java (tidak bisa di-cast ke <code>Object</code> secara langsung tanpa auto-boxing).
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Lupa setAccessible untuk field private</div>
+                        <pre style="font-size:.65rem;margin-top:8px;">Field firstName = personClass
+    .getDeclaredField("firstName");
+<span class="cmt">// Lupa setAccessible(true)!</span>
+
+String val = (String) firstName.get(person);
+<span class="cmt">// → IllegalAccessException saat runtime!</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Selalu setAccessible untuk private field</div>
+                        <pre style="font-size:.65rem;margin-top:8px;">Field firstName = personClass
+    .getDeclaredField("firstName");
+firstName.setAccessible(true); <span class="cmt">// ← wajib</span>
+
+String val = (String) firstName.get(person);
+<span class="cmt">// → "Eko" ✓</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Operasi <code>field.get(object)</code> dan <code>field.set(object, value)</code> di Java persis seperti <code>$reflection->getValue($object)</code> dan <code>$reflection->setValue($object, $value)</code> di PHP's <code>ReflectionProperty</code>. <code>setAccessible(true)</code> di Java = <code>$prop->setAccessible(true)</code> di PHP — keduanya bypass enkapsulasi dengan cara yang sama.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q:</strong> Kamu mencoba membaca nilai field <code>private int age</code> milik class <code>Person</code> via Reflection, tapi mendapat <code>IllegalAccessException</code>. Apa yang harus ditambahkan?</p>
+                    <div class="quiz-options" id="q2">
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">A. Ubah field <code>age</code> menjadi <code>public</code> di source code</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,true)">B. Panggil <code>ageField.setAccessible(true)</code> sebelum <code>ageField.get(person)</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">C. Gunakan <code>getFields()</code> bukan <code>getDeclaredFields()</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">D. Tambahkan <code>throws IllegalAccessException</code> saja sudah cukup</div>
+                    </div>
+                    <div class="quiz-feedback" id="q2-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 3: METHODS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner teal">
+                    <div class="chapter-num">Chapter 03</div>
+                    <div class="chapter-title">⚡ Methods & Parameters — Invoke Dinamis</div>
+                    <div class="chapter-sub">MethodTest.java · ParameterTest.java · Method.invoke()</div>
+                </div>
+
+                <p>Setelah Field, kini giliran <strong>Method</strong>. Reflection memungkinkan kamu memanggil method apapun secara dinamis — bahkan tanpa mengetahui nama method-nya saat kompilasi. Ini adalah inti dari mekanisme seperti JUnit (menjalankan method <code>@Test</code>) dan Spring AOP.</p>
+
+                <div class="text-title mt-m">Inspeksi Semua Method</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetMethods</span>() {
+    <span class="cls">Method</span>[] methods = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getDeclaredMethods</span>();
+    <span class="kw">for</span> (<span class="cls">Method</span> method : methods) {
+        System.out.<span class="met">println</span>(method.<span class="met">getName</span>());                          <span class="cmt">// nama method</span>
+        System.out.<span class="met">println</span>(method.<span class="met">getReturnType</span>());                     <span class="cmt">// tipe return</span>
+        System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(method.<span class="met">getParameterTypes</span>())); <span class="cmt">// tipe parameter</span>
+        System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(method.<span class="met">getExceptionTypes</span>())); <span class="cmt">// exception yang dideklarasikan</span>
+    }
+}</pre>
+
+                <div class="text-title mt-l">Memanggil (Invoke) Method Tanpa Parameter</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetMethodValue</span>() <span class="kw">throws</span> <span class="cls">NoSuchMethodException</span>, <span class="cls">InvocationTargetException</span>, <span class="cls">IllegalAccessException</span> {
+    <span class="cls">Method</span> getFirstName = <span class="cls">Person</span>.<span class="kw">class</span>
+        .<span class="met">getDeclaredMethod</span>(<span class="str">"getFirstName"</span>);          <span class="cmt">// (1)</span>
+
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>);
+    <span class="typ">String</span> firstName = (<span class="typ">String</span>) getFirstName.<span class="met">invoke</span>(person); <span class="cmt">// (2)</span>
+    System.out.<span class="met">println</span>(firstName); <span class="cmt">// "Eko"</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) getDeclaredMethod("nama")</span>
+                        <span class="line-desc">Mencari method berdasarkan nama. Jika ada <strong>overloaded method</strong> (nama sama, parameter berbeda), kamu harus menyertakan tipe-tipe parameter sebagai argumen tambahan untuk disambiguasi — lihat contoh berikutnya.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) method.invoke(instance, args...)</span>
+                        <span class="line-desc">Memanggil method pada instance tertentu. Argumen pertama adalah objek targetnya (seperti <code>this</code>). Argumen berikutnya adalah parameter method (varargs). Return type adalah <code>Object</code> — perlu casting. Untuk <code>void</code> method, <code>invoke()</code> mengembalikan <code>null</code>.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Invoke Method Dengan Parameter + Overload</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testInvokeMethodWithParameter</span>() <span class="kw">throws</span> ... {
+    <span class="cmt">// Disambiguasi overload: sertakan tipe parameter</span>
+    <span class="cls">Method</span> setFirstName = <span class="cls">Person</span>.<span class="kw">class</span>
+        .<span class="met">getDeclaredMethod</span>(<span class="str">"setFirstName"</span>, <span class="typ">String</span>.<span class="kw">class</span>); <span class="cmt">// (A)</span>
+
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>);
+    setFirstName.<span class="met">invoke</span>(person, <span class="str">"Joko"</span>);               <span class="cmt">// (B)</span>
+    System.out.<span class="met">println</span>(person.<span class="met">getFirstName</span>()); <span class="cmt">// "Joko"</span>
+}
+
+<span class="cmt">// Untuk primitive type, gunakan tipe primitive-nya langsung:</span>
+<span class="cls">Method</span> setAge = <span class="cls">Person</span>.<span class="kw">class</span>
+    .<span class="met">getDeclaredMethod</span>(<span class="str">"setAge"</span>, <span class="kw">int</span>.<span class="kw">class</span>); <span class="cmt">// (C) BUKAN Integer.class!</span>
+setAge.<span class="met">invoke</span>(person, <span class="num">25</span>);</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) Disambiguasi overload</span>
+                        <span class="line-desc">Argumen kedua dan seterusnya di <code>getDeclaredMethod()</code> adalah tipe-tipe parameter untuk memilih overload yang tepat. Jika kamu menulis <code>getDeclaredMethod("setFirstName")</code> saja tanpa parameter type, dan ada lebih dari satu <code>setFirstName</code>, kamu akan mendapat exception.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) invoke dengan argumen</span>
+                        <span class="line-desc">Argumen method diberikan setelah instance. Varargs membuatnya fleksibel: <code>method.invoke(obj, arg1, arg2, arg3)</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) int.class vs Integer.class</span>
+                        <span class="line-desc"><strong>Jebakan umum!</strong> <code>int.class</code> (primitive) ≠ <code>Integer.class</code> (wrapper/boxed). Jika method signature-nya <code>setAge(int age)</code>, kamu HARUS pakai <code>int.class</code>. Memakai <code>Integer.class</code> akan membuat <code>getDeclaredMethod()</code> melempar <code>NoSuchMethodException</code>.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Inspect Parameter Detail</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">getGetParameters</span>() {
+    <span class="cls">Method</span>[] methods = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getDeclaredMethods</span>();
+    <span class="kw">for</span> (<span class="cls">Method</span> method : methods) {
+        <span class="cls">Parameter</span>[] parameters = method.<span class="met">getParameters</span>();
+        <span class="kw">for</span> (<span class="cls">Parameter</span> parameter : parameters) {
+            System.out.<span class="met">println</span>(<span class="str">"Name: "</span> + parameter.<span class="met">getName</span>());  <span class="cmt">// ⚠️ perlu flag compiler</span>
+            System.out.<span class="met">println</span>(<span class="str">"Type: "</span> + parameter.<span class="met">getType</span>());
+        }
+    }
+}</pre>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ Nama Parameter Butuh Flag Compiler Khusus</strong><br>
+                    Secara default, Java compiler <strong>tidak menyimpan nama parameter</strong> ke dalam bytecode (untuk menghemat ukuran). Method <code>parameter.getName()</code> akan mengembalikan nilai generik seperti <code>arg0</code>, <code>arg1</code>, dll. Untuk mendapatkan nama asli, tambahkan flag <code>-parameters</code> ke compiler Java (di Maven: <code>&lt;compilerArg&gt;-parameters&lt;/compilerArg&gt;</code>). Spring Boot secara default sudah mengaktifkan ini.
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 InvocationTargetException — Error yang Terbungkus</strong><br>
+                    Ketika method yang di-invoke melempar exception, Reflection membungkusnya dalam <code>InvocationTargetException</code>. Untuk mendapatkan exception aslinya, panggil <code>e.getCause()</code>. Ini adalah pola yang sering membingungkan pemula — stack trace akan menunjuk ke kode Reflection, padahal error sesungguhnya ada di dalam method target.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — int.class vs Integer.class tertukar</div>
+                        <pre style="font-size:.65rem;margin-top:8px;"><span class="cmt">// Signature method: setAge(int age)</span>
+Method setAge = Person.class
+    .getDeclaredMethod("setAge",
+        Integer.class); <span class="cmt">// ← SALAH!</span>
+<span class="cmt">// → NoSuchMethodException!</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Cocokkan exact signature</div>
+                        <pre style="font-size:.65rem;margin-top:8px;"><span class="cmt">// Signature method: setAge(int age)</span>
+Method setAge = Person.class
+    .getDeclaredMethod("setAge",
+        int.class); <span class="cmt">// ← BENAR: int primitive</span>
+setAge.invoke(person, 25);</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>method.invoke(object, args)</code> di Java adalah ekuivalen langsung dari <code>$reflectionMethod->invoke($object, ...$args)</code> di PHP. Perbedaan utama: PHP lebih toleran soal type coercion (bisa auto-convert int ke string), sedangkan Java sangat ketat — tipe argumen harus cocok persis dengan signature method. Salah tipe = <code>IllegalArgumentException</code> saat runtime.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q:</strong> Method <code>setAge(int age)</code> di-invoke via Reflection tapi melempar <code>NoSuchMethodException</code>. Apa kemungkinan penyebabnya?</p>
+                    <div class="quiz-options" id="q3">
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">A. Method <code>setAge</code> bersifat <code>public</code>, bukan <code>private</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,true)">B. Kode menggunakan <code>Integer.class</code> sebagai tipe parameter, padahal signature-nya <code>int</code> (primitive)</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">C. Lupa memanggil <code>setAccessible(true)</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">D. <code>getDeclaredMethod</code> hanya bekerja untuk method <code>private</code></div>
+                    </div>
+                    <div class="quiz-feedback" id="q3-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 4: CONSTRUCTORS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner red">
+                    <div class="chapter-num">Chapter 04</div>
+                    <div class="chapter-title">🏗️ Constructors — Membuat Object Secara Dinamis</div>
+                    <div class="chapter-sub">ConstructorTest.java · Constructor.newInstance()</div>
+                </div>
+
+                <p>Reflection juga memungkinkan pembuatan objek secara dinamis — tanpa menggunakan <code>new</code> secara langsung di kode. Ini adalah fondasi dari Dependency Injection di Spring: container membuat instance class-class-mu tanpa pernah menulis <code>new MyService()</code> secara eksplisit.</p>
+
+                <div class="text-title mt-m">Inspeksi & Invoke Constructor</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testCreateObjectUsingConstructor</span>() <span class="kw">throws</span> ... {
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass = <span class="cls">Person</span>.<span class="kw">class</span>;
+
+    <span class="cmt">// Constructor tanpa parameter (no-arg constructor)</span>
+    <span class="cls">Constructor</span>&lt;<span class="cls">Person</span>&gt; constructor =
+        personClass.<span class="met">getConstructor</span>();                        <span class="cmt">// (1)</span>
+
+    <span class="cmt">// Constructor dengan dua parameter String</span>
+    <span class="cls">Constructor</span>&lt;<span class="cls">Person</span>&gt; constructorWithParams =
+        personClass.<span class="met">getConstructor</span>(<span class="typ">String</span>.<span class="kw">class</span>, <span class="typ">String</span>.<span class="kw">class</span>); <span class="cmt">// (2)</span>
+
+    <span class="cls">Person</span> person1 = constructor.<span class="met">newInstance</span>();               <span class="cmt">// (3)</span>
+    <span class="cls">Person</span> person2 = constructorWithParams.<span class="met">newInstance</span>(        <span class="cmt">// (4)</span>
+        <span class="str">"Eko"</span>, <span class="str">"Khannedy"</span>);
+
+    System.out.<span class="met">println</span>(person1); <span class="cmt">// Person{firstName='null', lastName='null', age=0}</span>
+    System.out.<span class="met">println</span>(person2); <span class="cmt">// Person{firstName='Eko', lastName='Khannedy', age=0}</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) getConstructor()</span>
+                        <span class="line-desc">Mengambil constructor tanpa parameter. Perhatikan perbedaan: <code>getConstructor()</code> (bukan <code>getDeclared</code>) — artinya hanya constructor <code>public</code> yang bisa diakses. Untuk private constructor (seperti di Singleton pattern), pakai <code>getDeclaredConstructor()</code> + <code>setAccessible(true)</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) getConstructor(types...)</span>
+                        <span class="line-desc">Disambiguasi overloaded constructor dengan menyertakan tipe parameter. Prinsip sama dengan <code>getDeclaredMethod()</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3-4) constructor.newInstance(args...)</span>
+                        <span class="line-desc">Membuat instance baru — ekuivalen dengan <code>new Person()</code> atau <code>new Person("Eko", "Khannedy")</code>. Tipe return adalah <code>T</code> (berkat type parameter <code>Constructor&lt;Person&gt;</code>), sehingga tidak perlu casting!</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Inspect Semua Constructor</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetConstructors</span>() {
+    <span class="cls">Constructor</span>&lt;?&gt;[] constructors =
+        <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getDeclaredConstructors</span>();
+
+    <span class="kw">for</span> (<span class="cls">Constructor</span>&lt;?&gt; ctor : constructors) {
+        System.out.<span class="met">println</span>(ctor.<span class="met">getName</span>());
+        System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(ctor.<span class="met">getParameterTypes</span>()));
+    }
+}
+<span class="cmt">// Output:
+// programmerzamannow.reflection.data.Person
+// []
+// programmerzamannow.reflection.data.Person
+// [class java.lang.String, class java.lang.String]</span></pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Mengapa Perlu No-Arg Constructor?</strong><br>
+                    Banyak framework Java (Hibernate, Jackson, Spring) <strong>memerlukan</strong> no-arg constructor (constructor tanpa parameter) untuk membuat instance via Reflection sebelum mengisi field-nya satu per satu. Itulah mengapa class <code>Person</code> memiliki <code>public Person() {}</code> meskipun terkesan "tidak berguna" — ini adalah <em>infrastructure requirement</em>, bukan kebutuhan bisnis.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Hanya punya parameterized constructor</div>
+                        <pre style="font-size:.65rem;margin-top:8px;"><span class="kw">public class</span> Person {
+    <span class="kw">private</span> String name;
+
+    <span class="cmt">// Tidak ada no-arg constructor!</span>
+    <span class="kw">public</span> Person(String name) {
+        this.name = name;
+    }
+}
+<span class="cmt">// Jackson/Hibernate akan throw:
+// No suitable constructor found
+// for type Person</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Sediakan no-arg constructor</div>
+                        <pre style="font-size:.65rem;margin-top:8px;"><span class="kw">public class</span> Person {
+    <span class="kw">private</span> String name;
+
+    <span class="kw">public</span> Person() {} <span class="cmt">// ← wajib ada</span>
+
+    <span class="kw">public</span> Person(String name) {
+        this.name = name;
+    }
+}
+<span class="cmt">// Framework dapat membuat instance
+// via constructor.newInstance()</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>constructor.newInstance(args)</code> di Java sama dengan <code>$reflectionClass->newInstance(...$args)</code> di PHP. Prinsip yang sama digunakan oleh Laravel Service Container saat melakukan automatic resolution: ia membaca constructor class via Reflection, menentukan dependency yang dibutuhkan, lalu memanggil <code>newInstance()</code> dengan dependency yang sudah di-resolve. Di Java, Spring melakukan hal yang persis sama.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 4</div>
+                    <p><strong>Q:</strong> Mengapa class entity di Hibernate (atau model di Spring Data JPA) <em>wajib</em> memiliki no-arg constructor?</p>
+                    <div class="quiz-options" id="q4">
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">A. Karena Java tidak mengizinkan class tanpa no-arg constructor</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,true)">B. Hibernate menggunakan <code>constructor.newInstance()</code> (Reflection) untuk membuat instance, lalu mengisi field satu per satu — butuh no-arg constructor agar bisa membuat objek kosong dulu</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">C. Supaya bisa di-serialize ke JSON dengan Jackson</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">D. Hanya convention, tidak ada alasan teknis</div>
+                    </div>
+                    <div class="quiz-feedback" id="q4-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 5: MODIFIERS & PACKAGE ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,#475569 0%,#334155 100%);">
+                    <div class="chapter-num">Chapter 05</div>
+                    <div class="chapter-title">🏷️ Modifiers & Package</div>
+                    <div class="chapter-sub">ModifierTest.java · PackageTest.java · bitmask access flags</div>
+                </div>
+
+                <p>Reflection juga bisa membaca <strong>access modifier</strong> (public, private, static, final, dll) dari class, field, atau method — dan mengakses informasi package termasuk annotation yang ada di level package.</p>
+
+                <div class="text-title mt-m">Membaca Modifier</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testModifier</span>() {
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass = <span class="cls">Person</span>.<span class="kw">class</span>;
+
+    <span class="cls">Modifier</span>.<span class="met">isPublic</span>(personClass.<span class="met">getModifiers</span>());  <span class="cmt">// true  (Person is public)</span>
+    <span class="cls">Modifier</span>.<span class="met">isFinal</span>(personClass.<span class="met">getModifiers</span>());   <span class="cmt">// true  (Person is final)</span>
+    <span class="cls">Modifier</span>.<span class="met">isStatic</span>(personClass.<span class="met">getModifiers</span>());  <span class="cmt">// false (bukan static class)</span>
+}</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Modifier sebagai Bitmask Integer</strong><br>
+                    <code>getModifiers()</code> mengembalikan <code>int</code> — bukan String, melainkan sebuah <strong>bitmask</strong>. Setiap bit merepresentasikan satu modifier: <code>public=1</code>, <code>private=2</code>, <code>protected=4</code>, <code>static=8</code>, <code>final=16</code>, dll. Class utilitas <code>Modifier</code> menyediakan method statis (<code>isPublic()</code>, <code>isFinal()</code>, dll) untuk mengurai bitmask tersebut dengan mudah tanpa harus manual bit-masking.
+                </div>
+
+                <div class="text-title mt-l">Package — Termasuk Annotation di Level Package</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetPackage</span>() {
+    <span class="cls">Package</span> aPackage = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getPackage</span>();
+
+    System.out.<span class="met">println</span>(aPackage.<span class="met">getName</span>());
+    <span class="cmt">// "programmerzamannow.reflection.data"</span>
+
+    System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(aPackage.<span class="met">getAnnotations</span>()));
+    <span class="cmt">// [@programmerzamannow.reflection.annotation.SampleAnnotation()]</span>
+}</pre>
+
+                <div class="info-box success mt-m">
+                    <strong>📦 Package-level Annotation — Dideklarasikan di <code>package-info.java</code></strong><br>
+                    File khusus <code>package-info.java</code> (satu per package) memungkinkan kamu menambahkan annotation dan Javadoc di level package. Ini digunakan Spring untuk feature seperti <code>@NonNullApi</code> (agar semua method di package dianggap non-null secara default).
+                    <pre style="margin-top:8px;background:#0d1117;"><span class="cmt">/**
+ * Package ini berisikan data-data
+ */</span>
+<span class="ann">@SampleAnnotation</span>
+<span class="kw">package</span> programmerzamannow.reflection.data;</pre>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Di PHP, modifier (visibility) bisa dicek via <code>$method->isPublic()</code>, <code>$method->isPrivate()</code>, dll pada <code>ReflectionMethod</code>. Di Java, semua modifier dikompresi menjadi satu integer bitmask yang dibaca via <code>Modifier.isXxx()</code> — lebih efisien di memory tapi perlu utilitas untuk dibaca. Konsep <code>package-info.java</code> tidak ada padanannya di PHP karena PHP tidak punya sistem package yang se-formal Java.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 6: INTERFACE & SUPERCLASS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,#0891b2 0%,#0e7490 100%);">
+                    <div class="chapter-num">Chapter 06</div>
+                    <div class="chapter-title">📦 Interface & Superclass — Hierarki Class</div>
+                    <div class="chapter-sub">InterfaceTest.java · SuperClassTest.java · getInterfaces() · getSuperclass()</div>
+                </div>
+
+                <p>Reflection juga memungkinkan kamu menelusuri <strong>hierarki class</strong> — interface apa yang diimplementasikan, siapa superclass-nya, sampai puncak hierarki (<code>Object</code>). Ini penting untuk framework yang perlu memvalidasi "apakah class ini mengimplementasikan interface tertentu?"</p>
+
+                <div class="text-title mt-m">Menelusuri Superclass Chain</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetSuperClass</span>() {
+    <span class="cls">Class</span>&lt;<span class="cls">Person</span>&gt; personClass = <span class="cls">Person</span>.<span class="kw">class</span>;
+    System.out.<span class="met">println</span>(personClass);
+    <span class="cmt">// class programmerzamannow.reflection.data.Person</span>
+
+    <span class="cls">Class</span>&lt;? <span class="kw">super</span> <span class="cls">Person</span>&gt; objectClass = personClass.<span class="met">getSuperclass</span>();
+    System.out.<span class="met">println</span>(objectClass);
+    <span class="cmt">// class java.lang.Object  ← superclass terakhir sebelum null</span>
+
+    <span class="cls">Class</span>&lt;? <span class="kw">super</span> <span class="cls">Person</span>&gt; nullClass = objectClass.<span class="met">getSuperclass</span>();
+    System.out.<span class="met">println</span>(nullClass);
+    <span class="cmt">// null  ← Object tidak punya superclass</span>
+}</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Semua Class Mewarisi <code>java.lang.Object</code></strong><br>
+                    Di Java, <strong>setiap class</strong> secara implisit mewarisi <code>java.lang.Object</code> — mirip seperti di PHP di mana setiap class bisa memanggil method seperti <code>get_class()</code>. <code>Object</code> adalah akar dari semua hierarki, dan <code>getSuperclass()</code> pada <code>Object.class</code> mengembalikan <code>null</code> sebagai penanda puncak hierarki.
+                </div>
+
+                <div class="text-title mt-l">Inspect Interface yang Diimplementasikan</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testSuperInterfaces</span>() {
+    <span class="cmt">// Lihat interface yang langsung diimplementasikan Person</span>
+    System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(
+        <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getInterfaces</span>()));
+    <span class="cmt">// [interface programmerzamannow.reflection.data.Nameable,
+    //  interface java.io.Serializable]</span>
+}
+
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testClass</span>() {
+    <span class="cls">Class</span>&lt;<span class="cls">Nameable</span>&gt; nameableClass = <span class="cls">Nameable</span>.<span class="kw">class</span>;
+    System.out.<span class="met">println</span>(nameableClass.<span class="met">isInterface</span>()); <span class="cmt">// true</span>
+    System.out.<span class="met">println</span>(nameableClass.<span class="met">getSuperclass</span>()); <span class="cmt">// null! Interface tidak punya superclass</span>
+    System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(
+        nameableClass.<span class="met">getInterfaces</span>())); <span class="cmt">// [] — tidak ada super-interface</span>
+}</pre>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ Interface: getSuperclass() Selalu null</strong><br>
+                    Interface tidak punya superclass dalam arti yang sama dengan class. <code>Nameable.class.getSuperclass()</code> mengembalikan <code>null</code>. Untuk memeriksa apakah sebuah interface extends interface lain, gunakan <code>getInterfaces()</code> — bukan <code>getSuperclass()</code>.
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ Cara Memeriksa Hierarki Secara Programatik</strong><br>
+                    Untuk mengecek apakah sebuah class mengimplementasikan interface tertentu, gunakan:
+                    <pre style="margin-top:8px;background:#0d1117;"><span class="cmt">// Cara 1: isAssignableFrom (paling direkomendasikan)</span>
+<span class="kw">boolean</span> isNameable = <span class="cls">Nameable</span>.<span class="kw">class</span>.<span class="met">isAssignableFrom</span>(<span class="cls">Person</span>.<span class="kw">class</span>); <span class="cmt">// true</span>
+
+<span class="cmt">// Cara 2: instanceof pada instance</span>
+<span class="cls">Person</span> p = <span class="kw">new</span> <span class="cls">Person</span>();
+<span class="kw">boolean</span> isNameable2 = p <span class="kw">instanceof</span> <span class="cls">Nameable</span>; <span class="cmt">// true</span></pre>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Di PHP, kamu bisa memeriksa hierarki class dengan <code>$reflection->getParentClass()</code> dan <code>$reflection->getInterfaceNames()</code>. Di Java, ekuivalennya adalah <code>getSuperclass()</code> dan <code>getInterfaces()</code>. Bedanya: di Java, interface bisa memiliki implementasi default (<code>default</code> method), sehingga hierarki bisa lebih kompleks dari PHP.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 7: ANNOTATIONS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Chapter 07</div>
+                    <div class="chapter-title">🔖 Annotations & Custom Validator</div>
+                    <div class="chapter-sub">NotBlank.java · Validator.java · AnnotationTest.java · studi kasus dunia nyata</div>
+                </div>
+
+                <p>Ini adalah <strong>chapter paling praktis dan paling dekat dengan dunia nyata</strong>. Di sini kita akan membuat annotation custom, lalu membuat validator yang menggunakan Reflection untuk membaca annotation tersebut dan melakukan validasi otomatis — persis seperti cara kerja Bean Validation (<code>@NotNull</code>, <code>@Size</code>, dll) di Java EE / Spring.</p>
+
+                <div class="text-title mt-m">Step 1 — Mendefinisikan Custom Annotation</div>
+                <pre><span class="cmt">// File: NotBlank.java</span>
+<span class="ann">@Documented</span>                           <span class="cmt">// (A)</span>
+<span class="ann">@Target</span>({ <span class="cls">ElementType</span>.FIELD })         <span class="cmt">// (B)</span>
+<span class="ann">@Retention</span>(<span class="cls">RetentionPolicy</span>.RUNTIME)   <span class="cmt">// (C)</span>
+<span class="kw">public</span> <span class="ann">@interface</span> <span class="cls">NotBlank</span> {
+    <span class="kw">boolean</span> <span class="met">allowEmptyString</span>() <span class="kw">default</span> <span class="kw">false</span>; <span class="cmt">// (D)</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) @Documented</span>
+                        <span class="line-desc">Annotation ini akan muncul di Javadoc yang di-generate. Opsional, tapi best practice untuk annotation yang ditujukan untuk pengguna library.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) @Target</span>
+                        <span class="line-desc"><strong>Meta-annotation terpenting.</strong> Mendefinisikan di mana annotation ini boleh dipakai. <code>ElementType.FIELD</code> = hanya pada field. Opsi lain: <code>TYPE</code> (class/interface), <code>METHOD</code>, <code>PARAMETER</code>, <code>PACKAGE</code>, dll. Compiler akan error jika annotation digunakan di tempat yang salah.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) @Retention(RUNTIME)</span>
+                        <span class="line-desc"><strong>Kunci agar Reflection bisa membacanya.</strong> Ada 3 pilihan: <code>SOURCE</code> (hanya ada di source code, hilang setelah compile — seperti <code>@Override</code>), <code>CLASS</code> (ada di bytecode, tapi tidak accessible via Reflection), <code>RUNTIME</code> (ada di bytecode DAN bisa dibaca via Reflection saat program jalan). Untuk validator yang berjalan saat runtime, HARUS <code>RUNTIME</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(D) allowEmptyString()</span>
+                        <span class="line-desc">Annotation dapat memiliki "atribut" — method-like declaration dengan default value. Cara pakai: <code>@NotBlank(allowEmptyString = true)</code>. Tanpa argumen, nilai default (<code>false</code>) digunakan otomatis.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Step 2 — Menggunakan Annotation pada Class</div>
+                <pre><span class="cmt">// File: Person.java</span>
+<span class="kw">public final class</span> <span class="cls">Person</span> <span class="kw">implements</span> <span class="iface">Nameable</span>, <span class="iface">Serializable</span> {
+
+    <span class="ann">@NotBlank</span>                              <span class="cmt">// allowEmptyString = false (default)</span>
+    <span class="kw">private</span> <span class="typ">String</span> firstName;
+
+    <span class="ann">@NotBlank</span>(allowEmptyString = <span class="kw">true</span>)   <span class="cmt">// izinkan empty string ""</span>
+    <span class="kw">private</span> <span class="typ">String</span> lastName;
+
+    <span class="kw">private</span> <span class="cls">List</span>&lt;<span class="typ">String</span>&gt; hobbies;          <span class="cmt">// tidak ada @NotBlank → tidak divalidasi</span>
+    <span class="kw">private</span> <span class="kw">int</span> age;
+    <span class="cmt">// ...</span>
+}</pre>
+
+                <div class="text-title mt-l">Step 3 — Validator via Reflection (Inti dari Chapter ini)</div>
+                <pre><span class="cmt">// File: Validator.java</span>
+<span class="kw">public class</span> <span class="cls">Validator</span> {
+
+  <span class="kw">public static void</span> <span class="met">validateNotBlank</span>(<span class="cls">Object</span> object)
+      <span class="kw">throws</span> <span class="cls">IllegalAccessException</span> {
+
+    <span class="cls">Class</span>&lt;?&gt; aClass = object.<span class="met">getClass</span>();         <span class="cmt">// (1)</span>
+    <span class="cls">Field</span>[] fields = aClass.<span class="met">getDeclaredFields</span>(); <span class="cmt">// (2)</span>
+
+    <span class="kw">for</span> (<span class="cls">Field</span> field : fields) {
+      <span class="cls">NotBlank</span> notBlank =
+          field.<span class="met">getAnnotation</span>(<span class="cls">NotBlank</span>.<span class="kw">class</span>);    <span class="cmt">// (3)</span>
+
+      <span class="kw">if</span> (notBlank != <span class="kw">null</span>) {                     <span class="cmt">// (4)</span>
+        field.<span class="met">setAccessible</span>(<span class="kw">true</span>);
+        <span class="typ">String</span> value = (<span class="typ">String</span>) field.<span class="met">get</span>(object); <span class="cmt">// (5)</span>
+
+        <span class="kw">if</span> (!notBlank.<span class="met">allowEmptyString</span>()) {        <span class="cmt">// (6)</span>
+          value = value.<span class="met">trim</span>();
+        }
+
+        <span class="kw">if</span> (<span class="str">""</span>.<span class="met">equals</span>(value)) {                    <span class="cmt">// (7)</span>
+          <span class="kw">throw new</span> <span class="cls">RuntimeException</span>(
+              field.<span class="met">getName</span>() + <span class="str">" must not blank"</span>);
+        }
+      }
+    }
+  }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) object.getClass()</span>
+                        <span class="line-desc">Method <code>validateNotBlank</code> menerima <code>Object</code> — bisa digunakan untuk class APAPUN, bukan hanya Person. Inilah kekuatan Reflection: satu validator untuk semua class.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) getDeclaredFields()</span>
+                        <span class="line-desc">Ambil semua field — termasuk private. Validator harus bisa membaca semua field tanpa peduli aksesibilitasnya.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) field.getAnnotation(NotBlank.class)</span>
+                        <span class="line-desc">Membaca annotation <code>@NotBlank</code> dari field ini. Jika field tidak punya annotation tersebut, mengembalikan <code>null</code>. Ini bekerja karena kita mendefinisikan <code>@Retention(RUNTIME)</code> — tanpa itu, hasil selalu <code>null</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(4) if (notBlank != null)</span>
+                        <span class="line-desc">Hanya proses field yang memiliki annotation <code>@NotBlank</code>. Field tanpa annotation (<code>hobbies</code>, <code>age</code>) dilewati begitu saja — opt-in validation.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(5) field.get(object)</span>
+                        <span class="line-desc">Baca nilai field dari objek yang sedang divalidasi. Cast ke <code>String</code> karena kita tahu <code>@NotBlank</code> hanya bisa ditaruh di field String (bisa diperkuat dengan pengecekan type).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(6) notBlank.allowEmptyString()</span>
+                        <span class="line-desc">Baca nilai atribut annotation — persis seperti memanggil method. Ini adalah cara Java mengakses "parameter" dari annotation. Jika <code>allowEmptyString=false</code>, lakukan trim sebelum pengecekan.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(7) "".equals(value)</span>
+                        <span class="line-desc"><strong>Best practice Java:</strong> Selalu panggil <code>equals()</code> pada string literal, bukan pada variabel. Ini mencegah <code>NullPointerException</code> jika <code>value</code> adalah <code>null</code> (karena <code>""</code> tidak pernah null).</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Step 4 — Menggunakan Validator</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testValidateUsingAnnotation</span>() <span class="kw">throws</span> <span class="cls">IllegalAccessException</span> {
+    <span class="cls">Person</span> person = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Eko"</span>, <span class="str">""</span>); <span class="cmt">// lastName = ""</span>
+    <span class="cls">Validator</span>.<span class="met">validateNotBlank</span>(person);
+    <span class="cmt">// ✅ TIDAK THROW — karena @NotBlank(allowEmptyString=true) pada lastName
+    // Jika firstName = "", AKAN throw: "firstName must not blank"</span>
+}</pre>
+
+                <div class="info-box success mt-m">
+                    <strong>🎯 Studi Kasus: Inilah Cara Spring Validator Bekerja</strong><br>
+                    Framework Bean Validation (Hibernate Validator) yang kamu pakai via <code>@Valid</code>, <code>@NotNull</code>, <code>@Size</code> di Spring Boot bekerja dengan prinsip yang <em>persis sama</em>: ia membaca semua annotation Reflection dari object yang divalidasi, kemudian menjalankan logic validasi yang sesuai. Kamu baru saja menulis mini-implementasinya sendiri!
+                </div>
+
+                <div class="info-box danger mt-m">
+                    <strong>🚨 @Retention — Jebakan Paling Sering</strong><br>
+                    Jika kamu lupa menambahkan <code>@Retention(RetentionPolicy.RUNTIME)</code> pada annotation custom, <code>field.getAnnotation(NotBlank.class)</code> akan <strong>selalu mengembalikan <code>null</code></strong> — seolah-olah tidak ada annotation. Tidak ada error, tidak ada warning. Ini adalah silent bug yang sulit di-debug.
+                    <div class="compare-box mt-s" style="max-width:100%">
+                        <div class="compare-wrong">
+                            <div class="compare-label">❌ Lupa @Retention</div>
+                            <pre style="font-size:.65rem;margin-top:4px;"><span class="kw">public</span> <span class="ann">@interface</span> NotBlank {
+    <span class="cmt">// default: CLASS retention
+    // field.getAnnotation(NotBlank.class)
+    // → selalu null saat runtime!</span>
+}</pre>
+                        </div>
+                        <div class="compare-right">
+                            <div class="compare-label">✅ Wajib RUNTIME untuk Reflection</div>
+                            <pre style="font-size:.65rem;margin-top:4px;"><span class="ann">@Retention</span>(<span class="cls">RetentionPolicy</span>.RUNTIME)
+<span class="kw">public</span> <span class="ann">@interface</span> NotBlank {
+    <span class="cmt">// field.getAnnotation(NotBlank.class)
+    // → instance NotBlank yang benar ✓</span>
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Di PHP/Laravel, Form Request Validation menggunakan annotation-like (sebenarnya method <code>rules()</code>) untuk mendefinisikan aturan validasi. Di Java, annotation <code>@NotBlank</code>, <code>@NotNull</code>, <code>@Size</code> adalah cara yang lebih <em>deklaratif</em> — validasi langsung ditempel pada property di class, bukan didefinisikan terpisah. Efeknya sama dengan <code>'name' => 'required|string|max:255'</code> di Laravel, tapi lebih type-safe karena dibaca saat kompilasi (untuk IDE support) dan runtime (untuk eksekusi).</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 7</div>
+                    <p><strong>Q1:</strong> Kamu membuat annotation <code>@MaxLength(value=100)</code> untuk memvalidasi panjang String. Annotation berjalan normal di test tapi tidak bekerja di production. Apa kemungkinan penyebabnya?</p>
+                    <div class="quiz-options" id="q7a">
+                        <div class="quiz-option" onclick="checkQuiz('q7a',this,false)">A. Annotation tidak bisa punya atribut bernama <code>value</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q7a',this,true)">B. Annotation mungkin tidak punya <code>@Retention(RetentionPolicy.RUNTIME)</code>, sehingga hilang setelah kompilasi</div>
+                        <div class="quiz-option" onclick="checkQuiz('q7a',this,false)">C. Harus menggunakan <code>@Target(ElementType.TYPE)</code> bukan <code>FIELD</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q7a',this,false)">D. Annotation custom tidak bisa digunakan di production, hanya di test</div>
+                    </div>
+                    <div class="quiz-feedback" id="q7a-fb"></div>
+                    <p class="mt-m"><strong>Q2:</strong> Kenapa <code>Validator.validateNotBlank()</code> menerima parameter bertipe <code>Object</code> (bukan <code>Person</code> spesifik)?</p>
+                    <div class="quiz-options" id="q7b">
+                        <div class="quiz-option" onclick="checkQuiz('q7b',this,true)">A. Agar validator bisa bekerja untuk <em>class manapun</em> yang menggunakan <code>@NotBlank</code>, bukan hanya Person</div>
+                        <div class="quiz-option" onclick="checkQuiz('q7b',this,false)">B. Karena <code>getDeclaredFields()</code> hanya tersedia di <code>Object</code>, bukan di subclass</div>
+                        <div class="quiz-option" onclick="checkQuiz('q7b',this,false)">C. Untuk menghindari ClassCastException saat runtime</div>
+                        <div class="quiz-option" onclick="checkQuiz('q7b',this,false)">D. Karena tipe <code>Person</code> tidak diketahui saat kompilasi</div>
+                    </div>
+                    <div class="quiz-feedback" id="q7b-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 8: GENERICS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%);">
+                    <div class="chapter-num">Chapter 08</div>
+                    <div class="chapter-title">🧬 Generics & ParameterizedType</div>
+                    <div class="chapter-sub">TypeVariableTest.java · ParameterTypeTest.java · Type Erasure</div>
+                </div>
+
+                <p>Ini adalah chapter paling advanced. Java menggunakan <strong>Type Erasure</strong> untuk implementasi Generics — informasi generic type (<code>&lt;String&gt;</code>, <code>&lt;Person&gt;</code>) dihapus saat kompilasi dari bytecode. Namun, ada pengecualian: Reflection menyimpan informasi generic di beberapa tempat tertentu.</p>
+
+                <div class="text-title mt-m">Type Erasure — Mengapa Generics Menghilang</div>
+                <pre><span class="cmt">// Di source code:</span>
+<span class="cls">List</span>&lt;<span class="typ">String</span>&gt; names = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+
+<span class="cmt">// Di bytecode setelah type erasure (yang JVM benar-benar lihat):</span>
+<span class="cls">List</span> names = <span class="kw">new</span> <span class="cls">ArrayList</span>(); <span class="cmt">// &lt;String&gt; hilang!</span>
+
+<span class="cmt">// Akibatnya:</span>
+names.<span class="met">getClass</span>() == <span class="cls">ArrayList</span>.<span class="kw">class</span>; <span class="cmt">// true, bukan ArrayList&lt;String&gt;.class</span></pre>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ Tapi Ada Pengecualian: Generic Info Tersimpan di Metadata</strong><br>
+                    Walaupun type argument dihapus dari bytecode utama, Java menyimpannya di metadata khusus untuk: (1) <strong>field declarations</strong>, (2) <strong>method return types</strong>, (3) <strong>method parameter types</strong>, dan (4) <strong>class/interface declarations</strong>. Inilah yang dieksploitasi oleh Jackson untuk mengetahui bahwa <code>List&lt;String&gt;</code> berisi String.
+                </div>
+
+                <div class="text-title mt-l">Membaca Generic Type dari Field</div>
+                <pre><span class="cmt">// Person punya: private List&lt;String&gt; hobbies;</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testFieldGeneric</span>() <span class="kw">throws</span> <span class="cls">NoSuchFieldException</span> {
+    <span class="cls">Field</span> hobbies = <span class="cls">Person</span>.<span class="kw">class</span>.<span class="met">getDeclaredField</span>(<span class="str">"hobbies"</span>);
+
+    <span class="cls">Type</span> type = hobbies.<span class="met">getGenericType</span>();                    <span class="cmt">// (1)</span>
+    System.out.<span class="met">println</span>(type.<span class="met">getClass</span>()); <span class="cmt">// ParameterizedTypeImpl</span>
+
+    <span class="kw">if</span> (type <span class="kw">instanceof</span> <span class="cls">ParameterizedType</span>) {               <span class="cmt">// (2)</span>
+        <span class="cls">ParameterizedType</span> pt = (<span class="cls">ParameterizedType</span>) type;
+        System.out.<span class="met">println</span>(pt.<span class="met">getRawType</span>());               <span class="cmt">// interface java.util.List</span>
+        System.out.<span class="met">println</span>(pt.<span class="met">getOwnerType</span>());              <span class="cmt">// null</span>
+        System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(
+            pt.<span class="met">getActualTypeArguments</span>()));               <span class="cmt">// [class java.lang.String]</span>
+    }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) getGenericType()</span>
+                        <span class="line-desc">Berbeda dari <code>field.getType()</code> yang mengembalikan <code>Class</code> (sudah di-erase, hanya <code>List</code>), <code>getGenericType()</code> mengembalikan <code>Type</code> yang mempertahankan informasi generic jika ada. Untuk <code>List&lt;String&gt;</code>, ini mengembalikan <code>ParameterizedType</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) instanceof ParameterizedType</span>
+                        <span class="line-desc">Cek apakah type ini adalah parameterized (generic) type. Perlu dicek karena tidak semua field punya generic — <code>int age</code> menghasilkan type biasa, bukan <code>ParameterizedType</code>.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">TypeVariable — Inspect Generic Parameter di Class Declaration</div>
+                <pre><span class="cmt">// Data.java: public class Data&lt;T extends AutoCloseable &amp; Serializable&gt;</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetTypeVariables</span>() {
+    <span class="cls">TypeVariable</span>&lt;<span class="cls">Class</span>&lt;<span class="cls">Data</span>&gt;&gt;[] typeVariables =
+        <span class="cls">Data</span>.<span class="kw">class</span>.<span class="met">getTypeParameters</span>();
+
+    <span class="kw">for</span> (<span class="cls">TypeVariable</span>&lt;<span class="cls">Class</span>&lt;<span class="cls">Data</span>&gt;&gt; variable : typeVariables) {
+        System.out.<span class="met">println</span>(variable.<span class="met">getName</span>());         <span class="cmt">// T</span>
+        System.out.<span class="met">println</span>(Arrays.<span class="met">toString</span>(variable.<span class="met">getBounds</span>()));
+        <span class="cmt">// [interface java.lang.AutoCloseable, interface java.io.Serializable]</span>
+        System.out.<span class="met">println</span>(variable.<span class="met">getGenericDeclaration</span>()); <span class="cmt">// class ...Data</span>
+    }
+}</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Bounded Type Parameter: <code>T extends AutoCloseable &amp; Serializable</code></strong><br>
+                    Ini adalah <strong>multiple bounds</strong> di Java — type parameter <code>T</code> harus mengimplementasikan KEDUA interface tersebut sekaligus. Di PHP tidak ada ekuivalen langsung. Di Java, ini memberikan jaminan bahwa apapun yang masuk ke <code>Data&lt;T&gt;</code> pasti bisa di-<code>close()</code> (AutoCloseable) DAN bisa di-serialize (Serializable). <code>getBounds()</code> via Reflection bisa membaca constraint ini saat runtime.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Type Erasure adalah salah satu perbedaan besar Java vs PHP. PHP menyimpan type hint generically (via PHPDoc <code>@template</code>), tapi tidak di bytecode. Java juga menghapusnya dari bytecode utama, tapi menyimpannya di metadata signature — yang hanya bisa dibaca via Reflection. Framework seperti Jackson memanfaatkan ini lewat <code>TypeReference&lt;&gt;</code>: <code>new TypeReference&lt;List&lt;Person&gt;&gt;(){}</code> — anonymous subclass yang "membekukan" type argument sehingga bisa dibaca via Reflection.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 8</div>
+                    <p><strong>Q:</strong> Kamu punya field <code>private Map&lt;String, List&lt;Person&gt;&gt; data</code>. Apa yang dikembalikan <code>field.getType()</code> vs <code>field.getGenericType()</code>?</p>
+                    <div class="quiz-options" id="q8">
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,false)">A. Keduanya mengembalikan hal yang sama: <code>Map&lt;String, List&lt;Person&gt;&gt;</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,true)">B. <code>getType()</code> → <code>interface java.util.Map</code> (erased). <code>getGenericType()</code> → <code>ParameterizedType</code> yang menyimpan info <code>String</code> dan <code>List&lt;Person&gt;</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,false)">C. <code>getType()</code> → error karena generic. <code>getGenericType()</code> → <code>Map.class</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q8',this,false)">D. Keduanya mengembalikan <code>Object.class</code> karena type erasure total</div>
+                    </div>
+                    <div class="quiz-feedback" id="q8-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 9: ENUM, ARRAY & RECORD ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,#d97706 0%,#92400e 100%);">
+                    <div class="chapter-num">Chapter 09</div>
+                    <div class="chapter-title">🎲 Enum, Array & Record</div>
+                    <div class="chapter-sub">EnumTest.java · ArrayTest.java · RecordTest.java · type-type khusus Java</div>
+                </div>
+
+                <p>Selain class dan interface biasa, Java memiliki beberapa tipe khusus: <strong>Enum</strong>, <strong>Array</strong>, dan (sejak Java 16) <strong>Record</strong>. Ketiganya memiliki dukungan Reflection khusus.</p>
+
+                <div class="text-title mt-m">Enum via Reflection</div>
+                <pre><span class="cmt">// Gender.java: public enum Gender { MALE("Male"), FEMALE("Female"); }</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testEnum</span>() {
+    <span class="cls">Class</span>&lt;<span class="cls">Gender</span>&gt; genderClass = <span class="cls">Gender</span>.<span class="kw">class</span>;
+
+    genderClass.<span class="met">getName</span>();         <span class="cmt">// ...data.Gender</span>
+    genderClass.<span class="met">getSuperclass</span>();   <span class="cmt">// class java.lang.Enum  ← semua enum extends ini</span>
+    genderClass.<span class="met">isEnum</span>();          <span class="cmt">// true</span>
+    genderClass.<span class="met">getEnumConstants</span>(); <span class="cmt">// [MALE, FEMALE]  ← semua konstanta enum</span>
+    genderClass.<span class="met">getDeclaredFields</span>();<span class="cmt">// MALE, FEMALE, description</span>
+    genderClass.<span class="met">getDeclaredConstructors</span>(); <span class="cmt">// private constructor (selalu private di enum)</span>
+    genderClass.<span class="met">getDeclaredMethods</span>();     <span class="cmt">// getDescription, values, valueOf</span>
+}</pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Enum di Java adalah Class Penuh</strong><br>
+                    Berbeda dengan PHP di mana enum relatif sederhana (PHP 8.1+), Enum Java adalah <strong>class yang memperluas <code>java.lang.Enum</code></strong>. Setiap enum bisa punya constructor, field, dan method sendiri — seperti <code>Gender.MALE.getDescription()</code>. Di Reflection, <code>getEnumConstants()</code> mengembalikan semua value enum sebagai array.
+                </div>
+
+                <div class="text-title mt-l">Array via Reflection</div>
+                <pre><span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testArrayManipulation</span>() {
+    <span class="cls">Class</span>&lt;<span class="typ">String</span>[]&gt; stringArrayClass = <span class="typ">String</span>[].<span class="kw">class</span>;
+
+    <span class="cmt">// Buat array baru secara dinamis via Reflection</span>
+    <span class="typ">String</span>[] array = (<span class="typ">String</span>[]) <span class="cls">Array</span>.<span class="met">newInstance</span>(            <span class="cmt">// (1)</span>
+        stringArrayClass.<span class="met">getComponentType</span>(), <span class="num">10</span>);           <span class="cmt">// (2)</span>
+
+    <span class="cmt">// Set dan get element via Reflection</span>
+    <span class="cls">Array</span>.<span class="met">set</span>(array, <span class="num">0</span>, <span class="str">"Eko"</span>);                             <span class="cmt">// (3)</span>
+    System.out.<span class="met">println</span>(<span class="cls">Array</span>.<span class="met">get</span>(array, <span class="num">0</span>));               <span class="cmt">// (4) → "Eko"</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) Array.newInstance()</span>
+                        <span class="line-desc">Membuat array baru secara dinamis saat runtime. Berguna ketika tipe elemen array tidak diketahui saat kompilasi (misalnya dari konfigurasi).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) getComponentType()</span>
+                        <span class="line-desc">Untuk <code>String[].class</code>, <code>getComponentType()</code> mengembalikan <code>String.class</code> (tipe elemen array). Untuk <code>int[].class</code>, mengembalikan <code>int.class</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3-4) Array.set() / Array.get()</span>
+                        <span class="line-desc">Utility class <code>java.lang.reflect.Array</code> untuk manipulasi array via Reflection. Berbeda dari akses array biasa (<code>array[0]</code>), ini berguna saat tipe array tidak diketahui di compile time.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Record via Reflection (Java 16+)</div>
+                <pre><span class="cmt">// Product.java: public record Product(String id, String name, Long price) {}</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testGetRecordValueByComponent</span>()
+    <span class="kw">throws</span> <span class="cls">InvocationTargetException</span>, <span class="cls">IllegalAccessException</span> {
+
+    <span class="cls">RecordComponent</span>[] components =
+        <span class="cls">Product</span>.<span class="kw">class</span>.<span class="met">getRecordComponents</span>();                <span class="cmt">// (1)</span>
+
+    <span class="cls">Product</span> product = <span class="kw">new</span> <span class="cls">Product</span>(<span class="str">"1"</span>, <span class="str">"Apple iPhone"</span>, <span class="num">20000000L</span>);
+
+    <span class="kw">for</span> (<span class="cls">RecordComponent</span> component : components) {
+        <span class="cls">Method</span> accessor = component.<span class="met">getAccessor</span>();             <span class="cmt">// (2)</span>
+        System.out.<span class="met">println</span>(accessor.<span class="met">getName</span>());              <span class="cmt">// id, name, price</span>
+        System.out.<span class="met">println</span>(accessor.<span class="met">invoke</span>(product));        <span class="cmt">// 1, Apple iPhone, 20000000</span>
+    }
+}</pre>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ Record — Immutable Data Class Bawaan Java</strong><br>
+                    <code>record Product(String id, String name, Long price)</code> adalah cara ringkas Java untuk membuat <strong>immutable data class</strong>. Java otomatis generate: constructor, getter dengan nama sama persis dengan field (<code>product.id()</code> bukan <code>product.getId()</code>), <code>equals()</code>, <code>hashCode()</code>, dan <code>toString()</code>. Di PHP/Laravel, ini seperti punya DTO (Data Transfer Object) dengan semua boilerplate sudah di-generate, tapi lebih ringkas.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><strong>Java Record</strong> adalah padanan dari PHP 8.2 <code>readonly class</code> atau Laravel DTO dengan Spatie Data — immutable object yang hanya bisa diisi saat konstruksi. Perbedaan: Reflection pada Record menggunakan <code>getRecordComponents()</code> (bukan <code>getDeclaredFields()</code>) untuk mendapatkan komponen-komponennya beserta accessor method-nya secara langsung.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 10: DYNAMIC PROXY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner dark">
+                    <div class="chapter-num">Chapter 10</div>
+                    <div class="chapter-title">🪆 Dynamic Proxy — AOP Ala Sendiri</div>
+                    <div class="chapter-sub">ProxyTest.java · InvocationHandler · Proxy.newProxyInstance()</div>
+                </div>
+
+                <p>Dynamic Proxy adalah fitur Reflection paling powerful — dan paling sering digunakan secara <em>tidak langsung</em>. Spring AOP, <code>@Transactional</code>, <code>@Cacheable</code>, Hibernate lazy loading, dan banyak fitur framework lainnya dibangun di atas Dynamic Proxy.</p>
+
+                <div class="text-title mt-m">Masalah yang Dipecahkan Dynamic Proxy</div>
+                <p>Bayangkan kamu ingin menambahkan logging ke setiap pemanggilan method pada sebuah interface, tanpa mengubah implementasinya. Dynamic Proxy memungkinkan kamu mencegat (intercept) setiap pemanggilan method dan menambahkan logika sebelum/sesudahnya.</p>
+
+                <div class="text-title mt-l">Kode Lengkap Dynamic Proxy</div>
+                <pre><span class="cmt">// Car interface: void run(); String getName();</span>
+<span class="ann">@Test</span>
+<span class="kw">void</span> <span class="met">testProxy</span>() {
+    <span class="cmt">// (1) Buat InvocationHandler — "interseptor" untuk semua method call</span>
+    <span class="cls">InvocationHandler</span> handler = <span class="kw">new</span> <span class="cls">InvocationHandler</span>() {
+        <span class="ann">@Override</span>
+        <span class="kw">public</span> <span class="cls">Object</span> <span class="met">invoke</span>(<span class="cls">Object</span> proxy,          <span class="cmt">// (2)</span>
+                                <span class="cls">Method</span> method,
+                                <span class="cls">Object</span>[] args) <span class="kw">throws</span> <span class="cls">Throwable</span> {
+
+            <span class="kw">if</span> (method.<span class="met">getName</span>().<span class="met">equals</span>(<span class="str">"getName"</span>)) { <span class="cmt">// (3)</span>
+                <span class="kw">return</span> <span class="str">"Car Proxy"</span>;
+            }
+            <span class="kw">if</span> (method.<span class="met">getName</span>().<span class="met">equals</span>(<span class="str">"run"</span>)) {     <span class="cmt">// (4)</span>
+                System.out.<span class="met">println</span>(<span class="str">"Car is running"</span>);
+            }
+            <span class="kw">return</span> <span class="kw">null</span>;
+        }
+    };
+
+    <span class="cmt">// (5) Buat Proxy object yang mengimplementasikan Car</span>
+    <span class="cls">Car</span> car = (<span class="cls">Car</span>) <span class="cls">Proxy</span>.<span class="met">newProxyInstance</span>(
+        <span class="cls">ClassLoader</span>.<span class="met">getSystemClassLoader</span>(),    <span class="cmt">// ClassLoader</span>
+        <span class="kw">new</span> <span class="cls">Class</span>[]{ <span class="cls">Car</span>.<span class="kw">class</span> },               <span class="cmt">// Interface yang di-proxy</span>
+        handler                                  <span class="cmt">// Handler yang menangani semua call</span>
+    );
+
+    System.out.<span class="met">println</span>(car.<span class="met">getClass</span>()); <span class="cmt">// com.sun.proxy.$Proxy0 ← bukan Car!</span>
+    System.out.<span class="met">println</span>(car.<span class="met">getName</span>()); <span class="cmt">// "Car Proxy" ← dari handler</span>
+    car.<span class="met">run</span>();                           <span class="cmt">// "Car is running" ← dari handler</span>
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) InvocationHandler</span>
+                        <span class="line-desc">Interface dengan satu method: <code>invoke()</code>. Ini adalah "catch-all" yang dipanggil ketika <em>method manapun</em> di proxy object dipanggil. Semua logika interceptor ada di sini.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) Parameter invoke()</span>
+                        <span class="line-desc"><code>proxy</code> = objek proxy itu sendiri, <code>method</code> = Method yang dipanggil (via Reflection), <code>args</code> = argumen yang diberikan. Dari sini kamu bisa: membaca nama method, parameter, annotation-nya, lalu memutuskan apa yang harus dilakukan.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3-4) Dispatch berdasarkan nama method</span>
+                        <span class="line-desc">Pengecekan manual berdasarkan <code>method.getName()</code>. Dalam implementasi AOP yang sesungguhnya, ini digantikan dengan pengecekan annotation atau pointcut expression yang lebih elegan.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(5) Proxy.newProxyInstance()</span>
+                        <span class="line-desc">JVM secara dinamis membuat bytecode untuk class baru yang mengimplementasikan semua interface yang diberikan. Class ini tidak pernah ada sebelumnya di disk — dibuat di memory saat runtime. Itulah mengapa <code>car.getClass()</code> mengembalikan <code>$Proxy0</code>, bukan <code>Car</code>.</span>
+                    </div>
+                </div>
+
+                <div class="info-box success mt-m">
+                    <strong>🎯 Bagaimana Spring @Transactional Bekerja (Simplified)</strong><br>
+                    <p style="margin-top:var(--xs)">Ketika kamu menulis <code>@Transactional</code> di service, Spring tidak memodifikasi class-mu. Ia membuat <strong>proxy object</strong> yang menggantikan bean-mu di container. Ketika method dipanggil:</p>
+                    <ol style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs)">
+                        <li>Proxy <code>invoke()</code> dipanggil</li>
+                        <li>Spring membuka transaksi database</li>
+                        <li>Spring memanggil method aslimu: <code>method.invoke(realObject, args)</code></li>
+                        <li>Jika sukses → commit. Jika exception → rollback</li>
+                    </ol>
+                </div>
+
+                <div class="info-box danger mt-m">
+                    <strong>🚨 Limitasi Dynamic Proxy: Hanya Interface!</strong><br>
+                    <code>java.lang.reflect.Proxy</code> hanya bisa membuat proxy untuk <strong>interface</strong>, bukan class biasa. Jika kamu perlu proxy untuk class (bukan interface), kamu butuh library bytecode manipulation seperti <strong>CGLIB</strong> atau <strong>ByteBuddy</strong> — yang memang digunakan Spring di balik layar untuk kasus ini.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Proxy untuk Class, bukan Interface</div>
+                        <pre style="font-size:.65rem;margin-top:8px;"><span class="kw">class</span> MyCar <span class="kw">implements</span> Car { ... }
+
+<span class="cmt">// Mencoba proxy class biasa:</span>
+Car car = (Car) Proxy.newProxyInstance(
+    cl,
+    new Class[]{ MyCar.class }, <span class="cmt">// ← SALAH!</span>
+    handler
+);
+<span class="cmt">// → IllegalArgumentException:
+//   MyCar is not an interface!</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Proxy harus pakai Interface</div>
+                        <pre style="font-size:.65rem;margin-top:8px;"><span class="cmt">// Gunakan interface, bukan class:</span>
+Car car = (Car) Proxy.newProxyInstance(
+    cl,
+    new Class[]{ Car.class }, <span class="cmt">// ← interface ✓</span>
+    handler
+);
+<span class="cmt">// Untuk proxy class biasa → CGLIB/ByteBuddy</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Dynamic Proxy di Java adalah cara implementasi <strong>AOP (Aspect-Oriented Programming)</strong> — konsep yang sama dengan Laravel Middleware (mencegat request) atau Event Listener. Tapi AOP beroperasi di level method call, bukan HTTP request. Ini seperti jika setiap pemanggilan method di PHP bisa di-intercept oleh sebuah "middleware". Di Laravel, <code>@Transactional</code> tidak ada built-in — kamu harus manually wrap dengan <code>DB::transaction()</code>. Di Spring, ini ditangani oleh Dynamic Proxy secara otomatis.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 10</div>
+                    <p><strong>Q:</strong> Kamu punya class <code>OrderService</code> (bukan interface) yang ingin di-proxy untuk logging. Menggunakan <code>java.lang.reflect.Proxy</code> langsung menghasilkan error. Apa solusinya?</p>
+                    <div class="quiz-options" id="q10">
+                        <div class="quiz-option" onclick="checkQuiz('q10',this,false)">A. Tambahkan <code>implements Proxy</code> ke <code>OrderService</code></div>
+                        <div class="quiz-option" onclick="checkQuiz('q10',this,true)">B. Ekstrak interface <code>IOrderService</code> dari <code>OrderService</code>, lalu proxy interface tersebut. Atau gunakan CGLIB/ByteBuddy untuk proxy class langsung</div>
+                        <div class="quiz-option" onclick="checkQuiz('q10',this,false)">C. Gunakan <code>Proxy.newProxyInstance()</code> dengan <code>OrderService.class</code> di array interface</div>
+                        <div class="quiz-option" onclick="checkQuiz('q10',this,false)">D. Dynamic Proxy tidak bisa digunakan untuk logging sama sekali</div>
+                    </div>
+                    <div class="quiz-feedback" id="q10-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SUMMARY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Summary</div>
+                    <div class="chapter-title">📋 Ringkasan Arsitektur Project</div>
+                    <div class="chapter-sub">Peta class, alur data, dan hubungan antar komponen</div>
+                </div>
+
+                <div class="text-title mt-m">Peta Arsitektur Project</div>
+                <div class="arch-diagram">
+                    <span class="d-ann">// === Data Layer ===</span>
+                    <span class="d-kw">interface</span> <span class="d-cls">Car</span>              → dipakai di ProxyTest sebagai target proxy
+                    <span class="d-kw">interface</span> <span class="d-cls">Nameable</span>         → diimplementasikan Person; dibaca via InterfaceTest
+                    <span class="d-kw">class</span>     <span class="d-cls">Person</span>            → central model; dipakai di 8 test class
+                    <span class="d-kw">class</span>     <span class="d-cls">Data&lt;T&gt;</span>           → generic class; dibaca TypeVariable via TypeVariableTest
+                    <span class="d-kw">enum</span>      <span class="d-cls">Gender</span>            → diinspeksi via EnumTest
+                    <span class="d-kw">record</span>    <span class="d-cls">Product</span>           → immutable DTO; diinspeksi via RecordTest
+
+                    <span class="d-ann">// === Annotation Layer ===</span>
+                    <span class="d-ann">@interface NotBlank</span>       → @Target(FIELD) @Retention(RUNTIME)
+                    <span class="d-ann">@interface SampleAnnotation</span> → @Target(PACKAGE) di package-info.java
+
+                    <span class="d-ann">// === Validation Layer ===</span>
+                    <span class="d-kw">class</span> <span class="d-cls">Validator</span>            → membaca @NotBlank via Reflection → validasi otomatis
+
+                    <span class="d-ann">// === Test Layer (14 file) ===</span>
+                    ClassTest          <span class="d-arr">→</span> 3 cara get Class object + inspeksi metadata
+                    FieldTest          <span class="d-arr">→</span> getDeclaredFields + get/set value + setAccessible
+                    MethodTest         <span class="d-arr">→</span> getDeclaredMethods + invoke
+                    ParameterTest      <span class="d-arr">→</span> getParameters + invoke with args
+                    ConstructorTest    <span class="d-arr">→</span> getDeclaredConstructors + newInstance
+                    ModifierTest       <span class="d-arr">→</span> Modifier.isPublic/isFinal/isStatic
+                    PackageTest        <span class="d-arr">→</span> getPackage + package annotations
+                    InterfaceTest      <span class="d-arr">→</span> isInterface + getInterfaces + getSuperclass
+                    SuperClassTest     <span class="d-arr">→</span> getSuperclass chain sampai Object
+                    AnnotationTest     <span class="d-arr">→</span> pakai Validator.validateNotBlank(person)
+                    PrimitiveTypeTest  <span class="d-arr">→</span> isPrimitive + getInt/getLong (primitive-specific accessors)
+                    EnumTest           <span class="d-arr">→</span> isEnum + getEnumConstants
+                    ArrayTest          <span class="d-arr">→</span> isArray + Array.newInstance + Array.set/get
+                    RecordTest         <span class="d-arr">→</span> isRecord + getRecordComponents + accessor.invoke
+                    ParameterTypeTest  <span class="d-arr">→</span> getGenericType + ParameterizedType (type erasure bypass)
+                    TypeVariableTest   <span class="d-arr">→</span> getTypeParameters + getBounds
+                    ProxyTest          <span class="d-arr">→</span> InvocationHandler + Proxy.newProxyInstance
+                </div>
+
+                <div class="text-title mt-l">Hierarki Learning Path</div>
+                <div class="display-grid mt-s">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value">Dapatkan <code>Class&lt;T&gt;</code> object — gerbang semua Reflection</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">2</div><div class="stepper-value">Inspect Fields (<code>getDeclaredFields()</code>, <code>setAccessible()</code>, <code>get()</code>, <code>set()</code>)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">3</div><div class="stepper-value">Inspect & Invoke Methods (<code>getDeclaredMethods()</code>, <code>invoke()</code>)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">4</div><div class="stepper-value">Inspect & Invoke Constructors (<code>getDeclaredConstructors()</code>, <code>newInstance()</code>)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">5</div><div class="stepper-value">Baca Annotations (<code>getAnnotation()</code>) → Build custom validator</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">6</div><div class="stepper-value">Generics at Runtime (<code>getGenericType()</code>, <code>ParameterizedType</code>)</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">7</div><div class="stepper-value">Dynamic Proxy (<code>InvocationHandler</code>, <code>Proxy.newProxyInstance()</code>)</div></div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Cheat Sheet: Class API</div>
+                <div class="table-content mt-s">
+                    <table>
+                        <thead><tr><th>Method</th><th>Mengembalikan</th><th>Catatan</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>getDeclaredFields()</code></td><td><code>Field[]</code></td><td>Semua field class ini (incl. private), tapi tidak dari superclass</td></tr>
+                        <tr><td><code>getDeclaredMethods()</code></td><td><code>Method[]</code></td><td>Semua method class ini, tidak dari superclass</td></tr>
+                        <tr><td><code>getDeclaredConstructors()</code></td><td><code>Constructor&lt;?&gt;[]</code></td><td>Semua constructor termasuk private</td></tr>
+                        <tr><td><code>getFields()</code></td><td><code>Field[]</code></td><td>Hanya public, tapi termasuk yang diwarisi</td></tr>
+                        <tr><td><code>getMethods()</code></td><td><code>Method[]</code></td><td>Hanya public, termasuk warisan + Object</td></tr>
+                        <tr><td><code>getSuperclass()</code></td><td><code>Class&lt;? super T&gt;</code></td><td><code>null</code> untuk interface dan <code>Object</code></td></tr>
+                        <tr><td><code>getInterfaces()</code></td><td><code>Class&lt;?&gt;[]</code></td><td>Interface yang langsung diimplementasikan</td></tr>
+                        <tr><td><code>getAnnotation(T.class)</code></td><td><code>T</code> annotation</td><td><code>null</code> jika tidak ada atau bukan RUNTIME retention</td></tr>
+                        <tr><td><code>getModifiers()</code></td><td><code>int</code> bitmask</td><td>Parse dengan <code>Modifier.isPublic()</code>, dll</td></tr>
+                        <tr><td><code>isArray()</code></td><td><code>boolean</code></td><td>True jika class adalah array type</td></tr>
+                        <tr><td><code>isEnum()</code></td><td><code>boolean</code></td><td>True jika class adalah enum</td></tr>
+                        <tr><td><code>isInterface()</code></td><td><code>boolean</code></td><td>True jika ini adalah interface</td></tr>
+                        <tr><td><code>isRecord()</code></td><td><code>boolean</code></td><td>True jika ini adalah record (Java 16+)</td></tr>
+                        <tr><td><code>getTypeParameters()</code></td><td><code>TypeVariable[]</code></td><td>Type parameter generics di deklarasi class</td></tr>
+                        <tr><td><code>getRecordComponents()</code></td><td><code>RecordComponent[]</code></td><td>Komponen record beserta accessor-nya</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title mt-l">Key Takeaways untuk ex-Laravel Dev</div>
+                <div class="timeline mt-m">
+                    <div>
+                        <span class="timeline-key active">1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Reflection = Tulang Punggung Framework</div>
+                        <div class="timeline-content-desc">Setiap magic yang kamu rasakan di Spring Boot (<code>@Autowired</code>, <code>@Transactional</code>, <code>@Valid</code>) ditenagai Reflection. Memahami Reflection berarti kamu mengerti <em>mengapa</em> framework bekerja, bukan sekadar <em>bagaimana cara menggunakannya</em>.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">2</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">@Retention(RUNTIME) adalah Wajib</div>
+                        <div class="timeline-content-desc">Annotation custom untuk runtime processing HARUS punya <code>@Retention(RetentionPolicy.RUNTIME)</code>. Lupa ini = silent failure = bug yang susah di-trace. Jadikan ini kebiasaan pertama saat mendefinisikan annotation baru.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">3</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">getDeclared* vs get* — Bedakan Selalu</div>
+                        <div class="timeline-content-desc"><code>getDeclared*()</code> = class ini saja, semua visibility. <code>get*()</code> = public only, termasuk warisan. Salah pilih = missing fields/methods yang tidak kamu sadari.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">4</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Gunakan Reflection Hanya di Infrastructure, Bukan Business Logic</div>
+                        <div class="timeline-content-desc">Reflection itu lambat dan kehilangan type safety. Tulis business logic dengan cara Java biasa. Pakai Reflection hanya untuk library/framework/utility code yang perlu bekerja secara generik.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">5</span>
+                    </div>
+                    <div class="timeline-content max-width-800">
+                        <div class="timeline-content-title">Dynamic Proxy = AOP = Middleware-nya Java</div>
+                        <div class="timeline-content-desc"><code>@Transactional</code>, <code>@Cacheable</code>, logging, security check — semua bisa diimplementasikan via Dynamic Proxy tanpa mengubah business code. Ini adalah aplikasi nyata dari prinsip Open/Closed: terbuka untuk behavior baru (via proxy), tertutup untuk modifikasi class asli.</div>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-l">
+                    <strong>🚀 Langkah Berikutnya</strong><br>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs);">
+                        <li><strong>Spring AOP</strong> — implementasi Dynamic Proxy di level framework dengan <code>@Aspect</code></li>
+                        <li><strong>Bean Validation (JSR-303)</strong> — <code>@NotNull</code>, <code>@Size</code>, custom <code>ConstraintValidator</code></li>
+                        <li><strong>Jackson ObjectMapper</strong> — serialisasi JSON yang memanfaatkan Reflection + Generics</li>
+                        <li><strong>ByteBuddy / CGLIB</strong> — bytecode manipulation untuk proxy class (bukan hanya interface)</li>
+                        <li><strong>Java Annotation Processing (APT)</strong> — Lombok, MapStruct: generate kode saat kompilasi dari annotation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="height:4rem;"></div>
+    </section>
+
+    <footer>
+        <p style="text-align:center;padding:var(--m);color:var(--transtext-color);font-size:var(--xs);">
+            Modul Interaktif Java Reflection · Untuk developer PHP/Laravel yang migrasi ke Java &amp; Spring Boot
+        </p>
+    </footer>
+</main>
+
+<script>
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse")
+        document.getElementsByClassName("container")[0].classList.toggle("expanded")
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode")
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show")
+        document.getElementById('get-menu').classList.toggle('opened')
+    }
+
+    const QUIZ_FEEDBACK = {
+        q1:  { ok: 'Tepat! Class.forName() adalah satu-satunya cara mendapat Class object dari string nama — ideal untuk plugin system, konfigurasi file YAML/JSON, atau class yang hanya diketahui saat runtime.', no: 'Class literal (A) dan getClass() (C) membutuhkan class yang diketahui saat kompilasi. Untuk nama class dari konfigurasi eksternal, wajib gunakan Class.forName().' },
+        q2:  { ok: 'Benar! setAccessible(true) adalah cara legal untuk bypass akses kontrol Java saat runtime. Ini memberi tahu JVM untuk tidak menegakkan pengecekan akses pada field/method tersebut.', no: 'Mengubah source code (A) bukan opsi yang realistis di framework. getFields() (C) hanya mengembalikan public fields yang diwarisi. throws (D) hanya mendeklarasikan exception, tidak menyelesaikan masalah akses.' },
+        q3:  { ok: 'Tepat! int (primitive) dan Integer (wrapper/boxed) adalah DUA tipe yang berbeda di Reflection. getDeclaredMethod("setAge", int.class) dan getDeclaredMethod("setAge", Integer.class) mencari method yang BERBEDA.', no: 'setAccessible (C) tidak relevan untuk NoSuchMethodException — itu tentang access, bukan tentang menemukan method. Penyebab paling umum NoSuchMethodException adalah type parameter yang tidak cocok persis.' },
+        q4:  { ok: 'Benar! Ini adalah alasan teknis yang nyata. Hibernate membuat instance "kosong" via no-arg constructor, lalu mengisi setiap field via setters atau langsung via Reflection field access. Tanpa no-arg constructor, newInstance() akan melempar InstantiationException.', no: 'Java tidak mewajibkan no-arg constructor secara bahasa (A salah). Alasannya murni karena kebutuhan framework yang menggunakan Reflection untuk membuat objek.' },
+        q7a: { ok: 'Tepat! Ini adalah jebakan paling sering. Tanpa @Retention(RUNTIME), annotation hanya ada di source code (SOURCE) atau bytecode (CLASS) tapi TIDAK bisa dibaca via Reflection saat program berjalan. Hasilnya: getAnnotation() selalu null, validator tidak pernah berjalan — tanpa error apapun.', no: 'Nama atribut "value" valid. @Target tidak mempengaruhi apakah annotation bisa dibaca di runtime. Annotation custom bisa dipakai di production.' },
+        q7b: { ok: 'Tepat! Inilah inti kekuatan Reflection — menulis kode yang bekerja untuk SEMUA class, bukan hanya satu class spesifik. Cukup taruh @NotBlank di class manapun, dan validator yang sama bisa memvalidasinya.', no: 'getDeclaredFields() tersedia di semua Class object. Parameter Object bukan tentang mencegah ClassCastException, melainkan tentang reusability validator untuk class apapun.' },
+        q8:  { ok: 'Tepat! Ini adalah inti dari memahami Type Erasure. getType() mengembalikan raw type yang sudah di-erase (Map), sedangkan getGenericType() mengakses metadata signature yang menyimpan informasi generic — memungkinkan kamu tahu bahwa ini Map<String, List<Person>>.', no: 'Type Erasure tidak menghapus semua informasi generic. Java menyimpannya di metadata signature field/method untuk keperluan seperti ini. getType() dan getGenericType() memang berbeda perilakunya.' },
+        q10: { ok: 'Benar! java.lang.reflect.Proxy hanya bisa proxy interface. Untuk class biasa, solusinya: (1) ekstrak interface dulu lalu proxy interface-nya, atau (2) gunakan library bytecode manipulation (CGLIB yang dipakai Spring, atau ByteBuddy).', no: 'Proxy.newProxyInstance() hanya menerima interface di array kedua-nya. Memberikan class biasa akan langsung melempar IllegalArgumentException.' },
+    };
+
+    function checkQuiz(groupId, clickedEl, isCorrect) {
+        const container = document.getElementById(groupId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = '1';
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.style.pointerEvents = 'none');
+        const fbEl = document.getElementById(groupId + '-fb');
+        if (isCorrect) {
+            clickedEl.classList.add('correct');
+            fbEl.textContent = '✅ ' + QUIZ_FEEDBACK[groupId].ok;
+            fbEl.className = 'quiz-feedback show ok';
+        } else {
+            clickedEl.classList.add('wrong');
+            fbEl.textContent = '❌ ' + QUIZ_FEEDBACK[groupId].no;
+            fbEl.className = 'quiz-feedback show no';
+            options.forEach(opt => {
+                if (opt.onclick && opt.onclick.toString().includes(',true)')) {
+                    opt.classList.add('correct');
+                }
+            });
+        }
+    }
+
+    // Scroll-based sidebar highlight
+    const sectionIds = ['intro','chapter-1','chapter-2','chapter-3','chapter-4',
+        'chapter-5','chapter-6','chapter-7','chapter-8','chapter-9','chapter-10','summary'];
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + e.target.id) link.classList.add('active');
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) obs.observe(el);
+    });
+</script>
+</body>
+</html>

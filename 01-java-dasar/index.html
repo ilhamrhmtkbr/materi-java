@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Dasar — Modul Belajar untuk Developer PHP/Laravel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .quiz-box { box-sizing:border-box; max-width:77dvw; overflow:auto; border-left:4px solid var(--primary-color); background:var(--transprimary-color); border-radius:var(--radius-m); padding:var(--m); margin-top:var(--m); }
+        .quiz-box .quiz-title { font-weight:700; color:var(--primary-color); margin-bottom:var(--s); }
+        .quiz-option { display:flex; align-items:center; gap:var(--s); padding:var(--xs) var(--s); border-radius:var(--radius-s); cursor:pointer; margin-bottom:var(--xs); border:1px solid var(--border-color); background:var(--bg-color); }
+        .quiz-option:hover { background:var(--sidebar-hover-color); }
+        .quiz-option.correct { background:var(--transsuccess-color); border-color:var(--success-color); }
+        .quiz-option.wrong { background:var(--transdanger-color); border-color:var(--danger-color); }
+        .quiz-feedback { margin-top:var(--s); font-size:var(--s); font-weight:600; }
+        .quiz-feedback.ok { color:var(--success-color); }
+        .quiz-feedback.err { color:var(--danger-color); }
+        .info-box { box-sizing:border-box; max-width:77dvw; overflow:auto; border-radius:var(--radius-m); padding:var(--m); margin:var(--s) 0; }
+        .info-box.tip { background:var(--transsuccess-color); border-left:4px solid var(--success-color); }
+        .info-box.warn { background:var(--transwarning-color); border-left:4px solid var(--warning-color); }
+        .info-box.laravel { background:var(--transsecond-primary-color); border-left:4px solid var(--second-primary-color); }
+        .info-box.danger { background:var(--transdanger-color); border-left:4px solid var(--danger-color); }
+        .info-box strong { display:block; margin-bottom:var(--xs); }
+        .code-wrap { box-sizing:border-box; max-width:77dvw; overflow-x:auto; border-radius:var(--radius-m); margin:var(--s) 0; }
+        .code-wrap pre { margin:0; }
+        .code-wrap code { font-size:0.85em; }
+        .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--m); max-width:77dvw; overflow:auto; }
+        @media(max-width:600px){ .compare-grid { grid-template-columns:1fr; } }
+        .compare-grid .wrong-box { border-left:4px solid var(--danger-color); background:var(--transdanger-color); border-radius:var(--radius-m); padding:var(--s); }
+        .compare-grid .right-box { border-left:4px solid var(--success-color); background:var(--transsuccess-color); border-radius:var(--radius-m); padding:var(--s); }
+        .compare-label { font-weight:700; font-size:var(--s); margin-bottom:var(--xs); }
+        .chapter-intro { box-sizing:border-box; max-width:77dvw; overflow:auto; background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color)); border-radius:var(--radius-x); padding:var(--l); margin-bottom:var(--m); }
+        .chapter-intro .chapter-num { color:var(--primary-color); font-weight:700; font-size:var(--s); letter-spacing:.08em; text-transform:uppercase; }
+        .chapter-intro h2 { margin:var(--xs) 0 var(--s); font-size:var(--xx); }
+        .line-table { width:100%; border-collapse:collapse; font-size:var(--s); }
+        .line-table th,.line-table td { padding:var(--xs) var(--s); text-align:left; border-bottom:1px solid var(--border-color); }
+        .line-table th { background:var(--transprimary-color); color:var(--primary-color); font-weight:700; }
+        .line-table tr:hover td { background:var(--sidebar-hover-color); }
+        .section-divider { border:none; border-top:1px solid var(--border-color); margin:var(--x) 0; }
+        .summary-item { display:flex; align-items:flex-start; gap:var(--s); padding:var(--s) 0; border-bottom:1px solid var(--border-color); }
+        .summary-item:last-child { border-bottom:none; }
+        .summary-icon { font-size:1.4rem; flex-shrink:0; }
+        #progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--primary-color); transition:width .2s; z-index:9999; }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s;z-index: 99">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<div id="progress-bar"></div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-1">🚀 Mulai</a>
+    <a class="bottom-nav-item" href="#chapter-5">🔀 Kontrol</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bottom-nav-check-1">☰ Lainnya</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bottom-nav-check-1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bottom-nav-check-1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-7">🔄 Perulangan</a>
+                <a class="bottom-nav-item" href="#chapter-9">🔧 Method</a>
+                <a class="bottom-nav-item" href="#chapter-10">📊 Array</a>
+                <a class="bottom-nav-item" href="#chapter-11">📝 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<aside class="sidebar">
+    <a href="../" class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">☕ Java Dasar</div>
+    </a>
+    <div class="sidebar-menu">
+        <a href="#chapter-1" class="sidebar-menu-item active" data-title="Hello World"><div class="sidebar-menu-item-svg">🚀</div><span>Hello World</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Variabel"><div class="sidebar-menu-item-svg">📦</div><span>Variabel</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Tipe Data"><strong class="sidebar-menu-item-svg">🔢</strong><span>Tipe Data</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-3" class="sidebar-menu-item" data-title="Number & Boolean"><strong class="sidebar-menu-item-svg">🔢</strong><span>Number & Boolean</span></a>
+                <a href="#chapter-3b" class="sidebar-menu-item" data-title="String & Char"><strong class="sidebar-menu-item-svg">💬</strong><span>String & Char</span></a>
+                <a href="#chapter-3c" class="sidebar-menu-item" data-title="Wrapper & Konversi"><strong class="sidebar-menu-item-svg">🔄</strong><span>Wrapper & Konversi</span></a>
+            </div>
+        </details>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="Operator"><div class="sidebar-menu-item-svg">➕</div><span>Operator</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Percabangan"><strong class="sidebar-menu-item-svg">🔀</strong><span>Percabangan</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-5" class="sidebar-menu-item" data-title="If Statement"><strong class="sidebar-menu-item-svg">❓</strong><span>If Statement</span></a>
+                <a href="#chapter-5b" class="sidebar-menu-item" data-title="Switch Statement"><strong class="sidebar-menu-item-svg">⚙️</strong><span>Switch Statement</span></a>
+                <a href="#chapter-5c" class="sidebar-menu-item" data-title="Ternary Operator"><strong class="sidebar-menu-item-svg">⚡</strong><span>Ternary Operator</span></a>
+            </div>
+        </details>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Block & Scope"><div class="sidebar-menu-item-svg">📐</div><span>Block &amp; Scope</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Perulangan"><strong class="sidebar-menu-item-svg">🔄</strong><span>Perulangan</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-7" class="sidebar-menu-item" data-title="While & Do-While"><strong class="sidebar-menu-item-svg">🌀</strong><span>While &amp; Do-While</span></a>
+                <a href="#chapter-7b" class="sidebar-menu-item" data-title="For & ForEach"><strong class="sidebar-menu-item-svg">🔁</strong><span>For &amp; ForEach</span></a>
+                <a href="#chapter-8" class="sidebar-menu-item" data-title="Break & Continue"><strong class="sidebar-menu-item-svg">⏭️</strong><span>Break &amp; Continue</span></a>
+            </div>
+        </details>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item" data-title="Method"><strong class="sidebar-menu-item-svg">🔧</strong><span>Method (Fungsi)</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-9" class="sidebar-menu-item" data-title="Method Dasar"><strong class="sidebar-menu-item-svg">🛠️</strong><span>Method Dasar</span></a>
+                <a href="#chapter-9b" class="sidebar-menu-item" data-title="Overloading & Varargs"><strong class="sidebar-menu-item-svg">🎛️</strong><span>Overloading &amp; Varargs</span></a>
+                <a href="#chapter-9c" class="sidebar-menu-item" data-title="Rekursif"><strong class="sidebar-menu-item-svg">♻️</strong><span>Rekursif</span></a>
+            </div>
+        </details>
+        <a href="#chapter-10" class="sidebar-menu-item" data-title="Array"><div class="sidebar-menu-item-svg">📊</div><span>Array</span></a>
+        <a href="#chapter-11" class="sidebar-menu-item" data-title="Summary"><div class="sidebar-menu-item-svg">📝</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">☕ Java Dasar</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-1"><span class="container-header-nav-item-text">Hello World</span></a>
+                    <a class="container-header-nav-item" href="#chapter-5"><span class="container-header-nav-item-text">Percabangan</span></a>
+                    <a class="container-header-nav-item" href="#chapter-9"><span class="container-header-nav-item-text">Method</span></a>
+                    <a class="container-header-nav-item" href="#chapter-11"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--x);">
+                <div class="flex-ais-jcs gap-m" style="align-items:center;">
+                    <span style="font-size:3rem;">☕</span>
+                    <div>
+                        <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Modul Pembelajaran Mandiri</div>
+                        <h1 style="margin:var(--xs) 0 var(--s);">Java Dasar untuk Developer PHP/Laravel</h1>
+                        <p>Kamu sudah jago di ekosistem PHP &amp; Laravel. Selamat datang di dunia Java — bahasa yang <strong>statically typed</strong>, <strong>compiled</strong>, dan sangat <strong>verbose by design</strong>. Modul ini membimbingmu step-by-step dengan analogi dari dunia yang sudah kamu kenal.</p>
+                    </div>
+                </div>
+                <hr class="section-divider">
+                <div class="flex-ais-jcs gap-m">
+                    <div class="badge text-white bg-primary"><p>11 Chapter</p></div>
+                    <div class="badge text-white bg-success"><p>PHP/Laravel Analogy</p></div>
+                    <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+                    <div class="badge badge-small bg-danger"><p>Common Mistakes</p></div>
+                </div>
+            </div>
+            <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">🧠 Perbedaan Mindset Fundamental</div>
+            <div class="table-content">
+                <table>
+                    <thead><tr><th>Aspek</th><th>PHP / Laravel</th><th>Java</th></tr></thead>
+                    <tbody>
+                    <tr><td><strong>Tipe Data</strong></td><td>Loosely-typed (dinamis)</td><td><strong>Strongly-typed</strong> (wajib deklarasi eksplisit)</td></tr>
+                    <tr><td><strong>Eksekusi</strong></td><td>Interpreted (dieksekusi langsung)</td><td><strong>Compiled</strong> ke bytecode → JVM</td></tr>
+                    <tr><td><strong>Error</strong></td><td>Sering muncul saat runtime</td><td>Banyak error <strong>ditangkap saat compile</strong></td></tr>
+                    <tr><td><strong>Null Safety</strong></td><td>null bisa di mana saja</td><td>null ada, tapi lebih terkontrol</td></tr>
+                    <tr><td><strong>Paradigma</strong></td><td>Multi-paradigm, OOP opsional</td><td>OOP adalah <strong>fondasi utama</strong></td></tr>
+                    <tr><td><strong>Boilerplate</strong></td><td>Sedikit, ekspresif</td><td>Lebih banyak, tapi eksplisit &amp; aman</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="display-grid" style="margin-top:var(--m);">
+                <div class="stepper">
+                    <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value">Hello World</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">2</div><div class="stepper-value">Variabel</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">3</div><div class="stepper-value">Tipe Data</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Operator</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Kontrol Flow</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">6</div><div class="stepper-value">Loop</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">7</div><div class="stepper-value">Method</div></div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item"><div class="stepper-key">8</div><div class="stepper-value">Array</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH1: HELLO WORLD -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 1</div>
+                    <h2>🚀 Hello World &amp; Struktur Program Java</h2>
+                    <p>Setiap program Java dimulai dari sebuah <strong>class</strong>. Tidak ada kode yang bisa hidup di luar class — beda total dari PHP di mana kamu bisa langsung tulis <code>echo "Hello";</code> di file.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// File: HelloWorld.java
+public class HelloWorld {
+
+  public static void main(String[] args) {
+    System.out.println("Hello World");
+  }
+
+}</code></pre></div>
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📖 Penjelasan Baris per Baris</div>
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Baris</th><th>Kode</th><th>Penjelasan</th></tr></thead>
+                        <tbody>
+                        <tr><td>1</td><td><code>public class HelloWorld</code></td><td>Mendefinisikan class bernama <code>HelloWorld</code>. Nama class WAJIB sama persis dengan nama file (<code>HelloWorld.java</code>). Ini aturan keras Java.</td></tr>
+                        <tr><td>2</td><td><code>public static void main(String[] args)</code></td><td>Entry point program. Java mencari method <code>main</code> dengan signature persis ini. <code>static</code> = bisa dipanggil tanpa membuat object. <code>void</code> = tidak mengembalikan nilai.</td></tr>
+                        <tr><td>3</td><td><code>System.out.println("Hello World")</code></td><td>Mencetak teks ke konsol + newline. <code>System</code> = class bawaan, <code>out</code> = output stream, <code>println</code> = print + newline. Di PHP: <code>echo "Hello World\n";</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Kalau di Laravel ada <code>php artisan serve</code>, di Java ada JVM. File <code>.java</code> dikompilasi jadi <code>.class</code> (bytecode), lalu JVM menjalankannya. Bayangkan JVM seperti PHP interpreter, tapi file yang dijalankan sudah "diterjemahkan" lebih dulu.
+                </div>
+                <div class="info-box tip">
+                    <strong>💡 Under The Hood</strong>
+                    <code>javac HelloWorld.java</code> → kompilasi ke <code>HelloWorld.class</code>, lalu <code>java HelloWorld</code> menjalankannya lewat JVM. Di modern tooling (IntelliJ, Maven, Gradle) proses ini otomatis.
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Nama file berbeda</div>
+                        <div class="code-wrap"><pre><code class="language-java">// File: helloWorld.java (huruf kecil h!)
+public class HelloWorld { // ERROR saat compile!
+  ...
+}</code></pre></div>
+                        <small>Java case-sensitive. Nama class HARUS sama persis dengan nama file.</small>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar</div>
+                        <div class="code-wrap"><pre><code class="language-java">// File: HelloWorld.java
+public class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello World");
+  }
+}</code></pre></div>
+                    </div>
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1</div>
+                    <p><strong>Mengapa nama file Java harus sama dengan nama class-nya?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅐</span> Hanya konvensi saja, tidak wajib</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',true)"><span>🅑</span> Karena Java compiler (javac) mencari file berdasarkan nama class secara otomatis</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅒</span> Supaya program lebih mudah dibaca manusia</div>
+                    <div class="quiz-feedback" id="q1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2: VARIABEL -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 2</div>
+                    <h2>📦 Variabel di Java</h2>
+                    <p>Di PHP, kamu tulis <code>$x = "hello";</code> tanpa menyebutkan tipe. Java tidak bisa begitu — kamu <strong>wajib</strong> deklarasikan tipe data secara eksplisit. Tapi Java 10+ membawa keyword <code>var</code> yang membantu.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class Variable {
+  public static void main(String[] args) {
+
+    // 1. Deklarasi dulu, isi nanti
+    String name;
+    name = "Eko Kurniawan Khannedy";
+    System.out.println(name);
+
+    // 2. Deklarasi + inisialisasi langsung
+    int age = 30;
+    String address = "Indonesia";
+
+    // 3. Reassign (ubah nilai)
+    name = "Budi Nugraha";
+    System.out.println(name);
+
+    // 4. var — type inference (Java 10+)
+    var firstName  = "Eko";       // otomatis String
+    var middleName = "Kurniawan"; // otomatis String
+    var lastName   = "Khannedy"; // otomatis String
+
+    // 5. final — konstanta, tidak bisa diubah
+    final String application = "Belajar Java";
+    // application = "Lain"; // ERROR! Cannot assign to final variable
+  }
+}</code></pre></div>
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Konsep</th><th>PHP</th><th>Java</th></tr></thead>
+                        <tbody>
+                        <tr><td>Variabel biasa</td><td><code>$name = "Eko";</code></td><td><code>String name = "Eko";</code></td></tr>
+                        <tr><td>Type inference</td><td>Selalu otomatis</td><td><code>var name = "Eko";</code> (Java 10+)</td></tr>
+                        <tr><td>Konstanta</td><td><code>define('APP', 'val')</code></td><td><code>final String APP = "val";</code></td></tr>
+                        <tr><td>Tipe harus cocok</td><td>Tidak harus</td><td><strong>Wajib cocok</strong> saat compile</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>final</code> di Java mirip <code>const</code> di PHP, tapi dicek saat <em>compile time</em>. Kalau kamu coba ubah nilai <code>final</code>, programnya bahkan tidak bisa dikompilasi — error terdeteksi lebih awal sebelum jalan!
+                </div>
+                <div class="info-box warn">
+                    <strong>⚠️ Tentang <code>var</code></strong>
+                    <code>var</code> di Java bukan "loose typing". Tipe tetap ditentukan saat compile dan <strong>tidak bisa berubah</strong>. <code>var x = "hello";</code> artinya <code>x</code> adalah <code>String</code> selamanya. Berbeda dari PHP di mana variabel bisa berubah tipe kapan saja.
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Mengubah tipe variabel</div>
+                        <div class="code-wrap"><pre><code class="language-java">var x = "hello"; // tipe: String
+x = 123; // ERROR! int tidak kompatibel ke String</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar — Gunakan tipe yang sesuai</div>
+                        <div class="code-wrap"><pre><code class="language-java">var x = "hello"; // String
+var y = 123;     // int — dua variabel terpisah</code></pre></div>
+                    </div>
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 2</div>
+                    <p><strong>Apakah kode berikut valid di Java? <code>var x = 10; x = "hello";</code></strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅐</span> Valid, karena <code>var</code> berarti tipe bisa berubah seperti PHP</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',true)"><span>🅑</span> Tidak valid — <code>var</code> hanya type inference, tipe tetap terkunci saat kompilasi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅒</span> Valid, karena Java versi terbaru mendukung dynamic typing</div>
+                    <div class="quiz-feedback" id="q2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3: TIPE DATA NUMBER & BOOLEAN -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3A</div>
+                    <h2>🔢 Tipe Data Number &amp; Boolean</h2>
+                    <p>Java memiliki <strong>8 tipe data primitif</strong>. Berbeda dari PHP yang punya satu tipe "int" saja, Java memberi pilihan presisi memori — penting untuk efisiensi di aplikasi enterprise.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class TipeDataNumber {
+  public static void main(String[] args) {
+    byte  iniByte  = 100;        // -128 s/d 127 (8-bit)
+    short iniShort = 1000;       // -32,768 s/d 32,767 (16-bit)
+    int   iniInt   = 10000000;   // ±2.1 miliar (32-bit) — paling umum!
+    long  iniLong  = 1000000000L;// sangat besar (64-bit), wajib suffix L
+
+    float  iniFloat  = 10.10F;  // presisi rendah (32-bit), suffix F
+    double iniDouble = 10.10;   // presisi tinggi (64-bit) — default desimal
+
+    // Underscore untuk keterbacaan angka besar
+    int amount = 1_000_000_000; // sama dengan 1000000000
+
+    // Format literal lain
+    int hexaDec  = 0xFFFFFF;    // Hexadecimal
+    int binaryDec = 0b10101010; // Binary
+  }
+}</code></pre></div>
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Tipe</th><th>Ukuran</th><th>Range</th><th>Suffix</th><th>Kapan Dipakai</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>byte</code></td><td>8-bit</td><td>-128 ~ 127</td><td>-</td><td>Data biner kecil</td></tr>
+                        <tr><td><code>short</code></td><td>16-bit</td><td>-32K ~ 32K</td><td>-</td><td>Jarang dipakai</td></tr>
+                        <tr><td><code>int</code></td><td>32-bit</td><td>±2.1 miliar</td><td>-</td><td><strong>Default integer</strong></td></tr>
+                        <tr><td><code>long</code></td><td>64-bit</td><td>±9.2 kuadriliun</td><td><code>L</code></td><td>ID besar, timestamp</td></tr>
+                        <tr><td><code>float</code></td><td>32-bit</td><td>~7 digit</td><td><code>F</code></td><td>Grafik, game</td></tr>
+                        <tr><td><code>double</code></td><td>64-bit</td><td>~15 digit</td><td>-</td><td><strong>Default desimal</strong></td></tr>
+                        <tr><td><code>boolean</code></td><td>1-bit</td><td>true/false</td><td>-</td><td>Flag, kondisi</td></tr>
+                        <tr><td><code>char</code></td><td>16-bit</td><td>0 ~ 65535</td><td>-</td><td>Satu karakter Unicode</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// OperasiBoolean.java
+public class OperasiBoolean {
+  public static void main(String[] args) {
+    boolean benar = true;
+    boolean salah = false;
+
+    var absen      = 75;
+    var nilaiAkhir = 80;
+
+    boolean lulusAbsen = absen >= 75;      // true
+    boolean lulusNilai = nilaiAkhir >= 75; // true
+
+    var lulus = lulusAbsen && lulusNilai;  // true && true = true
+    System.out.println(lulus); // true
+  }
+}</code></pre></div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Di PHP, <code>true</code> dan <code>1</code> bisa saling ditukar karena loosely-typed. Di Java, <code>boolean</code> hanya bisa berisi <code>true</code> atau <code>false</code>. Kode seperti <code>if (1)</code> yang valid di PHP akan <strong>error compile</strong> di Java!
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3A</div>
+                    <p><strong>Mengapa perlu menulis <code>1000000000L</code> (suffix L) untuk nilai long yang besar?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅐</span> Hanya untuk membedakan penulisan saja</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',true)"><span>🅑</span> Karena literal angka default dianggap <code>int</code> — jika nilainya melebihi kapasitas int, <em>wajib</em> pakai suffix <code>L</code></div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅒</span> Karena <code>long</code> hanya bisa menerima angka dengan suffix L</div>
+                    <div class="quiz-feedback" id="q3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3B: STRING & CHAR -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3B</div>
+                    <h2>💬 String &amp; Char</h2>
+                    <p><code>String</code> di Java adalah sebuah <strong>Object</strong> (bukan primitif), sedangkan <code>char</code> adalah primitif untuk satu karakter. Ini perbedaan penting yang tidak ada di PHP.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// TipeDataString.java
+public class TipeDataString {
+  public static void main(String[] args) {
+    String firstName = "Eko Kurniawan"; // tanda kutip GANDA untuk String
+    String lastName  = "Khannedy";
+
+    // Konkatenasi string dengan operator +
+    String fullName = firstName + " " + lastName;
+    System.out.println(fullName); // Eko Kurniawan Khannedy
+  }
+}
+
+// TipeDataChar.java
+public class TipeDataChar {
+  public static void main(String[] args) {
+    char e = 'E'; // tanda kutip TUNGGAL untuk char
+    char k = 'K';
+    char o = 'O';
+
+    System.out.print(e); // E — print tanpa newline
+    System.out.print(k); // K
+    System.out.print(o); // O → output: EKO
+  }
+}</code></pre></div>
+                <div class="info-box warn">
+                    <strong>⚠️ String vs char — Jangan tertukar!</strong>
+                    <ul style="margin:var(--xs) 0 0; padding-left:var(--m);">
+                        <li><code>"A"</code> → <strong>String</strong> (double quote) = objek, bisa null, punya method</li>
+                        <li><code>'A'</code> → <strong>char</strong> (single quote) = primitif, satu karakter saja</li>
+                        <li>Di PHP, single/double quote untuk string sama-sama valid. Di Java, <strong>berbeda tipe data!</strong></li>
+                    </ul>
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah</div>
+                        <div class="code-wrap"><pre><code class="language-java">char c = "A";    // ERROR! "A" adalah String
+String s = 'x';  // ERROR! 'x' adalah char</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar</div>
+                        <div class="code-wrap"><pre><code class="language-java">char   c = 'A';       // satu karakter
+String s = "hello";  // teks/string</code></pre></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3C: WRAPPER & KONVERSI -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3c">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3C</div>
+                    <h2>🔄 Wrapper Class &amp; Konversi Number</h2>
+                    <p>Setiap tipe primitif punya <strong>Wrapper Class</strong> — versi Object-nya. Wrapper diperlukan ketika kamu butuh fitur OOP seperti method atau nilai <code>null</code>.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// TipeDataBukanPrimitif.java
+public class TipeDataBukanPrimitif {
+  public static void main(String[] args) {
+
+    Integer iniInteger = 100;    // Wrapper dari int
+    Long    iniLong    = 10000L; // Wrapper dari long
+
+    // Wrapper class BISA bernilai null (primitif tidak bisa!)
+    Byte iniByte = null;
+    System.out.println(iniByte); // null
+
+    iniByte = 100;
+    System.out.println(iniByte); // 100
+
+    // Autoboxing: int → Integer otomatis
+    int     iniInt    = 100;
+    Integer iniObject = iniInt; // Java membungkus otomatis
+
+    // Unboxing ke tipe lain via method Wrapper
+    short iniShort = iniObject.shortValue();
+    long  iniLong2 = iniObject.longValue();
+    float iniFloat = iniObject.floatValue();
+  }
+}
+
+// KonversiNumber.java — Widening vs Narrowing
+public class KonversiNumber {
+  public static void main(String[] args) {
+
+    // Widening (otomatis, aman): kecil → besar
+    byte  iniByte  = 10;
+    short iniShort = iniByte;  // byte → short, otomatis
+    int   iniInt   = iniShort; // short → int, otomatis
+
+    // Narrowing (manual, bisa kehilangan data): besar → kecil
+    int  iniInt2  = 1000;
+    byte iniByte2 = (byte) iniInt2; // casting eksplisit!
+    // 1000 tidak muat di byte (max 127) → data TERPOTONG jadi -24
+  }
+}</code></pre></div>
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Primitif</th><th>Wrapper Class</th><th>Bisa null?</th><th>Punya method?</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>int</code></td><td><code>Integer</code></td><td>✅</td><td>✅ (<code>.parseInt()</code>, dll)</td></tr>
+                        <tr><td><code>long</code></td><td><code>Long</code></td><td>✅</td><td>✅</td></tr>
+                        <tr><td><code>double</code></td><td><code>Double</code></td><td>✅</td><td>✅</td></tr>
+                        <tr><td><code>boolean</code></td><td><code>Boolean</code></td><td>✅</td><td>✅</td></tr>
+                        <tr><td><code>byte</code></td><td><code>Byte</code></td><td>✅</td><td>✅</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Di Spring Boot, kolom database nullable WAJIB pakai Wrapper (<code>Integer</code>, bukan <code>int</code>), karena <code>int</code> tidak bisa null — persis seperti kolom nullable di migration Laravel. Kalau pakai <code>int</code> primitif pada kolom nullable, kamu bisa dapat <code>NullPointerException</code> saat data kosong!
+                </div>
+                <div class="info-box warn">
+                    <strong>⚠️ Narrowing Casting — Hati-hati Kehilangan Data!</strong>
+                    Kalau kamu cast <code>(byte) 1000</code>, hasilnya <em>bukan</em> error — tapi nilainya <strong>terpotong diam-diam</strong> jadi -24. Java tidak memberi warning, tidak melempar exception. Ini "silent bug" yang berbahaya!
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3C</div>
+                    <p><strong>Di Spring Boot, kolom database yang bisa NULL lebih baik menggunakan tipe apa?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3c',false)"><span>🅐</span> <code>int</code>, karena lebih efisien</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3c',true)"><span>🅑</span> <code>Integer</code> (Wrapper Class), karena primitif tidak bisa null</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3c',false)"><span>🅒</span> Tidak ada bedanya, keduanya sama saja</div>
+                    <div class="quiz-feedback" id="q3c-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4: OPERATOR -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 4</div>
+                    <h2>➕ Operator &amp; Ekspresi</h2>
+                    <p>Operator di Java sangat mirip PHP. Yang paling krusial diperhatikan: operator <code>==</code> pada objek seperti <code>String</code> berperilaku berbeda dari PHP.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// OperasiMatematika.java
+public class OperasiMatematika {
+  public static void main(String[] args) {
+    int a = 100;
+    int b = 10;
+
+    System.out.println(a + b);  // 110 — penjumlahan
+    System.out.println(a - b);  // 90  — pengurangan
+    System.out.println(a * b);  // 1000 — perkalian
+    System.out.println(a / b);  // 10  — pembagian integer (sisa dibuang!)
+    System.out.println(a % b);  // 0   — modulus / sisa bagi
+
+    int c = 100;
+    c += 10;  // c = 110
+    c -= 10;  // c = 100
+    c *= 10;  // c = 1000
+
+    int d = 100;
+    d++;      // d = 101 (increment)
+    d--;      // d = 100 (decrement)
+  }
+}
+
+// OperasiPerbandingan.java
+public class OperasiPerbandingan {
+  public static void main(String[] args) {
+    int a = 100;
+    int b = 100;
+
+    System.out.println(a > b);  // false
+    System.out.println(a < b);  // false
+    System.out.println(a >= b); // true
+    System.out.println(a <= b); // true
+    System.out.println(a == b); // true  ← aman untuk PRIMITIF
+    System.out.println(a != b); // false
+  }
+}</code></pre></div>
+                <div class="info-box danger">
+                    <strong>🚨 Jebakan Besar: <code>==</code> vs <code>.equals()</code> untuk String!</strong>
+                    Ini adalah kesalahan paling umum developer PHP pindah ke Java. Operator <code>==</code> pada <strong>objek</strong> (termasuk String) membandingkan <em>referensi memori</em>, bukan nilai isinya!
+                    <div class="code-wrap" style="margin-top:var(--s);"><pre><code class="language-java">String s1 = new String("hello");
+String s2 = new String("hello");
+System.out.println(s1 == s2);       // false! (beda lokasi memori)
+System.out.println(s1.equals(s2)); // true  (konten sama)</code></pre></div>
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Bandingkan String dengan ==</div>
+                        <div class="code-wrap"><pre><code class="language-java">String userInput = getInput();
+if (userInput == "admin") {
+  // BUG! Bisa false meski isinya "admin"
+}</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar — Gunakan .equals()</div>
+                        <div class="code-wrap"><pre><code class="language-java">String userInput = getInput();
+// Taruh literal di KIRI → null-safe!
+if ("admin".equals(userInput)) {
+  // aman
+}</code></pre></div>
+                    </div>
+                </div>
+                <div class="info-box tip">
+                    <strong>💡 Tips: Taruh string literal di kiri <code>.equals()</code></strong>
+                    <code>"admin".equals(userInput)</code> lebih aman dari <code>userInput.equals("admin")</code> — kalau <code>userInput</code> null, kasus pertama tidak akan melempar <code>NullPointerException</code> karena string literal tidak pernah null.
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 4</div>
+                    <p><strong>Apa hasil dari <code>7 / 2</code> jika keduanya bertipe <code>int</code> di Java?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',false)"><span>🅐</span> 3.5 — karena hasilnya desimal</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',true)"><span>🅑</span> 3 — Java melakukan integer division, bagian desimal dibuang</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',false)"><span>🅒</span> Error compile karena hasilnya tidak bulat</div>
+                    <div class="quiz-feedback" id="q4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5: IF STATEMENT -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 5A</div>
+                    <h2>❓ If Statement — Percabangan</h2>
+                    <p>Sintaks <code>if-else</code> Java hampir identik dengan PHP. Perbedaan utama: kondisi di Java <strong>harus boolean</strong> — tidak ada truthy/falsy seperti PHP.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class IfStatement {
+  public static void main(String[] args) {
+    var nilai = 80;
+    var absen = 30;
+
+    // If-else sederhana
+    if (nilai >= 75 && absen >= 75) {
+      System.out.println("Selamat Anda Lulus");
+    } else {
+      System.out.println("Silahkan Coba Lagi Tahun Depan");
+    }
+
+    // If-else if chain — identik dengan PHP!
+    if (nilai >= 80 && absen >= 80) {
+      System.out.println("Nilai Anda A");
+    } else if (nilai >= 70 && absen >= 70) {
+      System.out.println("Nilai Anda B");
+    } else if (nilai >= 60 && absen >= 60) {
+      System.out.println("Nilai Anda C");
+    } else if (nilai >= 50 && absen >= 50) {
+      System.out.println("Nilai Anda D");
+    } else {
+      System.out.println("Nilai Anda E");
+    }
+  }
+}</code></pre></div>
+                <div class="compare-grid" style="margin-top:var(--m);">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Gaya PHP di Java</div>
+                        <div class="code-wrap"><pre><code class="language-java">var list = new ArrayList&lt;&gt;();
+// Di PHP: if ($list) {} → valid
+if (list) { // ERROR! list bukan boolean
+  ...
+}</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar — Ekspresi boolean eksplisit</div>
+                        <div class="code-wrap"><pre><code class="language-java">var list = new ArrayList&lt;&gt;();
+if (!list.isEmpty()) { // boolean eksplisit
+  ...
+}</code></pre></div>
+                    </div>
+                </div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Operator logika di Java: <code>&amp;&amp;</code> (AND), <code>||</code> (OR), <code>!</code> (NOT) — sama persis dengan PHP. Yang beda: di PHP <code>if ($nilai)</code> valid untuk cek truthy, di Java kamu harus tulis <code>if (nilai != 0)</code> secara eksplisit.
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 5A</div>
+                    <p><strong>Mengapa <code>if (someString)</code> tidak valid di Java tapi valid di PHP?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5',true)"><span>🅐</span> Java mengharuskan kondisi if berupa nilai <code>boolean</code> eksplisit, tidak ada truthy/falsy</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5',false)"><span>🅑</span> Java tidak mengenal tipe String dalam kondisi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5',false)"><span>🅒</span> PHP lebih modern dari Java</div>
+                    <div class="quiz-feedback" id="q5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5B: SWITCH -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 5B</div>
+                    <h2>⚙️ Switch Statement — Gaya Lama &amp; Modern</h2>
+                    <p>Java punya dua gaya switch: <strong>gaya lama</strong> (mirip PHP, perlu <code>break</code>) dan <strong>switch modern</strong> dengan arrow (<code>-&gt;</code>) yang lebih bersih dan aman (Java 14+). Ada pula <strong>switch expression</strong> yang bisa mengembalikan nilai.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class SwitchStatement {
+  public static void main(String[] args) {
+    var nilai = "A";
+
+    // === Gaya Lama (mirip PHP) — Harus pakai break! ===
+    switch (nilai) {
+      case "A":
+        System.out.println("Wow, Anda Lulus Dengan Baik");
+        break; // WAJIB! Tanpa break → "fall-through" ke case berikutnya
+      case "B":
+      case "C":
+        System.out.println("Nilai Anda Cukup Baik");
+        break;
+      case "D":
+        System.out.println("Anda tidak lulus");
+        break;
+      default:
+        System.out.println("Mungkin Anda salah jurusan");
+    }
+
+    // === Gaya Modern (Java 14+) — Arrow syntax, tidak perlu break ===
+    switch (nilai) {
+      case "A"     -> System.out.println("Wow, Anda Lulus Dengan Baik");
+      case "B","C" -> System.out.println("Nilai Anda Cukup Baik");
+      case "D"     -> System.out.println("Anda Tidak Lulus");
+      default      -> System.out.println("Mungkin Anda Salah Jurusan");
+    }
+
+    // === Switch Expression — switch yang MENGEMBALIKAN NILAI ===
+    String ucapan = switch (nilai) {
+      case "A"     -> "Wow, Anda Lulus Dengan Baik";
+      case "B","C" -> "Nilai Anda Cukup Baik";
+      case "D"     -> "Anda Tidak Lulus";
+      default      -> "Mungkin Anda Salah Jurusan";
+    };
+    System.out.println(ucapan);
+
+    // === Dengan yield (blok multi-baris di switch expression) ===
+    ucapan = switch (nilai) {
+      case "A":
+        yield "Wow, Anda Lulus Dengan Baik"; // yield = return di switch
+      case "B","C":
+        yield "Nilai Anda Cukup Baik";
+      default:
+        yield "Mungkin Anda Salah Jurusan";
+    };
+  }
+}</code></pre></div>
+                <div class="info-box danger" style="margin-top:var(--m);">
+                    <strong>🚨 Fall-Through: Jebakan switch gaya lama!</strong>
+                    Jika lupa <code>break</code>, eksekusi akan "jatuh" ke case berikutnya tanpa henti — bahkan meski case-nya tidak cocok!
+                    <div class="code-wrap" style="margin-top:var(--s);"><pre><code class="language-java">switch ("B") {
+  case "A":
+    System.out.println("A"); // tidak dieksekusi
+  case "B":
+    System.out.println("B"); // dieksekusi
+  // LUPA break!
+  case "C":
+    System.out.println("C"); // JUGA dieksekusi! ← BUG!
+}</code></pre></div>
+                </div>
+                <div class="info-box tip">
+                    <strong>💡 Best Practice</strong>
+                    Selalu gunakan <strong>switch modern dengan arrow</strong> (<code>-&gt;</code>) untuk kode baru. Lebih bersih, bebas fall-through, dan bisa jadi expression yang mengembalikan nilai langsung.
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 5B</div>
+                    <p><strong>Apa itu "fall-through" pada switch gaya lama Java?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5b',false)"><span>🅐</span> Program crash karena switch tidak menemukan case yang cocok</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5b',true)"><span>🅑</span> Eksekusi berlanjut ke case berikutnya meski tidak cocok, karena tidak ada <code>break</code></div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q5b',false)"><span>🅒</span> Switch melewati semua case dan langsung ke default</div>
+                    <div class="quiz-feedback" id="q5b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5C: TERNARY -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5c">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 5C</div>
+                    <h2>⚡ Ternary Operator</h2>
+                    <p>Ternary adalah cara ringkas untuk if-else satu baris. Sintaksnya identik dengan PHP.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class TernaryOperator {
+  public static void main(String[] args) {
+    var nilai = 75;
+
+    // Sintaks: kondisi ? nilai_jika_true : nilai_jika_false
+    String ucapan = nilai >= 75 ? "Selamat Anda Lulus" : "Silahkan Coba lagi";
+    System.out.println(ucapan); // Selamat Anda Lulus
+  }
+}</code></pre></div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel/PHP</strong>
+                    Identik dengan PHP: <code>$ucapan = $nilai >= 75 ? "Lulus" : "Tidak Lulus";</code>. Bedanya di Java, tipe hasil kedua sisi ternary harus konsisten — tidak bisa return <code>String</code> di satu sisi dan <code>int</code> di sisi lain.
+                </div>
+            </div>
+        </div>
+
+        <!-- CH6: BLOCK & SCOPE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 6</div>
+                    <h2>📐 Block &amp; Scope Variabel</h2>
+                    <p>Setiap pasang kurung kurawal <code>{}</code> membentuk sebuah <strong>block</strong>. Variabel yang dideklarasikan di dalam block hanya bisa diakses di dalam block itu — ini disebut <strong>scope</strong>.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// Block.java — Block anonim
+public class Block {
+  public static void main(String[] args) {
+    System.out.println("Hello World 1"); // scope: main
+    System.out.println("Hello World 2");
+
+    { // Block baru dimulai
+      System.out.println("Hello World 4"); // scope: dalam block ini
+      System.out.println("Hello World 5");
+    } // Block berakhir — variabel di dalamnya tidak bisa diakses lagi
+  }
+}
+
+// Scope.java — Scope dalam method dan if block
+public class Scope {
+  public static void main(String[] args) {
+    sayHello("Eko");
+    sayHello("");
+  }
+
+  static void sayHello(String name) {
+    String hello = "Hello " + name; // scope: seluruh method sayHello
+
+    if (!name.isBlank()) {
+      String hi = "Hi " + name; // scope: hanya di dalam blok if ini
+      System.out.println(hi);
+    }
+
+    // System.out.println(hi); // ERROR! 'hi' tidak dikenal di sini
+    System.out.println(hello);   // OK, 'hello' ada di scope method
+  }
+}</code></pre></div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel/PHP</strong>
+                    Konsep scope di Java sama dengan PHP — variabel dalam <code>if</code> atau <code>for</code> tidak bisa diakses di luar. Bedanya, PHP punya <code>global $var</code> untuk akses variabel global, sedangkan Java tidak mengenal konsep variabel global di tingkat method.
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Akses variabel di luar scope</div>
+                        <div class="code-wrap"><pre><code class="language-java">if (kondisi) {
+  String pesan = "Halo";
+}
+System.out.println(pesan); // ERROR! 'pesan' tidak dikenal</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar — Deklarasi di scope yang tepat</div>
+                        <div class="code-wrap"><pre><code class="language-java">String pesan = ""; // deklarasi di luar
+if (kondisi) {
+  pesan = "Halo";  // assign, bukan deklarasi baru
+}
+System.out.println(pesan); // OK</code></pre></div>
+                    </div>
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 6</div>
+                    <p><strong>Variabel <code>String x</code> yang dideklarasikan di dalam blok <code>if</code> — bisa diakses dari mana?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q6',false)"><span>🅐</span> Dari mana saja di dalam class yang sama</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q6',true)"><span>🅑</span> Hanya dari dalam blok <code>if</code> tersebut dan blok-blok di dalamnya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q6',false)"><span>🅒</span> Dari seluruh method tempat if berada</div>
+                    <div class="quiz-feedback" id="q6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH7: WHILE & DO-WHILE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 7A</div>
+                    <h2>🌀 While &amp; Do-While Loop</h2>
+                    <p>Sintaksnya identik dengan PHP. Perbedaan kunci: <code>while</code> cek kondisi <em>sebelum</em> eksekusi, <code>do-while</code> cek kondisi <em>sesudah</em> — sehingga body minimal sekali dieksekusi.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// WhileLoop.java — cek kondisi DULU, baru eksekusi
+public class WhileLoop {
+  public static void main(String[] args) {
+    var counter = 1;
+    while (counter <= 10) {
+      System.out.println("Perulangan " + counter);
+      counter++;
+    }
+    // Output: Perulangan 1 sampai Perulangan 10
+  }
+}
+
+// DoWhileLoop.java — eksekusi DULU, baru cek kondisi
+public class DoWhileLoop {
+  public static void main(String[] args) {
+    var counter = 100; // counter sudah 100, kondisi awal SUDAH false!
+
+    do {
+      System.out.println("Perulangan " + counter); // tetap dieksekusi SEKALI
+      counter++;
+    } while (counter <= 10); // false setelah iterasi pertama
+
+    // Output: "Perulangan 100" — meskipun 100 > 10
+  }
+}</code></pre></div>
+                <div class="info-box tip">
+                    <strong>💡 Kapan pakai do-while?</strong>
+                    Gunakan <code>do-while</code> ketika body harus dieksekusi setidaknya sekali sebelum dicek kondisinya. Contoh klasik: meminta input user — kamu ingin tampilkan prompt setidaknya sekali baru kemudian validasi.
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 7A</div>
+                    <p><strong>Berapa kali body <code>do-while</code> dieksekusi jika kondisinya sudah <code>false</code> dari awal?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7',false)"><span>🅐</span> 0 kali — langsung skip karena kondisi false</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7',true)"><span>🅑</span> 1 kali — body dieksekusi dulu, kondisi dicek setelahnya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7',false)"><span>🅒</span> Error runtime karena kondisi false dari awal</div>
+                    <div class="quiz-feedback" id="q7-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH7B: FOR & FOREACH -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 7B</div>
+                    <h2>🔁 For Loop &amp; For-Each</h2>
+                    <p>Java punya dua varian for: <strong>for klasik</strong> (inisialisasi, kondisi, increment) dan <strong>for-each</strong> (enhanced for) untuk iterasi array/koleksi dengan sintaks yang lebih bersih.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// ForLoop.java — For klasik
+public class ForLoop {
+  public static void main(String[] args) {
+    // Struktur: for (inisialisasi; kondisi; increment)
+    for (var counter = 1; counter <= 10; counter++) {
+      System.out.println("Perulangan " + counter);
+    }
+  }
+}
+
+// ForEach.java — For klasik vs For-each
+public class ForEach {
+  public static void main(String[] args) {
+    String[] names = {"Eko", "Kurniawan", "Khannedy", "Programmer", "Zaman", "Now"};
+
+    // For klasik — akses via index
+    for (var i = 0; i < names.length; i++) {
+      System.out.println(names[i]);
+    }
+
+    System.out.println("=== FOR EACH ===");
+
+    // For-each — lebih bersih, tidak perlu index
+    for (String name : names) {
+      System.out.println(name);
+    }
+
+    // Atau pakai var:
+    for (var name : names) {
+      System.out.println(name);
+    }
+  }
+}</code></pre></div>
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Tipe Loop</th><th>Kapan Dipakai</th><th>PHP Equivalent</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>for (init; cond; incr)</code></td><td>Iterasi dengan index, jumlah diketahui</td><td><code>for ($i=0; $i&lt;n; $i++)</code></td></tr>
+                        <tr><td><code>for (Type x : collection)</code></td><td>Iterasi array/List tanpa butuh index</td><td><code>foreach ($arr as $item)</code></td></tr>
+                        <tr><td><code>while (cond)</code></td><td>Iterasi hingga kondisi terpenuhi</td><td><code>while ($cond)</code></td></tr>
+                        <tr><td><code>do { } while (cond)</code></td><td>Minimal satu kali eksekusi</td><td><code>do { } while ($cond)</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Java for-each (<code>for (String name : names)</code>) persis seperti PHP <code>foreach ($names as $name)</code>. Bedanya kamu harus sebutkan tipe data di Java. Alternatifnya pakai <code>var</code>: <code>for (var name : names)</code> — lebih ringkas dan tetap type-safe!
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 7B</div>
+                    <p><strong>Manakah cara penulisan for-each yang benar untuk array <code>int[] numbers</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7b',false)"><span>🅐</span> <code>for (numbers as num)</code> — gaya PHP</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7b',true)"><span>🅑</span> <code>for (int num : numbers)</code> — dengan tipe eksplisit</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q7b',false)"><span>🅒</span> <code>foreach (numbers)</code> — keyword foreach tidak ada di Java</div>
+                    <div class="quiz-feedback" id="q7b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH8: BREAK & CONTINUE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 8</div>
+                    <h2>⏭️ Break &amp; Continue</h2>
+                    <p><code>break</code> menghentikan loop sepenuhnya, <code>continue</code> melewati iterasi saat ini dan lanjut ke berikutnya. Identik dengan PHP.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// Break.java — Keluar dari loop
+public class Break {
+  public static void main(String[] args) {
+    var counter = 1;
+
+    while (true) {           // loop tak terbatas!
+      System.out.println("Perulangan " + counter);
+      counter++;
+
+      if (counter > 10) {
+        break;               // keluar dari loop saat counter > 10
+      }
+    }
+    System.out.println("Perulangan berhenti");
+  }
+}
+
+// Continue.java — Lewati iterasi tertentu
+public class Continue {
+  public static void main(String[] args) {
+    for (var counter = 1; counter <= 100; counter++) {
+      if (counter % 2 == 0) {
+        continue;             // lewati angka genap, lanjut ke iterasi berikutnya
+      }
+      System.out.println("Perulangan Ganjil " + counter);
+    }
+    // Output: 1, 3, 5, 7, ... 99
+  }
+}</code></pre></div>
+                <div class="info-box tip">
+                    <strong>💡 break vs return dalam loop</strong>
+                    <code>break</code> hanya keluar dari loop, <code>return</code> keluar dari seluruh method. Di dalam method yang berisi loop, pilih sesuai kebutuhan. Di Laravel kamu sering <code>return</code> langsung dari dalam foreach — di Java pun bisa dan sah!
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 8</div>
+                    <p><strong>Apa perbedaan <code>break</code> dan <code>continue</code> dalam sebuah loop?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q8',false)"><span>🅐</span> Keduanya menghentikan loop sepenuhnya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q8',true)"><span>🅑</span> <code>break</code> menghentikan loop, <code>continue</code> hanya melewati iterasi saat ini dan lanjut ke berikutnya</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q8',false)"><span>🅒</span> <code>continue</code> menghentikan loop, <code>break</code> melewati iterasi</div>
+                    <div class="quiz-feedback" id="q8-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9: METHOD DASAR -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 9A</div>
+                    <h2>🔧 Method — Fungsi di Java</h2>
+                    <p>Di PHP kamu menulis <code>function namaFungsi()</code>. Di Java, semua fungsi disebut <strong>method</strong> dan harus berada di dalam class. Method juga harus menyebutkan <strong>tipe return value</strong>-nya secara eksplisit.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// Method.java — Tanpa parameter, tanpa return value
+public class Method {
+  public static void main(String[] args) {
+    sayHelloWorld(); // panggil method
+    sayHelloWorld();
+    sayHelloWorld();
+  }
+
+  // static = bisa dipanggil tanpa membuat objek
+  // void   = tidak mengembalikan nilai (seperti PHP tanpa return)
+  static void sayHelloWorld() {
+    System.out.println("Hello World 1");
+    System.out.println("Hello World 2");
+    System.out.println("Hello World 3");
+  }
+}
+
+// MethodParameter.java — Dengan parameter (tipe wajib dideklarasikan!)
+public class MethodParameter {
+  public static void main(String[] args) {
+    sayHello("Eko", "Kurniawan");
+    sayHello("Budi", "Nugraha");
+  }
+
+  static void sayHello(String firstName, String lastName) {
+    System.out.println("Hello " + firstName + " " + lastName);
+  }
+}
+
+// MethodReturnValue.java — Dengan return value
+public class MethodReturnValue {
+  public static void main(String[] args) {
+    var result1 = sum(100, 100);       // 200
+    System.out.println(result1);
+    System.out.println(sum(200, 200)); // 400
+    System.out.println(hitung(100, "+", 100)); // 200
+    System.out.println(hitung(200, "-", 100)); // 100
+  }
+
+  // Tipe return "int" dideklarasikan sebelum nama method
+  static int sum(int value1, int value2) {
+    var total = value1 + value2;
+    return total;
+  }
+
+  static int hitung(int value1, String operasi, int value2) {
+    switch (operasi) {
+      case "+" : return value1 + value2;
+      case "-" : return value1 - value2;
+      default  : return 0;
+    }
+  }
+}</code></pre></div>
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Konsep</th><th>PHP</th><th>Java</th></tr></thead>
+                        <tbody>
+                        <tr><td>Definisi fungsi</td><td><code>function nama() {}</code></td><td><code>void nama() {}</code> (dalam class)</td></tr>
+                        <tr><td>Tipe return</td><td>Opsional / implied</td><td><strong>Wajib</strong> dideklarasikan (<code>int</code>, <code>String</code>, <code>void</code>)</td></tr>
+                        <tr><td>Tanpa return value</td><td>Tidak tulis apapun</td><td>Tulis <code>void</code></td></tr>
+                        <tr><td>Parameter</td><td>Tanpa tipe: <code>$name</code></td><td>Dengan tipe: <code>String name</code></td></tr>
+                        <tr><td>Panggil tanpa objek</td><td>Langsung panggil</td><td>Method harus <code>static</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:var(--m);">
+                    <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">📝 JavaDoc — Dokumentasi Method</div>
+                    <div class="code-wrap"><pre><code class="language-java">// Komentar.java
+public class Komentar {
+  public static void main(String[] args) {
+    System.out.println(sum(10, 10)); // 20
+  }
+
+  /**
+   * Method untuk menjumlahkan value1 dan value2
+   * @param value1 angka pertama
+   * @param value2 angka kedua
+   * @return hasil penjumlahan value1 dan value2
+   */
+  static int sum(int value1, int value2) {
+    // jumlahkan value1 ditambah value2
+    return value1 + value2;
+  }
+}</code></pre></div>
+                    <div class="info-box tip">
+                        <strong>💡 JavaDoc</strong>
+                        Komentar <code>/** ... */</code> adalah JavaDoc — format dokumentasi resmi Java. IDE seperti IntelliJ akan menampilkan JavaDoc sebagai tooltip saat kamu hover method. Di Laravel ini mirip dengan PHPDoc (<code>/** @param $name */</code>).
+                    </div>
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Lupa return type</div>
+                        <div class="code-wrap"><pre><code class="language-java">static sum(int a, int b) { // ERROR! Tidak ada return type
+  return a + b;
+}</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar</div>
+                        <div class="code-wrap"><pre><code class="language-java">static int sum(int a, int b) { // int = return type
+  return a + b;
+}</code></pre></div>
+                    </div>
+                </div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Method <code>static</code> di Java seperti static method di PHP — dipanggil tanpa instansiasi. Di Spring Boot nanti, kamu akan lebih banyak pakai non-static method melalui dependency injection. Contoh di modul ini semua <code>static</code> agar bisa dipanggil dari <code>main</code>.
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 9A</div>
+                    <p><strong>Apa yang terjadi jika method Java bertipe <code>int</code> tidak memiliki statement <code>return</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9',false)"><span>🅐</span> Method mengembalikan 0 secara otomatis</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9',true)"><span>🅑</span> Compile error — compiler mendeteksi tidak semua path punya <code>return</code></div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9',false)"><span>🅒</span> Runtime error saat method dipanggil</div>
+                    <div class="quiz-feedback" id="q9-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9B: OVERLOADING & VARARGS -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 9B</div>
+                    <h2>🎛️ Method Overloading &amp; Variable Arguments</h2>
+                    <p><strong>Method Overloading</strong>: Java memperbolehkan beberapa method dengan nama sama selama <em>signature parameter</em>-nya berbeda. <strong>Varargs</strong>: menerima jumlah argumen tidak terbatas dengan syntax <code>Type... nama</code>.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">// MethodOverloading.java
+public class MethodOverloading {
+  public static void main(String[] args) {
+    sayHello();                    // "Hello"
+    sayHello("Eko");              // "Hello Eko"
+    sayHello("Eko", "Kurniawan"); // "Hello Eko Kurniawan"
+  }
+
+  static void sayHello() {
+    System.out.println("Hello");
+  }
+
+  static void sayHello(String name) {
+    System.out.println("Hello " + name);
+  }
+
+  // Nama method SAMA, parameter BERBEDA → valid! Ini overloading
+  static void sayHello(String firstName, String lastName) {
+    System.out.println("Hello " + firstName + " " + lastName);
+  }
+}
+
+// MethodVariableArgument.java — Varargs
+public class MethodVariableArgument {
+  public static void main(String[] args) {
+    // Bisa kirim array
+    int[] values = {80, 50, 50, 50, 80};
+    sayCongrats("Eko", values);
+
+    // Bisa kirim langsung tanpa membuat array!
+    sayCongrats("Budi", 80, 90, 76, 80);
+  }
+
+  // int... values = varargs: menerima 0 atau lebih nilai int
+  // Di dalam method, varargs diperlakukan seperti array biasa
+  static void sayCongrats(String name, int... values) {
+    var total = 0;
+    for (var value : values) {
+      total += value;
+    }
+    var finalValue = total / values.length;
+
+    if (finalValue >= 75) {
+      System.out.println("Selamat " + name + ", Anda Lulus");
+    } else {
+      System.out.println("Maaf " + name + ", Anda Tidak Lulus");
+    }
+  }
+}</code></pre></div>
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel/PHP</strong>
+                    Method Overloading tidak ada di PHP secara native (PHP pakai magic method <code>__call</code> atau default parameter). Di Java, ini built-in dan dicek saat compile time. Varargs di Java (<code>int... values</code>) mirip dengan variadic function PHP (<code>...$args</code>) yang hadir sejak PHP 5.6+.
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Overloading beda return type saja</div>
+                        <div class="code-wrap"><pre><code class="language-java">static int  cek(String s) { return 1; }
+static void cek(String s) { }
+// ERROR! Overloading tidak boleh hanya
+// beda return type, parameter harus beda</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar — Beda jumlah/tipe parameter</div>
+                        <div class="code-wrap"><pre><code class="language-java">static void cek(String s)       { }
+static void cek(int n)          { }
+static void cek(String s, int n){ }
+// OK! Parameter berbeda</code></pre></div>
+                    </div>
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 9B</div>
+                    <p><strong>Manakah yang BUKAN syarat valid untuk Method Overloading di Java?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9b',false)"><span>🅐</span> Jumlah parameter berbeda</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9b',false)"><span>🅑</span> Tipe parameter berbeda</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9b',true)"><span>🅒</span> Return type berbeda saja (tanpa perbedaan pada parameter)</div>
+                    <div class="quiz-feedback" id="q9b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9C: RECURSIVE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9c">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 9C</div>
+                    <h2>♻️ Recursive Method</h2>
+                    <p>Method <strong>rekursif</strong> adalah method yang memanggil dirinya sendiri. Wajib punya <strong>base case</strong> (kondisi berhenti) untuk menghindari infinite recursion dan <code>StackOverflowError</code>.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class RecursiveMethod {
+  public static void main(String[] args) {
+    System.out.println(factorialLoop(10));      // 3628800
+    System.out.println(factorialRecursive(10)); // 3628800
+    loop(5);
+  }
+
+  // Faktorial dengan loop (iteratif)
+  static int factorialLoop(int value) {
+    var result = 1;
+    for (var counter = 1; counter <= value; counter++) {
+      result *= counter;
+    }
+    return result;
+  }
+
+  // Faktorial dengan rekursi
+  static int factorialRecursive(int value) {
+    if (value == 1) {
+      return 1; // BASE CASE — titik berhenti! Tanpa ini → StackOverflowError
+    } else {
+      return value * factorialRecursive(value - 1);
+      // factorialRecursive(3)
+      // = 3 * factorialRecursive(2)
+      // = 3 * 2 * factorialRecursive(1)
+      // = 3 * 2 * 1 = 6
+    }
+  }
+
+  // Rekursi countdown sederhana
+  static void loop(int value) {
+    if (value == 0) {
+      System.out.println("Selesai"); // base case
+    } else {
+      System.out.println("Loop " + value);
+      loop(value - 1); // panggil diri sendiri dengan value berkurang
+    }
+  }
+}</code></pre></div>
+                <div class="info-box danger">
+                    <strong>🚨 StackOverflowError — Rekursi tanpa base case!</strong>
+                    Setiap panggilan method menambah "frame" ke call stack. Jika rekursi tidak berhenti, stack penuh dan Java melempar <code>StackOverflowError</code>. Ini setara dengan <code>Fatal error: Maximum function nesting level</code> di PHP, tapi di Java stack-nya lebih kecil — jadi lebih cepat penuh.
+                </div>
+                <div class="info-box tip">
+                    <strong>💡 Rekursi vs Iterasi</strong>
+                    Untuk kasus seperti faktorial sederhana, iterasi (loop) umumnya lebih efisien karena tidak ada overhead pembuatan stack frame. Gunakan rekursi ketika struktur masalahnya secara alami rekursif: tree traversal, backtracking, divide &amp; conquer, dll.
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 9C</div>
+                    <p><strong>Apa yang terjadi jika method rekursif tidak memiliki base case?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9c',false)"><span>🅐</span> Method berhenti sendiri setelah 1000 iterasi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9c',true)"><span>🅑</span> <code>StackOverflowError</code> — call stack penuh karena rekursi tanpa henti</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q9c',false)"><span>🅒</span> Compile error karena compiler mendeteksi infinite recursion</div>
+                    <div class="quiz-feedback" id="q9c-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH10: ARRAY -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 10</div>
+                    <h2>📊 Array</h2>
+                    <p>Array di Java adalah koleksi data dengan <strong>tipe sama</strong> dan <strong>ukuran tetap</strong> (fixed-size). Ini berbeda dari PHP di mana array fleksibel ukurannya dan bisa campur tipe. Untuk array dinamis di Java, pakai <code>ArrayList</code>.</p>
+                </div>
+                <div class="code-wrap"><pre><code class="language-java">public class Array {
+  public static void main(String[] args) {
+
+    // === Cara 1: Deklarasi → Alokasi → Isi ===
+    String[] stringArray;          // deklarasi (belum ada memori)
+    stringArray = new String[3];   // alokasi 3 slot, default: null
+
+    stringArray[0] = "Eko";        // indeks mulai dari 0
+    stringArray[1] = "Kurniawan";
+    stringArray[2] = "Khannedy";
+
+    System.out.println(stringArray[0]); // Eko
+    stringArray[0] = "Budi";            // Ganti nilai
+    System.out.println(stringArray[0]); // Budi
+
+    // === Cara 2: Deklarasi + Alokasi sekaligus ===
+    String[] stringArray2 = new String[3];
+
+    // === Cara 3: Inisialisasi langsung dengan nilai ===
+    String[] namaNama = {"Eko", "Kurniawan", "Khannedy"};
+    namaNama[0] = null; // elemen array bisa null (untuk Object)
+
+    // === Array primitif ===
+    int[]  arrayInt  = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    long[] arrayLong = {10L, 20L, 30L};
+    arrayLong[0] = 0;
+
+    System.out.println(arrayLong.length); // 3 — PROPERTI (bukan method, tanpa ())
+
+    // === Array 2 Dimensi — "Jagged Array" ===
+    String[][] members = {
+      {"Eko", "Kurniawan"},  // baris 0: 2 elemen
+      {"Budi", "Nugraha"},   // baris 1: 2 elemen
+      {"Joko"}               // baris 2: 1 elemen saja (beda panjang = jagged!)
+    };
+
+    System.out.println(members[0][1]); // Kurniawan
+    System.out.println(members[1][0]); // Budi
+  }
+}</code></pre></div>
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Aspek</th><th>PHP Array</th><th>Java Array</th></tr></thead>
+                        <tbody>
+                        <tr><td>Ukuran</td><td>Dinamis, bisa tambah kapan saja</td><td><strong>Fixed</strong> — harus ditentukan saat dibuat</td></tr>
+                        <tr><td>Tipe elemen</td><td>Bisa campur (int, string, dll)</td><td><strong>Satu tipe saja</strong> (String[], int[], dll)</td></tr>
+                        <tr><td>Indeks pertama</td><td>0 (tapi bisa string key)</td><td>Selalu 0</td></tr>
+                        <tr><td>Panjang</td><td><code>count($arr)</code></td><td><code>arr.length</code> (properti, bukan method!)</td></tr>
+                        <tr><td>Nilai default elemen</td><td>Harus diisi</td><td>0 / false / null sesuai tipe</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-box danger">
+                    <strong>🚨 ArrayIndexOutOfBoundsException</strong>
+                    Mengakses indeks di luar batas array (misalnya index 5 pada array berukuran 3) menyebabkan <code>ArrayIndexOutOfBoundsException</code> saat runtime. PHP hanya memberi notice, Java melempar exception yang menghentikan program!
+                </div>
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Salah — Mindset PHP</div>
+                        <div class="code-wrap"><pre><code class="language-java">String[] arr = new String[3]; // ukuran 3
+arr[0] = "A";
+arr[1] = "B";
+arr[2] = "C";
+arr[3] = "D"; // ERROR! Indeks valid: 0,1,2 saja</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Benar — Pakai ArrayList untuk dinamis</div>
+                        <div class="code-wrap"><pre><code class="language-java">import java.util.ArrayList;
+var list = new ArrayList&lt;String&gt;();
+list.add("A");
+list.add("B");
+list.add("D"); // bisa tambah terus!</code></pre></div>
+                    </div>
+                </div>
+                <div class="info-box tip">
+                    <strong>💡 array.length vs String.length()</strong>
+                    <code>array.length</code> → properti (tanpa kurung), untuk array. <br>
+                    <code>string.length()</code> → method (dengan kurung), untuk String.<br>
+                    Ini salah satu hal yang sering membingungkan pemula!
+                </div>
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 10</div>
+                    <p><strong>Array Java berukuran 5 memiliki indeks berapa saja?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q10',false)"><span>🅐</span> 1, 2, 3, 4, 5</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q10',true)"><span>🅑</span> 0, 1, 2, 3, 4</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q10',false)"><span>🅒</span> 0, 1, 2, 3, 4, 5</div>
+                    <div class="quiz-feedback" id="q10-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH11: SUMMARY -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m);">
+                    <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Final Chapter</div>
+                    <h2 style="margin:var(--xs) 0 var(--s);">📝 Summary — Arsitektur &amp; Roadmap</h2>
+                    <p>Kamu telah menyelesaikan Java Dasar! Berikut rangkuman semua konsep yang telah dipelajari dan peta jalan ke topik berikutnya.</p>
+                </div>
+
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🗺️ Learning Timeline</div>
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Hello World &amp; Struktur Program</div>
+                        <div class="timeline-content-desc">Setiap program Java dimulai dari class. Entry point adalah <code>public static void main(String[] args)</code>. Nama file = nama class (case-sensitive).</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Variabel</div>
+                        <div class="timeline-content-desc">Tipe wajib dideklarasikan. <code>var</code> = type inference (tapi tipe tetap fixed saat compile). <code>final</code> = konstanta tidak bisa diubah.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Tipe Data Primitif &amp; Wrapper</div>
+                        <div class="timeline-content-desc">8 tipe primitif. Setiap primitif punya Wrapper Class yang bisa null dan punya method. Widening otomatis, Narrowing harus cast eksplisit.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Operator</div>
+                        <div class="timeline-content-desc">Mirip PHP. Hati-hati: <code>==</code> pada Object/String membandingkan referensi, bukan nilai. Selalu gunakan <code>.equals()</code>.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">5</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Percabangan</div>
+                        <div class="timeline-content-desc">If-else identik PHP. Switch punya gaya modern (arrow syntax, switch expression dengan yield). Ternary identik PHP.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">6</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Block, Scope &amp; Perulangan</div>
+                        <div class="timeline-content-desc">Variabel hidup dalam scope block. While, do-while, for, for-each, break, continue — semua semantiknya identik PHP.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">7</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Method (Fungsi)</div>
+                        <div class="timeline-content-desc">Semua fungsi adalah method dalam class. Tipe return wajib. Overloading: sama nama, beda parameter. Varargs dengan <code>Type...</code>. Rekursi butuh base case.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key active">8</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">Array</div>
+                        <div class="timeline-content-desc">Fixed-size, satu tipe. Indeks mulai 0. Gunakan <code>.length</code> (tanpa kurung) untuk panjang. Untuk array dinamis, pakai <code>ArrayList</code>.</div>
+                        <div class="timeline-content-time">✅ Selesai</div>
+                    </div>
+                    <div><span class="timeline-key">→</span></div>
+                    <div class="timeline-content max-width-600">
+                        <div class="timeline-content-title">🚀 Next: Java OOP</div>
+                        <div class="timeline-content-desc">Class &amp; Object, Encapsulation, Inheritance, Polymorphism, Interface, Abstract Class — fondasi dari Spring Boot!</div>
+                        <div class="timeline-content-time">Berikutnya</div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">⚡ Cheat Sheet — PHP vs Java</div>
+                <div class="table-content">
+                    <table>
+                        <thead><tr><th>Konsep</th><th>PHP / Laravel</th><th>Java</th></tr></thead>
+                        <tbody>
+                        <tr><td>Print</td><td><code>echo "Hello";</code></td><td><code>System.out.println("Hello");</code></td></tr>
+                        <tr><td>Variabel</td><td><code>$name = "Eko";</code></td><td><code>String name = "Eko";</code></td></tr>
+                        <tr><td>Type inference</td><td>Otomatis selalu</td><td><code>var name = "Eko";</code> (Java 10+)</td></tr>
+                        <tr><td>Konstanta</td><td><code>const NAME = "X";</code></td><td><code>final String NAME = "X";</code></td></tr>
+                        <tr><td>String equals</td><td><code>$a == $b</code></td><td><code>a.equals(b)</code></td></tr>
+                        <tr><td>Fungsi/Method</td><td><code>function foo() {}</code></td><td><code>static void foo() {}</code> (dalam class)</td></tr>
+                        <tr><td>Foreach</td><td><code>foreach ($arr as $v)</code></td><td><code>for (Type v : arr)</code></td></tr>
+                        <tr><td>Panjang array</td><td><code>count($arr)</code></td><td><code>arr.length</code></td></tr>
+                        <tr><td>Array dinamis</td><td><code>$arr[] = "x";</code></td><td><code>list.add("x");</code> via ArrayList</td></tr>
+                        <tr><td>Null-safe access</td><td><code>$obj?-&gt;method()</code></td><td><code>Optional.ofNullable(obj)</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🧠 Key Mindset Shifts untuk PHP Developer</div>
+                <div>
+                    <div class="summary-item"><div class="summary-icon">1️⃣</div><div><strong>Deklarasikan tipe secara eksplisit.</strong> Java tidak menerima ambiguitas tipe. Gunakan <code>var</code> untuk inferensi, tapi tipe tetap terkunci saat compile.</div></div>
+                    <div class="summary-item"><div class="summary-icon">2️⃣</div><div><strong>Error sebelum runtime adalah fitur, bukan masalah.</strong> Compile error di Java = bug tertangkap lebih awal, sebelum sampai ke production.</div></div>
+                    <div class="summary-item"><div class="summary-icon">3️⃣</div><div><strong>Semua kode ada di dalam class.</strong> Tidak ada "floating function" seperti PHP — semua method harus ada dalam class.</div></div>
+                    <div class="summary-item"><div class="summary-icon">4️⃣</div><div><strong>Gunakan <code>.equals()</code> untuk membandingkan String/Object.</strong> Operator <code>==</code> hanya untuk primitif dan perbandingan referensi memori.</div></div>
+                    <div class="summary-item"><div class="summary-icon">5️⃣</div><div><strong>Array fixed-size, butuh ArrayList untuk dinamis.</strong> Jangan coba "push" ke array Java — siapkan ukurannya dari awal atau pakai koleksi yang tepat.</div></div>
+                    <div class="summary-item"><div class="summary-icon">6️⃣</div><div><strong>Verbose = eksplisit = aman.</strong> Java memang lebih banyak kode, tapi setiap baris lebih jelas maksud dan tipenya. Ini investasi untuk maintainability jangka panjang.</div></div>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🗺️ Roadmap Selanjutnya</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Java Dasar</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">2</div><div class="stepper-value">Java OOP</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">3</div><div class="stepper-value">Collections</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Exception</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Spring Boot</div></div>
+                    </div>
+                </div>
+
+                <div class="info-box tip" style="margin-top:var(--m);">
+                    <strong>🎉 Selamat! Kamu sudah selesai Java Dasar!</strong>
+                    Dengan pemahaman sintaks dasar ini, kamu siap mempelajari Java OOP — fondasi utama Spring Boot. Mindset strongly-typed dan compile-time safety yang kamu pelajari di sini akan sangat membantu saat bekerja dengan framework enterprise.
+                </div>
+            </div>
+        </div>
+
+        <div style="height:var(--x);"></div>
+    </section>
+    <footer></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+    });
+
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active');
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.body.classList.toggle("dark-mode");
+        const btn = document.querySelector('.container-header-button-switch-theme');
+        btn.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    function checkQuiz(el, quizId, isCorrect) {
+        const parent = el.parentElement;
+        parent.querySelectorAll('.quiz-option').forEach(o => {
+            o.classList.remove('correct', 'wrong');
+            o.style.pointerEvents = 'none';
+        });
+        el.classList.add(isCorrect ? 'correct' : 'wrong');
+        const feedback = document.getElementById(quizId + '-feedback');
+        if (isCorrect) {
+            feedback.textContent = '✅ Benar! Pemahaman kamu sudah tepat.';
+            feedback.className = 'quiz-feedback ok';
+        } else {
+            feedback.textContent = '❌ Belum tepat. Coba baca kembali penjelasannya ya!';
+            feedback.className = 'quiz-feedback err';
+        }
+    }
+
+    // Active sidebar tracking on scroll
+    const sections = document.querySelectorAll('[id^="chapter"]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item[href]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                sidebarLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                });
+            }
+        });
+    }, { threshold: 0.2 });
+    sections.forEach(s => observer.observe(s));
+
+    // Progress bar
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        document.getElementById('progress-bar').style.width = progress + '%';
+    });
+</script>
+</body>
+</html>

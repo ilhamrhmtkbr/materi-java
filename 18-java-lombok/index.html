@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Lombok — Modul Belajar Mandiri</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .code-block{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin:var(--m) 0}
+        .code-block pre{margin:0;border-radius:var(--radius-l);font-size:var(--s);line-height:1.65}
+        .code-block pre code{font-family:'Fira Code','Cascadia Code','Courier New',monospace}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);padding:var(--m);border-radius:0 var(--radius-m) var(--radius-m) 0;margin:var(--m) 0}
+        .info-box.warning{border-left-color:var(--warning-color);background:var(--transwarning-color)}
+        .info-box.success{border-left-color:var(--success-color);background:var(--transsuccess-color)}
+        .info-box.danger{border-left-color:var(--danger-color);background:var(--transdanger-color)}
+        .compare-box{box-sizing:border-box;max-width:77dvw;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:var(--m);margin:var(--m) 0}
+        @media(max-width:620px){.compare-box{grid-template-columns:1fr}}
+        .compare-box .wrong{border:2px solid var(--danger-color);border-radius:var(--radius-m);padding:var(--s);background:var(--transdanger-color)}
+        .compare-box .correct{border:2px solid var(--success-color);border-radius:var(--radius-m);padding:var(--s);background:var(--transsuccess-color)}
+        .compare-box .compare-label{font-weight:bold;margin-bottom:var(--xs);font-size:var(--s)}
+        .laravel-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border:2px dashed var(--second-primary-color);border-radius:var(--radius-m);background:var(--transsecond-primary-color);padding:var(--m);margin:var(--m) 0}
+        .laravel-box .laravel-title{font-weight:bold;color:var(--second-primary-color);margin-bottom:var(--xs);font-size:var(--s)}
+        .quiz-box{box-sizing:border-box;max-width:77dvw;overflow:auto;background:var(--transprimary-color);border-radius:var(--radius-l);padding:var(--l);margin:var(--l) 0}
+        .quiz-box .quiz-title{font-weight:bold;font-size:var(--l);margin-bottom:var(--m);color:var(--primary-color)}
+        .quiz-option{display:block;width:100%;text-align:left;padding:var(--s) var(--m);margin:var(--xs) 0;border-radius:var(--radius-m);cursor:pointer;border:var(--border);background:var(--bg-color);color:var(--text-color);font-size:var(--s);transition:background .2s}
+        .quiz-option:hover{background:var(--transprimary-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{display:none;margin-top:var(--s);padding:var(--s);border-radius:var(--radius-m);font-size:var(--s)}
+        .quiz-feedback.show{display:block}
+        .line-explain{box-sizing:border-box;max-width:77dvw;overflow-x:auto;display:grid;grid-template-columns:max-content 1fr;gap:var(--xs) var(--m);align-items:start;font-size:var(--s);margin:var(--m) 0}
+        .line-num{background:var(--transprimary-color);color:var(--primary-color);border-radius:var(--radius-s);padding:2px var(--xs);font-family:monospace;font-weight:bold;white-space:nowrap}
+        .chapter-hero{box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-x);padding:var(--xx) var(--x);background:linear-gradient(135deg,var(--transprimary-color) 0%,var(--transsecond-primary-color) 100%);border:var(--border);margin-bottom:var(--l)}
+        .chapter-hero .chapter-number{font-size:var(--s);font-weight:bold;color:var(--primary-color);text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--xs)}
+        .chapter-hero .chapter-title{font-size:var(--xx);font-weight:bold;margin-bottom:var(--s)}
+        .chapter-hero .chapter-desc{font-size:var(--s);opacity:.8}
+        .section-divider{border:none;border-top:2px dashed var(--border-color);margin:var(--l) 0}
+        .tag-list{display:flex;flex-wrap:wrap;gap:var(--xs);margin:var(--s) 0}
+        .sidebar-menu-item-svg{font-style:normal}
+        .annot-badge{display:inline-block;background:var(--transprimary-color);color:var(--primary-color);border:1px solid var(--primary-color);border-radius:var(--radius-s);padding:1px 8px;font-family:monospace;font-size:var(--s);font-weight:bold;margin:2px}
+        .annot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--m);margin:var(--m) 0}
+        .annot-card{border:var(--border);border-radius:var(--radius-m);padding:var(--m)}
+        .annot-card code{font-size:var(--m);color:var(--primary-color);font-weight:bold}
+        .table-wrap{box-sizing:border-box;max-width:77dvw;overflow-x:auto}
+        .test-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border:2px solid var(--third-primary-color);border-radius:var(--radius-m);background:var(--transthird-primary-color);padding:var(--m);margin:var(--m) 0}
+        .test-box .test-title{font-weight:bold;color:var(--third-primary-color);margin-bottom:var(--xs);font-size:var(--s)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a href="#ch0" class="bottom-nav-item">🧠 Intro</a>
+    <a href="#ch1" class="bottom-nav-item">⚙️ Setup</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnav-check">📚 Materi</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnav-check">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnav-check">&Cross;</label>
+                <a href="#ch2" class="bottom-nav-item">📝 @Getter &amp; @Setter</a>
+                <a href="#ch3" class="bottom-nav-item">🏗️ Constructor</a>
+                <a href="#ch4" class="bottom-nav-item">🔍 @ToString &amp; @EqualsAndHashCode</a>
+                <a href="#ch5" class="bottom-nav-item">📦 @Data &amp; @NonNull</a>
+                <a href="#ch6" class="bottom-nav-item">🔨 @Builder</a>
+                <a href="#ch7" class="bottom-nav-item">🔒 @Value &amp; @With</a>
+                <a href="#ch8" class="bottom-nav-item">🪵 @Slf4j, @Cleanup, @SneakyThrows</a>
+                <a href="#ch9" class="bottom-nav-item">🔐 @Synchronized</a>
+                <a href="#ch10" class="bottom-nav-item">📌 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <a href="../" class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">Lombok</div>
+    </a>
+    <div class="sidebar-menu">
+        <a href="#ch0"  class="sidebar-menu-item active"><strong class="sidebar-menu-item-svg">🧠</strong><span>Intro — Apa itu Lombok?</span></a>
+        <a href="#ch1"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">⚙️</strong><span>Setup Maven</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📚</strong><span>Annotation Lombok</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#ch2"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📝</strong><span>@Getter &amp; @Setter</span></a>
+                <a href="#ch3"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🏗️</strong><span>Constructor Annotations</span></a>
+                <a href="#ch4"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔍</strong><span>@ToString &amp; @EqualsAndHashCode</span></a>
+                <a href="#ch5"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📦</strong><span>@Data &amp; @NonNull</span></a>
+                <a href="#ch6"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔨</strong><span>@Builder &amp; @Singular</span></a>
+                <a href="#ch7"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔒</strong><span>@Value &amp; @With</span></a>
+                <a href="#ch8"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🪵</strong><span>@Slf4j, @Cleanup, @SneakyThrows</span></a>
+                <a href="#ch9"  class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔐</strong><span>@Synchronized</span></a>
+            </div>
+        </details>
+        <a href="#ch10" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📌</strong><span>Summary &amp; Cheat Sheet</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">🌶️ Java Lombok</span></a>
+        </div>
+        <div class="container-header-button-show-sidebar" onclick="showMenu()">
+            <svg id="get-menu" viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-x);padding:var(--xxx) var(--x);background:linear-gradient(135deg,var(--transprimary-color),var(--transsecond-primary-color));border:var(--border);text-align:center">
+                <div style="font-size:3rem;margin-bottom:var(--s)">🌶️</div>
+                <div style="font-size:var(--xxx);font-weight:900;margin-bottom:var(--s)">Java Lombok</div>
+                <div style="font-size:var(--m);opacity:.75;margin-bottom:var(--l)">Hentikan nulis getter, setter, constructor, equals, hashCode secara manual. Lombok generate semua itu dengan satu annotation. Modul ini membedah setiap annotation dari kode nyata.</div>
+                <div class="tag-list" style="justify-content:center">
+                    <div class="badge bg-primary text-white"><p>Lombok 1.18+</p></div>
+                    <div class="badge bg-success text-white"><p>Spring Boot</p></div>
+                    <div class="badge bg-warning text-white"><p>Annotation Processing</p></div>
+                    <div class="badge badge-small bg-primary text-primary"><p>Builder Pattern</p></div>
+                    <div class="badge badge-small bg-success text-success"><p>Immutable Objects</p></div>
+                </div>
+            </div>
+            <br/>
+            <p>Lombok adalah library Java yang menggunakan <strong>annotation processing</strong> untuk men-generate boilerplate code saat kompilasi. Kode yang dihasilkan tidak terlihat di file <code>.java</code> kamu, tapi ada di bytecode <code>.class</code>-nya. Hasil akhirnya: class lebih ringkas, niat lebih jelas, bug lebih sedikit.</p>
+            <hr class="section-divider"/>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--m);text-align:center">
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">10</div><div style="font-size:var(--xs);opacity:.7">Chapter</div></div>
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">11</div><div style="font-size:var(--xs);opacity:.7">Class Java</div></div>
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">20+</div><div style="font-size:var(--xs);opacity:.7">Annotation</div></div>
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">13</div><div style="font-size:var(--xs);opacity:.7">Mini Quiz</div></div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 0: INTRO ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch0">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 0</div>
+                    <div class="chapter-title">🧠 Intro — Masalah Boilerplate &amp; Solusi Lombok</div>
+                    <div class="chapter-desc">Sebelum Lombok, setiap POJO Java wajib punya puluhan baris kode yang tidak ada nilai bisnisnya. Lombok hadir untuk menghilangkan "ceremony" tersebut.</div>
+                </div>
+
+                <div class="text-title">Tanpa Lombok — 60 Baris untuk 3 Field</div>
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Tanpa Lombok — Verbose</div>
+                        <div class="code-block"><pre><code class="language-java">public class Customer {
+    private String id;
+    private String name;
+
+    public Customer() {}
+
+    public Customer(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        Customer c = (Customer) o;
+        return Objects.equals(id, c.id);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+    // + toString(), jika perlu...
+}</code></pre></div>
+                        <p style="font-size:var(--xs)">30+ baris. Harus update setiap kali ada field baru. Sumber bug kalau lupa update equals/hashCode.</p>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Dengan Lombok — Ekspresif</div>
+                        <div class="code-block"><pre><code class="language-java">@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {"name"})
+public class Customer {
+    private String id;
+    private String name;
+}</code></pre></div>
+                        <p style="font-size:var(--xs)">7 baris. Lombok generate semua saat kompilasi. Tambah field baru? Otomatis ter-cover.</p>
+                    </div>
+                </div>
+
+                <div class="text-title">Cara Kerja Lombok — Annotation Processing</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">1</div>
+                            <div class="stepper-value">Kamu tulis <code>Customer.java</code> dengan annotation Lombok</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">2</div>
+                            <div class="stepper-value">Saat compile, <strong>Java Annotation Processor</strong> membaca annotation</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">3</div>
+                            <div class="stepper-value">Lombok memodifikasi <strong>AST (Abstract Syntax Tree)</strong> sebelum bytecode digenerate</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">4</div>
+                            <div class="stepper-value"><code>Customer.class</code> berisi getter/setter/constructor lengkap seolah kamu menulisnya manual</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key">✓</div>
+                            <div class="stepper-value">IDE (IntelliJ / VS Code dengan plugin Lombok) bisa auto-complete semua generated method</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    ⚠️ <strong>Wajib install plugin Lombok di IDE!</strong> Tanpa plugin, IDE tidak bisa "melihat" generated method sehingga semua pemanggilan getter/setter dianggap error meski kompilasi berhasil. Di IntelliJ: <em>File → Settings → Plugins → cari "Lombok" → Install</em>. Di VS Code: install extension <em>Lombok Annotations Support for VS Code</em>.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p>Lombok di Java = <strong>Magic method PHP</strong> (<code>__get</code>, <code>__set</code>) + <strong>PHP 8 Constructor Promotion</strong> dikombinasikan. Tapi Lombok lebih kuat: hasilnya adalah kode nyata yang di-generate saat compile, bukan runtime magic. Juga mirip dengan <strong>Eloquent's fillable/casts</strong> yang menghilangkan kebutuhan menulis setiap accessor/mutator secara manual.</p>
+                </div>
+
+                <!-- QUIZ 0 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 0</div>
+                    <p><strong>Q1.</strong> Kapan Lombok men-generate kode getter/setter?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q0-1')">A. Saat runtime, ketika method dipanggil pertama kali</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q0-1')">B. Saat kompilasi — hasil generate ada di bytecode <code>.class</code>, bukan di file <code>.java</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q0-1')">C. Saat class di-load oleh JVM</button>
+                    <div class="quiz-feedback" id="q0-1"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 1: SETUP ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">⚙️ Setup — Maven Dependency &amp; Spring Boot</div>
+                    <div class="chapter-desc">Project ini menggunakan Spring Boot sebagai base, dengan Lombok sebagai dependency. Memahami setup Maven adalah pintu masuk sebelum menggunakan annotation apapun.</div>
+                </div>
+
+                <div class="text-title">Dependency di pom.xml</div>
+                <div class="code-block"><pre><code class="language-xml">&lt;!-- pom.xml --&gt;
+&lt;dependencies&gt;
+
+    &lt;!-- Spring Boot Starter (optional, Lombok bisa dipakai tanpa Spring) --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- Lombok — scope "provided" karena hanya butuh saat compile --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+        &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+        &lt;optional&gt;true&lt;/optional&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- JUnit untuk testing --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+&lt;/dependencies&gt;
+
+&lt;!-- Plugin build — exclude Lombok dari JAR final --&gt;
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;configuration&gt;
+                &lt;excludes&gt;
+                    &lt;exclude&gt;
+                        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+                        &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+                    &lt;/exclude&gt;
+                &lt;/excludes&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;</code></pre></div>
+
+                <div class="line-explain">
+                    <span class="line-num">&lt;optional&gt;true&lt;/optional&gt;</span>
+                    <span>Lombok hanya diperlukan saat kompilasi, bukan saat runtime. Menandai <code>optional</code> mencegah Lombok ikut ter-bundle ke dalam JAR aplikasi final. Ini best practice karena bytecode yang sudah di-generate tidak membutuhkan Lombok lagi untuk berjalan.</span>
+                    <span class="line-num">excludes plugin</span>
+                    <span>Konfigurasi Spring Boot Maven Plugin untuk memastikan Lombok tidak masuk ke executable JAR. Double protection bersama <code>optional</code>.</span>
+                </div>
+
+                <div class="text-title">Entry Point — BelajarJavaLombokApplication.java</div>
+                <div class="code-block"><pre><code class="language-java">@SpringBootApplication
+public class BelajarJavaLombokApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(BelajarJavaLombokApplication.class, args);
+    }
+}</code></pre></div>
+                <p>Ini adalah entry point Spring Boot standar. Di project ini Spring Boot dipakai sebagai "scaffolding" agar bisa pakai JUnit test dengan mudah, bukan karena Lombok memerlukan Spring.</p>
+
+                <div class="info-box success">
+                    💡 <strong>Lombok tanpa Spring Boot:</strong> Lombok adalah library pure Java — bisa dipakai di proyek Maven/Gradle biasa tanpa Spring. Cukup tambahkan dependency Lombok ke <code>pom.xml</code> dan install plugin IDE.
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 2: GETTER & SETTER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">📝 @Getter &amp; @Setter — dengan AccessLevel</div>
+                    <div class="chapter-desc">Annotation paling dasar Lombok. <code>@Getter</code> generate semua getter, <code>@Setter</code> generate semua setter. Bisa dipakai di level class (semua field) atau field individual (field tertentu saja), dengan kontrol access level.</div>
+                </div>
+
+                <div class="text-title">@Getter &amp; @Setter di Level Class — Customer.java</div>
+                <div class="code-block"><pre><code class="language-java">// Customer.java
+@Getter           // ← generate getId() dan getName()
+@Setter           // ← generate setId() dan setName()
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {"name"})
+public class Customer {
+    private String id;
+    private String name;
+}</code></pre></div>
+
+                <div class="text-title">Apa yang Di-generate Lombok</div>
+                <div class="code-block"><pre><code class="language-java">// Kode yang SEOLAH ditulis Lombok (tidak ada di .java, ada di .class):
+public String getId()   { return this.id; }
+public String getName() { return this.name; }
+
+public void setId(String id)     { this.id = id; }
+public void setName(String name) { this.name = name; }</code></pre></div>
+
+                <div class="text-title">AccessLevel — Kontrol Visibilitas per Field — Login.java</div>
+                <div class="code-block"><pre><code class="language-java">// Login.java — kasus yang lebih kompleks
+@Getter
+@AllArgsConstructor(staticName = "create")
+@NoArgsConstructor(staticName = "createEmpty")
+@ToString(exclude = {"password"})
+public class Login {
+
+    @Setter(value = AccessLevel.PROTECTED)  // ← setter hanya bisa dipanggil dari subclass!
+    private String username;
+
+    @Setter(value = AccessLevel.PROTECTED)  // ← sama, setter protected
+    private String password;
+}</code></pre></div>
+
+                <div class="line-explain">
+                    <span class="line-num">@Getter (class level)</span>
+                    <span>Generate getter untuk semua field dengan access level PUBLIC. Nama method mengikuti JavaBean convention: field <code>name</code> → <code>getName()</code>, field <code>isActive</code> (boolean) → <code>isActive()</code> bukan <code>getIsActive()</code>.</span>
+                    <span class="line-num">@Setter (field level)</span>
+                    <span><code>@Setter</code> bisa diletakkan di field spesifik dengan <code>AccessLevel</code> berbeda: <code>PUBLIC</code> (default), <code>PROTECTED</code>, <code>PACKAGE</code>, <code>PRIVATE</code>, atau <code>NONE</code> (tidak generate setter).</span>
+                    <span class="line-num">AccessLevel.PROTECTED</span>
+                    <span>Setter hanya bisa dipanggil dari dalam class sendiri atau subclass-nya. Ini membuat <code>username</code> dan <code>password</code> hanya bisa diset melalui constructor (yang kita kontrol via Lombok), tidak bisa di-set sembarangan dari luar.</span>
+                </div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 CustomerTest.java — Verifikasi Getter &amp; Setter</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testCustomer() {
+    var customer = new Customer();    // NoArgsConstructor
+    customer.setId("100");            // generated setter
+    customer.setName("Eko");          // generated setter
+
+    System.out.println(customer.getId());   // generated getter → "100"
+    System.out.println(customer.getName()); // generated getter → "Eko"
+}
+
+@Test
+void testCustomerConstructor() {
+    var customer = new Customer("ID", "NAME"); // AllArgsConstructor
+    Assertions.assertEquals("ID",   customer.getId());
+    Assertions.assertEquals("NAME", customer.getName());
+}</code></pre></div>
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Jangan — @Setter di semua field sensitif</div>
+                        <div class="code-block"><pre><code class="language-java">@Getter
+@Setter // ← semua field bisa di-set dari mana saja
+public class Login {
+    private String username;
+    private String password; // ← rawan! siapa saja bisa set password
+}</code></pre></div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Benar — Batasi akses setter sensitif</div>
+                        <div class="code-block"><pre><code class="language-java">@Getter
+public class Login {
+    // Setter hanya untuk subclass atau konstruksi internal
+    @Setter(AccessLevel.PROTECTED)
+    private String username;
+
+    @Setter(AccessLevel.NONE) // tidak ada setter publik sama sekali
+    private String password;
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>@Getter</code> = accessor di Eloquent (<code>getNameAttribute()</code>) atau PHP 8.1 <code>readonly</code>. <code>@Setter(AccessLevel.PROTECTED)</code> = <code>protected function setPasswordAttribute()</code> di Eloquent — setter yang tidak bisa dipanggil dari luar model. Bedanya Lombok tidak perlu kamu tulis method-nya sama sekali.</p>
+                </div>
+
+                <!-- QUIZ 2 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q1.</strong> Apa yang terjadi jika kamu meletakkan <code>@Getter</code> dan <code>@Setter(AccessLevel.NONE)</code> pada satu field secara bersamaan?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q2-1')">A. Hanya getter yang di-generate; setter tidak di-generate (NONE = skip)</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-1')">B. Error kompilasi — tidak bisa kombinasi dua annotation</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-1')">C. Keduanya di-generate karena @Getter lebih prioritas</button>
+                    <div class="quiz-feedback" id="q2-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Field boolean <code>private boolean active</code> dengan <code>@Getter</code> akan generate method dengan nama apa?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-2')">A. <code>getActive()</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q2-2')">B. <code>isActive()</code> — JavaBean convention untuk boolean</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-2')">C. <code>active()</code></button>
+                    <div class="quiz-feedback" id="q2-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 3: CONSTRUCTORS ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">🏗️ Constructor Annotations — @NoArgs, @AllArgs, @RequiredArgs</div>
+                    <div class="chapter-desc">Tiga annotation constructor Lombok menutup semua kebutuhan: constructor kosong, constructor semua field, dan constructor hanya field yang wajib (final / @NonNull). Plus fitur <code>staticName</code> untuk factory method pattern.</div>
+                </div>
+
+                <div class="text-title">Perbandingan Tiga Constructor Annotation</div>
+                <div class="annot-grid">
+                    <div class="annot-card">
+                        <code>@NoArgsConstructor</code>
+                        <p style="font-size:var(--xs);margin-top:var(--xs)">Generate constructor tanpa parameter. Wajib ada untuk framework seperti JPA/Hibernate yang butuh instansiasi object kosong.</p>
+                        <div class="code-block"><pre><code class="language-java">// Generate:
+public Customer() {}</code></pre></div>
+                    </div>
+                    <div class="annot-card">
+                        <code>@AllArgsConstructor</code>
+                        <p style="font-size:var(--xs);margin-top:var(--xs)">Generate constructor dengan parameter untuk semua field, urut sesuai deklarasi field di class.</p>
+                        <div class="code-block"><pre><code class="language-java">// Generate:
+public Customer(String id, String name) {
+    this.id = id;
+    this.name = name;
+}</code></pre></div>
+                    </div>
+                    <div class="annot-card">
+                        <code>@RequiredArgsConstructor</code>
+                        <p style="font-size:var(--xs);margin-top:var(--xs)">Generate constructor hanya untuk field <code>final</code> dan field <code>@NonNull</code> yang tidak punya initializer.</p>
+                        <div class="code-block"><pre><code class="language-java">// Untuk Merchant (id = final):
+public Merchant(String id) {
+    this.id = id;
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="text-title">@RequiredArgsConstructor — Merchant.java</div>
+                <div class="code-block"><pre><code class="language-java">// Merchant.java
+@Getter
+@Setter
+@RequiredArgsConstructor   // ← hanya generate constructor untuk field final
+public class Merchant {
+
+    private final String id;   // ← FINAL → masuk ke RequiredArgs constructor!
+
+    private String name;       // ← tidak final → tidak masuk constructor, perlu setter
+}</code></pre></div>
+
+                <div class="line-explain">
+                    <span class="line-num">private final</span>
+                    <span><code>final</code> = field yang wajib diset saat konstruksi dan tidak bisa diubah setelah itu. <code>@RequiredArgsConstructor</code> mendeteksi ini dan membuat parameter constructor untuknya. <code>@Setter</code> pada field final akan diabaikan Lombok — tidak mungkin ada setter untuk field final.</span>
+                    <span class="line-num">private String name</span>
+                    <span>Non-final, tidak <code>@NonNull</code> → tidak masuk <code>@RequiredArgsConstructor</code>. Harus di-set via setter setelah konstruksi. Ini pola yang umum di JPA: <code>id</code> di-set via constructor, property lain via setter.</span>
+                </div>
+
+                <div class="text-title">staticName — Factory Method Pattern — Login.java</div>
+                <div class="code-block"><pre><code class="language-java">// Login.java
+@Getter
+@AllArgsConstructor(staticName = "create")      // ← bukan "new Login()", tapi "Login.create()"
+@NoArgsConstructor(staticName = "createEmpty")  // ← "Login.createEmpty()"
+@ToString(exclude = {"password"})
+public class Login {
+    @Setter(value = AccessLevel.PROTECTED)
+    private String username;
+
+    @Setter(value = AccessLevel.PROTECTED)
+    private String password;
+}</code></pre></div>
+
+                <div class="code-block"><pre><code class="language-java">// Yang di-generate Lombok:
+// Constructor asli menjadi PRIVATE:
+private Login() {}
+private Login(String username, String password) { ... }
+
+// Factory method static PUBLIC:
+public static Login createEmpty() { return new Login(); }
+public static Login create(String username, String password) {
+    return new Login(username, password);
+}</code></pre></div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 LoginTest.java — Verifikasi staticName</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testCreate() {
+    // Pakai factory method, bukan "new Login()"
+    var login1 = Login.createEmpty();
+    Assertions.assertNull(login1.getUsername());
+    Assertions.assertNull(login1.getPassword());
+
+    var login2 = Login.create("eko", "rahasia");
+    Assertions.assertEquals("eko",    login2.getUsername());
+    Assertions.assertEquals("rahasia", login2.getPassword());
+}
+
+@Test
+void testToString() {
+    var login = Login.create("eko", "rahasia");
+    System.out.println(login);
+    // Output: Login(username=eko)  ← password tidak muncul karena @ToString(exclude)
+}</code></pre></div>
+                </div>
+
+                <div class="info-box success">
+                    💡 <strong>Keuntungan <code>staticName</code>:</strong> Constructor jadi private → tidak bisa diinstansiasi sembarangan dengan <code>new</code>. Factory method bisa punya nama yang lebih ekspresif (<code>Login.create()</code> lebih jelas dari <code>new Login()</code>). Ini adalah <strong>Static Factory Method Pattern</strong> ala Effective Java oleh Joshua Bloch.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>staticName = "create"</code> = <code>static function make()</code> atau <code>Model::create([])</code> di Laravel. Kamu sudah terbiasa dengan factory method di Laravel — Lombok membuatnya mudah di Java tanpa menulis kode factory secara manual. <code>@RequiredArgsConstructor</code> juga adalah cara standar Spring Boot melakukan constructor injection tanpa <code>@Autowired</code>.</p>
+                </div>
+
+                <!-- QUIZ 3 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q1.</strong> Di class <code>Merchant</code> dengan <code>@RequiredArgsConstructor</code>, field <code>private final String id</code> dan <code>private String name</code>. Constructor yang di-generate hanya menerima parameter apa?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q3-1')">A. Hanya <code>String id</code> — karena hanya field <code>final</code> yang masuk <code>@RequiredArgsConstructor</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q3-1')">B. <code>String id</code> dan <code>String name</code> — semua field</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q3-1')">C. Tidak ada — <code>@RequiredArgsConstructor</code> selalu generate no-arg</button>
+                    <div class="quiz-feedback" id="q3-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Apa efek dari <code>@AllArgsConstructor(staticName = "create")</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q3-2')">A. Membuat constructor tambahan bernama <code>create</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q3-2')">B. Constructor all-args menjadi private, dan static factory method publik <code>ClassName.create()</code> di-generate</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q3-2')">C. Mengubah nama class menjadi <code>create</code></button>
+                    <div class="quiz-feedback" id="q3-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 4: TOSTRING & EQUALS ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">🔍 @ToString &amp; @EqualsAndHashCode</div>
+                    <div class="chapter-desc">Dua annotation yang paling sering salah dipakai — terutama di konteks inheritance. <code>@EqualsAndHashCode(callSuper = true)</code> dan <code>exclude</code> adalah detail penting yang wajib dipahami.</div>
+                </div>
+
+                <div class="text-title">@ToString — Login.java &amp; Product.java</div>
+                <div class="code-block"><pre><code class="language-java">// Login.java
+@ToString(exclude = {"password"})  // ← sembunyikan password dari toString()
+public class Login {
+    private String username;
+    private String password;
+}
+// Output Login.create("eko","rahasia").toString():
+// Login(username=eko)   ← password tidak muncul!
+
+// Product.java
+@ToString(exclude = {"price"})  // ← sembunyikan price dari toString()
+public class Product {
+    private final String id;
+    private String name;
+    private Long price;
+}
+// Output: Product(id=P001, name=Laptop)   ← price tidak muncul</code></pre></div>
+
+                <div class="line-explain">
+                    <span class="line-num">exclude</span>
+                    <span>Array nama field yang dikecualikan dari output <code>toString()</code>. Berguna untuk: field sensitif (password, token), field yang bisa menyebabkan infinite recursion (bidirectional relationship), atau field yang nilainya terlalu panjang/besar untuk di-log.</span>
+                    <span class="line-num">Format default</span>
+                    <span>Format Lombok: <code>ClassName(field1=value1, field2=value2)</code>. Bisa dikustomasi dengan <code>@ToString(of = {"id", "name"})</code> untuk memilih field yang DIIKUTSERTAKAN (kebalikan dari exclude).</span>
+                </div>
+
+                <div class="text-title">@EqualsAndHashCode — Customer.java (exclude field)</div>
+                <div class="code-block"><pre><code class="language-java">// Customer.java
+@EqualsAndHashCode(exclude = {"name"})  // ← name diabaikan saat equals/hashCode
+public class Customer {
+    private String id;
+    private String name;
+}</code></pre></div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 CustomerTest.java — testEquals()</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testEquals() {
+    var customer1 = new Customer("ID", "NAME 1"); // id sama, name beda
+    var customer2 = new Customer("ID", "NAME 2"); // id sama, name beda
+
+    // equals hanya cek field id (name di-exclude)
+    Assertions.assertEquals(customer1, customer2);         // ← TRUE! name diabaikan
+    Assertions.assertEquals(customer1.hashCode(), customer2.hashCode()); // ← sama
+}</code></pre></div>
+                </div>
+
+                <div class="text-title">@EqualsAndHashCode + Inheritance — Employee &amp; Manager</div>
+                <div class="code-block"><pre><code class="language-java">// Employee.java — parent class
+@Getter @Setter @NoArgsConstructor
+@EqualsAndHashCode               // ← hanya cek field Employee sendiri
+public class Employee {
+    private String id;
+    private String name;
+}
+
+// Manager.java — child class
+@Getter @Setter @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)  // ← !! wajib jika mau ikutsertakan field parent
+public class Manager extends Employee {
+    private Integer totalEmployee;
+}</code></pre></div>
+
+                <div class="info-box danger">
+                    🚨 <strong>Jebakan <code>callSuper</code>!</strong>
+                    <div class="code-block" style="margin-top:var(--s)"><pre><code class="language-java">// Tanpa callSuper = true di Manager:
+var m1 = new Manager(); m1.setId("1"); m1.setTotalEmployee(10);
+var m2 = new Manager(); m2.setId("2"); m2.setTotalEmployee(10);
+
+m1.equals(m2); // ← TRUE! (salah!) — hanya cek totalEmployee, id diabaikan!
+// karena callSuper default = false → field dari parent TIDAK dicek
+
+// Dengan callSuper = true:
+m1.equals(m2); // ← FALSE (benar) — id berbeda, jadi tidak sama</code></pre></div>
+                    <strong>Aturan:</strong> Jika class extends class lain (bukan Object), selalu gunakan <code>@EqualsAndHashCode(callSuper = true)</code>.
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Salah — lupa callSuper</div>
+                        <div class="code-block"><pre><code class="language-java">@EqualsAndHashCode  // callSuper default false
+public class Manager extends Employee {
+    private Integer totalEmployee;
+}
+// equals() tidak cek id dan name dari Employee!
+// Dua Manager berbeda bisa dianggap sama</code></pre></div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Benar — callSuper = true</div>
+                        <div class="code-block"><pre><code class="language-java">@EqualsAndHashCode(callSuper = true)
+public class Manager extends Employee {
+    private Integer totalEmployee;
+}
+// equals() cek SEMUA field: id, name, totalEmployee</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>@EqualsAndHashCode</code> = override <code>__equals()</code> di PHP (tidak ada standar bawaan). Di Laravel, dua Eloquent Model dianggap sama jika primary key-nya sama (<code>$model->is($other)</code>). Lombok memberi kamu kontrol penuh: field mana yang ikut dalam perbandingan, termasuk field dari parent class.</p>
+                </div>
+
+                <!-- QUIZ 4 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 4</div>
+                    <p><strong>Q1.</strong> Kenapa penting menggunakan <code>@ToString(exclude = {"password"})</code> di class Login?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q4-1')">A. Agar password tidak muncul di log aplikasi saat object Login di-print — mencegah kebocoran data sensitif</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-1')">B. Agar performa toString() lebih cepat</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-1')">C. Karena String password tidak bisa di-convert ke String</button>
+                    <div class="quiz-feedback" id="q4-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Kamu punya class <code>Doctor extends Person</code>. Apa yang terjadi jika <code>@EqualsAndHashCode</code> di Doctor tanpa <code>callSuper = true</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q4-2')">A. Field dari Person (seperti id, name) diabaikan saat perbandingan — dua Doctor bisa dianggap sama meski id berbeda</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-2')">B. Tidak ada masalah — Java otomatis memanggil super.equals()</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-2')">C. Error kompilasi</button>
+                    <div class="quiz-feedback" id="q4-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 5: @DATA & @NonNull ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 5</div>
+                    <div class="chapter-title">📦 @Data &amp; @NonNull</div>
+                    <div class="chapter-desc"><code>@Data</code> adalah "mega-annotation" yang menggabungkan @Getter + @Setter + @RequiredArgsConstructor + @ToString + @EqualsAndHashCode sekaligus. <code>@NonNull</code> menambahkan null-check otomatis. Bersama-sama di class <code>Member</code>.</div>
+                </div>
+
+                <div class="text-title">@Data — Shortcut untuk Semua — Member.java</div>
+                <div class="code-block"><pre><code class="language-java">// Member.java
+@Data              // ← generate: getter, setter, requiredArgsConstructor, toString, equals, hashCode
+public class Member {
+
+    @NonNull           // ← field ini tidak boleh null — generate null-check di constructor & setter
+    private String id;
+
+    @NonNull
+    private String name;
+
+    public String sayHello(@NonNull String name) {  // ← parameter method pun bisa @NonNull
+        return "Hello " + name + ", my name is " + this.name;
+    }
+}</code></pre></div>
+
+                <div class="text-title">Apa yang Di-generate @Data</div>
+                <div class="code-block"><pre><code class="language-java">// @Data setara dengan menulis semua ini secara manual:
+
+// Dari @Getter:
+public String getId()   { return this.id; }
+public String getName() { return this.name; }
+
+// Dari @Setter (dengan null-check karena @NonNull):
+public void setId(@NonNull String id) {
+    if (id == null) throw new NullPointerException("id is marked @NonNull but is null");
+    this.id = id;
+}
+public void setName(@NonNull String name) {
+    if (name == null) throw new NullPointerException("name is marked @NonNull but is null");
+    this.name = name;
+}
+
+// Dari @RequiredArgsConstructor (karena @NonNull = required):
+public Member(@NonNull String id, @NonNull String name) {
+    if (id == null)   throw new NullPointerException(...);
+    if (name == null) throw new NullPointerException(...);
+    this.id = id;
+    this.name = name;
+}
+
+// Dari @ToString:
+public String toString() { return "Member(id=" + id + ", name=" + name + ")"; }
+
+// Dari @EqualsAndHashCode:
+public boolean equals(Object o) { ... }
+public int hashCode() { ... }
+
+// @NonNull di parameter method:
+public String sayHello(@NonNull String name) {
+    if (name == null) throw new NullPointerException("name is marked @NonNull but is null");
+    return "Hello " + name + ", my name is " + this.name;
+}</code></pre></div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 MemberTest.java — Verifikasi @NonNull</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testConstructorNull() {
+    // @NonNull → NullPointerException saat constructor dipanggil dengan null
+    Assertions.assertThrows(NullPointerException.class, () -> {
+        var member = new Member(null, null); // ← NPE dilempar Lombok
+    });
+}
+
+@Test
+void testSetterNull() {
+    Assertions.assertThrows(NullPointerException.class, () -> {
+        var member = new Member("Eko", "Eko");
+        member.setName(null); // ← NPE di setter karena @NonNull
+    });
+}
+
+@Test
+void testMethodNull() {
+    Assertions.assertThrows(NullPointerException.class, () -> {
+        var member = new Member("Eko", "Eko");
+        member.sayHello(null); // ← NPE di parameter karena @NonNull
+    });
+}</code></pre></div>
+                </div>
+
+                <div class="info-box warning">
+                    ⚠️ <strong>Kapan TIDAK pakai @Data?</strong> <code>@Data</code> generate <code>@EqualsAndHashCode</code> dengan <code>callSuper = false</code>. Jika class extends class lain (bukan Object), kamu perlu menambahkan <code>@EqualsAndHashCode(callSuper = true)</code> secara eksplisit yang akan override behavior <code>@Data</code>. Juga, <code>@Data</code> tidak cocok untuk JPA Entity karena lazy-loaded field bisa menyebabkan masalah di <code>equals/hashCode</code>.
+                </div>
+
+                <div class="info-box success">
+                    💡 <strong>@NonNull vs Java Optional vs assert:</strong><br/>
+                    <code>@NonNull</code> Lombok = fail-fast saat null masuk → NullPointerException dengan pesan yang jelas.<br/>
+                    <code>Objects.requireNonNull()</code> = cara manual yang sama.<br/>
+                    Keduanya lebih baik dari membiarkan NPE terjadi di tempat lain yang lebih susah di-debug.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>@Data</code> = PHP 8 Constructor Promotion + <code>readonly</code> + <code>#[Required]</code> validation attribute sekaligus. <code>@NonNull</code> = Laravel Form Request <code>'field' => 'required'</code> tapi di level class, bukan di layer HTTP. Bedanya Lombok bekerja saat runtime biasa, tidak hanya saat handle HTTP request.</p>
+                </div>
+
+                <!-- QUIZ 5 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 5</div>
+                    <p><strong>Q1.</strong> <code>@Data</code> merupakan gabungan dari annotation apa saja?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q5-1')">A. @Getter + @Setter + @Builder + @ToString</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q5-1')">B. @Getter + @Setter + @RequiredArgsConstructor + @ToString + @EqualsAndHashCode</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q5-1')">C. @Getter + @Setter + @AllArgsConstructor + @ToString</button>
+                    <div class="quiz-feedback" id="q5-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Apa yang terjadi jika kamu memakai <code>@NonNull</code> pada parameter method yang menerima <code>null</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q5-2')">A. Method mengembalikan null secara diam-diam</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q5-2')">B. <code>NullPointerException</code> langsung dilempar di awal method sebelum logika lain berjalan</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q5-2')">C. Kompilasi gagal</button>
+                    <div class="quiz-feedback" id="q5-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 6: @BUILDER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 6</div>
+                    <div class="chapter-title">🔨 @Builder &amp; @Singular — Builder Pattern Otomatis</div>
+                    <div class="chapter-desc">Builder Pattern adalah cara terbaik membuat object kompleks dengan banyak field. Lombok men-generate seluruh Builder class beserta method-nya. <code>@Singular</code> adalah fitur khusus untuk field collection di Builder.</div>
+                </div>
+
+                <div class="text-title">@Builder — Person.java</div>
+                <div class="code-block"><pre><code class="language-java">// Person.java
+@Data
+@Builder              // ← generate static inner class PersonBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Person {
+    private String id;
+    private String name;
+    private Integer age;
+
+    @Singular             // ← generate method hobby() untuk add satu per satu ke list
+    private List&lt;String&gt; hobbies;
+}</code></pre></div>
+
+                <div class="text-title">Cara Menggunakan Builder</div>
+                <div class="code-block"><pre><code class="language-java">// PersonTest.java — createViaBuilder
+var person = Person.builder()   // Person.builder() → PersonBuilder instance
+    .id("id")
+    .name("name")
+    .age(30)
+    .hobby("Game")      // ← @Singular: tambah satu elemen
+    .hobby("Read")      // ← tambah lagi
+    .hobby("Traveling") // ← tambah lagi
+    .build();           // ← bangun Person object final
+
+System.out.println(person);
+// Person(id=id, name=name, age=30, hobbies=[Game, Read, Traveling])</code></pre></div>
+
+                <div class="text-title">Apa yang Di-generate @Builder + @Singular</div>
+                <div class="code-block"><pre><code class="language-java">// Lombok generate inner class PersonBuilder (disederhanakan):
+public static class PersonBuilder {
+    private String id;
+    private String name;
+    private Integer age;
+    private ArrayList&lt;String&gt; hobbies; // internal list untuk @Singular
+
+    public PersonBuilder id(String id)     { this.id = id; return this; }
+    public PersonBuilder name(String name) { this.name = name; return this; }
+    public PersonBuilder age(Integer age)  { this.age = age; return this; }
+
+    // @Singular generate method SINGULAR (hobby, bukan hobbies):
+    public PersonBuilder hobby(String hobby) {
+        if (this.hobbies == null) this.hobbies = new ArrayList&lt;&gt;();
+        this.hobbies.add(hobby);
+        return this;
+    }
+    // Juga generate bulk method:
+    public PersonBuilder hobbies(Collection&lt;String&gt; hobbies) {
+        this.hobbies.addAll(hobbies);
+        return this;
+    }
+    // Dan clear method:
+    public PersonBuilder clearHobbies() { this.hobbies = null; return this; }
+
+    public Person build() {
+        // List di-wrap jadi unmodifiable sebelum diserahkan ke Person
+        List&lt;String&gt; finalHobbies = this.hobbies == null
+            ? Collections.emptyList()
+            : Collections.unmodifiableList(this.hobbies);
+        return new Person(id, name, age, finalHobbies);
+    }
+}
+
+// Entry point:
+public static PersonBuilder builder() { return new PersonBuilder(); }</code></pre></div>
+
+                <div class="line-explain">
+                    <span class="line-num">@Singular</span>
+                    <span>Annotation field-level di field Collection. Lombok mendeteksi nama field (<code>hobbies</code>) → generate method singular (<code>hobby()</code>) untuk add satu elemen. Aturan naming: menghapus 's' di akhir. Untuk nama tidak beraturan, kamu bisa tentukan manual: <code>@Singular("addHobby")</code>.</span>
+                    <span class="line-num">return this</span>
+                    <span>Setiap method builder mengembalikan <code>this</code> (instance Builder) → memungkinkan method chaining fluent API. Ini persis seperti pattern chaining di Query Builder Laravel.</span>
+                    <span class="line-num">.build()</span>
+                    <span>Membangun object final dan mengunci semua state. Setelah <code>build()</code>, object Person tidak bisa diubah melalui Builder yang sama. Untuk membuat variasi, bisa pakai <code>person.toBuilder()</code> jika mengaktifkan <code>@Builder(toBuilder = true)</code>.</span>
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Tanpa Builder — Constructor panjang</div>
+                        <div class="code-block"><pre><code class="language-java">// Tidak jelas field mana yang diisi dengan nilai apa
+var person = new Person(
+    "id", "name", 30,
+    List.of("Game","Read","Traveling")
+);
+// Parameter ke-4 itu apa? Harus buka definisi class untuk tahu</code></pre></div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Builder — Self-documenting</div>
+                        <div class="code-block"><pre><code class="language-java">// Setiap field jelas namanya
+var person = Person.builder()
+    .id("id")
+    .name("name")
+    .age(30)
+    .hobby("Game")
+    .build();
+// Langsung tahu tanpa buka class Person</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 PersonTest.java — Tiga Cara Membuat Person</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void createViaConstructor() {
+    var hobbies = new ArrayList&lt;String&gt;();
+    hobbies.add("Game"); hobbies.add("Read"); hobbies.add("Traveling");
+    var person = new Person("id", "name", 30, hobbies); // @AllArgsConstructor
+}
+
+@Test
+void createViaSetter() {
+    var person = new Person(); // @NoArgsConstructor
+    person.setId("id");
+    person.setName("name");
+    person.setAge(30);
+    person.setHobbies(hobbies);
+}
+
+@Test
+void createViaBuilder() {
+    var person = Person.builder() // @Builder ← paling ekspresif!
+        .id("id").name("name").age(30)
+        .hobby("Game").hobby("Read").hobby("Traveling")
+        .build();
+    System.out.println(person);
+}</code></pre></div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel</div>
+                    <p><code>@Builder</code> = Laravel Query Builder atau <code>Model::factory()</code>. Method chaining <code>.id().name().age().build()</code> = <code>DB::table()->select()->where()->orderBy()->get()</code>. <code>@Singular</code> untuk collection = <code>->withCount()</code> atau <code>->with()</code> di Eloquent yang juga menerima item satu per satu atau bulk.</p>
+                </div>
+
+                <!-- QUIZ 6 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 6</div>
+                    <p><strong>Q1.</strong> Field <code>@Singular private List&lt;String&gt; hobbies</code> — method apa yang di-generate Builder untuk menambah satu elemen?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q6-1')">A. <code>hobbies(String hobby)</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q6-1')">B. <code>hobby(String hobby)</code> — Lombok deteksi nama field "hobbies" dan generate form singular "hobby"</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q6-1')">C. <code>addHobby(String hobby)</code></button>
+                    <div class="quiz-feedback" id="q6-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Apa keuntungan Builder Pattern dibanding constructor all-args biasa untuk class dengan banyak field?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q6-2')">A. Setiap field punya nama method yang jelas, parameter tidak perlu urut, field opsional bisa di-skip — kode lebih readable dan tidak error-prone</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q6-2')">B. Builder lebih cepat secara performa karena tidak membuat object baru</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q6-2')">C. Builder memastikan semua field wajib diisi</button>
+                    <div class="quiz-feedback" id="q6-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 7: @VALUE & @With ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 7</div>
+                    <div class="chapter-title">🔒 @Value &amp; @With — Immutable Object</div>
+                    <div class="chapter-desc"><code>@Value</code> adalah versi immutable dari <code>@Data</code> — semua field jadi final, tidak ada setter, class final. <code>@With</code> menambahkan "wither" method untuk membuat salinan object dengan satu field berbeda.</div>
+                </div>
+
+                <div class="text-title">@Value + @With — Register.java</div>
+                <div class="code-block"><pre><code class="language-java">// Register.java
+@Value   // ← @Data versi immutable: semua field final, tidak ada setter, class final
+@With    // ← generate withXxx() method untuk "update dengan copy"
+public class Register {
+    String username;   // ← otomatis jadi "private final String username"
+    String password;
+}</code></pre></div>
+
+                <div class="text-title">Apa yang Di-generate @Value &amp; @With</div>
+                <div class="code-block"><pre><code class="language-java">// @Value setara dengan:
+public final class Register {              // ← class jadi final
+    private final String username;         // ← semua field final
+    private final String password;
+
+    // @AllArgsConstructor (public)
+    public Register(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    // @Getter (tidak ada setter!)
+    public String getUsername() { return this.username; }
+    public String getPassword() { return this.password; }
+
+    // @ToString, @EqualsAndHashCode
+    public String toString()    { return "Register(username=" + username + ", password=" + password + ")"; }
+    public boolean equals(Object o) { ... }
+    public int hashCode() { ... }
+}
+
+// @With generate method "copy-with-one-change":
+public Register withUsername(String username) {
+    return this.username == username ? this : new Register(username, this.password);
+}
+public Register withPassword(String password) {
+    return this.password == password ? this : new Register(this.username, password);
+}</code></pre></div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 RegisterTest.java — Verifikasi @With</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testWith() {
+    var register1 = new Register("eko", "Eko");
+
+    // withUsername → membuat object BARU dengan username berbeda, password sama
+    var register2 = register1.withUsername("khannedy");
+
+    // Password sama karena disalin dari register1
+    Assertions.assertEquals(register1.getPassword(), register2.getPassword()); // ← TRUE
+
+    // Username berbeda
+    Assertions.assertNotEquals(register1.getUsername(), register2.getUsername()); // ← TRUE
+
+    // register1 TIDAK BERUBAH — immutable!
+    // register1.setUsername("other"); // ← tidak bisa, tidak ada setter!
+}</code></pre></div>
+                </div>
+
+                <div class="info-box success">
+                    💡 <strong>Mengapa Immutable Object?</strong> Object immutable adalah thread-safe secara alami — tidak perlu synchronization. Lebih mudah di-reason karena state tidak bisa berubah setelah konstruksi. Cocok untuk: DTO (Data Transfer Object), Value Object di Domain-Driven Design, object yang di-share antar thread.
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Mutable DTO — rawan bug</div>
+                        <div class="code-block"><pre><code class="language-java">@Data  // ada setter
+public class RegisterDto {
+    private String username;
+    private String password;
+}
+// Kode lain bisa saja ubah username setelah dibuat!
+// Susah di-trace siapa yang mengubah</code></pre></div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Immutable DTO — aman</div>
+                        <div class="code-block"><pre><code class="language-java">@Value  // tidak ada setter, semua final
+@With   // butuh ubah satu field? pakai withXxx()
+public class Register {
+    String username;
+    String password;
+}
+// Tidak ada yang bisa "iseng" ubah Register setelah dibuat</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>@Value</code> = PHP 8.1 <code>readonly class</code> (semua property readonly). <code>@With</code> = pattern <code>clone $obj; $clone->field = $value;</code> di PHP, atau Eloquent <code>$model->replicate()->fill(['field' => 'value'])</code>. Pola immutable + wither sangat umum di functional programming dan semakin populer di Java modern (Java 16+ Records adalah versi nativenya).</p>
+                </div>
+
+                <!-- QUIZ 7 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 7</div>
+                    <p><strong>Q1.</strong> <code>var r2 = r1.withUsername("khannedy")</code> — apakah <code>r1</code> berubah setelah baris ini?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q7-1')">A. Ya, username r1 berubah menjadi "khannedy"</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q7-1')">B. Tidak. <code>withUsername()</code> membuat object Register BARU — r1 tetap tidak berubah karena immutable</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q7-1')">C. Keduanya berubah, r1 dan r2 menunjuk ke object yang sama</button>
+                    <div class="quiz-feedback" id="q7-1"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 8: @SLF4J @CLEANUP @SNEAKYTHROWS ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 8</div>
+                    <div class="chapter-title">🪵 @Slf4j, @Cleanup &amp; @SneakyThrows</div>
+                    <div class="chapter-desc">Tiga annotation yang menangani aspek berbeda: logging, manajemen resource, dan checked exception. Bersama di class <code>FileHelper</code> — contoh nyata membaca file dengan kode bersih.</div>
+                </div>
+
+                <div class="text-title">FileHelper.java — Tiga Annotation Sekaligus</div>
+                <div class="code-block"><pre><code class="language-java">// FileHelper.java
+@Slf4j                  // ← generate field: private static final Logger log = LoggerFactory.getLogger(FileHelper.class);
+public class FileHelper {
+
+    @SneakyThrows       // ← checked exception (IOException) jadi unchecked — tidak perlu try-catch atau throws
+    public static String loadFile(String file) {
+        log.info("Load file {}", file);  // ← pakai logger yang di-generate @Slf4j
+
+        @Cleanup FileReader fileReader = new FileReader(file);  // ← auto-close saat keluar scope
+        @Cleanup Scanner scanner = new Scanner(fileReader);     // ← auto-close juga
+
+        StringBuilder builder = new StringBuilder();
+        while (scanner.hasNextLine()) {
+            builder.append(scanner.nextLine()).append("\n");
+        }
+        return builder.toString();
+    }
+}</code></pre></div>
+
+                <div class="text-title">@Slf4j — Logger Otomatis</div>
+                <div class="code-block"><pre><code class="language-java">// Tanpa @Slf4j — harus tulis ini di setiap class:
+private static final Logger log = LoggerFactory.getLogger(FileHelper.class);
+
+// Dengan @Slf4j — cukup taruh di atas class, Lombok generate field "log":
+@Slf4j
+public class FileHelper {
+    public void doSomething() {
+        log.info("Proses dimulai");          // ← langsung pakai
+        log.debug("Debug: {}", someValue);   // ← SLF4J format {} bukan %s seperti printf
+        log.warn("Hati-hati: {}", warning);
+        log.error("Error: {}", e.getMessage(), e);
+    }
+}</code></pre></div>
+
+                <div class="line-explain">
+                    <span class="line-num">@Slf4j</span>
+                    <span>Generate field logger SLF4J (<strong>Simple Logging Facade for Java</strong>). SLF4J adalah abstraksi logging — implementasi aktual bisa Logback (default Spring Boot), Log4j2, java.util.logging, dll. Format <code>{}</code> di pesan log adalah placeholder yang diisi saat log dipanggil, bukan saat string dibuat (lazy evaluation untuk performa).</span>
+                    <span class="line-num">log.info("Load file {}", file)</span>
+                    <span>Lebih baik dari <code>log.info("Load file " + file)</code> karena string concatenation tidak terjadi jika level INFO dimatikan. Format <code>{}</code> hanya di-evaluate jika log level aktif.</span>
+                </div>
+
+                <div class="text-title">@Cleanup — Auto-Close Resource</div>
+                <div class="code-block"><pre><code class="language-java">// Tanpa @Cleanup — verbose try-with-resources
+public static String loadFile(String file) throws IOException {
+    try (FileReader fileReader = new FileReader(file);
+         Scanner scanner = new Scanner(fileReader)) {
+        // ...
+    }
+}
+
+// Dengan @Cleanup — lebih ringkas, Lombok generate try-finally di balik layar
+@SneakyThrows
+public static String loadFile(String file) {
+    @Cleanup FileReader fileReader = new FileReader(file); // auto-close
+    @Cleanup Scanner scanner = new Scanner(fileReader);    // auto-close
+    // ...
+}
+
+// Yang di-generate Lombok (sama dengan try-with-resources):
+FileReader fileReader = new FileReader(file);
+try {
+    Scanner scanner = new Scanner(fileReader);
+    try {
+        // ... logika
+    } finally {
+        scanner.close();  // ← selalu dipanggil
+    }
+} finally {
+    fileReader.close(); // ← selalu dipanggil
+}</code></pre></div>
+
+                <div class="text-title">@SneakyThrows — Bypass Checked Exception</div>
+                <div class="code-block"><pre><code class="language-java">// Java punya checked exception yang WAJIB di-handle:
+// new FileReader(file) bisa throw IOException → wajib try-catch atau "throws IOException"
+
+// Tanpa @SneakyThrows:
+public static String loadFile(String file) throws IOException {  // ← wajib deklarasi
+    // ...
+}
+
+// Dengan @SneakyThrows:
+@SneakyThrows
+public static String loadFile(String file) {  // ← tidak perlu "throws IOException"
+    // Lombok bungkus exception dalam trick bytecode tanpa wrap ke RuntimeException
+    // Exception masih dilempar dengan tipe aslinya saat runtime!
+}</code></pre></div>
+
+                <div class="info-box warning">
+                    ⚠️ <strong>Kapan TIDAK pakai @SneakyThrows?</strong> <code>@SneakyThrows</code> menyembunyikan informasi bahwa method bisa throw checked exception. Caller tidak tahu perlu handle exception apa. Gunakan hanya ketika kamu yakin exception tidak akan terjadi, atau kamu ingin sengaja "up-level" exception handling ke pemanggil yang lebih tinggi. Jangan pakai sembarangan hanya untuk menghindari try-catch.
+                </div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 FileHelperTest.java</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testPom() throws Exception {
+    String text = FileHelper.loadFile("pom.xml"); // baca file nyata
+    System.out.println(text);
+}
+
+@Test
+void testFileNotFound() {
+    // @SneakyThrows tidak menyembunyikan exception — masih dilempar saat runtime!
+    Assertions.assertThrows(FileNotFoundException.class, () -> {
+        FileHelper.loadFile("tidakada.txt"); // FileNotFoundException tetap muncul
+    });
+}</code></pre></div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>@Slf4j</code> = Laravel <code>Log::info()</code> / <code>log_message()</code> yang langsung tersedia tanpa deklarasi. <code>@Cleanup</code> = PHP <code>try...finally { fclose($handle); }</code> atau pattern <code>with(fopen(...))</code>. <code>@SneakyThrows</code> tidak punya padanan PHP karena PHP tidak punya checked exception — semua exception PHP adalah unchecked.</p>
+                </div>
+
+                <!-- QUIZ 8 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 8</div>
+                    <p><strong>Q1.</strong> Apa yang di-generate oleh <code>@Slf4j</code> di level class?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q8-1')">A. Field <code>private static final Logger log = LoggerFactory.getLogger(ClassName.class)</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q8-1')">B. Method <code>log(String message)</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q8-1')">C. Anotasi <code>@Log</code> untuk semua method di class</button>
+                    <div class="quiz-feedback" id="q8-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> <code>@Cleanup</code> di Lombok setara dengan konstruk Java apa?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q8-2')">A. <code>synchronized</code> block</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q8-2')">B. <code>try-with-resources</code> / <code>try-finally</code> dengan pemanggilan <code>.close()</code> di blok <code>finally</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q8-2')">C. <code>Runtime.getRuntime().addShutdownHook()</code></button>
+                    <div class="quiz-feedback" id="q8-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 9: @SYNCHRONIZED ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 9</div>
+                    <div class="chapter-title">🔐 @Synchronized — Thread-Safe Method</div>
+                    <div class="chapter-desc"><code>@Synchronized</code> adalah versi lebih aman dari keyword <code>synchronized</code> bawaan Java. Perbedaan kunci: lock object yang digunakan private, bukan <code>this</code> — mencegah deadlock dari luar class.</div>
+                </div>
+
+                <div class="text-title">Counter.java — @Synchronized dengan Custom Lock</div>
+                <div class="code-block"><pre><code class="language-java">// Counter.java
+public class Counter {
+
+    private final Object counterLock = new Object(); // ← object khusus sebagai lock
+
+    private Long counter = 0L;
+
+    @Synchronized(value = "counterLock")  // ← pakai counterLock, bukan this
+    public void increment() {
+        counter = counter + 1;
+    }
+
+    @Synchronized(value = "counterLock")  // ← lock yang sama untuk read
+    public Long getCounter() {
+        return counter;
+    }
+}</code></pre></div>
+
+                <div class="text-title">Perbedaan @Synchronized vs synchronized Biasa</div>
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">⚠️ synchronized(this) — Lock Publik</div>
+                        <div class="code-block"><pre><code class="language-java">public synchronized void increment() {
+    counter++;
+}
+// Lock pada "this" — siapapun bisa lock object ini dari luar:
+Counter c = new Counter();
+synchronized(c) {
+    // Block ini menahan lock yang sama dengan increment()
+    // → bisa sebabkan deadlock yang susah di-debug!
+    Thread.sleep(10_000);
+}</code></pre></div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ @Synchronized — Lock Private</div>
+                        <div class="code-block"><pre><code class="language-java">private final Object counterLock = new Object();
+
+@Synchronized("counterLock")
+public void increment() { counter++; }
+
+// Lock pada counterLock yang private → tidak bisa diakses dari luar class
+// Tidak ada risiko deadlock dari kode eksternal!</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="text-title">Yang Di-generate Lombok</div>
+                <div class="code-block"><pre><code class="language-java">// @Synchronized(value = "counterLock") setara dengan:
+public void increment() {
+    synchronized(this.counterLock) {  // ← lock pada private field
+        this.counter = this.counter + 1;
+    }
+}
+
+public Long getCounter() {
+    synchronized(this.counterLock) {
+        return this.counter;
+    }
+}</code></pre></div>
+
+                <div class="test-box">
+                    <div class="test-title">🧪 CounterTest.java — 100 Thread × 100 Increment</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testSynchronized() throws InterruptedException {
+    // Buat 100 thread, masing-masing increment 100x = total harus 10.000
+    for (int i = 0; i &lt; 100; i++) {
+        new Thread(() -> {
+            for (int j = 0; j &lt; 100; j++) {
+                counter.increment(); // ← thread-safe karena @Synchronized
+            }
+        }).start();
+    }
+
+    Thread.sleep(5_000L); // tunggu semua thread selesai
+    System.out.println(counter.getCounter());
+    // Tanpa @Synchronized: bisa 9.743, 9.918, dll. (race condition)
+    // Dengan @Synchronized: selalu 10.000 ✅
+}</code></pre></div>
+                </div>
+
+                <div class="info-box success">
+                    💡 <strong>Race Condition:</strong> Terjadi ketika dua thread membaca dan mengubah data yang sama secara bersamaan. <code>counter = counter + 1</code> sebenarnya 3 langkah: (1) baca nilai, (2) tambah 1, (3) simpan hasil. Tanpa synchronization, thread A dan B bisa membaca nilai yang sama, keduanya menambah 1, dan menyimpan nilai yang sama — increment hilang!
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p>PHP umumnya single-threaded per request — race condition di level memory hampir tidak terjadi. Di Java, satu aplikasi bisa punya ratusan thread berjalan bersamaan. <code>@Synchronized</code> adalah padanan <code>database lock</code> di Laravel (<code>lockForUpdate()</code>) tapi di level memory Java, bukan di level database.</p>
+                </div>
+
+                <!-- QUIZ 9 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 9</div>
+                    <p><strong>Q1.</strong> Apa risiko utama menggunakan <code>public synchronized void method()</code> (lock pada <code>this</code>) dibanding <code>@Synchronized("privateLock")</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q9-1')">A. Kode eksternal bisa lock object yang sama (<code>synchronized(obj)</code>) → berpotensi deadlock yang sulit di-debug</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q9-1')">B. <code>synchronized(this)</code> lebih lambat secara performa</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q9-1')">C. <code>synchronized</code> biasa tidak bekerja untuk method public</button>
+                    <div class="quiz-feedback" id="q9-1"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 10: SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero" style="background:linear-gradient(135deg,var(--transsuccess-color),var(--transprimary-color))">
+                    <div class="chapter-number">Chapter 10 — Summary</div>
+                    <div class="chapter-title">📌 Cheat Sheet Annotation Lombok</div>
+                    <div class="chapter-desc">Semua annotation yang sudah dipelajari dalam satu tempat — kapan digunakan, apa yang di-generate, dan kapan dihindari.</div>
+                </div>
+
+                <div class="text-title">Referensi Cepat Semua Annotation</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Annotation</th><th>Generate</th><th>Dipakai di Class</th><th>Catatan Penting</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>@Getter</code></td><td>Semua getter method</td><td>Customer, Employee, Merchant</td><td>Boolean field → <code>isXxx()</code>, bukan <code>getXxx()</code></td></tr>
+                        <tr><td><code>@Setter</code></td><td>Semua setter method</td><td>Customer, Employee</td><td>Bisa di field level dengan <code>AccessLevel</code>; tidak jalan pada field <code>final</code></td></tr>
+                        <tr><td><code>@NoArgsConstructor</code></td><td>Constructor tanpa parameter</td><td>Customer, Login, Person</td><td>Wajib untuk JPA Entity; bisa dengan <code>staticName</code></td></tr>
+                        <tr><td><code>@AllArgsConstructor</code></td><td>Constructor semua field</td><td>Customer, Login, Person</td><td>Urutan parameter = urutan deklarasi field; bisa dengan <code>staticName</code></td></tr>
+                        <tr><td><code>@RequiredArgsConstructor</code></td><td>Constructor field <code>final</code> + <code>@NonNull</code></td><td>Merchant, Product</td><td>Cara standar Constructor Injection di Spring Boot tanpa <code>@Autowired</code></td></tr>
+                        <tr><td><code>@ToString</code></td><td>Method <code>toString()</code></td><td>Login, Product</td><td><code>exclude</code> untuk field sensitif; <code>of</code> untuk whitelist field</td></tr>
+                        <tr><td><code>@EqualsAndHashCode</code></td><td>Method <code>equals()</code> + <code>hashCode()</code></td><td>Customer, Employee, Manager</td><td><strong>Wajib</strong> <code>callSuper=true</code> saat extends class non-Object!</td></tr>
+                        <tr><td><code>@Data</code></td><td>Getter + Setter + RequiredArgsConstructor + ToString + EqualsAndHashCode</td><td>Member, Person, Product</td><td>Jangan di JPA Entity; <code>callSuper=false</code> by default</td></tr>
+                        <tr><td><code>@Builder</code></td><td>Static inner Builder class + <code>builder()</code> method</td><td>Person</td><td>Kombinasi dengan <code>@AllArgsConstructor</code> agar kompatibel; <code>toBuilder=true</code> untuk copy</td></tr>
+                        <tr><td><code>@Singular</code></td><td>Method singular add + bulk add + clear untuk Collection di Builder</td><td>Person.hobbies</td><td>Field harus Collection; nama dideteksi otomatis (hapus 's') atau tentukan manual</td></tr>
+                        <tr><td><code>@Value</code></td><td>Class final + semua field final + Getter + AllArgsConstructor + ToString + EqualsAndHashCode (tanpa Setter)</td><td>Register</td><td>Immutable object; tidak cocok untuk JPA Entity</td></tr>
+                        <tr><td><code>@With</code></td><td>Method <code>withXxx()</code> yang membuat salinan object dengan satu field berbeda</td><td>Register</td><td>Sangat berguna bersama <code>@Value</code> untuk immutable update</td></tr>
+                        <tr><td><code>@Slf4j</code></td><td>Field <code>private static final Logger log</code></td><td>FileHelper</td><td>Varian: <code>@Log4j2</code>, <code>@CommonsLog</code>, dll. sesuai logging framework</td></tr>
+                        <tr><td><code>@Cleanup</code></td><td>try-finally dengan <code>.close()</code></td><td>FileHelper</td><td>Default memanggil <code>close()</code>; bisa custom: <code>@Cleanup("shutdown")</code></td></tr>
+                        <tr><td><code>@SneakyThrows</code></td><td>Bytecode trick untuk lempar checked exception tanpa deklarasi</td><td>FileHelper</td><td>Pakai dengan hati-hati — menyembunyikan informasi checked exception dari caller</td></tr>
+                        <tr><td><code>@Synchronized</code></td><td>Method body dibungkus <code>synchronized(privateLock)</code></td><td>Counter</td><td>Lebih aman dari <code>synchronized</code> biasa karena lock-nya private</td></tr>
+                        <tr><td><code>@NonNull</code></td><td>Null-check di awal constructor/setter/method + NullPointerException dengan pesan jelas</td><td>Member</td><td>Bisa di field (cek di constructor+setter) atau parameter method</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title">Panduan Memilih Annotation yang Tepat</div>
+                <div class="code-block"><pre><code class="language-java">// Mutable DTO / POJO biasa?
+@Data  // getter + setter + constructor + equals + toString
+
+// Butuh builder pattern?
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
+
+// Immutable object / Value Object / DTO yang tidak boleh diubah?
+@Value @With  // (tidak ada setter, semua final)
+
+// JPA Entity? (hati-hati dengan @Data dan lazy loading)
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(of = {"id"}) @ToString(exclude = {"lazyField"})
+
+// Spring Bean / Service dengan Constructor Injection?
+@RequiredArgsConstructor  // inject semua final field via constructor
+// Tidak perlu @Autowired!
+
+// Butuh logging di class?
+@Slf4j  // langsung pakai log.info(), log.error(), dll.
+
+// Resource yang harus di-close?
+@Cleanup var resource = new FileReader(file); // auto-close
+
+// Field tidak boleh null?
+@NonNull private String id; // null-check di constructor + setter</code></pre></div>
+
+                <div class="text-title">Semua Class di Materi + Annotation yang Dipakai</div>
+                <div class="annot-grid">
+                    <div class="annot-card"><code>Customer</code><br/><span class="annot-badge">@Getter</span><span class="annot-badge">@Setter</span><span class="annot-badge">@NoArgs</span><span class="annot-badge">@AllArgs</span><span class="annot-badge">@EqualsAndHashCode</span></div>
+                    <div class="annot-card"><code>Employee</code><br/><span class="annot-badge">@Getter</span><span class="annot-badge">@Setter</span><span class="annot-badge">@NoArgs</span><span class="annot-badge">@EqualsAndHashCode</span></div>
+                    <div class="annot-card"><code>Manager</code><br/><span class="annot-badge">@Getter</span><span class="annot-badge">@Setter</span><span class="annot-badge">@NoArgs</span><span class="annot-badge">@EqualsAndHashCode(callSuper)</span></div>
+                    <div class="annot-card"><code>Member</code><br/><span class="annot-badge">@Data</span><span class="annot-badge">@NonNull</span></div>
+                    <div class="annot-card"><code>Person</code><br/><span class="annot-badge">@Data</span><span class="annot-badge">@Builder</span><span class="annot-badge">@AllArgs</span><span class="annot-badge">@NoArgs</span><span class="annot-badge">@Singular</span></div>
+                    <div class="annot-card"><code>Merchant</code><br/><span class="annot-badge">@Getter</span><span class="annot-badge">@Setter</span><span class="annot-badge">@RequiredArgs</span></div>
+                    <div class="annot-card"><code>Product</code><br/><span class="annot-badge">@Data</span><span class="annot-badge">@RequiredArgs</span><span class="annot-badge">@AllArgs</span><span class="annot-badge">@ToString(exclude)</span></div>
+                    <div class="annot-card"><code>Login</code><br/><span class="annot-badge">@Getter</span><span class="annot-badge">@AllArgs(staticName)</span><span class="annot-badge">@NoArgs(staticName)</span><span class="annot-badge">@ToString(exclude)</span><span class="annot-badge">@Setter(PROTECTED)</span></div>
+                    <div class="annot-card"><code>Register</code><br/><span class="annot-badge">@Value</span><span class="annot-badge">@With</span></div>
+                    <div class="annot-card"><code>FileHelper</code><br/><span class="annot-badge">@Slf4j</span><span class="annot-badge">@SneakyThrows</span><span class="annot-badge">@Cleanup</span></div>
+                    <div class="annot-card"><code>Counter</code><br/><span class="annot-badge">@Synchronized</span></div>
+                </div>
+
+                <hr class="section-divider"/>
+                <div class="info-box success" style="text-align:center;padding:var(--x)">
+                    <div style="font-size:2rem;margin-bottom:var(--s)">🎉</div>
+                    <div style="font-size:var(--l);font-weight:bold;margin-bottom:var(--s)">Selamat Menyelesaikan Modul Lombok!</div>
+                    <p>Kamu sudah menguasai seluruh annotation Lombok dari yang paling dasar (<code>@Getter/@Setter</code>) hingga advanced (<code>@Builder</code>, <code>@Value/@With</code>, <code>@Synchronized</code>). Langkah berikutnya: terapkan Lombok di proyek Spring Boot — gunakan <code>@RequiredArgsConstructor</code> untuk constructor injection, <code>@Slf4j</code> di setiap service, dan <code>@Builder</code> untuk DTO yang kompleks.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="text-align:center;padding:var(--x);opacity:.5;font-size:var(--xs)">
+        Java Lombok &bull; Modul Self-Paced Learning
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+<script>
+    hljs.highlightAll();
+
+    function showMenu()     { document.getElementsByClassName("sidebar")[0].classList.toggle("show"); document.getElementById("get-menu").classList.toggle("opened"); }
+    function sidebarMinify(){ document.getElementsByClassName("sidebar")[0].classList.toggle("collapse"); document.getElementsByClassName("container")[0].classList.toggle("expanded"); }
+    function switchTheme()  { document.body.classList.toggle("dark-mode"); document.querySelector(".container-header-button-switch-theme").textContent = document.body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode"; }
+
+    const quizAnswers = {
+        'q0-1': 'Betul! Lombok bekerja sebagai Java Annotation Processor saat kompilasi. File <code>.java</code> kamu tetap bersih, tapi <code>.class</code> yang dihasilkan berisi semua getter/setter seolah ditulis manual.',
+        'q2-1': 'Tepat! <code>AccessLevel.NONE</code> artinya Lombok tidak men-generate setter untuk field itu. <code>@Getter</code> di level class hanya men-generate getter, setter diputuskan oleh annotation setter.',
+        'q2-2': 'Benar! Ini JavaBean convention — field boolean menggunakan prefix <code>is</code> bukan <code>get</code>. Lombok mengikuti convention ini secara otomatis.',
+        'q3-1': 'Tepat! <code>@RequiredArgsConstructor</code> hanya memasukkan field <code>final</code> dan field <code>@NonNull</code> tanpa initializer ke constructor. Field <code>name</code> yang tidak final tidak ikut.',
+        'q3-2': 'Benar! <code>staticName</code> membuat constructor asli jadi private dan menambahkan public static factory method. Pola ini dikenal sebagai Static Factory Method.',
+        'q4-1': 'Tepat! Ini adalah best practice keamanan — field sensitif seperti password tidak boleh ikut di log output karena log seringkali disimpan dan bisa diakses oleh pihak yang tidak berhak.',
+        'q4-2': 'Benar! Tanpa <code>callSuper = true</code>, <code>@EqualsAndHashCode</code> hanya melihat field yang dideklarasikan di class Doctor sendiri. Field dari Person (seperti id) diabaikan — hasil equals bisa salah.',
+        'q5-1': '<code>@Data</code> adalah shortcut untuk 5 annotation: @Getter + @Setter + @RequiredArgsConstructor + @ToString + @EqualsAndHashCode. Bukan @Builder — itu annotation terpisah.',
+        'q5-2': 'Benar! <code>@NonNull</code> di parameter menyebabkan Lombok menyisipkan null-check di baris pertama method body. Jika null diberikan, <code>NullPointerException</code> langsung dilempar sebelum logika apapun berjalan.',
+        'q6-1': 'Tepat! Lombok mendeteksi nama field <code>hobbies</code> (plural) dan men-generate method <code>hobby()</code> (singular) dengan menghapus huruf "s" di akhir.',
+        'q6-2': 'Benar! Builder sangat berguna untuk class dengan banyak field karena setiap field diberi nama secara eksplisit, field opsional bisa di-skip, dan tidak perlu hafal urutan parameter constructor.',
+        'q7-1': 'Benar! <code>withUsername()</code> selalu membuat object Register BARU dengan value yang di-copy dari yang lama, lalu mengganti satu field yang diminta. <code>r1</code> tetap tidak berubah — ini esensi dari immutable object.',
+        'q8-1': 'Tepat! <code>@Slf4j</code> men-generate satu baris: <code>private static final Logger log = LoggerFactory.getLogger(ClassName.class);</code> yang bisa langsung dipakai sebagai <code>log.info()</code> dll.',
+        'q8-2': 'Benar! <code>@Cleanup</code> men-generate blok <code>try-finally</code> yang memanggil <code>.close()</code> (atau method lain yang dikonfigurasi) di blok <code>finally</code> — persis seperti <code>try-with-resources</code>.',
+        'q9-1': 'Tepat! <code>synchronized(this)</code> mengekspos lock object yang sama ke kode eksternal. Jika ada kode lain yang melakukan <code>synchronized(counterObj)</code>, keduanya bersaing di lock yang sama → potensi deadlock.',
+    };
+
+    function checkQuiz(btn, isCorrect, id) {
+        const all = btn.parentElement.querySelectorAll(".quiz-option");
+        all.forEach(b => { b.disabled = true; b.style.opacity = ".6"; b.style.cursor = "not-allowed"; });
+        if (isCorrect) { btn.classList.add("correct"); btn.style.opacity = "1"; }
+        else {
+            btn.classList.add("wrong"); btn.style.opacity = "1";
+            all.forEach(b => { if (b !== btn && b.getAttribute("onclick")?.includes("true")) { b.classList.add("correct"); b.style.opacity = "1"; } });
+        }
+        const fb = document.getElementById(id);
+        if (fb) {
+            fb.classList.add("show");
+            fb.style.background   = isCorrect ? "var(--transsuccess-color)" : "var(--transdanger-color)";
+            fb.style.borderLeft   = isCorrect ? "4px solid var(--success-color)" : "4px solid var(--danger-color)";
+            fb.style.padding      = "var(--s)";
+            fb.style.borderRadius = "0 var(--radius-m) var(--radius-m) 0";
+            fb.innerHTML = (isCorrect ? "✅ <strong>Benar!</strong> " : "❌ <strong>Kurang tepat.</strong> ") + (quizAnswers[id] || "");
+        }
+    }
+
+    const sections  = document.querySelectorAll("[id^='ch']");
+    const sideLinks = document.querySelectorAll(".sidebar-menu-item[href]");
+    new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                const id = e.target.getAttribute("id");
+                sideLinks.forEach(l => { l.classList.remove("active"); if (l.getAttribute("href") === "#" + id) l.classList.add("active"); });
+            }
+        });
+    }, { threshold: 0.25 }).observe && sections.forEach(s => new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { const id = e.target.getAttribute("id"); sideLinks.forEach(l => { l.classList.remove("active"); if (l.getAttribute("href") === "#" + id) l.classList.add("active"); }); } });
+    }, { threshold: 0.25 }).observe(s));
+</script>
+</body>
+</html>

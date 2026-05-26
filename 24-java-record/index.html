@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Record — Modul Belajar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .code-block{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin:var(--m) 0}
+        .code-block pre{margin:0}
+        .code-block code.hljs{border-radius:var(--radius-l);font-size:.82rem;line-height:1.6}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);border-radius:0 var(--radius-m) var(--radius-m) 0;padding:var(--m);margin:var(--m) 0}
+        .info-box.warning{border-left-color:var(--warning-color);background:var(--transwarning-color)}
+        .info-box.success{border-left-color:var(--success-color);background:var(--transsuccess-color)}
+        .info-box.danger{border-left-color:var(--danger-color);background:var(--transdanger-color)}
+        .info-box .info-box-title{font-weight:700;margin-bottom:var(--xs);font-size:var(--s)}
+        .info-box p{margin:0;font-size:var(--s)}
+        .line-annotation{box-sizing:border-box;max-width:77dvw;overflow:auto;margin:var(--m) 0}
+        .line-annotation table{width:100%}
+        .line-annotation th{background:var(--transprimary-color)}
+        .quiz-option{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) var(--m);border-radius:var(--radius-m);border:var(--border);cursor:pointer;margin-bottom:var(--s);transition:background .15s;font-size:var(--s)}
+        .quiz-option:hover{background:var(--transprimary-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{margin-top:var(--s);font-size:var(--s);font-weight:600;display:none}
+        .quiz-feedback.show{display:block}
+        .comparison-box{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);max-width:77dvw;box-sizing:border-box;margin:var(--m) 0}
+        @media(max-width:600px){.comparison-box{grid-template-columns:1fr}}
+        .comparison-wrong{border:1px solid var(--danger-color);border-radius:var(--radius-m);overflow:hidden}
+        .comparison-correct{border:1px solid var(--success-color);border-radius:var(--radius-m);overflow:hidden}
+        .comparison-header{padding:var(--xs) var(--m);font-weight:700;font-size:var(--xs)}
+        .comparison-wrong .comparison-header{background:var(--transdanger-color);color:var(--danger-color)}
+        .comparison-correct .comparison-header{background:var(--transsuccess-color);color:var(--success-color)}
+        .comparison-body{font-size:.78rem}
+        .comparison-body pre{margin:0;border-radius:0}
+        .comparison-body code.hljs{border-radius:0;font-size:.78rem}
+        .analogy-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border:1px solid var(--second-primary-color);background:var(--transsecond-primary-color);border-radius:var(--radius-m);padding:var(--m);margin:var(--m) 0}
+        .analogy-box .analogy-title{font-weight:700;color:var(--second-primary-color);margin-bottom:var(--xs);font-size:var(--s)}
+        .analogy-box p{margin:0;font-size:var(--s)}
+        .chapter-banner{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color) 0%,var(--transsecond-primary-color) 100%);border-radius:var(--radius-x);padding:var(--x) var(--l);margin-bottom:var(--m)}
+        .chapter-banner .chapter-number{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary-color);margin-bottom:var(--xs)}
+        .chapter-banner .chapter-title{font-size:var(--xx);font-weight:800;margin-bottom:var(--xs)}
+        .chapter-banner .chapter-desc{font-size:var(--s);color:var(--transtext-color);margin:0}
+        .summary-card{box-sizing:border-box;max-width:77dvw;overflow:auto;border:var(--border);border-radius:var(--radius-l);padding:var(--m);display:grid;gap:var(--s)}
+        .summary-row{display:flex;align-items:flex-start;gap:var(--m);padding:var(--s) 0;border-bottom:var(--border);font-size:var(--s)}
+        .summary-row:last-child{border-bottom:none}
+        .summary-icon{font-size:var(--l);min-width:2rem;text-align:center}
+        .summary-row strong{display:block;margin-bottom:2px}
+        .bp-list{list-style:none;padding:0;margin:0}
+        .bp-list li{display:flex;gap:var(--s);padding:var(--xs) 0;font-size:var(--s);border-bottom:1px dashed var(--border-color)}
+        .bp-list li:last-child{border-bottom:none}
+        .section-divider{border:none;border-top:2px dashed var(--border-color);margin:var(--x) 0}
+
+        /* Auto-generated member cards */
+        .auto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--m);max-width:77dvw;box-sizing:border-box;margin:var(--m) 0}
+        .auto-card{border:var(--border);border-radius:var(--radius-l);padding:var(--m)}
+        .auto-card-icon{font-size:1.5rem;margin-bottom:var(--xs)}
+        .auto-card-name{font-weight:800;font-size:var(--s);color:var(--primary-color);font-family:monospace}
+        .auto-card-sig{font-size:var(--xs);font-family:monospace;background:var(--transprimary-color);padding:2px 8px;border-radius:var(--radius-s);display:inline-block;margin:4px 0}
+        .auto-card-desc{font-size:var(--xs);color:var(--transtext-color)}
+
+        /* Limits grid */
+        .limit-item{display:flex;gap:var(--s);padding:var(--s) 0;border-bottom:1px dashed var(--border-color);font-size:var(--s)}
+        .limit-item:last-child{border-bottom:none}
+        .limit-icon{min-width:1.5rem;text-align:center}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠 Intro</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 Chapters</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-1">1. Masalah Tanpa Record</a>
+                <a class="bottom-nav-item" href="#chapter-2">2. Sintaks Dasar Record</a>
+                <a class="bottom-nav-item" href="#chapter-3">3. Constructor Record</a>
+                <a class="bottom-nav-item" href="#chapter-4">4. Method & Interface</a>
+                <a class="bottom-nav-item" href="#chapter-5">5. Static Member</a>
+                <a class="bottom-nav-item" href="#chapter-6">6. Generics & Annotation</a>
+                <a class="bottom-nav-item" href="#chapter-7">7. Record Patterns</a>
+                <a class="bottom-nav-item" href="#chapter-8">8. Reflection & Limits</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+    <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java Record</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro"     class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🧠</div><span>Intro & Why Record</span></a>
+        <a href="#chapter-1" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">😩</div><span>1. Masalah Tanpa Record</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📦</div><span>2. Sintaks Dasar</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔧</div><span>3. Constructor Record</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚙️</div><span>4. Method & Interface</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📌</div><span>5. Static Member</span></a>
+        <a href="#chapter-6" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏷️</div><span>6. Generics & Annotation</span></a>
+        <a href="#chapter-7" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🎯</div><span>7. Record Patterns</span></a>
+        <a href="#chapter-8" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔍</div><span>8. Reflection & Limits</span></a>
+        <a href="#summary"   class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📋</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">☕ Java Record</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a href="#chapter-2" class="container-header-nav-item"><span class="container-header-nav-item-text">Sintaks Dasar</span></a>
+                    <a href="#chapter-3" class="container-header-nav-item"><span class="container-header-nav-item-text">Constructor</span></a>
+                    <a href="#chapter-7" class="container-header-nav-item"><span class="container-header-nav-item-text">Record Patterns</span></a>
+                    <a href="#summary"   class="container-header-nav-item"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===== INTRO ===== -->
+        <div id="intro" class="card-wrapper max-width-1000">
+            <div style="text-align:center;padding:var(--m) 0;">
+                <div style="font-size:3.5rem;">📦</div>
+                <div class="text-title" style="font-size:var(--xxx);margin-top:var(--s);">Java Record</div>
+                <p style="color:var(--transtext-color);font-size:var(--s);max-width:600px;margin:var(--s) auto 0;">
+                    Fitur Java 16 (GA) yang memperkenalkan cara ringkas mendefinisikan kelas data immutable — tanpa boilerplate getter, equals, hashCode, dan toString. Seperti <code>readonly</code> class di bahasa modern.
+                </p>
+            </div>
+            <div class="flex-ais-jcc gap-m" style="margin:var(--m) 0;">
+                <div class="badge text-white bg-primary"><p>Java 16 (GA)</p></div>
+                <div class="badge text-white bg-success"><p>Immutable Data Carrier</p></div>
+                <div class="badge text-white" style="background:var(--second-primary-color);"><p>PHP/Laravel Analogy</p></div>
+                <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="text-subtitle">🧠 Record itu Apa, Tepatnya?</div>
+            <p>Record adalah <strong>kelas data immutable</strong> yang dideklarasikan secara ringkas. Dengan satu baris deklarasi, compiler Java otomatis menghasilkan: konstruktor, accessor (getter), <code>equals()</code>, <code>hashCode()</code>, dan <code>toString()</code>. Record sangat cocok untuk membawa data antar lapisan aplikasi — DTO, response API, value object, dll.</p>
+
+            <div class="display-grid" style="gap:var(--m);margin:var(--m) 0;">
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Sebelum Record: Class Biasa (boilerplate)</div>
+                        <div class="timeline-content-desc">Untuk membuat kelas data sederhana, kamu harus menulis: field, constructor, getter untuk setiap field, equals(), hashCode(), toString(). Bisa 50–100 baris hanya untuk 3 field data.</div>
+                        <div class="timeline-content-time">Java &lt; 16</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Workaround: Lombok @Data</div>
+                        <div class="timeline-content-desc">Library Lombok dengan <code>@Data</code> atau <code>@Value</code> mengurangi boilerplate via annotation processing. Masih butuh dependency eksternal dan kadang menyebabkan masalah dengan IDE/build tool.</div>
+                        <div class="timeline-content-time">Java 8+ (workaround)</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Java 16: Record — Solusi Native</div>
+                        <div class="timeline-content-desc">Record hadir sebagai fitur bahasa native. <code>record Point(int x, int y) {}</code> = satu baris untuk kelas data lengkap. Tidak butuh library eksternal, langsung didukung compiler dan semua tools Java.</div>
+                        <div class="timeline-content-time">Java 16 (GA) ✨</div>
+                    </div>
+                    <div><span class="timeline-key">4</span></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Java 21: Record Patterns</div>
+                        <div class="timeline-content-desc">Record Patterns di pattern matching (instanceof) memungkinkan destructuring langsung dari instanceof check — fitur yang sangat powerful untuk kode yang lebih ekspresif.</div>
+                        <div class="timeline-content-time">Java 21 (GA)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analogy-box">
+                <div class="analogy-title">🔗 Titik Tolak dari PHP/Laravel</div>
+                <p>Di PHP 8.2+, ada <strong>Readonly Class</strong>: <code>readonly class Point { public function __construct(public int $x, public int $y) {} }</code>. Di Laravel, kamu sering pakai array asosiatif atau DTO sederhana untuk membawa data antar lapisan. Java Record adalah solusi yang jauh lebih terstruktur dan type-safe dari keduanya — otomatis immutable, otomatis punya equals/hashCode yang benar, dan otomatis bisa di-destructure dengan pattern matching.</p>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 1: MASALAH TANPA RECORD ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">😩 Masalah Tanpa Record: Boilerplate Class</div>
+                    <p class="chapter-desc">Untuk memahami nilai Record, lihat dulu betapa banyak kode yang harus ditulis hanya untuk membuat kelas data sederhana di Java klasik. Ini adalah pain point yang sudah lama dikeluhkan developer Java.</p>
+                </div>
+
+                <div class="text-subtitle">Kelas Data Tanpa Record — Versi Penuh</div>
+                <p>Bayangkan kamu butuh kelas <code>Customer</code> dengan 4 field: id, name, email, phone. Berikut yang harus kamu tulis <em>tanpa</em> Record:</p>
+
+                <div class="code-block"><pre><code class="language-java">// ❌ SEBELUM RECORD — boilerplate yang menyiksa
+// Ini untuk 4 field saja! Bayangkan kalau 10 field...
+public class Customer {
+    private final String id;
+    private final String name;
+    private final String email;
+    private final String phone;
+
+    // Constructor
+    public Customer(String id, String name, String email, String phone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    // Getter untuk setiap field (4 method!)
+    public String getId()    { return id; }
+    public String getName()  { return name; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
+
+    // equals — harus cover semua field secara manual
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        Customer c = (Customer) o;
+        return Objects.equals(id, c.id) &&
+               Objects.equals(name, c.name) &&
+               Objects.equals(email, c.email) &&
+               Objects.equals(phone, c.phone);
+    }
+
+    // hashCode — harus konsisten dengan equals
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, phone);
+    }
+
+    // toString — biar debugging lebih mudah
+    @Override
+    public String toString() {
+        return "Customer[id=" + id + ", name=" + name +
+               ", email=" + email + ", phone=" + phone + "]";
+    }
+}
+// Total: ~40 baris hanya untuk 4 field data 😰</code></pre></div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">😩 Tanpa Record — ~40 baris</div>
+                        <div class="comparison-body"><pre><code class="language-java">public class Customer {
+    private final String id;
+    private final String name;
+    private final String email;
+    private final String phone;
+    // constructor, 4 getter,
+    // equals, hashCode, toString
+    // ... 40 baris total
+}</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Dengan Record — 1 baris!</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Semua yang di atas, tapi 1 baris:
+public record Customer(
+    String id,
+    String name,
+    String email,
+    String phone
+) {}
+// Compiler auto-generate SEMUA boilerplate ✅</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Apa yang Otomatis Dihasilkan Record?</div>
+                    <p>Dengan deklarasi <code>record Customer(String id, String name, String email, String phone)</code>, compiler Java otomatis membuat: (1) field <code>private final</code> untuk setiap komponen, (2) <em>canonical constructor</em> yang menginisialisasi semua field, (3) <em>accessor method</em> (bukan getter biasa!) dengan nama sama persis dengan field, (4) <code>equals()</code> yang membandingkan semua komponen, (5) <code>hashCode()</code> yang konsisten, (6) <code>toString()</code> yang menampilkan semua komponen.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Readonly Class</div>
+                    <p>PHP 8.2: <code>readonly class Customer { public function __construct(public string $id, public string $name, public string $email, public string $phone) {} }</code>. Ini adalah padanan terdekat PHP untuk Record Java. Perbedaan: PHP readonly class tidak otomatis menghasilkan <code>equals()</code> dan <code>hashCode()</code> — PHP tidak memiliki konsep ini secara native. Java Record lebih lengkap karena semua tersedia otomatis.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz1">
+                    <p style="font-size:var(--s);font-weight:600;">Apa saja yang otomatis dihasilkan compiler ketika kamu mendeklarasikan sebuah Record?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">A. Hanya constructor dan toString()</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">B. Constructor, getter, dan equals()</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,true)">C. Constructor, accessor method, equals(), hashCode(), dan toString()</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">D. Hanya field private final dan constructor</div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 2: SINTAKS DASAR ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">📦 Sintaks Dasar Record</div>
+                    <p class="chapter-desc">Pelajari cara mendeklarasikan Record, cara mengaksesnya, dan bagaimana equals/hashCode/toString bekerja secara otomatis — semuanya dari kode <code>CustomerTest.java</code>.</p>
+                </div>
+
+                <div class="text-subtitle">Deklarasi & Penggunaan Dasar</div>
+                <div class="code-block"><pre><code class="language-java">// Customer.java — deklarasi Record paling dasar
+// Sintaks: public record NamaRecord(TipeParam namaParam, ...) { }
+public record Customer(String id, String name, String email, String phone) {
+  // body bisa kosong — semua sudah di-generate compiler
+}
+
+// CustomerTest.java — cara menggunakan Record
+@Test
+void createNewRecord() {
+    // Instansiasi persis sama dengan class biasa
+    var customer = new Customer("1", "Eko", "eko@localhost", "082131231");
+    assertNotNull(customer);
+
+    // toString() otomatis → "Customer[id=1, name=Eko, email=eko@localhost, phone=082131231]"
+    System.out.println(customer);
+}
+
+@Test
+void getProperty() {
+    var customer = new Customer("1", "Eko", "eko@localhost", "082131231");
+
+    // ⚠️ PENTING: Accessor bukan getId() tapi langsung id()!
+    // Tidak ada prefix "get" — ini berbeda dari JavaBean convention
+    assertEquals("1",            customer.id());      // bukan customer.getId()
+    assertEquals("Eko",          customer.name());    // bukan customer.getName()
+    assertEquals("eko@localhost",customer.email());   // bukan customer.getEmail()
+    assertEquals("082131231",    customer.phone());   // bukan customer.getPhone()
+}
+
+@Test
+void recordEquals() {
+    var customer1 = new Customer("1", "Eko", "eko@localhost", null);
+    var customer2 = new Customer("1", "Eko", "eko@localhost", null);
+
+    // equals() otomatis membandingkan SEMUA komponen
+    // Dua customer dengan nilai yang sama → equals() return true
+    assertTrue(customer1.equals(customer2));       // ✅
+
+    // hashCode() juga konsisten — same data = same hashCode
+    assertEquals(customer1.hashCode(), customer2.hashCode()); // ✅
+
+    // toString() menghasilkan representasi yang sama
+    assertEquals(customer1.toString(), customer2.toString()); // ✅
+}</code></pre></div>
+
+                <div class="text-subtitle">Anggota yang Otomatis Dibuat — Referensi Cepat</div>
+                <div class="auto-grid">
+                    <div class="auto-card">
+                        <div class="auto-card-icon">🔒</div>
+                        <div class="auto-card-name">Field private final</div>
+                        <div class="auto-card-sig">private final String id;</div>
+                        <div class="auto-card-desc">Setiap komponen record menjadi field <code>private final</code>. Tidak bisa diubah setelah konstruksi — ini yang membuat Record <strong>immutable</strong>.</div>
+                    </div>
+                    <div class="auto-card">
+                        <div class="auto-card-icon">🏗️</div>
+                        <div class="auto-card-name">Canonical Constructor</div>
+                        <div class="auto-card-sig">Customer(String id, String name, ...)</div>
+                        <div class="auto-card-desc">Constructor yang menerima semua komponen sebagai parameter. Ini adalah satu-satunya constructor yang bisa juga di-custom (lihat Chapter 3).</div>
+                    </div>
+                    <div class="auto-card">
+                        <div class="auto-card-icon">📖</div>
+                        <div class="auto-card-name">Accessor Method</div>
+                        <div class="auto-card-sig">public String id() { return id; }</div>
+                        <div class="auto-card-desc">Bukan <code>getId()</code>! Accessor Record menggunakan nama komponen langsung tanpa prefix "get". Ini adalah konvensi baru yang berbeda dari JavaBean.</div>
+                    </div>
+                    <div class="auto-card">
+                        <div class="auto-card-icon">⚖️</div>
+                        <div class="auto-card-name">equals()</div>
+                        <div class="auto-card-sig">public boolean equals(Object o)</div>
+                        <div class="auto-card-desc">Membandingkan semua komponen secara otomatis. Dua Record dengan nilai yang sama selalu <code>equals()</code> — berbeda dari class biasa yang default-nya membandingkan referensi.</div>
+                    </div>
+                    <div class="auto-card">
+                        <div class="auto-card-icon">#️⃣</div>
+                        <div class="auto-card-name">hashCode()</div>
+                        <div class="auto-card-sig">public int hashCode()</div>
+                        <div class="auto-card-desc">Konsisten dengan equals() — dua Record yang equals() pasti hashCode() yang sama. Penting untuk penggunaan di HashMap/HashSet.</div>
+                    </div>
+                    <div class="auto-card">
+                        <div class="auto-card-icon">🖨️</div>
+                        <div class="auto-card-name">toString()</div>
+                        <div class="auto-card-sig">public String toString()</div>
+                        <div class="auto-card-desc">Format: <code>NamaRecord[komponen1=nilai1, ...]</code>. Contoh: <code>Customer[id=1, name=Eko, ...]</code>. Berguna untuk logging dan debugging.</div>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Perhatian: Accessor Record vs JavaBean Getter</div>
+                    <p>Ini perbedaan yang sering membuat developer baru tersandung. Di JavaBean (class biasa): <code>customer.getId()</code>. Di Record: <code>customer.id()</code>. Beberapa library yang mengharapkan JavaBean convention (misal Jackson JSON untuk serialisasi) mungkin perlu konfigurasi tambahan agar bisa membaca Record. Spring Boot 2.7+ dan Jackson 2.12+ sudah mendukung Record secara native.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Pakai konvensi JavaBean getter</div>
+                        <div class="comparison-body"><pre><code class="language-java">record Customer(String id, String name) {}
+
+var c = new Customer("1", "Eko");
+// ❌ Ini TIDAK ada pada Record!
+c.getId();   // compile error
+c.getName(); // compile error</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Accessor tanpa prefix "get"</div>
+                        <div class="comparison-body"><pre><code class="language-java">record Customer(String id, String name) {}
+
+var c = new Customer("1", "Eko");
+// ✅ Accessor = nama komponen langsung
+c.id();    // "1"
+c.name();  // "Eko"</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz2">
+                    <p style="font-size:var(--s);font-weight:600;">Cara yang benar untuk mendapatkan nilai <code>email</code> dari <code>record Customer(String id, String name, String email)</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">A. <code>customer.getEmail()</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,true)">B. <code>customer.email()</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">C. <code>customer.Email()</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">D. <code>customer.get("email")</code></div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 3: CONSTRUCTOR ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">🔧 Tiga Jenis Constructor Record</div>
+                    <p class="chapter-desc">Record mendukung tiga jenis constructor: <strong>canonical</strong> (kustom), <strong>compact</strong> (ringkas untuk validasi), dan <strong>alternate</strong> (dengan parameter berbeda). Semuanya ada di <code>Customer.java</code> dan <code>Point.java</code>.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>Customer.java</code> & <code>Point.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// Customer.java — menampilkan TIGA jenis constructor sekaligus
+public record Customer(String id, String name, String email, String phone)
+    implements SayHello {
+
+  // ─── Jenis 1: Canonical Constructor (custom) ─────────────────────────
+  // Nama + parameter SAMA PERSIS dengan deklarasi record
+  // Digunakan untuk: validasi, normalisasi data, logging
+  public Customer(String id, String name, String email, String phone) {
+    System.out.println("Create Customer");  // Side effect saat pembuatan
+    this.id    = id.toLowerCase();          // Normalisasi: selalu lowercase
+    this.name  = name;                      // Simpan apa adanya
+    this.email = email != null ? email.toLowerCase() : null; // Null-safe normalize
+    this.phone = phone != null ? phone.toLowerCase() : null;
+  }
+
+  // ─── Jenis 2: Alternate Constructor ──────────────────────────────────
+  // Parameter lebih sedikit — WAJIB delegasikan ke canonical constructor
+  // menggunakan this(...)
+  public Customer(String id, String name, String email) {
+    this(id, name, email, null); // phone = null secara default
+  }
+
+  public Customer(String id, String name) {
+    this(id, name, null);        // email = null, phone = null
+  }
+
+  @Override
+  public String sayHello(String name) {
+    return "Hello " + name + ", my name is " + this.name;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Point.java — menampilkan COMPACT Constructor
+public record Point(@Valid int x, @Valid int y) {
+
+  // ─── Jenis 3: Compact Constructor ────────────────────────────────────
+  // Tidak ada parameter list, tidak ada this.x = x (dilakukan otomatis!)
+  // Digunakan untuk: validasi ringan, side effect, logging
+  // Setelah blok ini selesai, assignment x = x dan y = y dilakukan otomatis
+  public Point {
+    System.out.println("Create Point");
+    // Tempat yang tepat untuk validasi:
+    // if (x < 0) throw new IllegalArgumentException("x harus >= 0");
+  }
+}</code></pre></div>
+
+                <div class="text-subtitle">Bedah Tiga Jenis Constructor</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Jenis</th><th>Sintaks</th><th>Kapan Digunakan</th><th>Kunci</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><strong>Canonical</strong></td>
+                                <td><code>public Customer(String id, ...)</code></td>
+                                <td>Butuh normalisasi data (lowercase, trim), validasi kompleks, logging pembuatan objek</td>
+                                <td>Nama & parameter harus identik dengan deklarasi record. Harus assign semua field (<code>this.x = ...</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compact</strong></td>
+                                <td><code>public Point { ... }</code></td>
+                                <td>Validasi sederhana, side effect ringan. Tidak perlu assign field secara manual — JVM melakukannya otomatis setelah blok.</td>
+                                <td>Tidak ada <code>(parameter)</code> dan tidak ada <code>this.x = x</code>. Kamu bisa modifikasi nilai parameter sebelum di-assign: <code>x = Math.abs(x);</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alternate</strong></td>
+                                <td><code>public Customer(String id, String name)</code></td>
+                                <td>Buat objek dengan parameter lebih sedikit (optional fields). Harus memanggil canonical via <code>this(...)</code> sebagai baris pertama.</td>
+                                <td>WAJIB panggil <code>this(...)</code> ke canonical atau alternate lain sebagai baris pertama — mirip aturan <code>super()</code> di inheritance.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Test: Canonical Constructor — Normalisasi Data</div>
+                <div class="code-block"><pre><code class="language-java">// CustomerTest.java
+@Test
+void canonicalConstructor() {
+    // Input email dalam UPPERCASE
+    var customer = new Customer("1", "Eko", "EKO@LOCALHOST");
+    assertNotNull(customer);
+
+    assertEquals("1",            customer.id());
+    assertEquals("Eko",          customer.name());
+    // Canonical constructor mengubah email ke lowercase!
+    assertEquals("eko@localhost", customer.email()); // "EKO@LOCALHOST" → "eko@localhost"
+    assertNull(customer.phone());                    // Alternate constructor: phone = null
+}
+
+@Test
+void constructor() {
+    // Alternate constructor dengan 3 parameter (tanpa phone)
+    var customer = new Customer("1", "Eko", "eko@localhost");
+    assertNull(customer.phone()); // phone otomatis null
+}</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Constructor Chaining</div>
+                    <p>Di PHP, constructor chaining dilakukan via <code>self::__construct()</code> atau biasanya dengan parameter default: <code>public function __construct(string $id, string $name, ?string $email = null, ?string $phone = null)</code>. Java Record memisahkan konstruktor dengan jumlah parameter berbeda secara eksplisit. Compact Constructor Java mirip dengan menempatkan logika validasi di awal <code>__construct</code> sebelum assignment. Keduanya bertujuan sama: memastikan objek selalu dalam state yang valid sejak penciptaannya.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Alternate constructor tidak delegasi</div>
+                        <div class="comparison-body"><pre><code class="language-java">public record Customer(String id, String name, String email) {
+  // COMPILE ERROR: alternate constructor WAJIB
+  // panggil this(...) sebagai baris PERTAMA
+  public Customer(String id, String name) {
+    this.id = id;    // ← error: baris pertama harus this(...)
+    this.name = name;
+    this.email = null;
+  }
+}</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Delegasi ke canonical via this()</div>
+                        <div class="comparison-body"><pre><code class="language-java">public record Customer(String id, String name, String email) {
+  // ✅ Delegasi ke canonical constructor
+  public Customer(String id, String name) {
+    this(id, name, null); // WAJIB baris pertama!
+    // Tidak ada kode lain yang boleh sebelum this(...)
+  }
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz3">
+                    <p style="font-size:var(--s);font-weight:600;">Apa keunggulan Compact Constructor (<code>public Point { ... }</code>) dibanding Canonical Constructor untuk validasi?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">A. Compact Constructor lebih cepat saat runtime</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,true)">B. Compact Constructor tidak perlu menulis assignment <code>this.x = x</code> — otomatis dilakukan JVM, cukup tulis logika validasi/modifikasi saja</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">C. Compact Constructor bisa menerima parameter tambahan di luar komponen record</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">D. Compact Constructor menggantikan semua jenis constructor lain</div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 4: METHOD & INTERFACE ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">⚙️ Method Tambahan & Implementasi Interface</div>
+                    <p class="chapter-desc">Record bukan hanya wadah data pasif. Kamu bisa menambahkan method instance, dan Record bisa mengimplementasikan Interface — persis seperti class biasa. Bahkan kamu bisa override <code>toString()</code> atau accessor yang otomatis dibuat.</p>
+                </div>
+
+                <div class="text-subtitle">Record yang Mengimplementasikan Interface</div>
+                <div class="code-block"><pre><code class="language-java">// SayHello.java — interface biasa
+public interface SayHello {
+  String sayHello(String name);
+}
+
+// Customer.java — Record mengimplementasikan interface
+public record Customer(String id, String name, String email, String phone)
+    implements SayHello {    // ← implements persis seperti class biasa!
+
+  // ... constructor ...
+
+  // Implementasi method dari interface
+  @Override
+  public String sayHello(String name) {
+    return "Hello " + name + ", my name is " + this.name;
+    //                                                ↑ ini field Record (this.name)
+    //                               parameter name ↑ menghide field, jadi butuh this.name
+  }
+}
+
+// CustomerTest.java
+@Test
+void recordMethod() {
+    var customer = new Customer("1", "Eko", "EKO@LOCALHOST");
+    assertEquals("Hello Budi, my name is Eko", customer.sayHello("Budi"));
+}</code></pre></div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>implements SayHello</code></td>
+                                <td>Record bisa implements satu atau lebih interface — sintaksnya identik dengan class. Record TIDAK bisa extend class lain (sudah implisit extends <code>java.lang.Record</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><code>public String sayHello(String name)</code></td>
+                                <td>Method instance biasa yang ditambahkan ke Record. Bisa mengakses semua komponen Record via <code>this.namaKomponen</code> atau langsung via accessor: <code>this.name()</code> atau <code>name()</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>this.name</code> vs <code>name</code></td>
+                                <td>Perhatikan dalam method <code>sayHello(String name)</code>, parameter <code>name</code> meng-<em>shadow</em> (menyembunyikan) komponen record <code>name</code>. Untuk mengakses komponen record, gunakan <code>this.name</code> (field) atau <code>this.name()</code> (accessor). Ini adalah gotcha yang perlu diwaspadai!</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Override Accessor — Kasus Khusus</div>
+                <p>Kamu juga bisa meng-override accessor yang otomatis dibuat, misalnya untuk menambahkan transformasi atau validasi saat membaca nilai:</p>
+
+                <div class="code-block"><pre><code class="language-java">public record Temperature(double celsius) {
+
+  // Override accessor untuk custom behavior saat read
+  @Override
+  public double celsius() {
+    return Math.round(celsius * 100.0) / 100.0; // Bulatkan ke 2 desimal
+  }
+
+  // Tambah accessor turunan (bukan komponen record, tapi method biasa)
+  public double fahrenheit() {
+    return celsius * 9.0 / 5.0 + 32;
+  }
+
+  public double kelvin() {
+    return celsius + 273.15;
+  }
+}
+
+// Penggunaan
+var t = new Temperature(36.6666);
+System.out.println(t.celsius());    // 36.67 (dibulatkan)
+System.out.println(t.fahrenheit()); // 97.8
+System.out.println(t.kelvin());     // 309.8166</code></pre></div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Aturan: Apa yang Bisa dan Tidak Bisa di Record</div>
+                    <p><span style="color:var(--success-color);font-weight:700;">BISA: </span>Tambah instance method, static method, override accessor, implements interface, tambah inner class. <span style="color:var(--danger-color);font-weight:700;">TIDAK BISA: </span>Extend class lain (sudah extends Record), tambah instance field di luar komponen, buat instance mutable (field selalu final), buat record abstract, buat record inner class non-static.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Interface Implementation</div>
+                    <p>PHP: <code>readonly class Customer implements SayHello { public function sayHello(string $name): string { return "Hello $name, my name is {$this->name}"; } }</code>. Java Record melakukan hal yang sama — implementasi interface tidak berbeda dari class biasa. Satu hal yang berbeda: di Java, kamu tidak bisa extends class lain dalam Record, karena Record sudah secara implisit extends <code>java.lang.Record</code>. Ekuivalennya di PHP: readonly class tidak bisa extend class yang punya mutable property.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz4">
+                    <p style="font-size:var(--s);font-weight:600;">Dalam method instance sebuah Record, kenapa kadang perlu menulis <code>this.name</code> bukan langsung <code>name</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">A. Karena Record selalu butuh <code>this</code> untuk mengakses field</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,true)">B. Karena parameter method mungkin memiliki nama yang sama dengan komponen record, sehingga shadowing terjadi — <code>this.name</code> memastikan yang diakses adalah field record, bukan parameter</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">C. Karena akses field Record selalu butuh qualifier</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">D. Karena <code>name</code> saja mengembalikan null di Record</div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 5: STATIC MEMBER ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 5</div>
+                    <div class="chapter-title">📌 Static Member dalam Record</div>
+                    <p class="chapter-desc">Record bisa memiliki static field (konstanta) dan static method — berguna untuk nilai default, factory method, dan helper. Lihat bagaimana <code>Point.java</code> menggunakannya.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>Point.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// Point.java
+public record Point(@Valid int x, @Valid int y) {
+
+  // Compact Constructor (validasi/side effect)
+  public Point {
+    System.out.println("Create Point");
+  }
+
+  // ─── Static Field (Konstanta) ──────────────────────────────────────────
+  // Konstanta dalam Record WAJIB dideklarasikan sebagai static
+  // (instance field di luar komponen tidak diizinkan)
+  public static final Point ZERO = new Point(0, 0);
+  // "Origin point" yang sering dibutuhkan, tidak perlu buat berkali-kali
+
+  // ─── Static Method (Factory Method) ───────────────────────────────────
+  // Pola Factory Method: beri nama yang lebih ekspresif dari "new Point()"
+  public static Point create(int x, int y) {
+    return new Point(x, y);
+    // Manfaat factory method: bisa tambahkan validasi, caching, atau
+    // logika lain tanpa mengubah constructor
+  }
+}
+
+// PointTest.java
+@Test
+void staticMember() {
+    // Akses static field langsung dari nama class
+    assertEquals(0, Point.ZERO.x()); // (0,0) sudah tersedia sebagai konstanta
+    assertEquals(0, Point.ZERO.y());
+
+    // Gunakan factory method sebagai alternatif new Point()
+    var point = Point.create(10, 10);
+    assertEquals(10, point.x());
+    assertEquals(10, point.y());
+}</code></pre></div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th><th>Mengapa Harus Static</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>public static final Point ZERO</code></td>
+                                <td>Konstanta dalam Record. Harus <code>static</code> karena Record tidak bisa punya instance field tambahan di luar komponen yang dideklarasikan. <code>final</code> agar nilainya tidak bisa diganti.</td>
+                                <td>Record melarang instance field non-komponen untuk menjaga immutability dan kesederhanaan. Static field tidak melanggar prinsip ini karena bukan bagian dari "state" instance.</td>
+                            </tr>
+                            <tr>
+                                <td><code>public static Point create(int x, int y)</code></td>
+                                <td>Static factory method — alternatif dari <code>new Point(x, y)</code>. Manfaat: nama lebih ekspresif (<code>Point.create()</code> vs <code>new Point()</code>), bisa ditambahkan validasi tanpa menyentuh constructor, bisa return cached instance.</td>
+                                <td>Pola Factory Method sangat umum di Java. Contoh familiar: <code>List.of()</code>, <code>Map.of()</code>, <code>Optional.of()</code> — semuanya static factory method.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Static Method</div>
+                    <p>Di PHP: <code>class Point { public static Point $ZERO; public static function create(int $x, int $y): self { return new self($x, $y); } }</code>. Konsep identik — static member tetap ada dalam Record Java sama seperti dalam class PHP. Perbedaan: Java lebih strict — kamu tidak bisa tambahkan instance property biasa di Record. Di PHP readonly class, kamu masih bisa tambahkan method dan property (tapi property tidak bisa diubah setelah init).</p>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Pattern: Factory Method di Record</div>
+                    <p>Factory method sangat berguna saat kamu butuh membuat Record dari format lain. Misalnya: <code>public static Point fromString(String s) { var parts = s.split(","); return new Point(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])); }</code> — sehingga bisa dipanggil <code>Point.fromString("10,20")</code>. Ini lebih ekspresif dan memisahkan logika parsing dari konstruktor utama.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz5">
+                    <p style="font-size:var(--s);font-weight:600;">Kenapa field tambahan di dalam Record harus dideklarasikan sebagai <code>static</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">A. Karena semua field dalam Record harus bisa diakses dari mana saja</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,true)">B. Karena Record tidak mengizinkan instance field di luar komponen yang dideklarasikan — hanya static field yang diperbolehkan sebagai tambahan</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">C. Karena field static lebih hemat memori dari instance field</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">D. Karena field instance di Record akan konflik dengan constructor</div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 6: GENERICS & ANNOTATION ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 6</div>
+                    <div class="chapter-title">🏷️ Generics & Annotation pada Record</div>
+                    <p class="chapter-desc">Record mendukung generics seperti class biasa, dan annotation pada komponen Record secara otomatis diterapkan ke field, accessor, dan parameter constructor — fitur yang sangat berguna untuk framework validasi.</p>
+                </div>
+
+                <div class="text-subtitle">Record dengan Generics — <code>Data.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// Data.java — Record generic paling sederhana
+public record Data<T>(T data) {
+  // T adalah type parameter — bisa berisi tipe apa saja
+  // Sama persis dengan generic class biasa
+}
+
+// DataTest.java
+@Test
+void generic() {
+    // Data<String> — T = String
+    var data = new Data<String>("Eko");
+    assertEquals("Eko", data.data()); // accessor mengembalikan String
+
+    // Data<Integer> — T = Integer
+    var data2 = new Data<Integer>(100);
+    assertEquals(100, data2.data()); // accessor mengembalikan Integer
+}
+
+// Contoh penggunaan di API response wrapper:
+// Data<Customer> customerData = new Data<>(customer);
+// Data<List<Product>> productsData = new Data<>(productList);
+// Data<Map<String, String>> configData = new Data<>(config);</code></pre></div>
+
+                <div class="text-subtitle">Annotation pada Komponen — <code>Point.java</code></div>
+                <p>Ketika kamu menaruh annotation pada komponen Record, annotation tersebut <strong>dipropagasikan ke tiga tempat sekaligus</strong>: field, accessor method, dan parameter constructor. Ini diatur oleh <code>@Target</code> pada annotation itu sendiri.</p>
+
+                <div class="code-block"><pre><code class="language-java">// Valid.java — Custom Annotation
+@Target({
+    ElementType.FIELD,      // bisa dipakai pada field
+    ElementType.METHOD,     // bisa dipakai pada method
+    ElementType.PARAMETER   // bisa dipakai pada parameter
+})
+@Retention(RetentionPolicy.RUNTIME) // Tersedia saat runtime (untuk reflection)
+@Documented
+public @interface Valid {
+}
+
+// Point.java — menggunakan annotation pada komponen
+public record Point(@Valid int x, @Valid int y) {
+  // @Valid pada komponen x dan y akan otomatis dipropagasikan ke:
+  // 1. Field: private final int x (karena @Target includes FIELD)
+  // 2. Method: public int x() (karena @Target includes METHOD)
+  // 3. Constructor param: Point(int x, ...) (karena @Target includes PARAMETER)
+  public Point {
+    System.out.println("Create Point");
+  }
+}
+
+// PointTest.java — membuktikan propagasi annotation via Reflection
+@Test
+void annotation() throws NoSuchFieldException, NoSuchMethodException {
+    // Cek annotation pada FIELD
+    assertNotNull(Point.class.getDeclaredField("x").getAnnotation(Valid.class)); // ✅
+    assertNotNull(Point.class.getDeclaredField("y").getAnnotation(Valid.class)); // ✅
+
+    // Cek annotation pada METHOD (accessor)
+    assertNotNull(Point.class.getDeclaredMethod("x").getAnnotation(Valid.class)); // ✅
+    assertNotNull(Point.class.getDeclaredMethod("y").getAnnotation(Valid.class)); // ✅
+
+    // Cek annotation pada CONSTRUCTOR PARAMETER
+    assertNotNull(Point.class.getConstructors()[0]
+        .getParameters()[0].getAnnotation(Valid.class)); // ✅ param x
+    assertNotNull(Point.class.getConstructors()[0]
+        .getParameters()[1].getAnnotation(Valid.class)); // ✅ param y
+}</code></pre></div>
+
+                <div class="text-subtitle">Bedah Annotation Propagation</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>@Target di Annotation</th><th>Dipropagasikan ke</th><th>Contoh penggunaan nyata</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>ElementType.FIELD</code></td><td>Field private final komponen</td><td>Framework ORM (Hibernate) membaca annotation field untuk mapping kolom</td></tr>
+                            <tr><td><code>ElementType.METHOD</code></td><td>Accessor method komponen</td><td>Jackson membaca annotation method untuk serialisasi JSON</td></tr>
+                            <tr><td><code>ElementType.PARAMETER</code></td><td>Parameter canonical constructor</td><td>Bean Validation (Jakarta Validation) membaca annotation parameter untuk validasi</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Praktis: Jakarta Validation dengan Record</div>
+                    <p>Dengan propagasi annotation ini, kamu bisa langsung menggunakan Jakarta Validation (<code>@NotNull</code>, <code>@NotBlank</code>, <code>@Email</code>) pada komponen Record, dan framework seperti Spring Boot akan secara otomatis memvalidasinya saat menerima request body:</p>
+                </div>
+
+                <div class="code-block"><pre><code class="language-java">// DTO Request menggunakan Record + Jakarta Validation
+import jakarta.validation.constraints.*;
+
+public record CreateCustomerRequest(
+    @NotBlank(message = "ID tidak boleh kosong")
+    String id,
+
+    @NotBlank @Size(min = 2, max = 100)
+    String name,
+
+    @Email(message = "Format email tidak valid")
+    String email
+) {}
+
+// Di Spring Boot Controller:
+@PostMapping("/customers")
+public ResponseEntity&lt;Customer&gt; create(
+    @RequestBody @Valid CreateCustomerRequest request
+) {
+    // Jika validasi gagal → 400 Bad Request otomatis!
+    var customer = new Customer(request.id(), request.name(), request.email(), null);
+    return ResponseEntity.ok(customer);
+}</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Form Request</div>
+                    <p>Di Laravel, validasi request dilakukan di <code>FormRequest</code> dengan method <code>rules()</code>: <code>return ['email' => 'required|email', 'name' => 'required|min:2']</code>. Di Java Spring Boot, Record + <code>@Valid</code> + Jakarta Validation annotation mencapai hal yang sama tapi dengan pendekatan type-safe berbasis annotation. Keuntungan Java: aturan validasi berada langsung di deklarasi field (lebih dekat dengan data), type-safe, dan langsung terlihat di IDE saat penggunaan.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz6">
+                    <p style="font-size:var(--s);font-weight:600;">Jika annotation <code>@Valid</code> hanya memiliki <code>@Target({ElementType.FIELD})</code>, apa yang terjadi saat digunakan pada komponen Record?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">A. Annotation dipropagasikan ke field, accessor method, dan parameter constructor</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,true)">B. Annotation HANYA dipropagasikan ke field — accessor dan constructor parameter tidak mendapatkan annotation</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">C. Annotation tidak bisa digunakan pada komponen Record sama sekali</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">D. Compiler akan error karena annotation tidak kompatibel dengan Record</div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 7: RECORD PATTERNS ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 7</div>
+                    <div class="chapter-title">🎯 Record Patterns — Destructuring di Java 21</div>
+                    <p class="chapter-desc">Record Patterns (Java 21) adalah fitur yang memungkinkan destructuring langsung saat pattern matching dengan <code>instanceof</code>. Ini membuat kode yang memproses hierarki data jauh lebih ekspresif dan aman dari null.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>PointTest.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// PointTest.java
+// Data Records yang digunakan
+public record Point(int x, int y) {}
+public record Line(Point start, Point end) {} // Record nested di dalam Record
+
+// Method yang memproses objek berbeda tipe
+public void printObject(Object object) {
+
+    // ─── Record Pattern: Destructuring langsung di instanceof ─────────────
+    // Tidak perlu: instanceof check → cast → akses field satu per satu
+    // Langsung: instanceof + destructure semua field sekaligus!
+
+    // Kasus 1: Jika object adalah Line → destructure langsung sampai ke Point
+    if (object instanceof Line(Point(int startX, int startY), Point(int endX, int endY))) {
+        // startX, startY, endX, endY LANGSUNG tersedia di sini!
+        // Tidak perlu: ((Line)object).start().x() — itu sudah di-extract otomatis
+        System.out.println(startX); // 0
+        System.out.println(startY); // 0
+        System.out.println(endX);   // 10
+        System.out.println(endY);   // 10
+    }
+
+    // Kasus 2: Jika object adalah Point → destructure field x dan y
+    else if (object instanceof Point(int x, int y)) {
+        System.out.println(x); // langsung bisa dipakai!
+        System.out.println(y);
+    }
+
+    else {
+        System.out.println(object);
+    }
+}
+
+@Test
+void beforeRecordPatterns() {
+    printObject(new Point(10, 10));
+    // Output: 10, 10
+
+    printObject(new Line(new Point(0, 0), new Point(10, 10)));
+    // Output: 0, 0, 10, 10
+}</code></pre></div>
+
+                <div class="text-subtitle">Evolusi: Cara Lama vs Record Patterns</div>
+                <div class="code-block"><pre><code class="language-java">// ─── CARA LAMA (sebelum Record Patterns) — verbose ──────────────────────
+if (object instanceof Line) {
+    Line line = (Line) object;              // Cast manual
+    Point start = line.start();             // Akses komponen
+    Point end   = line.end();
+    int startX  = start.x();               // Akses nested komponen
+    int startY  = start.y();
+    int endX    = end.x();
+    int endY    = end.y();
+    System.out.println(startX + ", " + startY);
+    System.out.println(endX + ", " + endY);
+}
+
+// ─── CARA BARU (Java 21, Record Patterns) — ringkas ──────────────────────
+if (object instanceof Line(Point(int startX, int startY), Point(int endX, int endY))) {
+    System.out.println(startX + ", " + startY); // Langsung tersedia!
+    System.out.println(endX + ", " + endY);
+}
+// Hemat 6 baris, tidak ada cast, tidak ada akses nested bertingkat,
+// dan LEBIH AMAN: tidak ada ClassCastException yang mungkin</code></pre></div>
+
+                <div class="text-subtitle">Bedah Sintaks Record Pattern</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Elemen</th><th>Penjelasan</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>object instanceof Point(int x, int y)</code></td>
+                                <td>Pengecekan tipe + destructuring sekaligus. Jika <code>object</code> adalah <code>Point</code>, variabel <code>x</code> dan <code>y</code> langsung tersedia dalam scope blok if. Jika bukan <code>Point</code>, blok dilewati.</td>
+                            </tr>
+                            <tr>
+                                <td><code>Line(Point(int startX, int startY), Point(int endX, int endY))</code></td>
+                                <td>Nested destructuring — Line punya dua komponen bertipe Point, dan masing-masing Point juga di-destructure. Ini bisa nested sedalam yang diperlukan selama semua tipe adalah Record.</td>
+                            </tr>
+                            <tr>
+                                <td>Nama variabel bebas</td>
+                                <td>Nama variabel di dalam pattern (<code>startX</code>, <code>startY</code>) bebas ditentukan — tidak harus sama dengan nama komponen record. Yang penting urutan dan tipenya cocok.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Record Patterns Bekerja dengan Switch Expression</div>
+                    <p>Record Pattern juga bekerja dengan <code>switch</code> expression (Java 21 sealed class + switch) yang lebih powerful:</p>
+                </div>
+
+                <div class="code-block"><pre><code class="language-java">// Record Pattern dalam switch expression
+String describe(Object shape) {
+    return switch (shape) {
+        case Point(int x, int y)
+            -> "Titik di (%d, %d)".formatted(x, y);
+        case Line(Point(int x1, int y1), Point(int x2, int y2))
+            -> "Garis dari (%d,%d) ke (%d,%d)".formatted(x1, y1, x2, y2);
+        default
+            -> "Bentuk tidak dikenal: " + shape;
+    };
+}
+
+System.out.println(describe(new Point(5, 10)));
+// Output: Titik di (5, 10)
+
+System.out.println(describe(new Line(new Point(0,0), new Point(10,10))));
+// Output: Garis dari (0,0) ke (10,10)</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP match + Destructuring</div>
+                    <p>PHP tidak memiliki pattern matching bawaan yang sekuat Java. Padanan terdekat adalah kombinasi <code>match(true)</code> + <code>instanceof</code> + manual property access: <code>match(true) { $obj instanceof Point => "{$obj->x}, {$obj->y}", ... }</code>. Di Python ada <code>match-case</code> dengan structural pattern matching yang mirip: <code>match point: case Point(x=x, y=y): print(x, y)</code>. Java 21 Record Patterns lebih powerful karena fully type-safe dan terintegrasi dengan compiler — jika tipe berubah, compiler langsung error.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz7">
+                    <p style="font-size:var(--s);font-weight:600;">Apa yang terjadi jika kamu menulis <code>if (obj instanceof Point(int a, int b))</code> dan <code>obj</code> bertipe <code>Line</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,false)">A. ClassCastException dilempar saat runtime</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,true)">B. Blok if dilewati — variabel <code>a</code> dan <code>b</code> tidak tersedia, tidak ada exception</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,false)">C. Compile error karena tipe tidak cocok</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,false)">D. <code>a</code> dan <code>b</code> bernilai 0 (default int)</div>
+                    <div class="quiz-feedback" id="quiz7-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 8: REFLECTION & LIMITS ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 8</div>
+                    <div class="chapter-title">🔍 Reflection & Keterbatasan Record</div>
+                    <p class="chapter-desc">Java Reflection API mendapat dukungan khusus untuk Record — kamu bisa mengidentifikasi Record dan mengiterasi komponennya secara programatik. Di sisi lain, Record memiliki batasan yang sengaja dirancang untuk menjaga sifat immutable-nya.</p>
+                </div>
+
+                <div class="text-subtitle">Reflection pada Record</div>
+                <div class="code-block"><pre><code class="language-java">// CustomerTest.java
+@Test
+void reflection() {
+    // Cek apakah sebuah class adalah Record
+    assertTrue(Customer.class.isRecord()); // ✅ true untuk Record
+
+    // Dapatkan semua komponen Record (bukan field biasa, tapi RecordComponent)
+    RecordComponent[] components = Customer.class.getRecordComponents();
+    assertEquals(4, components.length); // id, name, email, phone = 4 komponen
+
+    for (RecordComponent component : components) {
+        System.out.println(component.getName()); // "id", "name", "email", "phone"
+        System.out.println(component.getType()); // class java.lang.String (x4)
+        // Juga bisa: component.getAccessor() → Method objek accessor
+        // component.getAnnotations() → semua annotation pada komponen
+    }
+}</code></pre></div>
+
+                <div class="text-subtitle">API Reflection Khusus Record</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>API</th><th>Return Type</th><th>Kegunaan</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>Class.isRecord()</code></td><td><code>boolean</code></td><td>Cek apakah class adalah Record — berguna untuk generic serializer/deserializer</td></tr>
+                            <tr><td><code>Class.getRecordComponents()</code></td><td><code>RecordComponent[]</code></td><td>Dapatkan semua komponen Record secara berurutan (sesuai deklarasi)</td></tr>
+                            <tr><td><code>RecordComponent.getName()</code></td><td><code>String</code></td><td>Nama komponen (misal: <code>"id"</code>, <code>"name"</code>)</td></tr>
+                            <tr><td><code>RecordComponent.getType()</code></td><td><code>Class&lt;?&gt;</code></td><td>Tipe data komponen (misal: <code>String.class</code>, <code>int.class</code>)</td></tr>
+                            <tr><td><code>RecordComponent.getAccessor()</code></td><td><code>Method</code></td><td>Accessor method untuk komponen ini — berguna untuk invokasi dinamis</td></tr>
+                            <tr><td><code>RecordComponent.getAnnotations()</code></td><td><code>Annotation[]</code></td><td>Semua annotation pada komponen — berguna untuk framework validasi/serialisasi</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Keterbatasan Record — Sengaja Dirancang</div>
+                <div style="max-width:77dvw;box-sizing:border-box;border:var(--border);border-radius:var(--radius-l);padding:var(--m);margin:var(--m) 0;">
+                    <div class="limit-item">
+                        <div class="limit-icon">🚫</div>
+                        <div>
+                            <strong>Tidak bisa extends class lain</strong>
+                            <div style="font-size:var(--xs);color:var(--transtext-color);margin-top:2px;">Record sudah implisit extends <code>java.lang.Record</code>. Java tidak mendukung multiple inheritance untuk class. <em>Solusi:</em> gunakan <strong>interface</strong> untuk berbagi perilaku antar Record.</div>
+                        </div>
+                    </div>
+                    <div class="limit-item">
+                        <div class="limit-icon">🚫</div>
+                        <div>
+                            <strong>Tidak bisa tambah instance field di luar komponen</strong>
+                            <div style="font-size:var(--xs);color:var(--transtext-color);margin-top:2px;"><code>private String computed;</code> di dalam body Record → compile error. Ini untuk menjaga konsistensi: semua "state" Record harus terlihat dari deklarasinya. <em>Solusi:</em> gunakan computed method (bukan field).</div>
+                        </div>
+                    </div>
+                    <div class="limit-item">
+                        <div class="limit-icon">🚫</div>
+                        <div>
+                            <strong>Selalu immutable — field tidak bisa diubah</strong>
+                            <div style="font-size:var(--xs);color:var(--transtext-color);margin-top:2px;">Semua komponen bersifat <code>final</code> — tidak ada setter. Jika butuh "update" satu field, kamu harus buat Record baru. <em>Solusi:</em> buat method seperti <code>withName(String name)</code> yang mengembalikan Record baru dengan nilai yang diubah.</div>
+                        </div>
+                    </div>
+                    <div class="limit-item">
+                        <div class="limit-icon">🚫</div>
+                        <div>
+                            <strong>Tidak bisa abstract</strong>
+                            <div style="font-size:var(--xs);color:var(--transtext-color);margin-top:2px;"><code>abstract record Shape(...)</code> → compile error. Record adalah final secara implisit — tidak bisa di-extend atau di-abstract. <em>Solusi:</em> gunakan sealed interface jika butuh hierarki tipe.</div>
+                        </div>
+                    </div>
+                    <div class="limit-item">
+                        <div class="limit-icon">🚫</div>
+                        <div>
+                            <strong>Inner Record harus static</strong>
+                            <div style="font-size:var(--xs);color:var(--transtext-color);margin-top:2px;">Record yang dideklarasikan di dalam class otomatis static — tidak bisa mengakses instance dari enclosing class. Ini konsisten dengan sifat Record sebagai data carrier yang mandiri.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Pattern: Record dengan "Wither" Method</div>
+                <p>Karena Record immutable, untuk "mengubah" satu nilai, buat Record baru dengan nilai yang dimodifikasi:</p>
+                <div class="code-block"><pre><code class="language-java">public record Customer(String id, String name, String email, String phone) {
+
+  // "Wither" method: mengembalikan Record baru dengan satu field berbeda
+  public Customer withName(String newName) {
+    return new Customer(this.id, newName, this.email, this.phone);
+  }
+
+  public Customer withEmail(String newEmail) {
+    return new Customer(this.id, this.name, newEmail, this.phone);
+  }
+}
+
+// Penggunaan
+var original = new Customer("1", "Eko", "eko@test.com", null);
+var updated  = original.withName("Budi").withEmail("budi@test.com");
+// original tidak berubah — immutable!
+System.out.println(original.name()); // "Eko" — tidak berubah
+System.out.println(updated.name());  // "Budi" — Record baru</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Reflection</div>
+                    <p>Di PHP, <code>$rc = new ReflectionClass(Customer::class); $rc->getProperties();</code> untuk mengakses informasi class secara programatik. Java Reflection lebih powerful karena ada API khusus Record: <code>getRecordComponents()</code> yang langsung mengembalikan komponen sesuai urutan deklarasi, beserta informasi accessor dan annotation-nya. Framework seperti Jackson menggunakan ini untuk auto-serialisasi Record ke JSON tanpa konfigurasi tambahan.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz8">
+                    <p style="font-size:var(--s);font-weight:600;">Kamu ingin Record <code>Customer</code> bisa "diubah" email-nya. Apa pola yang benar?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,false)">A. Tambahkan setter: <code>public void setEmail(String email) { this.email = email; }</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,false)">B. Ubah komponen menjadi non-final dengan keyword <code>mutable</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,true)">C. Buat "wither" method yang mengembalikan Record baru: <code>public Customer withEmail(String email) { return new Customer(id, name, email, phone); }</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,false)">D. Extends Record dengan subclass yang menambahkan setter</div>
+                    <div class="quiz-feedback" id="quiz8-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,var(--transsuccess-color) 0%,var(--transprimary-color) 100%);">
+                    <div class="chapter-number" style="color:var(--success-color);">Rangkuman Akhir</div>
+                    <div class="chapter-title">📋 Peta Lengkap Java Record</div>
+                    <p class="chapter-desc">Semua yang perlu kamu ketahui tentang Java Record dalam satu tampilan.</p>
+                </div>
+
+                <div class="text-subtitle">Ringkasan Semua Fitur Record</div>
+                <div class="summary-card">
+                    <div class="summary-row">
+                        <div class="summary-icon">📦</div>
+                        <div>
+                            <strong>Deklarasi & Auto-generation</strong>
+                            <span><code>public record NamaRecord(TipeA namaA, TipeB namaB) {}</code> — compiler otomatis membuat: field private final, canonical constructor, accessor method (<code>namaA()</code> bukan <code>getNamaA()</code>), <code>equals()</code>, <code>hashCode()</code>, <code>toString()</code>.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🔧</div>
+                        <div>
+                            <strong>Tiga Jenis Constructor</strong>
+                            <span>1. <strong>Canonical</strong>: parameter persis seperti deklarasi, untuk normalisasi. 2. <strong>Compact</strong>: tanpa parameter list, tanpa manual assignment — untuk validasi ringan. 3. <strong>Alternate</strong>: parameter lebih sedikit, wajib delegasi ke canonical via <code>this(...)</code> sebagai baris pertama.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">⚙️</div>
+                        <div>
+                            <strong>Method & Interface</strong>
+                            <span>Record bisa tambahkan instance method, mengimplementasikan interface (<code>implements SayHello</code>), override accessor dan <code>toString()</code>. TIDAK BISA extends class lain — sudah extends <code>java.lang.Record</code>.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">📌</div>
+                        <div>
+                            <strong>Static Member</strong>
+                            <span>Hanya static field dan static method yang diperbolehkan sebagai tambahan — instance field di luar komponen dilarang. Pola umum: <code>public static final Point ZERO = new Point(0,0);</code> dan factory method <code>create()</code>.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🏷️</div>
+                        <div>
+                            <strong>Generics & Annotation</strong>
+                            <span>Record mendukung type parameter: <code>record Data&lt;T&gt;(T data) {}</code>. Annotation pada komponen dipropagasikan ke field, accessor method, dan parameter constructor — sesuai <code>@Target</code> annotation tersebut. Berguna untuk Jakarta Validation, Jackson, Hibernate.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🎯</div>
+                        <div>
+                            <strong>Record Patterns (Java 21)</strong>
+                            <span>Destructuring langsung di <code>instanceof</code>: <code>if (obj instanceof Point(int x, int y))</code>. Bisa nested: <code>instanceof Line(Point(int x1, int y1), Point(int x2, int y2))</code>. Juga bekerja di <code>switch</code> expression. Tidak perlu cast manual, tidak ada ClassCastException.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🔍</div>
+                        <div>
+                            <strong>Reflection</strong>
+                            <span><code>Class.isRecord()</code> → cek apakah Record. <code>Class.getRecordComponents()</code> → array <code>RecordComponent</code> yang punya <code>getName()</code>, <code>getType()</code>, <code>getAccessor()</code>, <code>getAnnotations()</code>. Digunakan oleh framework Jackson, Spring, dll untuk auto-processing Record.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">📊 Perbandingan: Record vs Class vs Lombok</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Aspek</th><th>Class Biasa</th><th>Lombok @Value</th><th>Java Record</th></tr></thead>
+                            <tbody>
+                            <tr><td>Boilerplate</td><td>Tinggi (~40 baris/4 field)</td><td>Rendah (butuh @Value)</td><td>Nol (1 baris)</td></tr>
+                            <tr><td>Immutable</td><td>Manual (final field)</td><td>Ya (otomatis)</td><td>Ya (otomatis)</td></tr>
+                            <tr><td>Getter</td><td>Manual / lomboked</td><td><code>getNama()</code></td><td><code>nama()</code> (tanpa get)</td></tr>
+                            <tr><td>equals/hashCode</td><td>Manual / lomboked</td><td>Otomatis</td><td>Otomatis</td></tr>
+                            <tr><td>Dependency</td><td>–</td><td>Lombok (external)</td><td>– (native JDK)</td></tr>
+                            <tr><td>Pattern Matching</td><td>Tidak</td><td>Tidak</td><td>Ya (Java 21)</td></tr>
+                            <tr><td>Reflection support</td><td>Field/Method biasa</td><td>Field/Method biasa</td><td>RecordComponent API</td></tr>
+                            <tr><td>Extends class</td><td>Ya</td><td>Ya</td><td>Tidak (extends Record)</td></tr>
+                            <tr><td>Cocok untuk</td><td>Segala use case</td><td>Data class dengan Lombok</td><td>DTO, value object, response wrapper</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">📊 Perbandingan: Java Record vs PHP/Bahasa Lain</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Fitur</th><th>Java Record</th><th>PHP Readonly Class</th><th>Kotlin data class</th><th>Python dataclass</th></tr></thead>
+                            <tbody>
+                            <tr><td>Deklarasi ringkas</td><td><code>record P(int x, int y){}</code></td><td><code>readonly class P{public function __construct(public int $x, int $y){}}</code></td><td><code>data class P(val x: Int, val y: Int)</code></td><td><code>@dataclass class P: x:int; y:int</code></td></tr>
+                            <tr><td>Auto equals</td><td>✅ Otomatis</td><td>❌ Manual</td><td>✅ Otomatis</td><td>✅ Otomatis (eq=True)</td></tr>
+                            <tr><td>Auto toString</td><td>✅ <code>P[x=1, y=2]</code></td><td>❌ Manual</td><td>✅ <code>P(x=1, y=2)</code></td><td>✅ <code>P(x=1, y=2)</code></td></tr>
+                            <tr><td>Immutable</td><td>✅ Selalu</td><td>✅ Selalu</td><td>✅ (val), bisa mutable (var)</td><td>⚠️ Perlu <code>frozen=True</code></td></tr>
+                            <tr><td>Pattern matching</td><td>✅ Java 21</td><td>❌</td><td>✅ (destructuring)</td><td>⚠️ Terbatas (match-case)</td></tr>
+                            <tr><td>Generics</td><td>✅</td><td>✅ (template)</td><td>✅</td><td>✅ (type hints)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">🏆 Checklist Penguasaan Java Record</div>
+                <ul class="bp-list">
+                    <li><span>✅</span><span>Paham mengapa Record ada: eliminasi boilerplate kelas data (field, constructor, getter, equals, hashCode, toString)</span></li>
+                    <li><span>✅</span><span>Tahu bahwa accessor Record adalah <code>nama()</code> bukan <code>getNama()</code> — perbedaan dari JavaBean convention</span></li>
+                    <li><span>✅</span><span>Bisa membuat Canonical Constructor untuk normalisasi data (lowercase, trim, null check)</span></li>
+                    <li><span>✅</span><span>Bisa membuat Compact Constructor untuk validasi sederhana tanpa menulis manual assignment</span></li>
+                    <li><span>✅</span><span>Tahu aturan Alternate Constructor: WAJIB panggil <code>this(...)</code> ke canonical sebagai baris pertama</span></li>
+                    <li><span>✅</span><span>Record bisa implements interface dan tambahkan method instance</span></li>
+                    <li><span>✅</span><span>Field tambahan dalam Record HARUS static (instance field di luar komponen dilarang)</span></li>
+                    <li><span>✅</span><span>Record mendukung generics: <code>record Data&lt;T&gt;(T data) {}</code></span></li>
+                    <li><span>✅</span><span>Annotation pada komponen Record dipropagasikan sesuai <code>@Target</code>: ke field, accessor, dan/atau constructor parameter</span></li>
+                    <li><span>✅</span><span>Bisa menggunakan Record Patterns untuk destructuring di <code>instanceof</code> (Java 21)</span></li>
+                    <li><span>✅</span><span>Tahu API Reflection Record: <code>isRecord()</code>, <code>getRecordComponents()</code></span></li>
+                    <li><span>✅</span><span>Tahu pola "Wither" method untuk "mengubah" Record yang immutable — return Record baru</span></li>
+                    <li><span>✅</span><span>Tahu kapan gunakan Record vs class biasa: Record untuk data carrier (DTO, value object, response), class biasa untuk entity dengan behavior kompleks</span></li>
+                </ul>
+
+                <div class="info-box success">
+                    <div class="info-box-title">🎉 Selamat! Kamu sudah menguasai Java Record.</div>
+                    <p>Langkah selanjutnya: Pelajari <strong>Sealed Class & Interface</strong> (Java 17) — kombinasi sempurna dengan Record untuk membuat ADT (Algebraic Data Type). Contoh: <code>sealed interface Shape permits Circle, Rectangle, Triangle {}</code> di mana setiap permit adalah Record. Lalu eksplorasi <strong>Switch Expression</strong> dengan pattern matching untuk memproses sealed type secara exhaustive. Di Spring Boot, manfaatkan Record sebagai DTO request/response untuk API yang lebih ringkas dan type-safe.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="padding:var(--m);text-align:center;font-size:var(--xs);color:var(--transtext-color);">
+        Java Record Learning Module · Java 16+ · Dibuat untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script>
+    function showBottomSheet(p){document.getElementsByClassName('bottom-sheet')[p].classList.toggle('active')}
+    function sidebarMinify(){document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");document.getElementsByClassName("container")[0].classList.toggle("expanded")}
+    function switchTheme(){document.getElementsByTagName("body")[0].classList.toggle("dark-mode")}
+    function showMenu(){document.getElementsByClassName("sidebar")[0].classList.toggle("show");document.getElementById('get-menu').classList.toggle('opened')}
+
+    function checkQuiz(quizId, el, isCorrect) {
+        const container = document.getElementById(quizId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = "true";
+        container.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents='none');
+        if (isCorrect) {
+            el.classList.add('correct');
+            const fb = document.getElementById(quizId+'-feedback');
+            fb.style.color='var(--success-color)'; fb.textContent='✅ Jawaban benar! Bagus!'; fb.classList.add('show');
+        } else {
+            el.classList.add('wrong');
+            container.querySelectorAll('.quiz-option').forEach(opt => { if(opt.getAttribute('onclick').includes('true')) opt.classList.add('correct'); });
+            const fb = document.getElementById(quizId+'-feedback');
+            fb.style.color='var(--danger-color)'; fb.textContent='❌ Belum tepat. Perhatikan jawaban yang benar di atas.'; fb.classList.add('show');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+        const sections = document.querySelectorAll('[id^="chapter-"], #intro, #summary');
+        const menuItems = document.querySelectorAll('.sidebar-menu-item');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    const active = document.querySelector(`.sidebar-menu-item[href="#${entry.target.id}"]`);
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, {rootMargin:'-30% 0px -60% 0px'});
+        sections.forEach(s => observer.observe(s));
+    });
+</script>
+</body>
+</html>

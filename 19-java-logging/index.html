@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Logging (SLF4J + Logback) — Modul Belajar Mandiri</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .chapter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: .25rem .65rem;
+            font-size: var(--xs);
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: .5rem;
+        }
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-left: 3px solid var(--primary-color);
+            background: var(--transprimary-color);
+            border-radius: 0 var(--radius-m) var(--radius-m) 0;
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .info-box.warning { border-left-color: var(--warning-color); background: var(--transwarning-color); }
+        .info-box.success { border-left-color: var(--success-color); background: var(--transsuccess-color); }
+        .info-box.danger  { border-left-color: var(--danger-color);  background: var(--transdanger-color);  }
+        .info-box .info-box-title { font-weight: 700; font-size: var(--s); margin-bottom: .4rem; color: var(--primary-color); }
+        .info-box.warning .info-box-title { color: var(--warning-color); }
+        .info-box.success .info-box-title { color: var(--success-color); }
+        .info-box.danger  .info-box-title { color: var(--danger-color); }
+
+        .code-block {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-m);
+            margin: var(--m) 0;
+        }
+        .code-block pre { margin: 0 !important; border-radius: var(--radius-m) !important; font-size: .8rem !important; overflow-x: auto; }
+        .code-block pre code { white-space: pre !important; }
+
+        .line-explain { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: var(--transprimary-color); border-radius: var(--radius-m); padding: var(--m); margin: var(--m) 0; }
+        .line-explain .line-item { display: flex; gap: var(--s); padding: .4rem 0; border-bottom: 1px solid var(--translink-color); font-size: var(--s); }
+        .line-explain .line-item:last-child { border-bottom: none; }
+        .line-explain .line-num { min-width: 70px; font-weight: 700; color: var(--primary-color); font-family: monospace; }
+
+        .compare-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; grid-template-columns: 1fr 1fr; gap: var(--m); margin: var(--m) 0; }
+        @media(max-width:600px){ .compare-box { grid-template-columns: 1fr; } }
+        .compare-box .compare-item { border-radius: var(--radius-m); padding: var(--m); }
+        .compare-box .compare-item.wrong { background: var(--transdanger-color); border: 1px solid var(--danger-color); }
+        .compare-box .compare-item.right { background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .compare-box .compare-label { font-weight: 700; font-size: var(--s); margin-bottom: .5rem; }
+        .compare-box .compare-item.wrong .compare-label { color: var(--danger-color); }
+        .compare-box .compare-item.right .compare-label { color: var(--success-color); }
+
+        .quiz-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border: 2px solid var(--border-color); border-radius: var(--radius-x); padding: var(--l); margin: var(--l) 0; background: var(--bg-color); }
+        .quiz-box .quiz-title { font-weight: 700; font-size: var(--m); margin-bottom: var(--m); color: var(--primary-color); }
+        .quiz-option { display: flex; align-items: center; gap: var(--s); padding: .6rem var(--m); border-radius: var(--radius-m); cursor: pointer; margin-bottom: .4rem; border: 1px solid var(--border-color); font-size: var(--s); transition: background .15s; user-select: none; }
+        .quiz-option:hover { background: var(--transprimary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong   { background: var(--transdanger-color);  border-color: var(--danger-color); }
+        .quiz-feedback { margin-top: var(--s); padding: var(--s) var(--m); border-radius: var(--radius-m); font-size: var(--s); display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.ko { background: var(--transdanger-color);  color: var(--danger-color); }
+
+        .progress-bar-wrap { background: var(--border-color); border-radius: 99px; height: 6px; margin: var(--s) 0 var(--m); overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--second-primary-color)); border-radius: 99px; transition: width .4s ease; }
+
+        .hero-banner { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #164e63 100%); border-radius: var(--radius-x); padding: var(--xx) var(--x); color: #fff; margin-bottom: var(--l); }
+        .hero-banner h1 { font-size: var(--xx); font-weight: 800; margin-bottom: .5rem; }
+        .hero-banner p { opacity: .85; font-size: var(--s); }
+
+        .analogy-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: var(--transsecond-primary-color); border: 1px dashed var(--second-primary-color); border-radius: var(--radius-m); padding: var(--m); margin: var(--m) 0; font-size: var(--s); }
+        .analogy-box .analogy-title { font-weight: 700; color: var(--second-primary-color); margin-bottom: .4rem; }
+
+        .level-bar { display: flex; gap: .3rem; align-items: center; margin: var(--s) 0; }
+        .level-chip { padding: .2rem .7rem; border-radius: 99px; font-size: var(--xs); font-weight: 700; }
+        .level-trace   { background: #6366f1; color: #fff; }
+        .level-debug   { background: #3b82f6; color: #fff; }
+        .level-info    { background: #22c55e; color: #fff; }
+        .level-warn    { background: #f59e0b; color: #fff; }
+        .level-error   { background: #ef4444; color: #fff; }
+
+        .arch-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; background: var(--transprimary-color); border: 1px solid var(--border-color); border-radius: var(--radius-x); padding: var(--l); margin: var(--m) 0; }
+        .arch-arrow { text-align: center; font-size: var(--l); color: var(--primary-color); margin: .4rem 0; }
+        .arch-layer { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-m); padding: .6rem var(--m); text-align: center; font-weight: 600; font-size: var(--s); }
+
+        .flow-box { box-sizing: border-box; max-width: 77dvw; overflow-x: auto; display: flex; align-items: center; gap: var(--s); padding: var(--m); background: var(--transprimary-color); border-radius: var(--radius-m); margin: var(--m) 0; flex-wrap: nowrap; }
+        .flow-node { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-m); padding: .4rem .8rem; font-size: var(--xs); font-weight: 600; white-space: nowrap; }
+        .flow-arrow { color: var(--primary-color); font-size: var(--l); flex-shrink: 0; }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#pengantar">🏠 Home</a>
+    <a class="bottom-nav-item" href="#chapter-1">📋 Level</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-3">🏗️ Arsitektur</a>
+                <a class="bottom-nav-item" href="#chapter-4">✍️ Format Log</a>
+                <a class="bottom-nav-item" href="#chapter-5">🔖 MDC</a>
+                <a class="bottom-nav-item" href="#summary">📝 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java Logging</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#pengantar" class="sidebar-menu-item active" data-title="Pengantar">
+            <div class="sidebar-menu-item-svg">🏠</div><span>Pengantar</span>
+        </a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Log Level">
+            <div class="sidebar-menu-item-svg">📋</div><span>1. Log Level</span>
+        </a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="SLF4J & Logback">
+            <div class="sidebar-menu-item-svg">📦</div><span>2. SLF4J &amp; Logback</span>
+        </a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="Arsitektur Logger">
+            <div class="sidebar-menu-item-svg">🏗️</div><span>3. Arsitektur Logger</span>
+        </a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="Format Pesan Log">
+            <div class="sidebar-menu-item-svg">✍️</div><span>4. Format Pesan Log</span>
+        </a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="MDC">
+            <div class="sidebar-menu-item-svg">🔖</div><span>5. MDC &amp; Request ID</span>
+        </a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Logger Per Class">
+            <div class="sidebar-menu-item-svg">🗂️</div><span>6. Logger per Class</span>
+        </a>
+        <a href="#chapter-7" class="sidebar-menu-item" data-title="System.out vs Logger">
+            <div class="sidebar-menu-item-svg">⚖️</div><span>7. println vs Logger</span>
+        </a>
+        <a href="#summary" class="sidebar-menu-item" data-title="Summary">
+            <div class="sidebar-menu-item-svg">📝</div><span>Summary</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#chapter-1">
+                <span class="container-header-nav-item-text">Mulai Belajar</span>
+            </a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Topik</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-3">
+                        <span class="container-header-nav-item-text">Arsitektur</span>
+                    </a>
+                    <a class="container-header-nav-item" href="#chapter-5">
+                        <span class="container-header-nav-item-text">MDC</span>
+                    </a>
+                    <a class="container-header-nav-item" href="#summary">
+                        <span class="container-header-nav-item-text">Summary</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ========== PENGANTAR ========== -->
+        <div class="card-wrapper max-width-1000" id="pengantar">
+            <div class="hero-banner">
+                <h1>📋 Java Logging</h1>
+                <p>SLF4J · Logback · MDC — Modul untuk developer PHP/Laravel yang migrasi ke Java.</p>
+                <p style="margin-top:.5rem; opacity:.7; font-size:.75rem;">7 Bab · Codebase Nyata · Mini Quiz · Analogi Laravel</p>
+            </div>
+
+            <div class="text-title">Mengapa Logging Penting?</div>
+            <p>Di PHP/Laravel kamu sudah terbiasa dengan <code>Log::info()</code>, <code>Log::error()</code>, atau bahkan <code>dd()</code> untuk debugging. Di Java, <strong>System.out.println()</strong> adalah praktik yang harus ditinggalkan</strong> di lingkungan produksi.</p>
+
+            <div class="info-box">
+                <div class="info-box-title">💡 Logging yang baik menjawab 3 pertanyaan</div>
+                <ul style="margin:.4rem 0 0 1.5rem; font-size:var(--s);">
+                    <li><strong>Apa</strong> yang terjadi? (message log)</li>
+                    <li><strong>Kapan</strong> terjadi? (timestamp)</li>
+                    <li><strong>Siapa / request mana</strong> yang memicunya? (MDC / context)</li>
+                </ul>
+            </div>
+
+            <div class="text-title" style="margin-top:var(--l)">📍 Learning Path</div>
+            <div class="display-grid">
+                <div class="stepper">
+                    <div class="stepper-item">
+                        <div class="stepper-key active">1</div>
+                        <div class="stepper-value">Log Level</div>
+                    </div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item">
+                        <div class="stepper-key">2</div>
+                        <div class="stepper-value">SLF4J &amp; Setup</div>
+                    </div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item">
+                        <div class="stepper-key">3</div>
+                        <div class="stepper-value">Format &amp; MDC</div>
+                    </div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item">
+                        <div class="stepper-key">4</div>
+                        <div class="stepper-value">Best Practice</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:var(--l)">
+                <div class="text-title">📊 Progress Belajar</div>
+                <div id="progress-label" class="text-small" style="color:var(--primary-color);font-weight:600;">0 / 7 bab selesai</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 1: Log Level ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 1 · Fundamental</div>
+                <div class="text-title">📋 Log Level — Tingkat Urgensi Pesan</div>
+                <p>Setiap pesan log memiliki <strong>level</strong> yang menunjukkan seberapa penting/kritis informasi tersebut. Java (via SLF4J) mengenal 5 level dari paling rendah ke paling tinggi:</p>
+
+                <div class="level-bar">
+                    <span class="level-chip level-trace">TRACE</span>
+                    <span style="font-size:var(--xs); color:var(--transtext-color)">↑ lebih detail</span>
+                </div>
+                <div class="level-bar"><span class="level-chip level-debug">DEBUG</span></div>
+                <div class="level-bar"><span class="level-chip level-info">INFO</span></div>
+                <div class="level-bar"><span class="level-chip level-warn">WARN</span></div>
+                <div class="level-bar">
+                    <span class="level-chip level-error">ERROR</span>
+                    <span style="font-size:var(--xs); color:var(--transtext-color)">↑ lebih kritis</span>
+                </div>
+
+                <div class="code-block" style="margin-top:var(--l)">
+                    <pre><code class="language-java">public class LevelTest {
+
+  private static final Logger log = LoggerFactory.getLogger(LevelTest.class);
+
+  @Test
+  void testLevel() {
+    log.trace("Trace");   // paling detail, biasanya dipakai developer saat debug intensif
+    log.debug("Debug");   // informasi debug development
+    log.info("Info");     // informasi umum jalannya aplikasi
+    log.warn("Warning");  // peringatan — sesuatu tidak ideal tapi tidak mematikan
+    log.error("Error");   // kesalahan serius yang perlu ditangani
+  }
+}</code></pre>
+                </div>
+
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Kapan Dipakai</th>
+                            <th>Contoh</th>
+                            <th>Analogi Laravel</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="level-chip level-trace">TRACE</span></td>
+                            <td>Detail sangat dalam — loop, langkah per langkah</td>
+                            <td>Nilai variabel tiap iterasi</td>
+                            <td>Tidak ada padanan langsung</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-chip level-debug">DEBUG</span></td>
+                            <td>Informasi development, dimatikan di produksi</td>
+                            <td>Query SQL yang dieksekusi</td>
+                            <td><code>Log::debug()</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-chip level-info">INFO</span></td>
+                            <td>Event normal yang penting dicatat</td>
+                            <td>"User login berhasil", "Order dibuat"</td>
+                            <td><code>Log::info()</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-chip level-warn">WARN</span></td>
+                            <td>Situasi tidak ideal, sistem masih jalan</td>
+                            <td>Retry ke API eksternal, deprecated method</td>
+                            <td><code>Log::warning()</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-chip level-error">ERROR</span></td>
+                            <td>Kesalahan serius, perlu tindakan segera</td>
+                            <td>Exception, DB down, payment gagal</td>
+                            <td><code>Log::error()</code></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Level Filtering — Level Minimum di Konfigurasi</div>
+                    <p style="font-size:var(--s)">Kamu bisa mengatur <strong>level minimum</strong> di konfigurasi Logback. Jika di-set ke <code>INFO</code>, maka <code>TRACE</code> dan <code>DEBUG</code> <strong>tidak akan muncul</strong> di log. Di produksi biasanya minimal <code>INFO</code> atau <code>WARN</code>, di development bisa <code>DEBUG</code> atau <code>TRACE</code>.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel / Monolog</div>
+                    <p>Laravel menggunakan <strong>Monolog</strong> di balik layar, yang juga punya level: <code>debug → info → notice → warning → error → critical → alert → emergency</code>. SLF4J di Java lebih sederhana dengan 5 level, tapi konsepnya identik. <code>Log::info()</code> di Laravel = <code>log.info()</code> di Java.</p>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-box" id="quiz-1">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 1</div>
+                    <p style="font-size:var(--s)"><strong>Aplikasi produksi kamu mengalami koneksi database yang sering timeout tapi sistem masih berjalan. Level log mana yang paling tepat?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, false)">A. <code>TRACE</code> — ini detail internal</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, false)">B. <code>INFO</code> — informasi normal</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, true)">C. <code>WARN</code> — tidak ideal tapi sistem masih jalan</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, false)">D. <code>DEBUG</code> — hanya untuk development</div>
+                    <div class="quiz-feedback" id="quiz-1-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-1')">✅ Selesai — Lanjut ke Bab 2</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 2: SLF4J & Logback ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 2 · Setup &amp; Arsitektur Library</div>
+                <div class="text-title">📦 SLF4J &amp; Logback — Dua Komponen Berbeda</div>
+                <p>Di ekosistem Java, logging menggunakan <strong>dua layer</strong>: API dan implementasi. Ini konsep yang tidak ada di PHP — perlu dipahami baik-baik.</p>
+
+                <div class="arch-box">
+                    <div class="arch-layer" style="background:var(--transprimary-color); border-color:var(--primary-color)">
+                        📝 <strong>Kode Aplikasi Kamu</strong> — <code>log.info("...")</code>
+                    </div>
+                    <div class="arch-arrow">⬇</div>
+                    <div class="arch-layer" style="background:var(--transthird-primary-color); border-color:var(--third-primary-color)">
+                        🔌 <strong>SLF4J</strong> (Simple Logging Facade for Java) — <em>hanya interface/API</em><br>
+                        <small style="font-weight:400">Paket: <code>org.slf4j.Logger</code>, <code>LoggerFactory</code></small>
+                    </div>
+                    <div class="arch-arrow">⬇</div>
+                    <div class="arch-layer" style="background:var(--transsuccess-color); border-color:var(--success-color)">
+                        ⚙️ <strong>Logback</strong> — <em>implementasi nyata yang menulis log</em><br>
+                        <small style="font-weight:400">Bisa diganti: Log4j2, java.util.logging, dll</small>
+                    </div>
+                    <div class="arch-arrow">⬇</div>
+                    <div class="arch-layer">
+                        📁 Output: <strong>Console</strong> · <strong>File</strong> · <strong>Database</strong> · <strong>Remote</strong>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Mengapa Dua Layer?</div>
+                    <p style="font-size:var(--s)">SLF4J adalah <em>abstraksi</em> (interface). Kodenya selalu sama: <code>log.info(...)</code>. Implementasinya (Logback, Log4j2) bisa diganti cukup dengan ganti dependency di <code>pom.xml</code> — tanpa ubah satu baris kode pun. Ini prinsip <strong>Dependency Inversion</strong>.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Cara Membuat Logger</div>
+                <div class="code-block">
+                    <pre><code class="language-java">import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MainTest {
+
+  // Pattern standar: static final, nama variabel "log" atau "logger"
+  private static final Logger log = LoggerFactory.getLogger(MainTest.class);
+
+  @Test
+  void testLog() {
+    System.out.println("Hello Logger");    // ❌ Jangan di produksi
+    log.info("Hello Logger");             // ✅ Ini yang benar
+    System.out.println("Selamat Belajar Java Logging");
+    log.info("Selamat Belajar Java Logging");
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">import</span><span>Import dari <code>org.slf4j</code> — bukan dari Logback langsung. Ini penting: kode kamu hanya bergantung pada SLF4J API, bukan implementasi.</span></div>
+                    <div class="line-item"><span class="line-num">static final</span><span>Logger dibuat satu kali per class, dibagi semua instance. <code>static</code> agar tidak buat object baru tiap instantiasi. <code>final</code> agar tidak bisa di-reassign.</span></div>
+                    <div class="line-item"><span class="line-num">getLogger(MainTest.class)</span><span>Argument adalah <code>Class</code> dari class saat ini. Ini memberi nama logger sesuai fully-qualified class name, misal <code>programmerzamannow.logging.MainTest</code>.</span></div>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Salah — Import implementasi langsung</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// JANGAN — kode terikat ke Logback
+import ch.qos.logback.classic.Logger;
+Logger log = ...; // Tidak fleksibel</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Benar — Import SLF4J API</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// SELALU pakai interface SLF4J
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+Logger log = LoggerFactory.getLogger(MyClass.class);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel kamu pakai <code>Log::info()</code> yang merupakan facade — abstraksi di atas Monolog. Kamu tidak pernah langsung instantiate Monolog. SLF4J di Java adalah hal yang sama: facade/interface di atas implementasi nyata. Bahkan nama pola designnya sama: <em>Facade Pattern</em>.</p>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-box" id="quiz-2">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 2</div>
+                    <p style="font-size:var(--s)"><strong>Kamu ingin mengganti Logback dengan Log4j2 di proyek Java tanpa mengubah kode aplikasi. Ini mungkin karena...</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, false)">A. Java secara otomatis mendeteksi library logging yang tersedia</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, true)">B. Kode hanya bergantung pada SLF4J API — implementasinya bisa diganti di dependency</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, false)">C. Log4j2 dan Logback punya nama method yang sama persis</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, false)">D. Tidak bisa, harus ubah semua import di setiap class</div>
+                    <div class="quiz-feedback" id="quiz-2-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-2')">✅ Selesai — Lanjut ke Bab 3</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 3: Arsitektur Logger per Class ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 3 · Arsitektur</div>
+                <div class="text-title">🏗️ Arsitektur Logger: Controller → Service → Repository</div>
+                <p>Codebase ini mendemonstrasikan pola nyata aplikasi Java berlapis. Setiap class memiliki Logger-nya sendiri, sehingga kamu tahu persis dari layer mana pesan log berasal.</p>
+
+                <div class="text-title" style="margin-top:var(--l)">Alur Request: MyController → MyService → MyRepository</div>
+                <div class="flow-box">
+                    <div class="flow-node">HTTP Request</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MyController<br><small>log: "Controller Save"</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MyService<br><small>log: "Service Save"</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MyRepository<br><small>log: "Repository Save"</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">Database</div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-3a" class="accordion-item-check" checked/>
+                    <label for="acc-3a" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 MyController.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Layer terluar — menerima request dan mendelegasikan ke Service</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">package programmerzamannow.logging;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MyController {
+
+  // Logger dengan nama class ini → "programmerzamannow.logging.MyController"
+  private static final Logger log = LoggerFactory.getLogger(MyController.class);
+
+  private MyService service;
+
+  // Constructor Injection — service diinjeksi dari luar
+  public MyController(MyService service) {
+    this.service = service;
+  }
+
+  public void save() {
+    log.info("Controller Save");  // Log di layer Controller
+    this.service.save();           // Delegasikan ke Service
+  }
+}</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">Line 9</span><span><code>getLogger(MyController.class)</code> — nama logger = <code>programmerzamannow.logging.MyController</code>. Di output log, ini muncul sebagai identifier class.</span></div>
+                            <div class="line-item"><span class="line-num">Line 11</span><span><code>private MyService service</code> — dependency disimpan sebagai field, bukan dibuat langsung dengan <code>new</code>. Ini prinsip <strong>Dependency Injection</strong>.</span></div>
+                            <div class="line-item"><span class="line-num">Line 17</span><span><code>log.info("Controller Save")</code> — log sebelum action. Ini membantu tracing: kamu tahu request sudah sampai controller.</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-3b" class="accordion-item-check"/>
+                    <label for="acc-3b" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 MyService.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Layer bisnis — berisi logika, mendelegasikan ke Repository</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">public class MyService {
+
+  private static final Logger log = LoggerFactory.getLogger(MyService.class);
+  private MyRepository repository;
+
+  public MyService(MyRepository repository) {
+    this.repository = repository;
+  }
+
+  public void save() {
+    log.info("Service Save");
+    this.repository.save();
+  }
+}</code></pre>
+                        </div>
+                        <div class="info-box success">
+                            <div class="info-box-title">✅ Pola yang Konsisten</div>
+                            <p style="font-size:var(--s)">Perhatikan pola yang sama di ketiga class: <code>private static final Logger log = LoggerFactory.getLogger(NamaClass.class)</code>. Ini adalah konvensi standar Java — hampir setiap class yang perlu logging menggunakan deklarasi yang identik ini.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-3c" class="accordion-item-check"/>
+                    <label for="acc-3c" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>📄 MyRepository.java</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Layer data — langsung berinteraksi dengan database</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">public class MyRepository {
+
+  private static final Logger log = LoggerFactory.getLogger(MyRepository.class);
+
+  public void save() {
+    log.info("Repository Save");
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Output Log yang Dihasilkan</div>
+                <div class="code-block">
+                    <pre><code class="language-bash">[INFO] p.l.MyController  - Controller Save
+[INFO] p.l.MyService     - Service Save
+[INFO] p.l.MyRepository  - Repository Save</code></pre>
+                </div>
+                <p style="font-size:var(--s)">Setiap baris log mencantumkan nama class lengkapnya — kamu langsung tahu di layer mana pesan itu ditulis, tanpa perlu baca kodenya.</p>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel kamu juga biasa log di berbagai layer: Controller, Service class, Repository. Bedanya, di PHP kamu pakai <code>Log::info()</code> yang global, sedangkan di Java setiap class punya Logger sendiri dengan <em>nama unik</em> berdasarkan package + class. Ini membuat filtering log per modul jauh lebih mudah.</p>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-box" id="quiz-3">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 3</div>
+                    <p style="font-size:var(--s)"><strong>Apa keuntungan utama setiap class memiliki Logger dengan nama class-nya sendiri (bukan satu Logger global)?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, false)">A. Lebih cepat performa-nya karena tidak sharing Logger</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, true)">B. Bisa filter/konfigurasi log level per package atau class secara independen</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, false)">C. Menghemat memori karena Logger lebih kecil</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, false)">D. Tidak ada keuntungan, ini hanya konvensi</div>
+                    <div class="quiz-feedback" id="quiz-3-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-3')">✅ Selesai — Lanjut ke Bab 4</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 4: Format Pesan Log ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 4 · Penulisan Pesan Log</div>
+                <div class="text-title">✍️ Format Pesan Log yang Benar</div>
+                <p>SLF4J menyediakan cara yang elegan untuk menyertakan variabel dalam pesan log — tanpa string concatenation yang boros.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">public class LogFormatTest {
+
+  private static final Logger log = LoggerFactory.getLogger(LogFormatTest.class);
+
+  @Test
+  void testLogFormat() {
+
+    // 1. Log tanpa parameter
+    log.info("Without Parameter");
+
+    // 2. Log dengan placeholder {} — lazy evaluation!
+    log.info("{} + {} = {}", 10, 10, (10 + 10));
+    // Output: 10 + 10 = 20
+
+    // 3. Log error dengan exception (stack trace otomatis dicetak)
+    log.error("Ups", new NullPointerException());
+
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">"{}"</span><span><strong>Placeholder</strong> — setiap <code>{}</code> akan diganti secara berurutan oleh argumen berikutnya. Lebih bersih dari string concatenation <code>"nilai: " + value</code>.</span></div>
+                    <div class="line-item"><span class="line-num">10, 10, (10+10)</span><span>Argumen pengganti placeholder. Bisa berupa variabel, ekspresi, atau objek apapun. SLF4J akan panggil <code>.toString()</code> otomatis.</span></div>
+                    <div class="line-item"><span class="line-num">log.error("Ups", ex)</span><span>Argumen terakhir bertipe <code>Throwable</code> diperlakukan khusus: SLF4J akan mencetak <strong>full stack trace</strong> secara otomatis.</span></div>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Salah — String Concatenation</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Boros: String dibuat SELALU, meskipun
+// level DEBUG tidak aktif di produksi
+log.debug("User: " + user.getName()
+        + ", Order: " + order.getId());
+// String concatenation terjadi sebelum
+// method log dipanggil!</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Benar — Placeholder {}</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">// Efisien: String dibuat HANYA JIKA
+// level DEBUG aktif (lazy evaluation)
+log.debug("User: {}, Order: {}",
+          user.getName(), order.getId());
+// Argumen dievaluasi hanya saat perlu</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Kenapa {} Lebih Efisien?</div>
+                    <p style="font-size:var(--s)">Saat kamu tulis <code>log.debug("User: " + name)</code>, Java <em>selalu</em> membuat String baru — bahkan jika DEBUG tidak aktif. Dengan placeholder <code>{}</code>, argumen diserahkan ke SLF4J dan String baru hanya dibuat <em>jika level tersebut aktif</em>. Di produksi dengan level INFO, semua <code>log.debug(...)</code> jadi no-op yang sangat murah.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Log Exception yang Benar</div>
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Salah — Exception hilang</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">try {
+  // ...
+} catch (Exception e) {
+  log.error("Error: " + e.getMessage());
+  // Stack trace TIDAK tercetak!
+  // Kamu tidak tahu dari mana error
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Benar — Stack trace tercatat</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">try {
+  // ...
+} catch (Exception e) {
+  log.error("Terjadi error saat save", e);
+  // Argumen terakhir Throwable →
+  // full stack trace otomatis dicetak!
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, <code>Log::info('User {name} login', ['name' => $user->name])</code> menggunakan named placeholder. SLF4J di Java menggunakan positional placeholder <code>{}</code> tanpa nama. Keduanya menghindari string concatenation manual dan lebih mudah dibaca.</p>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="quiz-box" id="quiz-4">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 4</div>
+                    <p style="font-size:var(--s)"><strong>Output dari <code>log.info("{} + {} = {}", 10, 10, (10 + 10))</code> adalah?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4', this, false)">A. <code>{} + {} = {}</code> (placeholder tidak diganti)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4', this, false)">B. <code>10 + 10 = {}</code> (placeholder ketiga tidak terganti)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4', this, true)">C. <code>10 + 10 = 20</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-4', this, false)">D. Error kompilasi karena tipe berbeda</div>
+                    <div class="quiz-feedback" id="quiz-4-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-4')">✅ Selesai — Lanjut ke Bab 5</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 5: MDC ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 5 · Advanced</div>
+                <div class="text-title">🔖 MDC — Mapped Diagnostic Context</div>
+                <p>MDC adalah fitur paling powerful yang <strong>tidak ada padanannya di PHP</strong> secara built-in. MDC memungkinkan kamu menyertakan <em>konteks tambahan</em> (seperti Request ID) di setiap baris log — secara otomatis, tanpa mengoper variabel ke setiap method.</p>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Masalah di Aplikasi Multi-Thread</div>
+                    <p style="font-size:var(--s)">Bayangkan 10 request masuk bersamaan. Log outputnya campur aduk:<br>
+                        <code>[INFO] Controller Save</code><br>
+                        <code>[INFO] Service Save</code><br>
+                        <code>[INFO] Controller Save</code> ← milik request siapa ini?<br>
+                        <code>[INFO] Repository Save</code><br>
+                        Kamu tidak bisa tahu log mana milik request mana!</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Solusi: MDC.put() untuk Menambahkan Request ID</div>
+                <div class="code-block">
+                    <pre><code class="language-java">public class MyTest {
+
+  @Test
+  void testRequestId() throws InterruptedException {
+
+    MyController controller = new MyController(new MyService(new MyRepository()));
+
+    for (int i = 0; i < 10; i++) {
+      new Thread(() -> {
+
+        // 1. Buat ID unik untuk request ini
+        String requestId = UUID.randomUUID().toString();
+
+        // 2. Masukkan ke MDC — thread-local, aman di multi-thread
+        MDC.put("requestId", requestId);
+
+        // 3. Semua log yang dipanggil di thread ini otomatis menyertakan requestId
+        controller.save(); // → log.info("Controller Save"), dst.
+
+        // 4. WAJIB: bersihkan MDC setelah selesai (thread bisa di-reuse!)
+        MDC.remove("requestId");
+
+      }).start();
+    }
+
+    Thread.sleep(1000L); // Tunggu semua thread selesai
+  }
+}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">MDC.put(k, v)</span><span>Menyimpan key-value ke dalam <strong>ThreadLocal</strong> — data ini hanya ada di thread saat ini, tidak bocor ke thread lain. Aman untuk concurrent requests.</span></div>
+                    <div class="line-item"><span class="line-num">UUID.randomUUID()</span><span>Membuat ID unik universal (128-bit). Setiap request mendapat ID berbeda. Format: <code>550e8400-e29b-41d4-a716-446655440000</code></span></div>
+                    <div class="line-item"><span class="line-num">controller.save()</span><span>Semua <code>log.info()</code> di dalam call chain ini (Controller → Service → Repository) akan otomatis menyertakan <code>requestId</code> tanpa parameter tambahan.</span></div>
+                    <div class="line-item"><span class="line-num">MDC.remove()</span><span><strong>Wajib dibersihkan!</strong> Thread Pool me-reuse thread. Jika tidak di-remove, request berikutnya di thread yang sama akan mewarisi requestId yang salah.</span></div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Konfigurasi Logback untuk Tampilkan MDC</div>
+                <p style="font-size:var(--s)">Agar <code>requestId</code> muncul di output log, tambahkan <code>%X{requestId}</code> di pattern <code>logback.xml</code>:</p>
+                <div class="code-block">
+                    <pre><code class="language-xml">&lt;!-- logback.xml --&gt;
+&lt;configuration&gt;
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;encoder&gt;
+      &lt;!-- %X{requestId} → ambil nilai "requestId" dari MDC --&gt;
+      &lt;pattern&gt;%d{HH:mm:ss} [%thread] [%X{requestId}] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
+  &lt;root level="INFO"&gt;
+    &lt;appender-ref ref="STDOUT" /&gt;
+  &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Output Setelah MDC Diterapkan</div>
+                <div class="code-block">
+                    <pre><code class="language-bash"># Tanpa MDC — sulit dilacak
+[INFO] MyController  - Controller Save
+[INFO] MyService     - Service Save
+[INFO] MyController  - Controller Save    ← request siapa?
+
+# Dengan MDC requestId — mudah dilacak!
+10:01:23 [Thread-1] [550e8400-...] INFO  MyController  - Controller Save
+10:01:23 [Thread-1] [550e8400-...] INFO  MyService     - Service Save
+10:01:23 [Thread-1] [550e8400-...] INFO  MyRepository  - Repository Save
+10:01:23 [Thread-2] [f47ac10b-...] INFO  MyController  - Controller Save
+10:01:23 [Thread-2] [f47ac10b-...] INFO  MyService     - Service Save</code></pre>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Manfaat MDC di Produksi</div>
+                    <p style="font-size:var(--s)">Saat ada bug, kamu bisa filter log berdasarkan <code>requestId</code> dan langsung lihat semua log dari request yang bermasalah saja — dari Controller sampai Repository — tanpa noise dari request lain. Di Spring Boot, ada library yang otomatis inject requestId via filter HTTP.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, kamu bisa menambahkan context ke semua log dengan <code>Log::withContext(['request_id' => $requestId])</code> (Laravel 8.49+). Konsepnya sama dengan MDC — tambahkan context sekali, muncul di semua log berikutnya. Di Java, MDC sudah ada sejak lama dan merupakan fitur inti SLF4J/Logback.</p>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="quiz-box" id="quiz-5">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 5</div>
+                    <p style="font-size:var(--s)"><strong>Mengapa <code>MDC.remove("requestId")</code> wajib dipanggil setelah request selesai?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, false)">A. Untuk membebaskan memori heap yang dipakai MDC</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, true)">B. Thread Pool me-reuse thread — request berikutnya di thread yang sama bisa mewarisi requestId yang salah</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, false)">C. MDC.put() hanya valid untuk satu pemanggilan log</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, false)">D. Logback tidak bisa menampilkan log tanpa remove() terlebih dahulu</div>
+                    <div class="quiz-feedback" id="quiz-5-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-5')">✅ Selesai — Lanjut ke Bab 6</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 6: Logger per Package ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 6 · Konfigurasi &amp; Hierarki</div>
+                <div class="text-title">🗂️ Hierarki Logger &amp; Konfigurasi per Package</div>
+                <p>Logback menggunakan <strong>hierarki logger</strong> berdasarkan nama package. Ini memungkinkan kamu mengatur level log secara granular tanpa harus edit setiap class.</p>
+
+                <div class="text-title" style="margin-top:var(--l)">Contoh Kasus: ContohTest vs LevelTest</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// package: contoh (berbeda dari programmerzamannow.logging)
+package contoh;
+
+public class ContohTest {
+  private static final Logger log = LoggerFactory.getLogger(ContohTest.class);
+
+  @Test
+  void testLog() {
+    log.error("Contoh");
+    log.info("Contoh Info");
+  }
+}
+
+// package: programmerzamannow.logging
+package programmerzamannow.logging;
+
+public class LevelTest {
+  private static final Logger log = LoggerFactory.getLogger(LevelTest.class);
+
+  @Test
+  void testLevel() {
+    log.trace("Trace");
+    log.debug("Debug");
+    log.info("Info");
+    log.warn("Warning");
+    log.error("Error");
+  }
+}</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Konfigurasi Level per Package (logback.xml)</div>
+                <div class="code-block">
+                    <pre><code class="language-xml">&lt;configuration&gt;
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;encoder&gt;
+      &lt;pattern&gt;%d %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
+
+  &lt;!-- Package 'contoh' → hanya ERROR yang muncul --&gt;
+  &lt;logger name="contoh" level="ERROR"/&gt;
+
+  &lt;!-- Package 'programmerzamannow' → DEBUG dan di atasnya --&gt;
+  &lt;logger name="programmerzamannow" level="DEBUG"/&gt;
+
+  &lt;!-- Root logger → default untuk package lain --&gt;
+  &lt;root level="INFO"&gt;
+    &lt;appender-ref ref="STDOUT" /&gt;
+  &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">&lt;logger name&gt;</span><span>Cocokkan berdasarkan prefix nama logger. <code>contoh</code> cocok dengan <code>contoh.ContohTest</code>. <code>programmerzamannow</code> cocok dengan semua sub-package-nya.</span></div>
+                    <div class="line-item"><span class="line-num">level="ERROR"</span><span>Hanya log level ERROR (dan yang lebih tinggi) dari package <code>contoh</code> yang akan dicetak. DEBUG, INFO, WARN diabaikan.</span></div>
+                    <div class="line-item"><span class="line-num">&lt;root level&gt;</span><span>Default untuk semua logger yang tidak punya konfigurasi spesifik.</span></div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Hierarki Nama Logger</div>
+                    <p style="font-size:var(--s)">Logger <code>com.example.service.UserService</code> adalah <em>anak</em> dari logger <code>com.example.service</code>, yang merupakan anak dari <code>com.example</code>, dst. Jika tidak ada konfigurasi untuk class spesifik, ia mewarisi level dari parent-nya (walk up ke root).</p>
+                </div>
+
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Logger Name</th>
+                            <th>Configured Level</th>
+                            <th>Effective Level</th>
+                            <th>Level yang Tercetak</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>root</code></td><td>INFO</td><td>INFO</td><td>INFO, WARN, ERROR</td></tr>
+                        <tr><td><code>contoh</code></td><td>ERROR</td><td>ERROR</td><td>ERROR saja</td></tr>
+                        <tr><td><code>contoh.ContohTest</code></td><td>none</td><td>ERROR (dari parent)</td><td>ERROR saja</td></tr>
+                        <tr><td><code>programmerzamannow</code></td><td>DEBUG</td><td>DEBUG</td><td>DEBUG, INFO, WARN, ERROR</td></tr>
+                        <tr><td><code>programmerzamannow.logging.MyService</code></td><td>none</td><td>DEBUG (dari parent)</td><td>DEBUG, INFO, WARN, ERROR</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, kamu bisa membuat multiple log channel di <code>config/logging.php</code> dan mengarahkan log dari class/namespace tertentu ke channel berbeda. Di Java, hierarki logger lebih native dan built-in — cukup konfigurasi di <code>logback.xml</code> tanpa kode PHP tambahan.</p>
+                </div>
+
+                <!-- Quiz 6 -->
+                <div class="quiz-box" id="quiz-6">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 6</div>
+                    <p style="font-size:var(--s)"><strong>Logger <code>com.example.UserService</code> tidak dikonfigurasi secara spesifik. Package <code>com.example</code> dikonfigurasi level WARN, dan root level INFO. Apa effective level-nya?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, false)">A. INFO (dari root)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, true)">B. WARN (dari parent <code>com.example</code> — parent terdekat menang)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, false)">C. DEBUG (level terendah aktif)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, false)">D. ERROR (level tertinggi aktif)</div>
+                    <div class="quiz-feedback" id="quiz-6-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-6')">✅ Selesai — Lanjut ke Bab 7</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 7: System.out vs Logger ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 7 · Best Practice</div>
+                <div class="text-title">⚖️ System.out.println() vs Logger — Mengapa Harus Migrasi</div>
+                <p>Ini pertanyaan klasik bagi developer yang baru ke Java: <em>"Kenapa tidak boleh pakai System.out.println saja?"</em>. Mari kita bandingkan secara komprehensif.</p>
+
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Fitur</th>
+                            <th><code>System.out.println()</code></th>
+                            <th>Logger (SLF4J)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Timestamp</td>
+                            <td>❌ Tidak ada</td>
+                            <td>✅ Otomatis</td>
+                        </tr>
+                        <tr>
+                            <td>Level prioritas</td>
+                            <td>❌ Tidak ada</td>
+                            <td>✅ TRACE/DEBUG/INFO/WARN/ERROR</td>
+                        </tr>
+                        <tr>
+                            <td>Nama class</td>
+                            <td>❌ Tidak ada</td>
+                            <td>✅ Otomatis dari Logger name</td>
+                        </tr>
+                        <tr>
+                            <td>Filter per level</td>
+                            <td>❌ Tidak bisa</td>
+                            <td>✅ Bisa matikan DEBUG di produksi</td>
+                        </tr>
+                        <tr>
+                            <td>Output ke file</td>
+                            <td>❌ Perlu redirect manual</td>
+                            <td>✅ Konfigurasi di logback.xml</td>
+                        </tr>
+                        <tr>
+                            <td>Format JSON/structured</td>
+                            <td>❌ Tidak bisa</td>
+                            <td>✅ Dengan encoder JSON</td>
+                        </tr>
+                        <tr>
+                            <td>MDC / Konteks</td>
+                            <td>❌ Tidak ada</td>
+                            <td>✅ Request ID, user ID, dll</td>
+                        </tr>
+                        <tr>
+                            <td>Performa di prod</td>
+                            <td>⚠️ Selalu berjalan</td>
+                            <td>✅ Level non-aktif = no-op</td>
+                        </tr>
+                        <tr>
+                            <td>Stack trace exception</td>
+                            <td>⚠️ Manual ke stderr</td>
+                            <td>✅ Argumen Throwable langsung</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ System.out.println — Output Mentah</div>
+                        <div class="code-block">
+                            <pre><code class="language-bash"># Output System.out.println:
+Hello Logger
+Selamat Belajar Java Logging
+
+# Tidak ada: waktu, level, nama class
+# Tidak bisa dimatikan di produksi
+# Tidak bisa diarahkan ke file log</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Logger — Output Terstruktur</div>
+                        <div class="code-block">
+                            <pre><code class="language-bash"># Output Logger (SLF4J + Logback):
+10:01:23 INFO  p.l.MainTest - Hello Logger
+10:01:23 INFO  p.l.MainTest - Selamat Belajar Java Logging
+
+# Ada: waktu, level, class, pesan
+# Bisa filter, redirect ke file, JSON</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box danger">
+                    <div class="info-box-title">🚨 System.out.println di Produksi = Masalah Serius</div>
+                    <p style="font-size:var(--s)">Di produksi, output <code>System.out</code> sering terbuang atau tidak terpantau. Logger terintegrasi dengan sistem monitoring (Splunk, ELK Stack, Datadog) melalui format terstruktur. Tim DevOps tidak bisa setup alert otomatis dari plain println.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Tips Cepat Migrasi dari System.out</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// Sebelum (PHP mindset — debug dengan echo/print)
+System.out.println("User: " + userId);
+System.out.println("Order created: " + orderId);
+
+// Sesudah (Java Logger mindset)
+log.debug("Processing user: {}", userId);
+log.info("Order created successfully: {}", orderId);
+
+// Exception handling
+try {
+    processOrder(order);
+} catch (PaymentException e) {
+    // JANGAN: e.printStackTrace();
+    // HARUS:
+    log.error("Payment failed for order: {}", order.getId(), e);
+}</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Juga Hindari e.printStackTrace()</div>
+                    <p style="font-size:var(--s)"><code>e.printStackTrace()</code> menulis ke <code>System.err</code>, bukan ke sistem logging kamu. Stack trace ini tidak akan masuk ke file log, tidak ada timestamp, tidak ada context MDC. Selalu gunakan <code>log.error("pesan", e)</code>.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP/Laravel</div>
+                    <p>Di PHP, menggunakan <code>echo</code> atau <code>var_dump()</code> untuk debug di produksi sama berbahayanya. Laravel mengenal ini dan menyediakan <code>Log::info()</code> via Monolog. Di Java, ini bahkan lebih krusial karena aplikasi Java sering berjalan sebagai service long-running tanpa console user.</p>
+                </div>
+
+                <!-- Quiz 7 -->
+                <div class="quiz-box" id="quiz-7">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 7</div>
+                    <p style="font-size:var(--s)"><strong>Saat menangkap Exception di Java, cara mana yang paling benar untuk mencatat error beserta stack trace-nya?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, false)">A. <code>log.error(e.getMessage())</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, false)">B. <code>e.printStackTrace()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, false)">C. <code>System.err.println(e)</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, true)">D. <code>log.error("Pesan deskriptif", e)</code></div>
+                    <div class="quiz-feedback" id="quiz-7-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-7')">🎉 Semua Bab Selesai! Lihat Summary</button>
+            </div>
+        </div>
+
+        <!-- ========== SUMMARY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Ringkasan Arsitektur</div>
+                <div class="text-title">📝 Summary: Java Logging dengan SLF4J &amp; Logback</div>
+                <p>Kamu telah menyelesaikan semua bab! Berikut cheat sheet lengkap yang bisa dijadikan referensi harian.</p>
+
+                <div class="text-title" style="margin-top:var(--l)">📋 Cheat Sheet Lengkap</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// ── SETUP (1x per class) ──────────────────────────────────
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+private static final Logger log = LoggerFactory.getLogger(NamaClass.class);
+
+// ── LOG LEVELS ────────────────────────────────────────────
+log.trace("Paling detail — hanya development intensif");
+log.debug("Debug — dimatikan di produksi");
+log.info("Event penting normal: {}", value);
+log.warn("Peringatan — tidak ideal: {}", detail);
+log.error("Error serius: {}", context, exception); // exception di akhir!
+
+// ── FORMAT PESAN ──────────────────────────────────────────
+log.info("User {} login dari IP {}", userId, ipAddress); // Positional placeholder
+log.error("Gagal proses order {}", orderId, e);           // Exception otomatis stack trace
+
+// ── MDC (Multi-thread context) ────────────────────────────
+MDC.put("requestId", UUID.randomUUID().toString());  // Set di awal request
+// ... semua log di thread ini otomatis menyertakan requestId ...
+MDC.remove("requestId");                              // WAJIB bersihkan di akhir
+
+// ── JANGAN LAKUKAN INI ────────────────────────────────────
+System.out.println("Debug: " + value);               // ❌ tidak ada level, context
+e.printStackTrace();                                  // ❌ ke stderr, bukan log system
+log.debug("Value: " + obj.expensive());              // ❌ concatenation selalu jalan
+log.error(e.getMessage());                            // ❌ stack trace hilang</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">🏗️ Arsitektur Codebase yang Dipelajari</div>
+                <div class="flow-box">
+                    <div class="flow-node">HTTP Request</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MDC.put()<br><small>requestId</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MyController<br><small>log: INFO</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MyService<br><small>log: INFO</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MyRepository<br><small>log: INFO</small></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node">MDC.remove()</div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">🔑 7 Golden Rules Java Logging</div>
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Selalu import SLF4J, bukan implementasi</div>
+                        <div class="timeline-content-desc"><code>import org.slf4j.Logger</code> — bukan <code>ch.qos.logback</code>. Kode tetap portable.</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Gunakan <code>{}</code> placeholder, bukan concatenation</div>
+                        <div class="timeline-content-desc">Lebih efisien dan lebih bersih. String hanya dibuat jika level aktif.</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Selalu sertakan Exception sebagai argumen terakhir</div>
+                        <div class="timeline-content-desc"><code>log.error("Gagal", e)</code> — bukan <code>log.error(e.getMessage())</code>. Stack trace sangat berharga.</div>
+                    </div>
+                    <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Bersihkan MDC setelah request selesai</div>
+                        <div class="timeline-content-desc"><code>MDC.remove()</code> atau gunakan <code>try-finally</code>. Thread pool me-reuse thread.</div>
+                    </div>
+                    <div><span class="timeline-key active">5</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Pilih level yang tepat</div>
+                        <div class="timeline-content-desc">DEBUG untuk development, INFO untuk event bisnis penting, WARN untuk situasi tak ideal, ERROR untuk kegagalan nyata.</div>
+                    </div>
+                    <div><span class="timeline-key active">6</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Satu Logger per class</div>
+                        <div class="timeline-content-desc"><code>LoggerFactory.getLogger(NamaClass.class)</code> di setiap class. Memudahkan konfigurasi dan filtering per package.</div>
+                    </div>
+                    <div><span class="timeline-key">7</span></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Tidak pernah System.out.println() atau e.printStackTrace() di produksi</div>
+                        <div class="timeline-content-desc">Output tidak terkontrol, tidak ada context, tidak masuk ke sistem monitoring. Gunakan Logger.</div>
+                    </div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">🗺️ Ekosistem Logging Java</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Komponen</th>
+                            <th>Role</th>
+                            <th>Alternatif</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><strong>SLF4J</strong></td><td>API / Facade (interface)</td><td>Java Util Logging API (jarang)</td></tr>
+                        <tr><td><strong>Logback</strong></td><td>Implementasi default Spring Boot</td><td>Log4j2, java.util.logging</td></tr>
+                        <tr><td><strong>logback.xml</strong></td><td>Konfigurasi appender, level, format</td><td>logback-spring.xml di Spring Boot</td></tr>
+                        <tr><td><strong>MDC</strong></td><td>Thread-local diagnostic context</td><td>NDC (Nested Diagnostic Context)</td></tr>
+                        <tr><td><strong>Appender</strong></td><td>Tujuan output log (Console, File, dll)</td><td>Custom Appender (Kafka, Sentry, dll)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex-ais-jcs gap-m" style="margin-top:var(--l)">
+                    <div class="badge text-white bg-primary"><p>☕ SLF4J</p></div>
+                    <div class="badge text-white" style="background: #16213e"><p>⚙️ Logback</p></div>
+                    <div class="badge text-white bg-success"><p>🔖 MDC</p></div>
+                    <div class="badge badge-small bg-warning"><p>⚠️ Level Filtering</p></div>
+                    <div class="badge badge-small bg-danger"><p>🚫 No println</p></div>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--l)">
+                    <div class="info-box-title">🎉 Kamu sudah memahami Java Logging!</div>
+                    <p style="font-size:var(--s)">Dengan SLF4J + Logback + MDC, logging di Java jauh lebih powerful dari <code>Log::info()</code> di Laravel. Langkah selanjutnya: pelajari <strong>logback.xml</strong> lebih dalam (rolling file appender, JSON encoder untuk ELK Stack), dan eksplorasi integrasi <strong>Spring Boot</strong> yang mengkonfigurasi logging otomatis via <code>application.properties</code>.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer style="padding:var(--l); text-align:center; font-size:var(--xs); color:var(--transtext-color);">
+        Java Logging · SLF4J &amp; Logback Learning Module · Untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-xml-doc.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+<script>
+    function showBottomSheet(p) { document.getElementsByClassName('bottom-sheet')[p].classList.toggle('active'); }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() { document.getElementsByTagName("body")[0].classList.toggle("dark-mode"); }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    const TOTAL = 7;
+    const done = new Set(JSON.parse(localStorage.getItem('done_logging') || '[]'));
+
+    function updateProgress() {
+        const pct = Math.round((done.size / TOTAL) * 100);
+        document.getElementById('progress-fill').style.width = pct + '%';
+        document.getElementById('progress-label').textContent = done.size + ' / ' + TOTAL + ' bab selesai';
+    }
+    function markDone(id) {
+        done.add(id);
+        try { localStorage.setItem('done_logging', JSON.stringify([...done])); } catch(e){}
+        updateProgress();
+        const n = parseInt(id.replace('chapter-', '')) + 1;
+        const next = document.getElementById('chapter-' + n) || document.getElementById('summary');
+        if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    updateProgress();
+
+    const answered = {};
+    function answerQuiz(id, el, correct) {
+        if (answered[id]) return;
+        answered[id] = true;
+        const fb = document.getElementById(id + '-feedback');
+        el.parentElement.querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
+        if (correct) {
+            el.classList.add('correct');
+            fb.textContent = '✅ Benar! Jawaban kamu tepat.';
+            fb.className = 'quiz-feedback show ok';
+        } else {
+            el.classList.add('wrong');
+            el.parentElement.querySelectorAll('.quiz-option').forEach(o => {
+                if (o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+            });
+            fb.textContent = '❌ Kurang tepat. Perhatikan jawaban yang benar (hijau).';
+            fb.className = 'quiz-feedback show ko';
+        }
+    }
+
+    const items = document.querySelectorAll('.sidebar-menu-item[href]');
+    const secs  = document.querySelectorAll('[id^="chapter-"], #summary, #pengantar');
+    new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                const id = e.target.getAttribute('id');
+                items.forEach(i => i.classList.toggle('active', i.getAttribute('href') === '#' + id));
+            }
+        });
+    }, { threshold: 0.3 }).observe(document.getElementById('pengantar') || secs[0]);
+    secs.forEach(s => {
+        new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const id = e.target.getAttribute('id');
+                    items.forEach(i => i.classList.toggle('active', i.getAttribute('href') === '#' + id));
+                }
+            });
+        }, { threshold: 0.3 }).observe(s);
+    });
+</script>
+</body>
+</html>

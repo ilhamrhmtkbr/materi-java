@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Belajar Java Persistence API (JPA) — Panduan untuk Developer PHP/Laravel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .chapter-intro{box-sizing:border-box;max-width:77dvw;overflow:auto;background:var(--transprimary-color);border-left:4px solid var(--primary-color);border-radius:var(--radius-m);padding:var(--m);margin-bottom:var(--m)}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-m);padding:var(--m);margin-bottom:var(--m)}
+        .info-box.warning{background:var(--transwarning-color);border-left:4px solid var(--warning-color)}
+        .info-box.success{background:var(--transsuccess-color);border-left:4px solid var(--success-color)}
+        .info-box.danger{background:var(--transdanger-color);border-left:4px solid var(--danger-color)}
+        .info-box.primary{background:var(--transprimary-color);border-left:4px solid var(--primary-color)}
+        .code-block{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin-bottom:var(--m)}
+        .code-block pre{margin:0!important;border-radius:var(--radius-l)!important}
+        .code-block pre code{font-size:.84rem}
+        .line-explain{box-sizing:border-box;max-width:77dvw;overflow:auto;padding:var(--s) var(--m);background:var(--transprimary-color);border-radius:var(--radius-m);margin-bottom:var(--s)}
+        .line-explain strong{color:var(--primary-color);font-size:var(--s)}
+        .quiz-box{box-sizing:border-box;max-width:77dvw;overflow:auto;background:var(--transsecond-primary-color);border:1px solid var(--second-primary-color);border-radius:var(--radius-l);padding:var(--m);margin-top:var(--l)}
+        .quiz-option{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) var(--m);border-radius:var(--radius-m);border:1px solid var(--border-color);margin-bottom:var(--s);cursor:pointer;background:var(--bg-color);transition:all .2s}
+        .quiz-option:hover{border-color:var(--primary-color);background:var(--transprimary-color)}
+        .quiz-option.correct{border-color:var(--success-color);background:var(--transsuccess-color)}
+        .quiz-option.wrong{border-color:var(--danger-color);background:var(--transdanger-color)}
+        .quiz-feedback{display:none;padding:var(--s);border-radius:var(--radius-m);margin-top:var(--s);font-size:var(--s)}
+        .quiz-feedback.show{display:block}
+        .quiz-feedback.correct{background:var(--transsuccess-color);color:var(--success-color)}
+        .quiz-feedback.wrong{background:var(--transdanger-color);color:var(--danger-color)}
+        .laravel-analogy{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,rgba(255,45,32,.07),rgba(255,45,32,.02));border:1px solid rgba(255,45,32,.22);border-radius:var(--radius-l);padding:var(--m);margin-bottom:var(--m)}
+        .laravel-analogy::before{content:"🐘 Analogi Laravel / Eloquent";display:block;font-weight:700;font-size:var(--s);color:#FF2D20;margin-bottom:var(--xs)}
+        .section-title-chip{display:inline-block;background:var(--transprimary-color);color:var(--primary-color);border-radius:var(--radius-s);padding:2px var(--xs);font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--xs)}
+        .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);max-width:77dvw;margin-bottom:var(--m)}
+        @media(max-width:600px){.comparison-grid{grid-template-columns:1fr}}
+        .comparison-card{border-radius:var(--radius-m);padding:var(--m);overflow-x:auto}
+        .comparison-card.wrong{border:1px solid var(--danger-color);background:var(--transdanger-color)}
+        .comparison-card.correct{border:1px solid var(--success-color);background:var(--transsuccess-color)}
+        .text-title{font-size:var(--x);font-weight:700;margin-bottom:var(--s)}
+        .hero-banner{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,#1a73e8,#0d47a1);border-radius:var(--radius-x);padding:var(--xx);color:white;margin-bottom:var(--l)}
+        .hero-banner h1{color:white;margin:0 0 var(--s) 0;font-size:var(--xxx)}
+        .hero-banner p{color:rgba(255,255,255,.85);margin:0}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-intro">🏠 Intro</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal"><div class="bottom-nav-items-elements-content">
+            <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+            <a class="bottom-nav-item" href="#chapter-1">1. EntityManagerFactory &amp; EntityManager</a>
+            <a class="bottom-nav-item" href="#chapter-2">2. CRUD Operations</a>
+            <a class="bottom-nav-item" href="#chapter-3">3. Column Mapping &amp; @Transient</a>
+            <a class="bottom-nav-item" href="#chapter-4">4. Data Types, Enum &amp; Date</a>
+            <a class="bottom-nav-item" href="#chapter-5">5. Generated Value &amp; @Id</a>
+            <a class="bottom-nav-item" href="#chapter-6">6. Embedded &amp; EmbeddedId</a>
+            <a class="bottom-nav-item" href="#chapter-7">7. Entity Relationships</a>
+            <a class="bottom-nav-item" href="#chapter-8">8. Fetch Type &amp; Lazy Loading</a>
+            <a class="bottom-nav-item" href="#chapter-9">9. Entity Listener &amp; Lifecycle Callback</a>
+            <a class="bottom-nav-item" href="#chapter-10">10. Inheritance Strategies</a>
+            <a class="bottom-nav-item" href="#chapter-11">11. MappedSuperclass</a>
+            <a class="bottom-nav-item" href="#chapter-12">12. JPQL — Java Persistence Query Language</a>
+            <a class="bottom-nav-item" href="#chapter-13">13. Aggregate Query &amp; Named Query</a>
+            <a class="bottom-nav-item" href="#chapter-14">14. Native Query &amp; Non-Query</a>
+            <a class="bottom-nav-item" href="#chapter-15">15. Criteria API</a>
+            <a class="bottom-nav-item" href="#chapter-16">16. Collection Mapping (@ElementCollection)</a>
+            <a class="bottom-nav-item" href="#chapter-17">17. Managed Entity &amp; Entity Lifecycle</a>
+            <a class="bottom-nav-item" href="#chapter-18">18. Locking: Optimistic &amp; Pessimistic</a>
+            <a class="bottom-nav-item" href="#chapter-summary">📋 Summary</a>
+        </div></div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">Java JPA</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#chapter-intro" class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🚀</div><span>Pengantar</span></a>
+        <details class="sidebar-menu-accordion" open>
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📖</strong><span>Materi JPA</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#chapter-1" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🏭</strong><span>1. EntityManagerFactory &amp; EntityManager</span></a>
+                <a href="#chapter-2" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">💾</strong><span>2. CRUD Operations</span></a>
+                <a href="#chapter-3" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🗂️</strong><span>3. Column Mapping &amp; @Transient</span></a>
+                <a href="#chapter-4" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📅</strong><span>4. Data Types, Enum &amp; Date</span></a>
+                <a href="#chapter-5" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔑</strong><span>5. Generated Value &amp; @Id</span></a>
+                <a href="#chapter-6" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📦</strong><span>6. Embedded &amp; EmbeddedId</span></a>
+                <a href="#chapter-7" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔗</strong><span>7. Entity Relationships</span></a>
+                <a href="#chapter-8" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📡</strong><span>8. Fetch Type &amp; Lazy Loading</span></a>
+                <a href="#chapter-9" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🎧</strong><span>9. Entity Listener &amp; Lifecycle Callback</span></a>
+                <a href="#chapter-10" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🧬</strong><span>10. Inheritance Strategies</span></a>
+                <a href="#chapter-11" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🏛️</strong><span>11. MappedSuperclass</span></a>
+                <a href="#chapter-12" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📝</strong><span>12. JPQL — Java Persistence Query Language</span></a>
+                <a href="#chapter-13" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📊</strong><span>13. Aggregate Query &amp; Named Query</span></a>
+                <a href="#chapter-14" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🖥️</strong><span>14. Native Query &amp; Non-Query</span></a>
+                <a href="#chapter-15" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔬</strong><span>15. Criteria API</span></a>
+                <a href="#chapter-16" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🧩</strong><span>16. Collection Mapping (@ElementCollection)</span></a>
+                <a href="#chapter-17" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔄</strong><span>17. Managed Entity &amp; Entity Lifecycle</span></a>
+                <a href="#chapter-18" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🔐</strong><span>18. Locking: Optimistic &amp; Pessimistic</span></a>
+                <a href="#chapter-summary" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🗺️</strong><span>Summary Arsitektur JPA</span></a>
+            </div>
+        </details>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav"><a class="container-header-nav-item active"><span class="container-header-nav-item-text">Java JPA Course</span></a></div>
+        <div class="container-header-button-show-sidebar" onclick="showMenu()">
+            <svg id="get-menu" viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+    <section class="container-content">
+        <div class="card-wrapper max-width-1000" id="chapter-intro">
+            <div class="hero-banner">
+                <h1>🗄️ Belajar Java Persistence API (JPA)</h1>
+                <p>ORM standar Java — petakan object Java ke tabel database tanpa SQL manual. Panduan untuk developer PHP/Laravel dengan analogi Eloquent ORM.</p>
+            </div>
+            <div class="section-title-chip">Apa itu JPA?</div>
+            <div class="text-title">JPA = Eloquent-nya Java</div>
+            <p>Java Persistence API (JPA) adalah standar ORM (Object-Relational Mapping) di ekosistem Java. Implementasi paling populer adalah <strong>Hibernate</strong> — yang digunakan di balik Spring Data JPA. JPA memungkinkan kamu bekerja dengan database lewat object Java, tanpa menulis SQL secara manual.</p>
+            <div class="comparison-grid">
+                <div class="card-wrapper">
+                    <div class="section-title-chip">Laravel / Eloquent</div>
+                    <div class="data"><div class="data-key">ORM</div><div class="data-value">Eloquent ORM (built-in)</div></div>
+                    <div class="data"><div class="data-key">Model</div><div class="data-value">class User extends Model</div></div>
+                    <div class="data"><div class="data-key">Query Builder</div><div class="data-value">DB::table() / fluent chain</div></div>
+                    <div class="data"><div class="data-key">Migration</div><div class="data-value">php artisan migrate</div></div>
+                    <div class="data"><div class="data-key">Relasi</div><div class="data-value">hasOne, hasMany, belongsTo</div></div>
+                </div>
+                <div class="card-wrapper">
+                    <div class="section-title-chip">Java / JPA</div>
+                    <div class="data"><div class="data-key">ORM</div><div class="data-value">JPA (spec) + Hibernate (impl)</div></div>
+                    <div class="data"><div class="data-key">Model</div><div class="data-value">@Entity class Customer</div></div>
+                    <div class="data"><div class="data-key">Query Builder</div><div class="data-value">JPQL / Criteria API</div></div>
+                    <div class="data"><div class="data-key">Migration</div><div class="data-value">Flyway / Liquibase / DDL-auto</div></div>
+                    <div class="data"><div class="data-key">Relasi</div><div class="data-value">@OneToOne, @OneToMany, @ManyToMany</div></div>
+                </div>
+            </div>
+            <div class="info-box warning"><strong>⚡ Perbedaan Kunci:</strong> Di Eloquent, setiap method query langsung eksekusi SQL. Di JPA, ada konsep <strong>EntityManager</strong> — kamu harus membuka session, mulai transaksi, lakukan operasi, lalu commit. Lebih verbose, tapi lebih explicit dan kontrol penuh.</div>
+            <div class="section-title-chip">Learning Path</div>
+            <div class="timeline">
+                <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                <div class="timeline-content max-width-400"><div class="timeline-content-title">Setup &amp; CRUD Dasar</div><div class="timeline-content-desc">EntityManager, transaksi, dan operasi persist/find/merge/remove</div></div>
+                <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                <div class="timeline-content max-width-400"><div class="timeline-content-title">Entity Mapping</div><div class="timeline-content-desc">Column, tipe data, enum, tanggal, embedded, dan generated value</div></div>
+                <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                <div class="timeline-content max-width-400"><div class="timeline-content-title">Relationships &amp; Fetch</div><div class="timeline-content-desc">OneToOne, OneToMany, ManyToMany, Lazy vs Eager loading</div></div>
+                <div><span class="timeline-key">4</span><div class="timeline-divider"></div></div>
+                <div class="timeline-content max-width-400"><div class="timeline-content-title">Inheritance &amp; Listener</div><div class="timeline-content-desc">Single table, joined, table per class, lifecycle callbacks</div></div>
+                <div><span class="timeline-key">5</span><div class="timeline-divider"></div></div>
+                <div class="timeline-content max-width-400"><div class="timeline-content-title">Querying</div><div class="timeline-content-desc">JPQL, Named Query, Criteria API, Native Query</div></div>
+                <div><span class="timeline-key">6</span></div>
+                <div class="timeline-content max-width-400"><div class="timeline-content-title">Advanced: Locking &amp; Lifecycle</div><div class="timeline-content-desc">Optimistic/Pessimistic locking, managed entity lifecycle</div></div>
+            </div>
+        </div>
+
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 1</div>
+                <div class="text-title">🏭 EntityManagerFactory &amp; EntityManager</div>
+                <div class="chapter-intro">Dua komponen inti JPA. <strong>EntityManagerFactory</strong> adalah singleton — dibuat sekali untuk satu database. <strong>EntityManager</strong> adalah per-request/per-operation — seperti "koneksi" ke database yang kamu buka dan tutup setiap melakukan operasi.</div>
+                <div class="code-block"><pre><code class="language-java">// JpaUtil.java — Singleton Factory
+public class JpaUtil {
+    private static EntityManagerFactory entityManagerFactory = null;
+
+    public static EntityManagerFactory getEntityManagerFactory() {
+        if (entityManagerFactory == null) {
+            // "BELAJAR" = nama persistence unit di persistence.xml
+            entityManagerFactory = Persistence.createEntityManagerFactory("BELAJAR");
+        }
+        return entityManagerFactory;
+    }
+}
+
+// Cara pakai di setiap test/service
+EntityManagerFactory emf = JpaUtil.getEntityManagerFactory();
+EntityManager em = emf.createEntityManager();        // buka session
+EntityTransaction tx = em.getTransaction();
+
+try {
+    tx.begin();                   // mulai transaksi
+    // ... operasi database ...
+    tx.commit();                  // simpan perubahan
+} catch (Throwable t) {
+    tx.rollback();                // batalkan jika error
+} finally {
+    em.close();                   // SELALU tutup EntityManager!
+}</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>Persistence.createEntityManagerFactory("BELAJAR")</strong><br>Membaca konfigurasi dari <code>persistence.xml</code> — nama persistence unit, koneksi database, dialect, dll. Mahal secara resource — buat sekali (Singleton pattern).</div><div class="line-explain"><strong>emf.createEntityManager()</strong><br>Membuat satu session kerja ke database. Ringan, bisa dibuat banyak. Di aplikasi web biasanya satu EntityManager per HTTP request. WAJIB di-close setelah selesai.</div><div class="line-explain"><strong>em.getTransaction()</strong><br>JPA menggunakan resource-local transaction secara eksplisit. <code>begin()</code> memulai, <code>commit()</code> menyimpan, <code>rollback()</code> membatalkan semua perubahan dalam transaksi.</div><div class="info-box warning"><strong>⚡ Tidak seperti Eloquent!</strong><br>Di Eloquent, kamu cukup <code>User::create($data)</code> dan selesai. Di JPA, kamu harus eksplisit: buka EntityManager → begin transaction → persist → commit → close. Lebih verbose tapi memberikan kontrol penuh atas kapan data benar-benar disimpan.</div><div class="laravel-analogy">EntityManagerFactory ≈ koneksi database Laravel (<code>config/database.php</code>). EntityManager ≈ satu "sesi" query, mirip <code>DB::connection()</code> tapi lebih stateful. Transaction JPA ≈ <code>DB::transaction(function() { ... })</code> di Laravel.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Mengapa EntityManagerFactory harus dibuat sebagai Singleton (sekali saja), sedangkan EntityManager dibuat setiap kali diperlukan?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q1')"><span>A.</span><span>Karena EntityManagerFactory gratis secara resource, sedangkan EntityManager mahal.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q1')"><span>B.</span><span>EntityManagerFactory mahal (baca konfigurasi, buat connection pool). EntityManager ringan dan tidak thread-safe — satu per operasi/request.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q1')"><span>C.</span><span>Tidak ada perbedaan, keduanya bisa dibuat berkali-kali.</span></div><div class="quiz-feedback" id="q1-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 2</div>
+                <div class="text-title">💾 CRUD Operations</div>
+                <div class="chapter-intro">Empat operasi dasar JPA: <code>persist()</code> (insert), <code>find()</code> (select by id), <code>merge()</code> (update), <code>remove()</code> (delete). Semua harus dilakukan di dalam transaksi yang aktif.</div>
+                <div class="code-block"><pre><code class="language-java">// INSERT — persist()
+Customer customer = new Customer();
+customer.setId("1");
+customer.setName("Eko");
+entityManager.persist(customer);  // object masuk ke "managed" state
+// SQL: INSERT INTO customers (id, name) VALUES ('1', 'Eko')
+
+// SELECT BY ID — find()
+Customer found = entityManager.find(Customer.class, "1");
+// SQL: SELECT * FROM customers WHERE id = '1'
+// Jika tidak ditemukan → mengembalikan null (bukan exception!)
+
+// UPDATE — merge()
+Customer toUpdate = entityManager.find(Customer.class, "1");
+toUpdate.setName("Eko Kurniawan");
+entityManager.merge(toUpdate);
+// SQL: UPDATE customers SET name = 'Eko Kurniawan' WHERE id = '1'
+// Catatan: jika entity sudah "managed" (dari find), update OTOMATIS saat commit!
+
+// DELETE — remove()
+Customer toDelete = entityManager.find(Customer.class, "1");
+entityManager.remove(toDelete);
+// SQL: DELETE FROM customers WHERE id = '1'
+// toDelete harus dalam "managed" state dulu (hasil find)</code></pre></div><div class="section-title-chip">Penjelasan Penting</div><div class="line-explain"><strong>persist() vs merge()</strong><br><code>persist()</code> untuk INSERT — object yang belum pernah disimpan. <code>merge()</code> untuk UPDATE — object yang sudah ada di database atau sudah di-detach. Kalau ragu, gunakan <code>merge()</code> tapi pastikan ID sudah di-set.</div><div class="line-explain"><strong>find() vs getReference()</strong><br><code>find()</code> langsung eksekusi SQL SELECT. <code>getReference()</code> mengembalikan proxy tanpa SELECT — SQL baru dieksekusi saat kamu benar-benar mengakses field-nya (lazy). Gunakan <code>getReference()</code> jika kamu hanya butuh object untuk di-assign sebagai foreign key.</div><div class="line-explain"><strong>Managed Entity = Auto-Save!</strong><br>Setelah <code>find()</code>, object dalam status "managed". Kamu cukup <code>toUpdate.setName("baru")</code> tanpa panggil <code>merge()</code> — JPA secara otomatis tracking perubahan (dirty checking) dan akan UPDATE saat commit. Ini yang membuat JPA "magical"!</div><div class="info-box success"><strong>✅ Urutan yang benar:</strong> Selalu lakukan <code>find()</code> terlebih dahulu sebelum <code>remove()</code>. <code>remove()</code> hanya bisa dilakukan pada object yang dalam state "managed", bukan object yang baru dibuat (<code>new Customer()</code>).</div><div class="laravel-analogy">Eloquent: <code>User::create($data)</code> ≈ persist(). <code>User::find($id)</code> ≈ find(). <code>$user->update($data)</code> ≈ merge(). <code>$user->delete()</code> ≈ remove(). Perbedaan besar: Eloquent menjalankan SQL langsung saat method dipanggil, JPA mengumpulkan perubahan dan flush saat commit.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Setelah memanggil entityManager.find(Customer.class, "1"), kamu mengubah customer.setName("baru"). Apakah kamu perlu memanggil entityManager.merge(customer) agar perubahan tersimpan?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q2')"><span>A.</span><span>Ya, selalu harus memanggil merge() agar perubahan disimpan.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q2')"><span>B.</span><span>Tidak perlu. Object hasil find() dalam status "managed" — JPA otomatis tracking perubahan (dirty checking) dan akan UPDATE saat commit.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q2')"><span>C.</span><span>Kamu harus memanggil entityManager.flush() secara manual.</span></div><div class="quiz-feedback" id="q2-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 3</div>
+                <div class="text-title">🗂️ Column Mapping &amp; @Transient</div>
+                <div class="chapter-intro">JPA memetakan field Java ke kolom database secara otomatis (nama field = nama kolom). Gunakan <code>@Column</code> untuk kustomisasi dan <code>@Transient</code> untuk field yang TIDAK mau disimpan ke database.</div>
+                <div class="code-block"><pre><code class="language-java">// Customer.java
+@Entity
+@Table(name = "customers")  // petakan ke tabel "customers"
+public class Customer {
+
+    @Id
+    @Column(name = "id")   // kolom "id" di tabel
+    private String id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "primary_email")  // nama kolom beda dari field Java
+    private String primaryEmail;
+
+    private Boolean married;   // kolom: married (otomatis)
+    private Byte age;          // kolom: age (otomatis)
+
+    @Enumerated(EnumType.STRING)  // simpan nama enum ("PREMIUM"), bukan ordinal (1)
+    private CustomerType type;
+
+    @Transient    // TIDAK disimpan ke database!
+    private String fullName;
+
+    // getter/setter ...
+}
+
+// CustomerType.java
+public enum CustomerType { REGULAR, PREMIUM, VIP }
+
+// Cara pakai:
+Customer c = new Customer();
+c.setId("3");
+c.setName("Joko");
+c.setType(CustomerType.PREMIUM);   // disimpan sebagai string "PREMIUM"
+c.setFullName("Joko Susilo");      // TIDAK disimpan — @Transient
+entityManager.persist(c);</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>@Table(name = "customers")</strong><br>Jika nama class berbeda dari nama tabel, gunakan <code>@Table</code>. Tanpa annotation ini, JPA otomatis menggunakan nama class sebagai nama tabel (case-sensitive di beberapa database).</div><div class="line-explain"><strong>@Column(name = "primary_email")</strong><br>Mapping field <code>primaryEmail</code> (camelCase Java) ke kolom <code>primary_email</code> (snake_case SQL). Konvensi SQL menggunakan underscore, Java menggunakan camelCase — gunakan <code>@Column</code> untuk menjembataninya.</div><div class="line-explain"><strong>@Enumerated(EnumType.STRING)</strong><br>Menyimpan enum sebagai String ("PREMIUM") bukan ordinal (angka urutan). <strong>Selalu gunakan EnumType.STRING!</strong> Jika kamu menggunakan ordinal dan menambahkan nilai baru di tengah enum, semua data lama akan salah.</div><div class="line-explain"><strong>@Transient</strong><br>Field ini tidak di-mapping ke kolom manapun. JPA mengabaikannya — tidak SELECT, tidak INSERT. Berguna untuk computed field seperti <code>fullName</code> yang dihitung dari field lain.</div><div class="info-box danger"><strong>🚨 Jangan gunakan @Enumerated(EnumType.ORDINAL)!</strong><br>ORDINAL menyimpan angka (0, 1, 2). Jika kamu menambahkan <code>GUEST</code> di posisi pertama enum, semua yang tadinya REGULAR (0) menjadi GUEST, PREMIUM (1) menjadi REGULAR, dan seterusnya. Bug data yang sangat berbahaya!</div><div class="laravel-analogy">Di Laravel, kamu mendefinisikan kolom di migration dan Eloquent otomatis map. Di JPA, mapping dilakukan langsung di class dengan annotation. <code>@Table(name="customers")</code> ≈ nama tabel di migration. <code>@Column</code> ≈ definisi kolom. <code>@Transient</code> ≈ field yang tidak ada di <code>$fillable</code> dan tidak di-cast.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Mengapa SANGAT disarankan menggunakan @Enumerated(EnumType.STRING) dibandingkan EnumType.ORDINAL?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q3')"><span>A.</span><span>Karena STRING lebih cepat diproses oleh database.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q3')"><span>B.</span><span>Karena ORDINAL menyimpan posisi angka enum — jika urutan enum berubah (tambah/hapus nilai di tengah), semua data lama akan salah mapping dan tidak bisa dikembalikan.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q3')"><span>C.</span><span>Karena ORDINAL tidak didukung oleh semua database.</span></div><div class="quiz-feedback" id="q3-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 4</div>
+                <div class="text-title">📅 Data Types, Enum &amp; Date/Time</div>
+                <div class="chapter-intro">JPA mendukung berbagai tipe data Java. Yang paling perlu perhatian adalah penanganan <strong>Date dan Time</strong> — ada dua pendekatan: Legacy (<code>java.util.Calendar</code> + <code>@Temporal</code>) dan Modern (<code>java.time.LocalDateTime</code> langsung tanpa annotation).</div>
+                <div class="code-block"><pre><code class="language-java">// Category.java — tanggal/waktu
+@Entity
+@Table(name = "categories")
+public class Category {
+
+    // ... id, name, description ...
+
+    @Temporal(TemporalType.TIMESTAMP)  // pendekatan LAMA
+    @Column(name = "created_at")
+    private Calendar createdAt;        // java.util.Calendar
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;   // pendekatan MODERN — tidak perlu @Temporal!
+}
+
+// Image.java — tipe data besar
+@Entity
+@Table(name = "images")
+public class Image {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
+
+    @Lob  // Large Object — untuk TEXT / BLOB
+    private String description;  // disimpan sebagai TEXT/CLOB
+
+    @Lob
+    private byte[] image;        // disimpan sebagai BLOB/BYTEA
+
+}
+
+// DataTypeTest.java — contoh tipe primitif wrapper
+Customer customer = new Customer();
+customer.setAge((byte) 30);     // Byte (bukan primitive byte)
+customer.setMarried(true);      // Boolean (wrapper, bisa null)</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>@Temporal(TemporalType.TIMESTAMP)</strong><br>Diperlukan untuk tipe <code>java.util.Date</code> atau <code>java.util.Calendar</code> agar JPA tahu format penyimpanannya (DATE, TIME, atau TIMESTAMP). Ini adalah API lama — <strong>hindari jika memungkinkan</strong>.</div><div class="line-explain"><strong>LocalDateTime updatedAt</strong><br>Tipe dari package <code>java.time</code> (Java 8+) sudah dikenali JPA/Hibernate secara langsung — tidak perlu <code>@Temporal</code>. Gunakan <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>, atau <code>ZonedDateTime</code> untuk kode modern.</div><div class="line-explain"><strong>@Lob</strong><br>Large Object — untuk data besar. <code>String</code> dengan <code>@Lob</code> disimpan sebagai <code>TEXT</code>/<code>CLOB</code> (tidak terbatas 255 karakter). <code>byte[]</code> dengan <code>@Lob</code> disimpan sebagai <code>BLOB</code>/<code>BYTEA</code> untuk file binary.</div><div class="line-explain"><strong>Byte vs byte</strong><br>JPA merekomendasikan tipe wrapper (Boolean, Byte, Integer) bukan tipe primitif (boolean, byte, int) agar field bisa bernilai <code>null</code> di database — tipe primitif tidak bisa null.</div><div class="info-box success"><strong>💡 Gunakan java.time (modern):</strong> LocalDate, LocalTime, LocalDateTime, ZonedDateTime — tidak butuh @Temporal. Hindari java.util.Date dan Calendar yang sudah deprecated di banyak kasus modern.</div><div class="laravel-analogy">Di Laravel, tipe kolom ditentukan di migration (<code>$table->timestamp()</code>, <code>$table->text()</code>). Di Eloquent, field <code>created_at</code> dan <code>updated_at</code> otomatis menggunakan Carbon. Di JPA, kamu harus eksplisit mendeklarasikan tipe Java yang sesuai. <code>@Lob</code> ≈ <code>$table->text()</code> atau <code>$table->binary()</code>.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Kamu punya field <code>private LocalDateTime createdAt</code> di entity JPA. Annotation apa yang harus ditambahkan agar field ini ter-mapping dengan benar ke database?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q4')"><span>A.</span><span>@Temporal(TemporalType.TIMESTAMP) wajib ditambahkan.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q4')"><span>B.</span><span>Tidak perlu annotation tambahan — LocalDateTime sudah dikenali JPA/Hibernate secara otomatis.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q4')"><span>C.</span><span>@Column(type="timestamp") harus ditambahkan.</span></div><div class="quiz-feedback" id="q4-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 5</div>
+                <div class="text-title">🔑 Generated Value &amp; Primary Key (@Id)</div>
+                <div class="chapter-intro">JPA menyediakan beberapa strategi auto-generate primary key. Pilihan strategi bergantung pada database yang digunakan dan kebutuhan aplikasi.</div>
+                <div class="code-block"><pre><code class="language-java">// Strategi 1: AUTO — JPA pilih sendiri (biasanya SEQUENCE atau TABLE)
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
+private Long id;
+
+// Strategi 2: IDENTITY — gunakan AUTO_INCREMENT database
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Integer id;          // cocok untuk MySQL, PostgreSQL SERIAL
+// Category, Image, Member, Wallet menggunakan strategi ini
+
+// Strategi 3: SEQUENCE — gunakan sequence database
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE,
+    generator = "my_seq")
+@SequenceGenerator(name = "my_seq", sequenceName = "my_sequence")
+private Long id;             // cocok untuk PostgreSQL, Oracle
+
+// Strategi 4: TABLE — simulasi sequence dengan tabel khusus
+@Id
+@GeneratedValue(strategy = GenerationType.TABLE)
+private Long id;             // portable tapi lambat
+
+// Manual ID (tanpa @GeneratedValue)
+@Id
+private String id;           // Brand, Customer, Product — kamu set sendiri
+
+// Cara pakai IDENTITY
+Category category = new Category();
+category.setName("Gadget");
+// id belum ada (null)!
+entityManager.persist(category);
+// setelah persist(), id sudah terisi otomatis dari database
+System.out.println(category.getId());  // tidak null lagi!</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>GenerationType.IDENTITY</strong><br>Database yang mengurus auto-increment (<code>AUTO_INCREMENT</code> MySQL, <code>SERIAL</code> PostgreSQL). Hibernate menjalankan INSERT lalu query balik ID yang baru dibuat. Paling sederhana untuk MySQL.</div><div class="line-explain"><strong>GenerationType.SEQUENCE</strong><br>Lebih efisien dari IDENTITY karena Hibernate bisa pre-fetch batch ID sebelum INSERT (tanpa query balik). Direkomendasikan untuk PostgreSQL dan Oracle. Tidak didukung MySQL versi lama.</div><div class="line-explain"><strong>Manual ID (String)</strong><br>Jika tidak ada <code>@GeneratedValue</code>, kamu yang bertanggung jawab mengisi ID sebelum persist(). Cocok untuk ID yang punya arti (slug, UUID yang kamu generate sendiri).</div><div class="line-explain"><strong>category.getId() setelah persist()</strong><br>Setelah <code>persist()</code>, entity dalam managed state dan JPA sudah mengisi field ID dari database. Ini yang ditest di <code>GeneratedValueTest</code>: <code>Assertions.assertNotNull(category.getId())</code>.</div><div class="info-box primary"><strong>💡 UUID sebagai ID</strong><br>Di aplikasi modern, sering menggunakan UUID sebagai ID: <code>@Id private String id = UUID.randomUUID().toString();</code> — tidak perlu @GeneratedValue, ID di-generate di sisi Java sebelum persist. Aman untuk distributed system dan tidak ada urutan yang bisa ditebak.</div><div class="laravel-analogy">@GeneratedValue(IDENTITY) ≈ <code>$table->id()</code> di migration Laravel (auto increment). Manual String ID ≈ <code>$table->string("id")</code> dengan UUID. Di Eloquent, <code>$incrementing = false</code> dan <code>$keyType = "string"</code> untuk UUID. Di JPA tidak perlu config tambahan — cukup tidak pasang @GeneratedValue.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Apa yang terjadi setelah memanggil entityManager.persist(category) jika category menggunakan @GeneratedValue(strategy = GenerationType.IDENTITY)?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q5')"><span>A.</span><span>ID masih null — harus memanggil entityManager.find() dulu untuk mendapatkan ID.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q5')"><span>B.</span><span>ID otomatis terisi setelah persist() — JPA meminta ID dari database dan langsung mengisi field @Id.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q5')"><span>C.</span><span>ID terisi setelah entityTransaction.commit() bukan setelah persist().</span></div><div class="quiz-feedback" id="q5-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 6</div>
+                <div class="text-title">📦 Embedded &amp; EmbeddedId</div>
+                <div class="chapter-intro"><code>@Embedded</code> memungkinkan kamu memecah kolom-kolom dalam satu tabel ke dalam beberapa class Java. Kolom tetap berada di satu tabel, tapi representasi Java-nya lebih terstruktur. <code>@EmbeddedId</code> digunakan untuk composite primary key.</div>
+                <div class="code-block"><pre><code class="language-java">// Name.java — @Embeddable: bisa di-embed ke entity lain
+@Embeddable
+public class Name {
+    private String title;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "middle_name")
+    private String middleName;
+
+    @Column(name = "last_name")
+    private String lastName;
+    // getter/setter ...
+}
+
+// Member.java — memakai @Embedded
+@Entity
+@Table(name = "members")
+public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String email;
+
+    @Embedded   // kolom title, first_name, middle_name, last_name di tabel members
+    private Name name;
+}
+
+// DepartmentId.java — Composite Primary Key
+@Embeddable
+public class DepartmentId implements Serializable {
+    @Column(name = "company_id")
+    private String companyId;
+
+    @Column(name = "department_id")
+    private String departmentId;
+    // getter/setter ...
+}
+
+// Department.java — menggunakan @EmbeddedId
+@Entity
+@Table(name = "departments")
+public class Department {
+    @EmbeddedId
+    private DepartmentId id;   // PK terdiri dari 2 kolom
+
+    private String name;
+}
+
+// Cara pakai EmbeddedId
+DepartmentId id = new DepartmentId();
+id.setCompanyId("pzn");
+id.setDepartmentId("tech");
+
+Department dept = new Department();
+dept.setId(id);
+dept.setName("Teknologi");
+entityManager.persist(dept);
+
+// Find by composite key
+Department found = entityManager.find(Department.class, id);</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>@Embeddable</strong><br>Class ini bisa di-embed ke dalam entity. Class tidak punya tabel sendiri — semua field-nya akan menjadi kolom di tabel entity yang meng-embed-nya. Seperti Value Object di DDD.</div><div class="line-explain"><strong>@Embedded pada field Member.name</strong><br>Semua kolom Name (<code>title</code>, <code>first_name</code>, <code>middle_name</code>, <code>last_name</code>) akan berada di tabel <code>members</code>. Di database, tidak ada tabel <code>names</code> — semuanya di satu tabel. Di Java, kamu bisa akses via <code>member.getName().getFirstName()</code>.</div><div class="line-explain"><strong>@EmbeddedId — Composite Primary Key</strong><br>Ketika primary key terdiri dari lebih dari satu kolom, gunakan class terpisah annotated <code>@Embeddable</code> yang implement <code>Serializable</code>, lalu field di entity di-annotate <code>@EmbeddedId</code>. <code>entityManager.find()</code> menggunakan object ID ini sebagai key.</div><div class="info-box warning"><strong>⚡ @EmbeddedId harus Serializable!</strong><br>Class composite key (seperti DepartmentId) WAJIB mengimplementasikan <code>java.io.Serializable</code>. Ini karena JPA menyimpan key di cache dan perlu serialisasi. Lupa implement ini akan menyebabkan runtime error yang membingungkan.</div><div class="laravel-analogy">@Embedded mirip konsep <code>$casts</code> di Eloquent untuk Value Object, atau penggunaan accessor/mutator untuk memecah data JSON. Composite primary key di Laravel/Eloquent bisa dilakukan dengan meng-override <code>$primaryKey</code> jadi array, tapi lebih jarang dipakai dibanding JPA.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Jika kamu memiliki @Embeddable class Name dan meng-embed-nya ke entity Member dengan @Embedded, berapa tabel yang akan dibuat di database?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q6')"><span>A.</span><span>Dua tabel: members dan names.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q6')"><span>B.</span><span>Satu tabel: members. Semua kolom dari Name (title, first_name, dll) menjadi kolom di tabel members.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q6')"><span>C.</span><span>Tergantung konfigurasi — bisa satu atau dua tabel.</span></div><div class="quiz-feedback" id="q6-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 7</div>
+                <div class="text-title">🔗 Entity Relationships</div>
+                <div class="chapter-intro">JPA mendukung semua tipe relasi antar tabel: OneToOne, OneToMany/ManyToOne, dan ManyToMany. Setiap tipe memiliki annotation yang berbeda dan konsep "owning side" yang penting dipahami.</div>
+                <div class="code-block"><pre><code class="language-java">// === ONE-TO-ONE ===
+// User.java — sisi yang punya foreign key (owning side)
+@Entity @Table(name = "users")
+public class User {
+    @Id private String id;
+
+    // PK Join: kolom "id" di users = kolom "id" di credentials
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
+    private Credential credential;
+
+    // Wallet punya FK ke users (mappedBy = "user")
+    @OneToOne(mappedBy = "user")
+    private Wallet wallet;
+}
+
+// Wallet.java — sisi yang punya FK (owning side untuk relasi ke User)
+@Entity @Table(name = "wallet")
+public class Wallet {
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+}
+
+// === ONE-TO-MANY / MANY-TO-ONE ===
+// Brand.java — satu Brand punya banyak Product
+@Entity @Table(name = "brands")
+public class Brand extends AuditableEntity&lt;String&gt; {
+    @OneToMany(mappedBy = "brand")  // Brand tidak punya FK — Product yang punya
+    private List&lt;Product&gt; products;
+}
+
+// Product.java — banyak Product milik satu Brand
+@Entity @Table(name = "products")
+public class Product {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id", referencedColumnName = "id")
+    private Brand brand;  // kolom brand_id di tabel products
+}
+
+// === MANY-TO-MANY ===
+// User.java — owning side (yang punya @JoinTable)
+@ManyToMany
+@JoinTable(
+    name = "users_like_products",           // nama tabel pivot
+    joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
+)
+private Set&lt;Product&gt; likes;
+
+// Product.java — inverse side
+@ManyToMany(mappedBy = "likes")  // mengacu field "likes" di User
+private Set&lt;User&gt; likedBy;</code></pre></div><div class="section-title-chip">Penjelasan Konsep Kunci</div><div class="line-explain"><strong>Owning Side vs Inverse Side</strong><br>Sisi yang punya foreign key di database disebut "owning side". Owning side menggunakan <code>@JoinColumn</code> atau <code>@JoinTable</code>. Inverse side menggunakan <code>mappedBy</code> yang mengacu ke nama field di owning side. Perubahan relasi hanya disimpan melalui owning side!</div><div class="line-explain"><strong>@PrimaryKeyJoinColumn</strong><br>Relasi OneToOne di mana kedua tabel share PK yang sama (bukan FK biasa). User id = Credential id. Ini natural join — tidak ada kolom tambahan di tabel users.</div><div class="line-explain"><strong>@JoinTable untuk ManyToMany</strong><br>Membuat tabel pivot (junction table) <code>users_like_products</code> dengan kolom <code>user_id</code> dan <code>product_id</code>. Ini adalah pendekatan standar untuk ManyToMany di relational database.</div><div class="line-explain"><strong>Set vs List untuk ManyToMany</strong><br>Gunakan <code>Set</code> untuk ManyToMany (bukan <code>List</code>). Set memastikan tidak ada duplikat dan lebih efisien. Lihat <code>EntityRelationshipTest.manyToManyInsert()</code> — digunakan <code>HashSet</code>.</div><div class="info-box warning"><strong>⚡ Aturan Emas Relasi JPA:</strong> Perubahan relasi hanya persisten jika dilakukan melalui <strong>owning side</strong>. Jika kamu menambahkan Product ke <code>brand.getProducts()</code> (inverse side), itu TIDAK akan disimpan. Harus via <code>product.setBrand(brand)</code> (owning side — yang punya @JoinColumn).</div><div class="laravel-analogy">Laravel Eloquent: <code>hasOne()</code> ≈ @OneToOne (inverse). <code>belongsTo()</code> ≈ @ManyToOne (owning side). <code>hasMany()</code> ≈ @OneToMany. <code>belongsToMany()</code> ≈ @ManyToMany. Di Eloquent, kamu bisa attach dari kedua sisi karena Eloquent yang mengurus. Di JPA, harus melalui owning side.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">User memiliki @ManyToMany dengan @JoinTable ke Product (sisi User adalah owning side). Jika kamu menambahkan User ke product.getLikedBy() (inverse side) tanpa mengubah user.getLikes(), apakah perubahan tersimpan ke database?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q7')"><span>A.</span><span>Ya — JPA menyinkronkan kedua sisi secara otomatis.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q7')"><span>B.</span><span>Tidak — perubahan relasi hanya disimpan melalui owning side (user.getLikes()). Inverse side (likedBy) hanya untuk navigasi baca.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q7')"><span>C.</span><span>Ya, tapi hanya setelah entityManager.flush() dipanggil.</span></div><div class="quiz-feedback" id="q7-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 8</div>
+                <div class="text-title">📡 Fetch Type &amp; Lazy Loading</div>
+                <div class="chapter-intro">JPA menyediakan dua strategi loading data relasi: <strong>EAGER</strong> (langsung dimuat bersama entity) dan <strong>LAZY</strong> (dimuat hanya saat diakses). Default berbeda per tipe relasi — dan ini sering menjadi sumber masalah performa.</div>
+                <div class="code-block"><pre><code class="language-java">// Product.java — LAZY loading untuk ManyToOne
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "brand_id", referencedColumnName = "id")
+private Brand brand;  // Brand TIDAK langsung di-load saat Product di-find
+
+// EntityRelationshipTest.java — demonstrasi lazy loading
+@Test
+void fetch() {
+    Product product = entityManager.find(Product.class, "p1");
+    // SQL: SELECT * FROM products WHERE id = 'p1'
+    // Brand BELUM di-load!
+
+    Brand brand = product.getBrand();
+    // masih belum ada SQL untuk Brand...
+
+    brand.getName();  // saat ini baru ada SQL: SELECT * FROM brands WHERE id = 'samsung'
+    Assertions.assertNotNull(brand);
+}
+
+// JPQL join fetch — paksa eager loading dalam query
+TypedQuery&lt;User&gt; query = entityManager.createQuery(
+    "select u from User u join fetch u.likes p where p.name = :product",
+    User.class
+);
+// SQL: SELECT u.*, p.* FROM users u
+//      JOIN users_like_products ulp ON u.id = ulp.user_id
+//      JOIN products p ON ulp.product_id = p.id
+//      WHERE p.name = 'Samsung Galaxy 1'
+// likes langsung ter-load bersama User!</code></pre></div><div class="section-title-chip">Default Fetch Type per Anotasi</div><div class="info-box primary"><div class="table-content"><table>
+                <thead><tr><th>Annotation</th><th>Default Fetch</th><th>Rekomendasi</th></tr></thead>
+                <tbody>
+                <tr><td>@OneToMany</td><td>LAZY</td><td>Biarkan LAZY ✅</td></tr>
+                <tr><td>@ManyToMany</td><td>LAZY</td><td>Biarkan LAZY ✅</td></tr>
+                <tr><td>@ManyToOne</td><td>EAGER</td><td>Ubah ke LAZY ⚠️</td></tr>
+                <tr><td>@OneToOne</td><td>EAGER</td><td>Pertimbangkan LAZY ⚠️</td></tr>
+                </tbody></table></div></div><div class="line-explain"><strong>LAZY loading bekerja dengan Proxy</strong><br>Saat Product di-find dengan Brand LAZY, JPA membuat proxy object untuk Brand. Proxy terlihat seperti Brand biasa tapi SQL baru dieksekusi saat kamu memanggil method (seperti <code>brand.getName()</code>). Ini disebut "N+1 problem" jika kamu iterasi banyak Product masing-masing dengan Branch-nya.</div><div class="line-explain"><strong>join fetch — solusi N+1</strong><br>Di JPQL, gunakan <code>join fetch</code> untuk memaksa load relasi dalam satu query SQL. Ini lebih efisien dari N+1 individual queries. Sama seperti <code>with()</code> di Eloquent Laravel.</div><div class="info-box danger"><strong>🚨 LazyInitializationException!</strong><br>Jika kamu akses lazy property SETELAH EntityManager ditutup (<code>em.close()</code>), JPA akan throw <code>LazyInitializationException</code>. Ini error paling umum di JPA. Solusi: gunakan <code>join fetch</code>, ubah ke EAGER, atau pastikan entity diakses sebelum EM ditutup.</div><div class="laravel-analogy"><code>join fetch</code> di JPQL ≈ eager loading dengan <code>with()</code> di Eloquent: <code>Product::with('brand')</code>. FetchType.LAZY default di Eloquent untuk semua relasi. N+1 problem ada di keduanya — Laravel punya <code>with()</code>, JPA punya <code>join fetch</code> atau @BatchSize.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Apa yang dimaksud dengan "N+1 problem" dalam konteks JPA Lazy Loading?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q8')"><span>A.</span><span>Sebuah bug di mana N+1 record tersimpan duplikat di database.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q8')"><span>B.</span><span>1 query untuk fetch daftar entity, lalu N query tambahan (satu per item) untuk fetch relasi lazy-nya. Untuk 100 Product dengan Brand LAZY, itu 1+100 = 101 SQL queries!</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q8')"><span>C.</span><span>JPA membatasi maksimum N+1 relasi per entity.</span></div><div class="quiz-feedback" id="q8-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 9</div>
+                <div class="text-title">🎧 Entity Listener &amp; Lifecycle Callback</div>
+                <div class="chapter-intro">JPA menyediakan hook/callback yang dipanggil secara otomatis saat terjadi event pada entity (sebelum/sesudah persist, update, delete, load). Bisa ditempatkan langsung di entity atau di class listener terpisah.</div>
+                <div class="code-block"><pre><code class="language-java">// UpdatedAtAware.java — interface penanda
+public interface UpdatedAtAware {
+    void setUpdatedAt(LocalDateTime updatedAt);
+}
+
+// UpdatedAtListener.java — listener terpisah
+public class UpdatedAtListener {
+
+    @PrePersist    // dipanggil SEBELUM INSERT
+    @PreUpdate     // dipanggil SEBELUM UPDATE
+    public void setLastUpdatedAt(UpdatedAtAware object) {
+        object.setUpdatedAt(LocalDateTime.now());
+    }
+}
+
+// Category.java — menggunakan listener external
+@Entity
+@Table(name = "categories")
+@EntityListeners({ UpdatedAtListener.class })  // daftarkan listener
+public class Category implements UpdatedAtAware {
+    // ...
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Override
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+}
+
+// Semua lifecycle callback JPA:
+// @PrePersist   — sebelum INSERT
+// @PostPersist  — setelah INSERT
+// @PreUpdate    — sebelum UPDATE
+// @PostUpdate   — setelah UPDATE
+// @PreRemove    — sebelum DELETE
+// @PostRemove   — setelah DELETE
+// @PostLoad     — setelah entity di-load dari database
+
+// Member.java — @PostLoad langsung di entity
+@Entity
+public class Member {
+    @Transient
+    private String fullName;
+
+    @PostLoad  // dipanggil setelah find() atau query berhasil
+    public void postLoad() {
+        fullName = name.getTitle() + ". " + name.getFirstName()
+                + " " + name.getMiddleName() + " " + name.getLastName();
+    }
+}
+// Setelah entityManager.find(Member.class, 1)
+// fullName otomatis terisi: "Mr. Eko Kurniawan Khannedy"</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>@EntityListeners({UpdatedAtListener.class})</strong><br>Daftarkan satu atau lebih class listener ke entity. Listener akan menerima event lifecycle entity tersebut. Listener class tidak perlu annotation khusus — cukup method dengan annotation lifecycle.</div><div class="line-explain"><strong>@PrePersist dan @PreUpdate pada Listener</strong><br>Satu method bisa punya banyak lifecycle annotation. Di sini, <code>setLastUpdatedAt</code> dipanggil baik sebelum INSERT maupun sebelum UPDATE — memastikan <code>updated_at</code> selalu ter-update.</div><div class="line-explain"><strong>@PostLoad langsung di entity</strong><br>Callback bisa langsung di dalam entity (bukan class terpisah). <code>@PostLoad</code> dipanggil setelah entity di-load dari database — cocok untuk menghitung field <code>@Transient</code> seperti <code>fullName</code> dari data yang sudah ada.</div><div class="info-box success"><strong>✅ Pattern Terbaik: UpdatedAtAware Interface</strong><br>Pattern di project ini sangat elegan: listener menggunakan interface <code>UpdatedAtAware</code>. Ini berarti listener bisa digunakan untuk entity apapun yang implement interface tersebut — reusable dan tidak coupling ke class spesifik.</div><div class="laravel-analogy">Laravel Eloquent punya event serupa: <code>creating</code>, <code>created</code>, <code>updating</code>, <code>updated</code>, <code>saving</code>, <code>saved</code>, <code>deleting</code>, <code>deleted</code>. Di Eloquent, didaftarkan via <code>static::creating(fn() => ...)</code> di <code>boot()</code> method, atau via <code>$dispatchesEvents</code>. JPA lebih eksplisit dengan annotation terpisah per callback type.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Kamu ingin field updatedAt terisi otomatis setiap kali entity diupdate. Di lifecycle callback JPA mana kamu harus menaruh logic tersebut?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q9')"><span>A.</span><span>@PostUpdate — setelah update selesai, update field updatedAt.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q9')"><span>B.</span><span>@PreUpdate — sebelum UPDATE SQL dieksekusi, set updatedAt = now(). Perubahan ini akan ikut disimpan.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q9')"><span>C.</span><span>@PrePersist saja sudah cukup.</span></div><div class="quiz-feedback" id="q9-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 10</div>
+                <div class="text-title">🧬 Inheritance Strategies</div>
+                <div class="chapter-intro">JPA mendukung tiga strategi pemetaan inheritance class hierarchy ke tabel database. Setiap strategi memiliki trade-off antara performa query, normalisasi data, dan kemudahan penggunaan.</div>
+                <div class="code-block"><pre><code class="language-java">// ===== STRATEGY 1: SINGLE TABLE =====
+// Semua subclass dalam SATU tabel, dibedakan oleh discriminator column
+@Entity
+@Table(name = "employees")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")         // kolom pembeda
+@DiscriminatorValue("EMPLOYEE")             // nilai untuk class ini
+public class Employee {
+    @Id private String id;
+    private String name;
+}
+
+@Entity
+@DiscriminatorValue("MANAGER")
+public class Manager extends Employee {
+    @Column(name = "total_employee")
+    private Integer totalEmployee;
+}
+
+@Entity
+@DiscriminatorValue("VP")
+public class VicePresident extends Employee {
+    @Column(name = "total_manager")
+    private Integer totalManager;
+}
+// SQL: SELECT * FROM employees WHERE type = 'MANAGER'
+
+// ===== STRATEGY 2: JOINED =====
+// Setiap class punya tabel sendiri, JOIN saat query
+@Entity
+@Table(name = "payments")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Payment {
+    @Id private String id;
+    private Long amount;
+}
+
+@Entity
+@Table(name = "payments_credit_card")
+public class PaymentCreditCard extends Payment {
+    @Column(name = "masked_card") private String maskedCard;
+    private String bank;
+}
+// SQL find PaymentCreditCard:
+// SELECT * FROM payments p JOIN payments_credit_card cc ON p.id = cc.id WHERE p.id = 'cc1'
+
+// ===== STRATEGY 3: TABLE PER CLASS =====
+// Setiap class punya tabel LENGKAP sendiri (duplikasi kolom parent)
+@Entity
+@Table(name = "transactions")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Transaction {
+    @Id private String id;
+    private Long balance;
+    @Column(name = "created_at") private LocalDateTime createdAt;
+}
+
+@Entity
+@Table(name = "transactions_debit")
+public class TransactionDebit extends Transaction {
+    @Column(name = "debit_amount") private Long debitAmount;
+}
+// transactions_debit punya kolom: id, balance, created_at, debit_amount</code></pre></div><div class="section-title-chip">Perbandingan Strategi</div><div class="info-box primary"><div class="table-content"><table>
+                <thead><tr><th>Strategi</th><th>Tabel</th><th>Kelebihan</th><th>Kekurangan</th></tr></thead>
+                <tbody>
+                <tr><td>SINGLE_TABLE</td><td>1 tabel, semua subclass</td><td>Query cepat, tanpa JOIN</td><td>Banyak kolom NULL, tidak normalized</td></tr>
+                <tr><td>JOINED</td><td>1 tabel per class, JOIN saat query</td><td>Normalized, tidak ada NULL sia-sia</td><td>Perlu JOIN — lebih lambat</td></tr>
+                <tr><td>TABLE_PER_CLASS</td><td>1 tabel per concrete class</td><td>Tabel self-contained, tanpa JOIN untuk subclass</td><td>Duplikasi kolom, query parent perlu UNION</td></tr>
+                </tbody></table></div></div><div class="line-explain"><strong>SINGLE_TABLE + @DiscriminatorColumn</strong><br>Hibernate menambahkan kolom <code>type</code> yang berisi nilai discriminator ("EMPLOYEE", "MANAGER", "VP"). Query untuk Manager otomatis menambahkan <code>WHERE type = "MANAGER"</code>. Cocok ketika subclass tidak banyak memiliki field tambahan.</div><div class="line-explain"><strong>JOINED — query parent</strong><br>Di <code>InheritanceTest.joinedTableFindParent()</code>: <code>entityManager.find(Payment.class, "gopay1")</code> — JPA tahu ini sebenarnya PaymentGopay dan otomatis JOIN ke tabel yang benar. Magic!</div><div class="laravel-analogy">Di Laravel/Eloquent, tidak ada built-in inheritance strategy. Biasanya dilakukan dengan Single Table Inheritance manual (satu tabel, ada kolom <code>type</code>) menggunakan package seperti <code>Parental</code>, atau Polymorphic Relations. JPA menyediakan ini sebagai fitur bawaan dengan annotation yang bersih.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Pada InheritanceType.SINGLE_TABLE, apa yang terjadi jika subclass Manager punya field totalEmployee yang tidak ada di subclass Employee biasa?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q10')"><span>A.</span><span>JPA membuat tabel terpisah untuk kolom totalEmployee.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q10')"><span>B.</span><span>Kolom total_employee tetap ada di tabel employees. Untuk record Employee biasa, kolom tersebut bernilai NULL.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q10')"><span>C.</span><span>Compile error — tidak bisa menambahkan field berbeda di SINGLE_TABLE.</span></div><div class="quiz-feedback" id="q10-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 11</div>
+                <div class="text-title">🏛️ MappedSuperclass</div>
+                <div class="chapter-intro"><code>@MappedSuperclass</code> memungkinkan kamu berbagi field dan mapping yang sama ke banyak entity — tanpa membuat tabel sendiri. Berbeda dengan Inheritance, <code>@MappedSuperclass</code> tidak membuat hierarki query — hanya berbagi definisi field.</div>
+                <div class="code-block"><pre><code class="language-java">// AuditableEntity.java — superclass tanpa tabel sendiri
+@MappedSuperclass  // bukan @Entity! tidak ada tabel "auditable_entities"
+public abstract class AuditableEntity&lt;T extends Serializable&gt; {
+
+    @Id
+    private T id;   // generic ID — subclass tentukan tipe konkretnya
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // getter/setter ...
+}
+
+// Brand.java — extends AuditableEntity dengan ID bertipe String
+@Entity
+@Table(name = "brands")
+public class Brand extends AuditableEntity&lt;String&gt; {
+    // Brand otomatis punya kolom: id (String), created_at, updated_at
+    // PLUS field brand sendiri:
+    private String name;
+    private String description;
+
+    @OneToMany(mappedBy = "brand")
+    private List&lt;Product&gt; products;
+
+    @Version  // untuk Optimistic Locking
+    private Long version;
+}
+
+// Cara pakai
+Brand brand = new Brand();
+brand.setId("xiaomi");
+brand.setName("Xiaomi");
+brand.setCreatedAt(LocalDateTime.now());  // dari AuditableEntity
+brand.setUpdatedAt(LocalDateTime.now());  // dari AuditableEntity
+entityManager.persist(brand);
+// SQL: INSERT INTO brands (id, name, description, created_at, updated_at, version)</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>@MappedSuperclass vs @Entity</strong><br><code>@MappedSuperclass</code> = class template yang field-nya di-copy ke subclass. TIDAK ada tabel sendiri, TIDAK bisa di-query langsung (<code>entityManager.find(AuditableEntity.class, id)</code> akan error). <code>@Entity</code> = class yang punya tabel sendiri dan bisa di-query.</div><div class="line-explain"><strong>Generic T extends Serializable</strong><br>AuditableEntity menggunakan generics agar tipe ID fleksibel. <code>Brand extends AuditableEntity&lt;String&gt;</code> → ID bertipe String. Jika ada entity lain dengan Long ID, bisa <code>extends AuditableEntity&lt;Long&gt;</code>.</div><div class="line-explain"><strong>@Version — Optimistic Locking</strong><br>Field <code>version</code> di Brand adalah counter yang dikelola JPA. Setiap UPDATE, version di-increment. Jika dua transaksi mencoba update Brand yang sama secara bersamaan, yang kedua akan gagal dengan <code>OptimisticLockException</code> karena version sudah berubah.</div><div class="info-box success"><strong>✅ Pattern DRY terbaik di JPA:</strong> Gunakan @MappedSuperclass untuk field audit yang dipakai banyak entity: id, createdAt, updatedAt, createdBy, updatedBy. Di Spring Boot, ada <code>@EnableJpaAuditing</code> + <code>@CreatedDate</code> + <code>@LastModifiedDate</code> yang mengisi field ini otomatis.</div><div class="laravel-analogy">Di Eloquent, field <code>created_at</code> dan <code>updated_at</code> otomatis ada di setiap model yang menggunakan timestamps (<code>$timestamps = true</code>). Di JPA murni, harus manual lewat @MappedSuperclass atau EntityListener. Di Spring Data JPA, ada <code>@EntityListeners(AuditingEntityListener.class)</code> yang setara dengan Eloquent timestamps.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Apa perbedaan antara @MappedSuperclass dan @Entity (untuk Inheritance) dalam hal tabel database?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q11')"><span>A.</span><span>@MappedSuperclass membuat tabel khusus untuk field bersama. @Entity (Inheritance) tidak membuat tabel.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q11')"><span>B.</span><span>@MappedSuperclass TIDAK membuat tabel — field-nya di-copy ke tabel subclass. @Entity (Inheritance) membuat tabel dan bisa di-query secara polimorfik.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q11')"><span>C.</span><span>Keduanya sama — hanya beda nama annotation.</span></div><div class="quiz-feedback" id="q11-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-12">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 12</div>
+                <div class="text-title">📝 JPQL — Java Persistence Query Language</div>
+                <div class="chapter-intro">JPQL adalah query language mirip SQL tapi bekerja dengan <strong>nama entity dan field Java</strong>, bukan nama tabel dan kolom SQL. JPA yang akan menerjemahkan JPQL ke SQL yang sesuai dengan database yang digunakan.</div>
+                <div class="code-block"><pre><code class="language-java">// Basic SELECT
+TypedQuery&lt;Brand&gt; query = entityManager.createQuery(
+    "select b from Brand b",   // "Brand" = nama class Java, bukan tabel!
+    Brand.class
+);
+List&lt;Brand&gt; brands = query.getResultList();
+
+// WHERE dengan named parameter
+TypedQuery&lt;Member&gt; query2 = entityManager.createQuery(
+    "select m from Member m where m.name.firstName = :firstName " +
+    "and m.name.lastName = :lastName",  // m.name.firstName = field dalam @Embedded!
+    Member.class
+);
+query2.setParameter("firstName", "Eko");
+query2.setParameter("lastName", "Khannedy");
+
+// JOIN antar entity
+TypedQuery&lt;Product&gt; query3 = entityManager.createQuery(
+    "select p from Product p join p.brand b where b.name = :brand",
+    Product.class
+);
+query3.setParameter("brand", "Samsung");
+
+// ORDER BY dan LIMIT/OFFSET
+TypedQuery&lt;Brand&gt; query4 = entityManager.createQuery(
+    "select b from Brand b order by b.name desc",
+    Brand.class
+);
+query4.setFirstResult(10);   // OFFSET — mulai dari record ke-10
+query4.setMaxResults(10);    // LIMIT — ambil 10 record
+
+// SELECT field tertentu (bukan full entity)
+TypedQuery&lt;Object[]&gt; query5 = entityManager.createQuery(
+    "select b.id, b.name from Brand b where b.name = :name",
+    Object[].class
+);
+
+// SELECT dengan constructor (DTO)
+TypedQuery&lt;SimpleBrand&gt; query6 = entityManager.createQuery(
+    "select new programmerzamannow.jpa.entity.SimpleBrand(b.id, b.name) " +
+    "from Brand b where b.name = :name",
+    SimpleBrand.class
+);
+
+// UPDATE dan DELETE (non-query)
+Query update = entityManager.createQuery(
+    "update Brand b set b.name = :name where b.id = :id"
+);
+update.setParameter("name", "Samsung Updated");
+update.setParameter("id", "samsung");
+int affected = update.executeUpdate();</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>"select b from Brand b" — bukan SQL!</strong><br>JPQL menggunakan nama class Java (<code>Brand</code>), bukan nama tabel (<code>brands</code>). Field juga menggunakan nama field Java (<code>b.name</code>), bukan nama kolom SQL. JPA yang menerjemahkan ke SQL sesuai database — berganti database tidak perlu ubah JPQL!</div><div class="line-explain"><strong>m.name.firstName — navigasi @Embedded</strong><br>JPQL bisa navigasi field yang di-embed. <code>m.name.firstName</code> artinya: field <code>name</code> dari Member (yang bertipe Name @Embedded), lalu field <code>firstName</code> dari Name. Di SQL: <code>WHERE first_name = ?</code>.</div><div class="line-explain"><strong>setFirstResult() + setMaxResults() — pagination</strong><br><code>setFirstResult(10)</code> = OFFSET (mulai dari record ke-11). <code>setMaxResults(10)</code> = LIMIT (ambil 10). JPA translate ke SQL yang sesuai per database (<code>LIMIT/OFFSET</code> di MySQL, <code>ROWNUM</code> di Oracle, dll).</div><div class="line-explain"><strong>select new FullClassName(field1, field2) — DTO projection</strong><br>Langsung membuat object non-entity dari hasil query. Jauh lebih bersih dari menggunakan Object[]. Class yang digunakan (SimpleBrand) harus punya constructor yang matching. Ini adalah pattern DTO Query di JPA.</div><div class="line-explain"><strong>executeUpdate() — bukan SELECT</strong><br>JPQL juga bisa UPDATE dan DELETE. Mengembalikan jumlah record yang terpengaruh (bukan entity). Ini bypass dirty checking — langsung SQL tanpa melalui managed entity lifecycle.</div><div class="laravel-analogy">JPQL ≈ Eloquent query builder tapi berbasis nama class Java. <code>Brand::orderBy("name", "desc")</code> ≈ <code>"select b from Brand b order by b.name desc"</code>. <code>->offset(10)->limit(10)</code> ≈ <code>setFirstResult(10)->setMaxResults(10)</code>. Eloquent lebih ringkas, JPQL lebih eksplisit tapi portable antar database.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Dalam JPQL, kamu menulis "select b from Brand b where b.name = :name". Nama apa yang digunakan: nama class Java atau nama tabel database?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q12')"><span>A.</span><span>Nama tabel database — "brands".</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q12')"><span>B.</span><span>Nama class Java — "Brand". JPQL bekerja dengan model Java, bukan skema database langsung.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q12')"><span>C.</span><span>Bisa keduanya — JPQL fleksibel.</span></div><div class="quiz-feedback" id="q12-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-13">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 13</div>
+                <div class="text-title">📊 Aggregate Query &amp; Named Query</div>
+                <div class="chapter-intro">JPQL mendukung fungsi agregat (MIN, MAX, AVG, COUNT, SUM) dengan GROUP BY dan HAVING, mirip SQL. <strong>Named Query</strong> adalah query JPQL yang didefinisikan di level class entity — compile-time checked dan bisa di-cache.</div>
+                <div class="code-block"><pre><code class="language-java">// Aggregate query — sederhana
+TypedQuery&lt;Object[]&gt; query1 = entityManager.createQuery(
+    "select min(p.price), max(p.price), avg(p.price) from Product p",
+    Object[].class
+);
+Object[] result = query1.getSingleResult();
+System.out.println("Min: " + result[0] + ", Max: " + result[1] + ", Avg: " + result[2]);
+
+// GROUP BY + HAVING
+TypedQuery&lt;Object[]&gt; query2 = entityManager.createQuery(
+    "select b.id, min(p.price), max(p.price), avg(p.price) " +
+    "from Product p join p.brand b " +
+    "group by b.id " +
+    "having min(p.price) &gt; :min",
+    Object[].class
+);
+query2.setParameter("min", 500_000L);
+
+// ===== Named Query =====
+// Didefinisikan di level class dengan annotation:
+@Entity
+@Table(name = "brands")
+@NamedQueries({
+    @NamedQuery(
+        name = "Brand.findAll",
+        query = "select b from Brand b"
+    ),
+    @NamedQuery(
+        name = "Brand.findAllByName",
+        query = "select b from Brand b where b.name = :name"
+    )
+})
+@NamedNativeQueries({
+    @NamedNativeQuery(
+        name = "Brand.native.findAll",
+        query = "select * from brands",   // SQL asli, bukan JPQL!
+        resultClass = Brand.class
+    )
+})
+public class Brand extends AuditableEntity&lt;String&gt; { ... }
+
+// Cara memanggil Named Query
+TypedQuery&lt;Brand&gt; namedQuery = entityManager.createNamedQuery(
+    "Brand.findAllByName",  // nama yang didaftarkan di @NamedQuery
+    Brand.class
+);
+namedQuery.setParameter("name", "Xiaomi");
+List&lt;Brand&gt; brands = namedQuery.getResultList();
+
+// Named Native Query
+Query nativeQuery = entityManager.createNamedQuery("Brand.native.findAll", Brand.class);
+List&lt;Brand&gt; allBrands = nativeQuery.getResultList();</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>getSingleResult() vs getResultList()</strong><br><code>getSingleResult()</code> mengharapkan tepat satu result — throw <code>NoResultException</code> jika tidak ada, <code>NonUniqueResultException</code> jika ada lebih dari satu. Gunakan untuk aggregate yang pasti menghasilkan satu baris (seperti COUNT, MIN tanpa GROUP BY). <code>getResultList()</code> selalu aman — mengembalikan list kosong jika tidak ada.</div><div class="line-explain"><strong>@NamedQueries dan @NamedQuery</strong><br>Named Query di-parse dan divalidasi saat aplikasi start (bukan saat dipanggil). Jika JPQL salah, aplikasi langsung gagal start — error lebih cepat terdeteksi. Ini juga memudahkan caching query plan oleh JPA provider.</div><div class="line-explain"><strong>Konvensi nama: "Brand.findAllByName"</strong><br>Konvensi standar JPA: prefix nama class + titik + nama query. Ini untuk menghindari konflik nama antar entity yang berbeda. Di Spring Data JPA, ini diadopsi sebagai konvensi nama method (<code>findAllByName</code>).</div><div class="line-explain"><strong>@NamedNativeQuery — SQL asli</strong><br>Jika JPQL tidak cukup ekspresif (query sangat kompleks, pakai fitur spesifik database), gunakan Named Native Query dengan SQL asli. Perlu <code>resultClass</code> agar hasil di-map ke entity.</div><div class="laravel-analogy">Eloquent: <code>Product::min("price")</code>, <code>::max()</code>, <code>::avg()</code>. Untuk GROUP BY: <code>Product::selectRaw("brand_id, min(price) as min_price")->groupBy("brand_id")->having("min_price", ">", 500000)</code>. Named Query tidak ada padanannya langsung di Eloquent — paling dekat adalah Scope method di Eloquent.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Apa keuntungan utama menggunakan @NamedQuery dibanding membuat JPQL string secara inline di setiap method?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q13')"><span>A.</span><span>@NamedQuery lebih cepat secara performa karena dikompilasi ke bytecode.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q13')"><span>B.</span><span>@NamedQuery divalidasi saat aplikasi start — JPQL yang salah langsung terdeteksi, bukan saat method dipanggil. Juga memungkinkan caching query plan.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q13')"><span>C.</span><span>@NamedQuery bisa menggunakan SQL asli (native), sedangkan inline JPQL tidak bisa.</span></div><div class="quiz-feedback" id="q13-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-14">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 14</div>
+                <div class="text-title">🖥️ Native Query &amp; Non-Query DML</div>
+                <div class="chapter-intro">Ketika JPQL tidak cukup, JPA menyediakan akses ke SQL asli melalui <strong>Native Query</strong>. Untuk operasi UPDATE/DELETE massal yang efisien tanpa memuat entity terlebih dahulu, gunakan JPQL atau Criteria non-select query.</div>
+                <div class="code-block"><pre><code class="language-java">// Native Query — SQL asli
+Query nativeQuery = entityManager.createNativeQuery(
+    "select * from brands where brands.created_at is not null",  // SQL asli!
+    Brand.class  // mapping hasil ke entity Brand
+);
+List&lt;Brand&gt; brands = nativeQuery.getResultList();
+
+// Gunakan saat butuh: window functions, CTE, JOIN LATERAL,
+// atau syntax yang tidak tersedia di JPQL
+
+// Non-Query DML — UPDATE/DELETE via JPQL
+// TIDAK memuat entity ke memory — langsung SQL
+Query jpqlUpdate = entityManager.createQuery(
+    "update Brand b set b.name = :name where b.id = :id"
+);
+jpqlUpdate.setParameter("name", "Samsung Updated");
+jpqlUpdate.setParameter("id", "samsung");
+int impacted = jpqlUpdate.executeUpdate();
+System.out.println("Success update " + impacted + " records");
+
+// Named Native Query (sudah dibahas di CH13)
+Query namedNative = entityManager.createNamedQuery(
+    "Brand.native.findAll",
+    Brand.class
+);
+
+// Perbedaan dengan entity-based update:
+// Entity-based (lewat managed entity):
+Brand brand = entityManager.find(Brand.class, "samsung"); // 1 SELECT
+brand.setName("Samsung");  // dirty check
+// saat commit: 1 UPDATE (hanya brand ini)
+
+// Direct JPQL UPDATE:
+// "update Brand b set b.name = :name" tanpa WHERE → UPDATE ALL RECORDS!
+// Tidak perlu load entity ke memory — sangat efisien untuk bulk update</code></pre></div><div class="section-title-chip">Penjelasan Penting</div><div class="line-explain"><strong>createNativeQuery() vs createQuery()</strong><br><code>createNativeQuery()</code> menerima SQL asli — langsung dikirim ke database tanpa transformasi. <code>createQuery()</code> menerima JPQL — ditransformasi ke SQL oleh JPA. Gunakan native hanya jika JPQL tidak mencukupi.</div><div class="line-explain"><strong>executeUpdate() — mengembalikan int</strong><br>Non-query (UPDATE/DELETE) menggunakan <code>executeUpdate()</code> yang mengembalikan jumlah row yang terpengaruh. Bypass managed entity lifecycle — @PreUpdate dan dirty checking tidak berjalan!</div><div class="line-explain"><strong>Hati-hati UPDATE tanpa WHERE</strong><br>JPQL Update tanpa WHERE clause akan mengupdate SEMUA record di tabel. JPA tidak memproteksi ini. Selalu verifikasi query sebelum eksekusi — terutama di production!</div><div class="info-box warning"><strong>⚡ @PreUpdate tidak berjalan pada JPQL UPDATE!</strong><br>Ketika kamu menjalankan <code>"update Brand b set b.name = :name"</code>, JPA bypass lifecycle callback. <code>UpdatedAtListener</code> yang punya @PreUpdate TIDAK akan dipanggil. Jika perlu, update <code>updatedAt</code> secara manual dalam query itu sendiri.</div><div class="laravel-analogy">Laravel: <code>DB::statement("SELECT ...")</code> atau <code>DB::select()</code> untuk native query. <code>Brand::where("id", "samsung")->update(["name" => "Samsung Updated"])</code> untuk bulk update via Eloquent — tanpa memuat entity. Di JPA, pola yang sama dengan JPQL Update. Eloquent otomatis mengisi <code>updated_at</code> saat update via model (tapi bukan via DB::).</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Kamu menjalankan JPQL: "update Brand b set b.name = :name where b.id = :id". Apakah @PreUpdate listener (seperti UpdatedAtListener) akan dieksekusi?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q14')"><span>A.</span><span>Ya — JPA selalu menjalankan lifecycle callback sebelum operasi apapun.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q14')"><span>B.</span><span>Tidak — JPQL Update/Delete bypass lifecycle callback dan dirty checking. Listener @PreUpdate hanya berjalan untuk perubahan melalui managed entity.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q14')"><span>C.</span><span>Tergantung konfigurasi Hibernate.</span></div><div class="quiz-feedback" id="q14-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-15">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 15</div>
+                <div class="text-title">🔬 Criteria API</div>
+                <div class="chapter-intro">Criteria API adalah cara membuat query JPA secara <strong>programmatic dan type-safe</strong> menggunakan Java code — bukan string JPQL. Cocok untuk query dinamis di mana kondisi WHERE-nya bergantung pada input user.</div>
+                <div class="code-block"><pre><code class="language-java">// CriteriaTest.java — semua contoh
+
+// ===== 1. Basic SELECT =====
+CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+CriteriaQuery&lt;Brand&gt; criteria = builder.createQuery(Brand.class);
+Root&lt;Brand&gt; b = criteria.from(Brand.class);
+criteria.select(b);  // setara: "select b from Brand b"
+
+TypedQuery&lt;Brand&gt; query = entityManager.createQuery(criteria);
+List&lt;Brand&gt; brands = query.getResultList();
+
+// ===== 2. SELECT dengan WHERE =====
+CriteriaQuery&lt;Brand&gt; criteria2 = builder.createQuery(Brand.class);
+Root&lt;Brand&gt; b2 = criteria2.from(Brand.class);
+criteria2.select(b2);
+criteria2.where(
+    builder.equal(b2.get("name"), "Xiaomi"),       // AND
+    builder.isNotNull(b2.get("createdAt"))
+);
+// JPQL setara: "select b from Brand b where b.name = 'Xiaomi' and b.createdAt is not null"
+
+// ===== 3. WHERE dengan OR =====
+criteria2.where(
+    builder.or(
+        builder.equal(b2.get("name"), "Xiaomi"),
+        builder.equal(b2.get("name"), "Samsung")
+    )
+);
+
+// ===== 4. JOIN =====
+CriteriaQuery&lt;Product&gt; criteria3 = builder.createQuery(Product.class);
+Root&lt;Product&gt; p = criteria3.from(Product.class);
+Join&lt;Product, Brand&gt; brand = p.join("brand");   // join ke relasi "brand"
+criteria3.select(p);
+criteria3.where(builder.equal(brand.get("name"), "Samsung"));
+// JPQL: "select p from Product p join p.brand b where b.name = 'Samsung'"
+
+// ===== 5. Named Parameter =====
+ParameterExpression&lt;String&gt; brandParam = builder.parameter(String.class, "brand");
+criteria3.where(builder.equal(brand.get("name"), brandParam));
+TypedQuery&lt;Product&gt; q3 = entityManager.createQuery(criteria3);
+q3.setParameter(brandParam, "Xiaomi");
+
+// ===== 6. Aggregate =====
+CriteriaQuery&lt;Object[]&gt; criteria4 = builder.createQuery(Object[].class);
+Root&lt;Product&gt; p4 = criteria4.from(Product.class);
+Join&lt;Product, Brand&gt; b4 = p4.join("brand");
+criteria4.select(builder.array(
+    b4.get("id"),
+    builder.min(p4.get("price")),
+    builder.max(p4.get("price")),
+    builder.avg(p4.get("price"))
+));
+criteria4.groupBy(b4.get("id"));
+criteria4.having(builder.greaterThan(builder.min(p4.get("price")), 500_000L));
+
+// ===== 7. CriteriaUpdate (non-query) =====
+CriteriaUpdate&lt;Brand&gt; updateCriteria = builder.createCriteriaUpdate(Brand.class);
+Root&lt;Brand&gt; bu = updateCriteria.from(Brand.class);
+updateCriteria.set(bu.get("name"), "Apple Updated");
+updateCriteria.set(bu.get("description"), "Apple Company");
+updateCriteria.where(builder.equal(bu.get("id"), "apple"));
+Query updateQuery = entityManager.createQuery(updateCriteria);
+int affected = updateQuery.executeUpdate();
+
+// ===== 8. SELECT constructor (non-entity DTO) =====
+CriteriaQuery&lt;SimpleBrand&gt; criteria5 = builder.createQuery(SimpleBrand.class);
+Root&lt;Brand&gt; b5 = criteria5.from(Brand.class);
+criteria5.select(builder.construct(SimpleBrand.class, b5.get("id"), b5.get("name")));</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>CriteriaBuilder — factory untuk semua komponen</strong><br><code>entityManager.getCriteriaBuilder()</code> mengembalikan factory yang bisa membuat predicate, expression, function, dll. Semua building block Criteria API dibuat lewat builder ini.</div><div class="line-explain"><strong>Root&lt;Brand&gt; b = criteria.from(Brand.class)</strong><br>Root adalah titik awal FROM clause — mirip alias dalam SQL. Dari root ini kamu bisa navigasi ke field (<code>b.get("name")</code>) atau join ke relasi (<code>b.join("products")</code>).</div><div class="line-explain"><strong>criteria.where(builder.equal(...), builder.isNotNull(...))</strong><br>Multiple predicate di <code>where()</code> = AND secara default. Untuk OR, gunakan <code>builder.or(...)</code>. Untuk NOT, gunakan <code>builder.not(...)</code>. Bisa dikombinasikan secara nested.</div><div class="line-explain"><strong>CriteriaUpdate — bulk update type-safe</strong><br><code>builder.createCriteriaUpdate(Brand.class)</code> untuk UPDATE. <code>updateCriteria.set(field, value)</code> untuk set nilai. Tidak ada setara CriteriaDelete yang eksplisit — gunakan JPQL Delete untuk kasus tersebut.</div><div class="info-box primary"><strong>💡 Kapan pakai Criteria API vs JPQL?</strong><br>Gunakan <strong>JPQL</strong> untuk query statis yang sudah diketahui strukturnya. Gunakan <strong>Criteria API</strong> untuk query dinamis (misalnya: filter pencarian produk di mana user bisa pilih filter mana saja). Criteria API lebih verbose tapi compile-time safe dan dynamic-friendly.</div><div class="laravel-analogy">Criteria API tidak ada padanan langsungnya di Eloquent yang semantiknya sama. Paling mirip adalah <code>DB::table()->when($condition, fn($q) => $q->where(...))</code> untuk query dinamis di Laravel, atau Laravel Scout untuk pencarian. Untuk type-safe query builder di Java modern, banyak tim beralih ke QueryDSL yang lebih ergonomis dari raw Criteria API.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Kapan Criteria API lebih cocok digunakan dibandingkan JPQL string biasa?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q15')"><span>A.</span><span>Criteria API selalu lebih baik karena lebih cepat.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q15')"><span>B.</span><span>Untuk query dinamis — di mana kondisi WHERE bergantung pada input runtime (misal: form filter dengan banyak pilihan opsional). Criteria API memungkinkan build query secara programmatic.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q15')"><span>C.</span><span>JPQL tidak mendukung JOIN, jadi Criteria API harus digunakan untuk query dengan JOIN.</span></div><div class="quiz-feedback" id="q15-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-16">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 16</div>
+                <div class="text-title">🧩 Collection Mapping (@ElementCollection)</div>
+                <div class="chapter-intro"><code>@ElementCollection</code> digunakan untuk memetakan koleksi nilai sederhana (String, Integer) atau embeddable ke tabel terpisah, tanpa membuat entity baru. Cocok untuk hobbies, tags, skills, dll.</div>
+                <div class="code-block"><pre><code class="language-java">// Member.java — koleksi List dan Map
+@Entity
+@Table(name = "members")
+public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String email;
+
+    @Embedded
+    private Name name;
+
+    // === List of String ===
+    @ElementCollection
+    @CollectionTable(
+        name = "hobbies",              // nama tabel terpisah
+        joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
+    )
+    @Column(name = "name")            // nama kolom nilai
+    private List&lt;String&gt; hobbies;
+
+    // === Map&lt;String, Integer&gt; — key-value ===
+    @ElementCollection
+    @CollectionTable(
+        name = "skills",
+        joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
+    )
+    @MapKeyColumn(name = "name")      // kolom key
+    @Column(name = "value")           // kolom value
+    private Map&lt;String, Integer&gt; skills;
+}
+
+// CollectionTest.java — cara INSERT
+Name name = new Name();
+name.setFirstName("Eko");
+Member member = new Member();
+member.setEmail("test@example.com");
+member.setName(name);
+member.setHobbies(new ArrayList&lt;&gt;());
+member.getHobbies().add("Coding");
+member.getHobbies().add("Gaming");
+entityManager.persist(member);
+// SQL: INSERT INTO hobbies (member_id, name) VALUES (1, 'Coding'), (1, 'Gaming')
+
+// UPDATE collection — merge
+Member found = entityManager.find(Member.class, 2);
+found.getHobbies().add("Traveling");
+entityManager.merge(found);
+// JPA DELETE lama lalu INSERT ulang semua hobbies!
+
+// Map skills
+found.setSkills(new HashMap&lt;&gt;());
+found.getSkills().put("Java", 90);
+found.getSkills().put("PHP", 85);
+entityManager.merge(found);
+// SQL: INSERT INTO skills (member_id, name, value) VALUES (2, 'Java', 90), ...</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>@ElementCollection + @CollectionTable</strong><br>Membuat tabel baru (<code>hobbies</code>) yang terhubung ke tabel member via FK (<code>member_id</code>). Berbeda dari @OneToMany — tidak ada entity class terpisah. Nilai (<code>name</code>) adalah kolom sederhana, bukan ID entity lain.</div><div class="line-explain"><strong>@MapKeyColumn + @Column untuk Map</strong><br>Untuk Map, ada dua kolom: satu untuk key (<code>@MapKeyColumn</code>) dan satu untuk value (<code>@Column</code>). Hasilnya: tabel skills dengan kolom <code>member_id</code>, <code>name</code> (key), <code>value</code> (value).</div><div class="line-explain"><strong>Update collection = DELETE + INSERT ulang</strong><br>Saat kamu mengupdate koleksi (tambah/hapus item) dan merge, JPA menghapus SEMUA baris lama untuk member tersebut lalu INSERT ulang semuanya. Ini tidak efisien untuk koleksi besar! Pertimbangkan entity terpisah untuk kasus seperti ini.</div><div class="info-box warning"><strong>⚡ @ElementCollection = Owned Collection</strong><br>Koleksi ini sepenuhnya "dimiliki" oleh entity induknya. Tidak ada ID sendiri, tidak ada lifecycle sendiri. Jika Member dihapus, semua hobinya otomatis terhapus (cascade delete). Untuk koleksi yang lebih kompleks atau perlu query tersendiri, buat entity terpisah dengan @OneToMany.</div><div class="laravel-analogy">Di Laravel, pola yang paling mirip adalah JSON column: <code>$table->json("hobbies")</code> dengan <code>$casts = ["hobbies" => "array"]</code>. Atau tabel pivot tanpa model (<code>DB::table("hobbies")->insert(...)</code>). @ElementCollection di JPA lebih terstruktur — ada tabel relasional yang proper, bukan JSON.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Ketika kamu menambahkan satu item ke hobbies List yang di-annotate @ElementCollection lalu memanggil merge(), apa SQL yang dieksekusi JPA?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q16')"><span>A.</span><span>Hanya satu INSERT untuk item baru yang ditambahkan.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q16')"><span>B.</span><span>DELETE semua baris hobbies untuk member tersebut, lalu INSERT ulang semua item (termasuk yang lama).</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q16')"><span>C.</span><span>UPDATE baris yang berubah, tidak ada DELETE.</span></div><div class="quiz-feedback" id="q16-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-17">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 17</div>
+                <div class="text-title">🔄 Managed Entity &amp; Entity Lifecycle</div>
+                <div class="chapter-intro">Entity di JPA memiliki empat status: <strong>New</strong> (baru dibuat), <strong>Managed</strong> (dilacak oleh EntityManager), <strong>Detached</strong> (tidak dilacak tapi masih ada datanya), dan <strong>Removed</strong> (akan dihapus). Memahami ini adalah kunci menghindari bug JPA.</div>
+                <div class="code-block"><pre><code class="language-java">// ManagedEntityTest.java
+
+// ===== NEW → MANAGED via persist() =====
+Brand brand = new Brand();         // status: NEW (transient)
+brand.setId("apple");
+brand.setName("Apple");
+entityManager.persist(brand);      // status: MANAGED
+brand.setName("Apple International");  // perubahan otomatis di-track!
+// saat commit → UPDATE brand SET name='Apple International' (tanpa perlu merge!)
+
+// ===== find() langsung mengembalikan MANAGED =====
+Brand managed = entityManager.find(Brand.class, "apple");  // status: MANAGED
+managed.setName("Apple Indonesia");   // cukup ini saja, tidak perlu merge()!
+entityTransaction.commit();           // → UPDATE otomatis!
+
+// ===== DETACH — lepas dari tracking =====
+Brand brand2 = entityManager.find(Brand.class, "apple");  // MANAGED
+entityManager.detach(brand2);          // status: DETACHED
+brand2.setName("Apple Test");          // perubahan ini TIDAK di-track JPA
+entityTransaction.commit();            // TIDAK ada UPDATE!
+
+// ===== DETACHED setelah EntityManager ditutup =====
+Brand brand3 = entityManager.find(Brand.class, "apple");  // MANAGED
+entityTransaction.commit();
+entityManager.close();                 // brand3 sekarang DETACHED!
+brand3.setName("Apple Indonesia");     // safe — perubahan tidak tersimpan ke DB
+// Untuk simpan perubahan di entity detached:
+// entityManager2.merge(brand3);       // attach lagi ke EM baru
+
+// ===== Diagram Status =====
+// new Brand() → [NEW]
+// persist()   → [MANAGED] ←→ merge() dari DETACHED
+// detach()    → [DETACHED]
+// remove()    → [REMOVED] → commit → terhapus dari DB
+// find()      → langsung [MANAGED]</code></pre></div><div class="section-title-chip">Penjelasan Baris per Baris</div><div class="line-explain"><strong>NEW vs MANAGED</strong><br>Saat kamu baru buat object (<code>new Brand()</code>), status-nya NEW — JPA tidak tahu tentang object ini. Setelah <code>persist()</code>, status berubah ke MANAGED — JPA mulai tracking semua perubahan (dirty checking).</div><div class="line-explain"><strong>Dirty Checking — Magic JPA</strong><br>EntityManager menyimpan snapshot state awal entity saat di-load atau di-persist. Saat commit, JPA membandingkan state saat ini dengan snapshot. Jika ada perbedaan → otomatis generate UPDATE SQL. Ini kenapa kamu tidak perlu selalu memanggil <code>merge()</code> untuk entity yang sudah managed.</div><div class="line-explain"><strong>entityManager.detach(brand)</strong><br>Melepaskan entity dari tracking. Perubahan setelah detach TIDAK akan disimpan saat commit. Berguna untuk mencegah perubahan tidak sengaja tersimpan, atau untuk melepas entity yang kamu mau return ke layer lain tanpa takut ada side effect.</div><div class="line-explain"><strong>Entity DETACHED setelah EM ditutup</strong><br>Setelah <code>entityManager.close()</code>, semua entity yang dimuat oleh EM tersebut otomatis menjadi DETACHED. Untuk menyimpan perubahan pada entity detached, gunakan <code>newEntityManager.merge(detachedEntity)</code>.</div><div class="info-box danger"><strong>🚨 Jangan Simpan Entity sebagai Field Class!</strong><br>Jangan simpan managed entity sebagai field instance di Service atau Controller class (singleton). Setelah request selesai dan EM ditutup, entity tersebut DETACHED. Perubahan berikutnya tidak tersimpan dan bisa menyebabkan bug yang sangat sulit dilacak.</div><div class="laravel-analogy">Konsep Managed Entity tidak ada di Eloquent — Eloquent model adalah "dumb" object, perubahan langsung ke database saat kamu memanggil <code>save()</code> atau <code>update()</code>. Di JPA, ada layer abstraksi "Unit of Work" — semua perubahan dikumpulkan dulu, baru di-flush ke database saat commit. Ini membuat JPA lebih efisien (batch operation) tapi lebih kompleks dipahami.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Kamu melakukan entityManager.find(Brand.class, "apple"), lalu brand.setName("Apple New"), lalu entityTransaction.commit() TANPA memanggil entityManager.merge(brand). Apa yang terjadi?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q17')"><span>A.</span><span>Perubahan name tidak tersimpan — harus memanggil merge() terlebih dahulu.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q17')"><span>B.</span><span>Perubahan name tersimpan otomatis — entity hasil find() dalam status MANAGED, dirty checking mendeteksi perubahan dan generate UPDATE saat commit.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q17')"><span>C.</span><span>Compile error — harus selalu memanggil merge() sebelum commit.</span></div><div class="quiz-feedback" id="q17-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-18">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Chapter 18</div>
+                <div class="text-title">🔐 Locking: Optimistic &amp; Pessimistic</div>
+                <div class="chapter-intro">Locking digunakan untuk menangani <strong>konkurensi</strong> — apa yang terjadi jika dua transaksi mencoba mengupdate data yang sama secara bersamaan. JPA menyediakan dua strategi: Optimistic (asumsi jarang konflik) dan Pessimistic (langsung kunci data).</div>
+                <div class="code-block"><pre><code class="language-java">// ===== OPTIMISTIC LOCKING =====
+// Brand.java — tambahkan field @Version
+@Entity
+@Table(name = "brands")
+public class Brand extends AuditableEntity&lt;String&gt; {
+    // ...
+    @Version    // JPA yang mengurus increment secara otomatis
+    private Long version;
+}
+
+// Skenario konflik:
+// Thread 1: find Nokia (version = 0)
+// Thread 2: find Nokia (version = 0)
+// Thread 2: update → commit → version jadi 1
+// Thread 1: update → commit → GAGAL! version di DB sudah 1, tapi di object masih 0
+//           → throw OptimisticLockException
+
+// LockingTest.java
+void optimisticLockingDemo1() throws InterruptedException {
+    Brand brand = entityManager.find(Brand.class, "nokia");
+    brand.setName("Nokia Demo 1");
+    Thread.sleep(10 * 1000L);  // simulasi transaksi lama
+    entityManager.persist(brand);
+    entityTransaction.commit();  // GAGAL jika Demo2 sudah commit lebih dulu!
+}
+
+void optimisticLockingDemo2() throws InterruptedException {
+    Brand brand = entityManager.find(Brand.class, "nokia");
+    brand.setName("Nokia Demo 2");
+    entityManager.persist(brand);
+    entityTransaction.commit();  // sukses — version naik dari 0 ke 1
+}
+
+// ===== PESSIMISTIC LOCKING =====
+// Lock langsung saat read — tidak ada thread lain yang bisa update
+
+void pessimisticLockingDemo1() throws InterruptedException {
+    // PESSIMISTIC_WRITE = SELECT ... FOR UPDATE
+    // Baris di-lock di database — thread lain yang coba select FOR UPDATE akan BLOCK
+    Brand brand = entityManager.find(Brand.class, "nokia",
+            LockModeType.PESSIMISTIC_WRITE);
+    brand.setName("Nokia Demo 1");
+    Thread.sleep(10 * 1000L);   // thread lain yang mau lock Nokia akan menunggu!
+    entityManager.persist(brand);
+    entityTransaction.commit();  // release lock
+}
+
+void pessimisticLockingDemo2() throws InterruptedException {
+    // Thread ini akan BLOCK saat Thread 1 sedang memegang lock
+    Brand brand = entityManager.find(Brand.class, "nokia",
+            LockModeType.PESSIMISTIC_WRITE);  // tunggu Thread 1 selesai...
+    brand.setName("Nokia Demo 2");
+    entityManager.persist(brand);
+    entityTransaction.commit();
+}</code></pre></div><div class="section-title-chip">Perbandingan Strategi Locking</div><div class="info-box primary"><div class="table-content"><table>
+                <thead><tr><th>Aspek</th><th>Optimistic Locking</th><th>Pessimistic Locking</th></tr></thead>
+                <tbody>
+                <tr><td>Asumsi</td><td>Konflik jarang terjadi</td><td>Konflik sering terjadi</td></tr>
+                <tr><td>Cara kerja</td><td>Cek version saat commit</td><td>Lock row di database saat read</td></tr>
+                <tr><td>Implementasi</td><td>@Version field di entity</td><td>LockModeType.PESSIMISTIC_WRITE</td></tr>
+                <tr><td>SQL yang dihasilkan</td><td>WHERE version = ? (saat UPDATE)</td><td>SELECT ... FOR UPDATE</td></tr>
+                <tr><td>Jika konflik</td><td>OptimisticLockException (bisa retry)</td><td>Thread block, menunggu lock release</td></tr>
+                <tr><td>Performa</td><td>Lebih baik (no lock di DB)</td><td>Potensi deadlock, throughput rendah</td></tr>
+                <tr><td>Cocok untuk</td><td>Web app, low conflict rate</td><td>High conflict, critical section</td></tr>
+                </tbody></table></div></div><div class="line-explain"><strong>@Version — JPA yang increment</strong><br>Field <code>version</code> TIDAK boleh kamu set manual. JPA yang mengurusi — setiap UPDATE sukses, version di-increment. Saat UPDATE, JPA menambahkan <code>WHERE version = ?</code> di query. Jika version tidak cocok → tidak ada baris yang terupdate → JPA throw <code>OptimisticLockException</code>.</div><div class="line-explain"><strong>LockModeType.PESSIMISTIC_WRITE</strong><br>Menjalankan <code>SELECT ... FOR UPDATE</code> — row di-lock di level database. Thread/transaksi lain yang mencoba lock baris yang sama akan menunggu (block) sampai lock direlease. Hati-hati: bisa menyebabkan deadlock jika tidak dikelola dengan baik.</div><div class="laravel-analogy">Di Laravel: Optimistic locking tidak built-in, biasanya pakai package atau manual check version. Pessimistic locking: <code>Brand::where("id", "nokia")->lockForUpdate()->first()</code> → SQL: <code>SELECT ... FOR UPDATE</code>. Di JPA, keduanya difasilitasi dengan API yang jelas dan type-safe.</div><div class="quiz-box"><strong>🧠 Mini Quiz</strong><p style="margin:var(--s) 0;">Dua transaksi (A dan B) membaca Brand "nokia" (version=0) bersamaan. Transaksi B commit lebih dulu (version jadi 1). Kemudian Transaksi A mencoba commit. Apa yang terjadi pada Optimistic Locking?</p><div class="quiz-option" onclick="answerQuiz(this,false,'q18')"><span>A.</span><span>Transaksi A berhasil commit — JPA otomatis merge perubahan dari kedua transaksi.</span></div><div class="quiz-option" onclick="answerQuiz(this,true,'q18')"><span>B.</span><span>Transaksi A gagal dengan OptimisticLockException — version di object A (0) tidak cocok dengan version di database (1). Aplikasi bisa menangkap exception ini dan retry.</span></div><div class="quiz-option" onclick="answerQuiz(this,false,'q18')"><span>C.</span><span>Transaksi A menimpa perubahan Transaksi B — yang terakhir commit menang.</span></div><div class="quiz-feedback" id="q18-feedback"></div></div>
+            </div></div>
+        <div class="padding-top-ideal-distance-to-header" id="chapter-summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="section-title-chip">Summary</div>
+                <div class="text-title">🗺️ Arsitektur Project JPA Secara Keseluruhan</div>
+                <div class="chapter-intro">Gambaran besar seluruh codebase — bagaimana setiap entity, relasi, query, dan strategi saling terhubung dalam project JPA ini.</div>
+
+                <div class="section-title-chip">Entity Diagram</div>
+                <div class="code-block"><pre><code class="language-bash">Entity Relationships:
+
+[AuditableEntity&lt;T&gt;]         @MappedSuperclass
+    ↑ extends
+[Brand]                       @Entity, @Table("brands")
+    │  @OneToMany(mappedBy="brand")
+    └──→ [Product]            @Entity, @Table("products")
+              @ManyToOne       ─────────────────────→ Brand
+              @ManyToMany ──────────────────────────→ [User]
+                                                          │
+[User]  @Entity @Table("users")                           │
+    │  @OneToOne (PK Join)         @ManyToMany(JoinTable) │
+    ├──→ [Credential]  @Entity     ← users_like_products ─┘
+    └──→ [Wallet]      @Entity (@JoinColumn user_id)
+
+[Member]  @Entity @Table("members")
+    ├── @Embedded Name (title, first_name, middle_name, last_name)
+    ├── @ElementCollection → hobbies List&lt;String&gt;
+    └── @ElementCollection → skills Map&lt;String,Integer&gt;
+
+[Category]  @Entity @EntityListeners(UpdatedAtListener)
+    └── implements UpdatedAtAware
+
+Inheritance Hierarchies:
+┌── [Employee]  SINGLE_TABLE (type column)
+│   ├── [Manager]       DiscriminatorValue="MANAGER"
+│   └── [VicePresident] DiscriminatorValue="VP"
+│
+├── [Payment]  JOINED (shared PK)
+│   ├── [PaymentCreditCard]  @Table("payments_credit_card")
+│   └── [PaymentGopay]       @Table("payments_gopay")
+│
+└── [Transaction]  TABLE_PER_CLASS
+    ├── [TransactionDebit]   @Table("transactions_debit")
+    └── [TransactionCredit]  @Table("transactions_credit")
+
+Embedded:
+[Department]  @EmbeddedId → [DepartmentId] (company_id + department_id)
+[Member]      @Embedded   → [Name]         (title, first_name, ...)</code></pre></div>
+
+                <div class="section-title-chip">Test Class → Topik</div>
+                <div class="code-block"><pre><code class="language-bash">src/test/java/programmerzamannow/jpa/
+├── EntityManagerFactoryTest  → Ch1: Setup, singleton factory
+├── EntityManagerTest         → Ch1: Buka/tutup EntityManager
+├── TransactionTest           → Ch1: begin/commit/rollback pattern
+├── CrudTest                  → Ch2: persist, find, merge, remove
+├── ColumnTest                → Ch3: @Column, @Transient
+├── DataTypeTest              → Ch4: Boolean, Byte wrapper types
+├── EnumTest                  → Ch4: @Enumerated(EnumType.STRING)
+├── DateTest                  → Ch4: Calendar + @Temporal, LocalDateTime
+├── LargeObjectTest           → Ch4: @Lob untuk byte[] (image)
+├── GeneratedValueTest        → Ch5: @GeneratedValue IDENTITY
+├── EmbeddedTest              → Ch6: @Embedded, @EmbeddedId
+├── EntityRelationshipTest    → Ch7-8: OneToOne, OneToMany, ManyToMany, Fetch
+├── EntityListenerTest        → Ch9: @EntityListeners, @PostLoad
+├── InheritanceTest           → Ch10-11: SINGLE_TABLE, JOINED, TABLE_PER_CLASS, @MappedSuperclass
+├── JpaQueryLangaugeTest      → Ch12-14: JPQL, Named Query, Native Query, DML
+├── CriteriaTest              → Ch15: Criteria API (select, where, join, aggregate, update)
+├── CollectionTest            → Ch16: @ElementCollection (List, Map)
+├── ManagedEntityTest         → Ch17: Entity lifecycle (new, managed, detached)
+└── LockingTest               → Ch18: Optimistic (@Version), Pessimistic (FOR UPDATE)</code></pre></div>
+
+                <div class="section-title-chip">Ringkasan JPA vs Eloquent Laravel</div>
+                <div class="table-content"><table>
+                    <thead><tr><th>Konsep JPA</th><th>Class/Annotation</th><th>Padanan Laravel / Eloquent</th></tr></thead>
+                    <tbody>
+                    <tr><td>EntityManagerFactory</td><td>JpaUtil.getEntityManagerFactory()</td><td>config/database.php + DB facade</td></tr>
+                    <tr><td>EntityManager</td><td>emf.createEntityManager()</td><td>DB::connection() / Eloquent session</td></tr>
+                    <tr><td>Transaction</td><td>begin/commit/rollback</td><td>DB::transaction(fn() => ...)</td></tr>
+                    <tr><td>persist()</td><td>entityManager.persist(obj)</td><td>Model::create($data) / $model->save()</td></tr>
+                    <tr><td>find()</td><td>entityManager.find(Class, id)</td><td>Model::find($id)</td></tr>
+                    <tr><td>merge()</td><td>entityManager.merge(obj)</td><td>$model->update($data)</td></tr>
+                    <tr><td>remove()</td><td>entityManager.remove(obj)</td><td>$model->delete()</td></tr>
+                    <tr><td>@Entity + @Table</td><td>Brand, Customer, Product</td><td>class User extends Model</td></tr>
+                    <tr><td>@Column(name=)</td><td>@Column(name = "primary_email")</td><td>$casts / accessor di Model</td></tr>
+                    <tr><td>@Transient</td><td>@Transient private String fullName</td><td>$appends + getFullNameAttribute()</td></tr>
+                    <tr><td>@Enumerated(STRING)</td><td>CustomerType enum</td><td>$casts = ["type" => MyEnum::class]</td></tr>
+                    <tr><td>@Lob</td><td>byte[] image, String description</td><td>$table->binary() / $table->text()</td></tr>
+                    <tr><td>@GeneratedValue(IDENTITY)</td><td>Category, Image, Member</td><td>$table->id() (auto increment)</td></tr>
+                    <tr><td>@Embedded</td><td>Name di Member</td><td>$casts ke Value Object / accessor</td></tr>
+                    <tr><td>@EmbeddedId</td><td>DepartmentId</td><td>$primaryKey = ["col1", "col2"]</td></tr>
+                    <tr><td>@OneToOne</td><td>User ↔ Credential, User ↔ Wallet</td><td>hasOne() / belongsTo()</td></tr>
+                    <tr><td>@OneToMany / @ManyToOne</td><td>Brand ↔ Product</td><td>hasMany() / belongsTo()</td></tr>
+                    <tr><td>@ManyToMany + @JoinTable</td><td>User ↔ Product (likes)</td><td>belongsToMany() + pivot table</td></tr>
+                    <tr><td>FetchType.LAZY</td><td>@ManyToOne(fetch=LAZY)</td><td>Default semua relasi Eloquent</td></tr>
+                    <tr><td>join fetch</td><td>"select u from User u join fetch u.likes"</td><td>User::with("likes")</td></tr>
+                    <tr><td>@EntityListeners</td><td>UpdatedAtListener @PrePersist @PreUpdate</td><td>creating/updating events + Observer</td></tr>
+                    <tr><td>@PostLoad</td><td>Member.postLoad() — fullName</td><td>$appends + getFullNameAttribute()</td></tr>
+                    <tr><td>SINGLE_TABLE Inheritance</td><td>Employee/Manager/VP</td><td>Single Table Inheritance (Parental pkg)</td></tr>
+                    <tr><td>JOINED Inheritance</td><td>Payment/PaymentCreditCard</td><td>Tidak ada built-in di Eloquent</td></tr>
+                    <tr><td>@MappedSuperclass</td><td>AuditableEntity (id, createdAt, updatedAt)</td><td>Eloquent $timestamps = true</td></tr>
+                    <tr><td>@Version (Optimistic Lock)</td><td>Brand.version</td><td>Tidak built-in (manual check)</td></tr>
+                    <tr><td>PESSIMISTIC_WRITE</td><td>find(Class, id, LockModeType.PESSIMISTIC_WRITE)</td><td>->lockForUpdate()->first()</td></tr>
+                    <tr><td>JPQL</td><td>"select b from Brand b where b.name = :name"</td><td>Brand::where("name", $name)->get()</td></tr>
+                    <tr><td>@NamedQuery</td><td>@NamedQuery(name="Brand.findAll", ...)</td><td>Named Scope di Eloquent</td></tr>
+                    <tr><td>createNativeQuery()</td><td>SQL asli ke database</td><td>DB::select("SELECT ...");</td></tr>
+                    <tr><td>Criteria API</td><td>CriteriaBuilder, CriteriaQuery, Root</td><td>Query builder dinamis dengan when()</td></tr>
+                    <tr><td>@ElementCollection (List)</td><td>Member.hobbies List&lt;String&gt;</td><td>JSON column + $casts = ["hobbies"=>"array"]</td></tr>
+                    <tr><td>@ElementCollection (Map)</td><td>Member.skills Map&lt;String,Integer&gt;</td><td>JSON column + custom cast</td></tr>
+                    <tr><td>Managed Entity Lifecycle</td><td>NEW → MANAGED → DETACHED → REMOVED</td><td>Tidak ada padanan — Eloquent stateless</td></tr>
+                    </tbody>
+                </table></div>
+
+                <div class="info-box success" style="margin-top:var(--l);">
+                    <strong>🎉 Selamat! Kamu telah menyelesaikan seluruh modul Java Persistence API (JPA).</strong><br><br>
+                    Langkah selanjutnya yang direkomendasikan:
+                    <ol style="margin:var(--s) 0 0 var(--m);">
+                        <li><strong>Spring Data JPA</strong> — abstraksi di atas JPA: <code>JpaRepository</code>, <code>findByName()</code> auto-generated, <code>@Query</code>, Specification API</li>
+                        <li><strong>Spring Boot + JPA</strong> — konfigurasi otomatis, <code>application.properties</code>, <code>@EnableJpaAuditing</code>, <code>@Transactional</code></li>
+                        <li><strong>Flyway atau Liquibase</strong> — database migration tool untuk Java (setara <code>php artisan migrate</code>)</li>
+                        <li><strong>QueryDSL</strong> — type-safe query builder yang lebih ergonomis dari raw Criteria API</li>
+                        <li><strong>Spring Data REST</strong> — expose JPA repository sebagai REST API secara otomatis</li>
+                    </ol>
+                </div>
+            </div></div>
+
+    </section>
+    <footer style="padding:var(--l);text-align:center;color:var(--transtext-color);font-size:var(--s);">
+        <p>🗄️ Java Persistence API (JPA) Learning Module — Untuk developer PHP/Laravel yang migrasi ke Java</p>
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script>
+    function sidebarMinify(){document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");document.getElementsByClassName("container")[0].classList.toggle("expanded")}
+    function switchTheme(){document.getElementsByTagName("body")[0].classList.toggle("dark-mode")}
+    function showMenu(){document.getElementsByClassName("sidebar")[0].classList.toggle("show");document.getElementById("get-menu").classList.toggle("opened")}
+
+    const quizExplanations={
+        q1:"Benar! EntityManagerFactory mahal secara resource (baca konfigurasi, setup connection pool, load semua entity mapping). EntityManager ringan dan tidak thread-safe — harus satu per request/operasi.",
+        q2:"Benar! Object hasil find() dalam status MANAGED. JPA melakukan dirty checking — membandingkan state awal dengan state saat commit. Jika ada perubahan, otomatis generate UPDATE SQL.",
+        q3:"Benar! ORDINAL menyimpan posisi enum (0, 1, 2...). Jika kamu menambahkan nilai baru di posisi tengah atau awal, semua data lama salah mapping. Ini bug data yang sangat berbahaya dan tidak bisa di-undo.",
+        q4:"Benar! java.time types (LocalDate, LocalTime, LocalDateTime, ZonedDateTime) sudah dikenali JPA/Hibernate secara native sejak Hibernate 5. Tidak perlu @Temporal.",
+        q5:"Benar! Setelah persist() dengan GenerationType.IDENTITY, JPA langsung mengisi field @Id dari nilai auto-increment yang dikembalikan database. Ini diverifikasi di GeneratedValueTest.generatedValue().",
+        q6:"Benar! @Embedded hanya mengubah cara representasi Java — di database tetap satu tabel. Kolom dari class Name (title, first_name, dll) langsung menjadi kolom di tabel members.",
+        q7:"Benar! Perubahan relasi hanya persisten melalui owning side (yang punya @JoinColumn atau @JoinTable). Inverse side dengan mappedBy hanya untuk navigasi read — perubahan di sana tidak di-tracking JPA.",
+        q8:"Benar! N+1 problem: 1 query untuk daftar entity, lalu N query terpisah untuk tiap relasi lazy. 100 Product dengan Brand LAZY = 101 queries. Solusi: join fetch atau eager loading selektif.",
+        q9:"Benar! @PreUpdate dipanggil SEBELUM SQL UPDATE dieksekusi. Perubahan yang kamu buat di method @PreUpdate (seperti set updatedAt) akan ikut disimpan bersama UPDATE tersebut.",
+        q10:"Benar! SINGLE_TABLE = satu tabel untuk semua subclass. Kolom subclass yang tidak relevan untuk record lain akan bernilai NULL. Ini trade-off normalisasi vs performa query.",
+        q11:"Benar! @MappedSuperclass adalah template — tidak ada tabel sendiri, tidak bisa di-query polimorfik. @Entity (Inheritance) membuat hierarki yang bisa di-query: entityManager.find(Payment.class, id) → Hibernate tahu harus JOIN ke tabel mana.",
+        q12:"Benar! JPQL menggunakan nama class Java (Brand) dan nama field Java (b.name), bukan nama tabel (brands) atau kolom SQL. JPA yang menerjemahkan ke SQL sesuai database — ini membuat query portable antar RDBMS.",
+        q13:"Benar! @NamedQuery divalidasi saat aplikasi start oleh JPA provider. JPQL yang salah langsung menyebabkan startup failure — jauh lebih baik daripada error di production saat method pertama kali dipanggil.",
+        q14:"Benar! JPQL Update/Delete adalah bulk operation yang bypass managed entity lifecycle. @PreUpdate, @PostUpdate, dirty checking tidak berjalan. Jika perlu update updatedAt, masukkan ke dalam JPQL query itu sendiri.",
+        q15:"Benar! Criteria API cocok untuk query dinamis. Misalnya: form pencarian dengan filter opsional (nama, harga min, harga max, brand). Dengan JPQL string, kamu harus concatenate string secara manual — rentan bug. Criteria API membangun query programmatically.",
+        q16:"Benar! Update @ElementCollection = DELETE semua baris lama untuk entity tersebut + INSERT ulang semua item (termasuk yang tidak berubah). Ini tidak efisien untuk koleksi besar. Untuk kasus tersebut, pertimbangkan entity terpisah dengan @OneToMany.",
+        q17:"Benar! Entity hasil find() langsung dalam status MANAGED. JPA melakukan dirty checking saat commit — membandingkan state awal (snapshot) dengan state saat ini. Jika ada perbedaan, UPDATE otomatis dijalankan.",
+        q18:"Benar! Optimistic Locking menggunakan @Version. Saat Transaksi A mencoba commit, JPA menjalankan: UPDATE brands SET name=? WHERE id='nokia' AND version=0. Tapi version di DB sudah 1 (diupdate Transaksi B). 0 rows affected → OptimisticLockException. Aplikasi bisa catch dan retry."
+    };
+
+    function answerQuiz(el,isCorrect,quizId){
+        const container=el.parentElement;
+        if(container.dataset.answered)return;
+        container.dataset.answered="true";
+        const allOptions=container.querySelectorAll(".quiz-option");
+        allOptions.forEach(opt=>{opt.style.pointerEvents="none"});
+        const feedback=document.getElementById(quizId+"-feedback");
+        if(isCorrect){
+            el.classList.add("correct");
+            feedback.textContent="✅ "+quizExplanations[quizId];
+            feedback.className="quiz-feedback show correct";
+        }else{
+            el.classList.add("wrong");
+            allOptions.forEach(opt=>{
+                if(opt.getAttribute("onclick")&&opt.getAttribute("onclick").includes(",true,"))opt.classList.add("correct");
+            });
+            feedback.textContent="❌ Belum tepat. "+quizExplanations[quizId];
+            feedback.className="quiz-feedback show wrong";
+        }
+    }
+
+    const sections=document.querySelectorAll("[id^=chapter]");
+    const sidebarLinks=document.querySelectorAll(".sidebar-menu-item[href]");
+    window.addEventListener("scroll",()=>{
+        let current="";
+        sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120)current=s.id});
+        sidebarLinks.forEach(l=>{l.classList.remove("active");if(l.getAttribute("href")==="#"+current)l.classList.add("active")});
+    });
+</script>
+</body>
+</html>

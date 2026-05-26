@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Sequenced Collections — Modul Belajar Mandiri</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .code-block{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin:var(--m) 0}
+        .code-block pre{margin:0;border-radius:var(--radius-l);font-size:var(--s);line-height:1.65}
+        .code-block pre code{font-family:'Fira Code','Cascadia Code','Courier New',monospace}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);padding:var(--m);border-radius:0 var(--radius-m) var(--radius-m) 0;margin:var(--m) 0}
+        .info-box.warning{border-left-color:var(--warning-color);background:var(--transwarning-color)}
+        .info-box.success{border-left-color:var(--success-color);background:var(--transsuccess-color)}
+        .info-box.danger{border-left-color:var(--danger-color);background:var(--transdanger-color)}
+        .compare-box{box-sizing:border-box;max-width:77dvw;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:var(--m);margin:var(--m) 0}
+        @media(max-width:620px){.compare-box{grid-template-columns:1fr}}
+        .compare-box .wrong{border:2px solid var(--danger-color);border-radius:var(--radius-m);padding:var(--s);background:var(--transdanger-color)}
+        .compare-box .correct{border:2px solid var(--success-color);border-radius:var(--radius-m);padding:var(--s);background:var(--transsuccess-color)}
+        .compare-box .compare-label{font-weight:bold;margin-bottom:var(--xs);font-size:var(--s)}
+        .laravel-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border:2px dashed var(--second-primary-color);border-radius:var(--radius-m);background:var(--transsecond-primary-color);padding:var(--m);margin:var(--m) 0}
+        .laravel-box .laravel-title{font-weight:bold;color:var(--second-primary-color);margin-bottom:var(--xs);font-size:var(--s)}
+        .quiz-box{box-sizing:border-box;max-width:77dvw;overflow:auto;background:var(--transprimary-color);border-radius:var(--radius-l);padding:var(--l);margin:var(--l) 0}
+        .quiz-box .quiz-title{font-weight:bold;font-size:var(--l);margin-bottom:var(--m);color:var(--primary-color)}
+        .quiz-option{display:block;width:100%;text-align:left;padding:var(--s) var(--m);margin:var(--xs) 0;border-radius:var(--radius-m);cursor:pointer;border:var(--border);background:var(--bg-color);color:var(--text-color);font-size:var(--s);transition:background .2s}
+        .quiz-option:hover{background:var(--transprimary-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{display:none;margin-top:var(--s);padding:var(--s);border-radius:var(--radius-m);font-size:var(--s)}
+        .quiz-feedback.show{display:block}
+        .line-explain{box-sizing:border-box;overflow:auto;max-width: 77dvw; display:grid;grid-template-columns:max-content 1fr;gap:var(--xs) var(--m);align-items:start;font-size:var(--s);margin:var(--m) 0}
+        .line-num{background:var(--transprimary-color);color:var(--primary-color);border-radius:var(--radius-s);padding:2px var(--xs);font-family:monospace;font-weight:bold;white-space:nowrap}
+        .chapter-hero{box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-x);padding:var(--xx) var(--x);background:linear-gradient(135deg,var(--transprimary-color) 0%,var(--transsecond-primary-color) 100%);border:var(--border);margin-bottom:var(--l)}
+        .chapter-hero .chapter-number{font-size:var(--s);font-weight:bold;color:var(--primary-color);text-transform:uppercase;letter-spacing:2px;margin-bottom:var(--xs)}
+        .chapter-hero .chapter-title{font-size:var(--xx);font-weight:bold;margin-bottom:var(--s)}
+        .chapter-hero .chapter-desc{font-size:var(--s);opacity:.8}
+        .section-divider{border:none;border-top:2px dashed var(--border-color);margin:var(--l) 0}
+        .tag-list{display:flex;flex-wrap:wrap;gap:var(--xs);margin:var(--s) 0}
+        .sidebar-menu-item-svg{font-style:normal}
+        .test-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border:2px solid var(--third-primary-color);border-radius:var(--radius-m);background:var(--transthird-primary-color);padding:var(--m);margin:var(--m) 0}
+        .test-box .test-title{font-weight:bold;color:var(--third-primary-color);margin-bottom:var(--xs);font-size:var(--s)}
+        .table-wrap{box-sizing:border-box;max-width:77dvw;overflow-x:auto}
+        .hier-tree{box-sizing:border-box;max-width:77dvw;overflow-x:auto;font-family:'Fira Code','Cascadia Code',monospace;font-size:var(--s);background:var(--transprimary-color);border-radius:var(--radius-l);padding:var(--l);margin:var(--m) 0;line-height:2.2}
+        .hier-tree .h-new{color:var(--success-color);font-weight:bold}
+        .hier-tree .h-old{opacity:.65}
+        .hier-tree .h-impl{color:var(--warning-color)}
+        /* state visualizer */
+        .state-vis{box-sizing:border-box;max-width:77dvw;overflow-x:auto;font-family:'Fira Code','Cascadia Code',monospace;font-size:var(--s);margin:var(--m) 0}
+        .state-step{display:flex;align-items:center;gap:var(--m);margin:var(--xs) 0;flex-wrap:wrap}
+        .state-label{font-size:var(--xs);opacity:.7;min-width:160px}
+        .state-arr{display:flex;gap:4px}
+        .state-cell{padding:4px 10px;border-radius:var(--radius-s);border:var(--border);font-weight:bold;font-size:var(--s)}
+        .state-cell.first{border-color:var(--success-color);background:var(--transsuccess-color);color:var(--success-color)}
+        .state-cell.last{border-color:var(--danger-color);background:var(--transdanger-color);color:var(--danger-color)}
+        .state-cell.mid{border-color:var(--border-color)}
+        .state-arrow{opacity:.4;font-size:var(--xs)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a href="#ch0" class="bottom-nav-item">🧠 Intro</a>
+    <a href="#ch5" class="bottom-nav-item">📌 Summary</a>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">Sequenced</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#ch0" class="sidebar-menu-item active"><strong class="sidebar-menu-item-svg">🧠</strong><span>Intro — Java 21 Feature</span></a>
+        <a href="#ch1" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🌳</strong><span>Hierarki Interface Baru</span></a>
+        <a href="#ch2" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📋</strong><span>SequencedCollection</span></a>
+        <a href="#ch3" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🎯</strong><span>SequencedSet</span></a>
+        <a href="#ch4" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">🗺️</strong><span>SequencedMap</span></a>
+        <a href="#ch5" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">📌</strong><span>Summary &amp; Cheat Sheet</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">🆕 Java Sequenced Collections</span></a>
+        </div>
+        <div class="container-header-button-show-sidebar" onclick="showMenu()">
+            <svg id="get-menu" viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-x);padding:var(--xxx) var(--x);background:linear-gradient(135deg,var(--transprimary-color),var(--transsecond-primary-color));border:var(--border);text-align:center">
+                <div style="font-size:3rem;margin-bottom:var(--s)">🆕</div>
+                <div style="font-size:var(--xxx);font-weight:900;margin-bottom:var(--s)">Java Sequenced Collections</div>
+                <div style="font-size:var(--m);opacity:.75;margin-bottom:var(--l)">Fitur baru Java 21 yang akhirnya menjawab pertanyaan lama: <em>"Bagaimana cara akses elemen pertama dan terakhir dari koleksi apapun dengan cara yang seragam?"</em></div>
+                <div class="tag-list" style="justify-content:center">
+                    <div class="badge bg-primary text-white"><p>Java 21 (LTS)</p></div>
+                    <div class="badge bg-success text-white"><p>JEP 431</p></div>
+                    <div class="badge bg-warning text-white"><p>SequencedCollection</p></div>
+                    <div class="badge badge-small bg-primary text-primary"><p>SequencedSet</p></div>
+                    <div class="badge badge-small bg-success text-success"><p>SequencedMap</p></div>
+                </div>
+            </div>
+            <br/>
+            <p>Sebelum Java 21, tidak ada cara yang <strong>konsisten dan seragam</strong> untuk mengakses elemen pertama atau terakhir dari semua jenis koleksi. Java 21 memperkenalkan tiga interface baru yang menjadi solusinya: <code>SequencedCollection</code>, <code>SequencedSet</code>, dan <code>SequencedMap</code> — retroactively ditambahkan ke hierarki Collections Framework yang sudah ada.</p>
+            <hr class="section-divider"/>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--m);text-align:center">
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">5</div><div style="font-size:var(--xs);opacity:.7">Chapter</div></div>
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">3</div><div style="font-size:var(--xs);opacity:.7">Interface Baru</div></div>
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">3</div><div style="font-size:var(--xs);opacity:.7">Test Files</div></div>
+                <div style="padding:var(--m);border:var(--border);border-radius:var(--radius-m)"><div style="font-size:1.5rem">8</div><div style="font-size:var(--xs);opacity:.7">Mini Quiz</div></div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 0: INTRO ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch0">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 0</div>
+                    <div class="chapter-title">🧠 Masalah Lama yang Akhirnya Selesai</div>
+                    <div class="chapter-desc">Sebelum Java 21, cara akses elemen pertama/terakhir berbeda-beda di tiap tipe koleksi. Tidak ada satu API yang bisa dipakai seragam. Java 21 memperbaiki ini.</div>
+                </div>
+
+                <div class="text-title">Problem — API yang Tidak Konsisten (Sebelum Java 21)</div>
+                <div class="code-block"><pre><code class="language-java">// Sebelum Java 21: cara berbeda untuk setiap tipe koleksi
+
+// List → pakai get(0) dan get(size-1)
+List&lt;String&gt; list = new ArrayList&lt;&gt;(List.of("A","B","C"));
+String first = list.get(0);              // elemen pertama
+String last  = list.get(list.size() - 1); // elemen terakhir — verbose!
+
+// Deque → pakai peekFirst() / peekLast()
+Deque&lt;String&gt; deque = new ArrayDeque&lt;&gt;(List.of("A","B","C"));
+String first = deque.peekFirst();
+String last  = deque.peekLast();
+
+// SortedSet → pakai first() / last()
+SortedSet&lt;String&gt; set = new TreeSet&lt;&gt;(Set.of("A","B","C"));
+String first = set.first();
+String last  = set.last();
+
+// LinkedHashMap → tidak ada cara langsung! Harus workaround:
+LinkedHashMap&lt;String,String&gt; map = new LinkedHashMap&lt;&gt;();
+// Cara lama: iterasi ke elemen pertama entry set
+Map.Entry&lt;String,String&gt; firstEntry = map.entrySet().iterator().next(); // 😱</code></pre></div>
+
+                <div class="info-box danger">
+                    🚨 <strong>Masalahnya:</strong> Tidak ada interface tunggal yang bisa kamu gunakan untuk <em>seragam</em> mengakses elemen pertama/terakhir. Ini memaksa developer menulis kode yang berbeda-beda tergantung tipe koleksi yang digunakan, dan tidak bisa polimorfis.
+                </div>
+
+                <div class="text-title">Solusi Java 21 — Tiga Interface Baru (JEP 431)</div>
+                <div class="code-block"><pre><code class="language-java">// Setelah Java 21: API yang seragam untuk semua koleksi berurutan
+
+SequencedCollection&lt;String&gt; list  = new ArrayList&lt;&gt;();
+SequencedCollection&lt;String&gt; deque = new ArrayDeque&lt;&gt;();
+
+// Sama persis untuk keduanya!
+list.getFirst();   deque.getFirst();
+list.getLast();    deque.getLast();
+list.addFirst("X"); deque.addFirst("X");
+list.addLast("Z");  deque.addLast("Z");
+list.removeFirst(); deque.removeFirst();
+list.removeLast();  deque.removeLast();
+list.reversed();    deque.reversed(); // view urutan terbalik</code></pre></div>
+
+                <div class="info-box success">
+                    💡 <strong>Retroactively Fitted:</strong> Java 21 tidak membuat class baru — ia <em>menambahkan interface baru ke class yang sudah ada</em>. <code>ArrayList</code>, <code>LinkedList</code>, <code>ArrayDeque</code>, <code>TreeSet</code>, <code>LinkedHashSet</code>, <code>TreeMap</code>, <code>LinkedHashMap</code> — semua kini mengimplementasikan interface Sequenced yang baru. Kode lama tidak rusak.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p>PHP array selalu punya <code>reset($arr)</code> (elemen pertama) dan <code>end($arr)</code> (terakhir) secara seragam untuk semua array. Laravel Collection punya <code>->first()</code> dan <code>->last()</code> yang bisa dipakai di semua Collection. Java baru mendapatkan keseragaman ini di versi 21 — dan caranya lebih elegan karena berbasis interface, bukan fungsi global.</p>
+                </div>
+
+                <!-- QUIZ 0 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 0</div>
+                    <p><strong>Q1.</strong> Apa masalah utama yang diselesaikan oleh Java Sequenced Collections (JEP 431)?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q0-1')">A. Koleksi Java sebelumnya tidak bisa menyimpan null</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q0-1')">B. Tidak ada API yang seragam untuk akses elemen pertama/terakhir dari semua tipe koleksi berurutan</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q0-1')">C. Performa ArrayList terlalu lambat</button>
+                    <div class="quiz-feedback" id="q0-1"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 1: HIERARCHY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">🌳 Hierarki Interface Baru di Java 21</div>
+                    <div class="chapter-desc">Tiga interface baru "disisipkan" ke tengah hierarki Collections yang sudah ada. Penting untuk memahami posisinya agar tahu class mana yang bisa digunakan sebagai <code>Sequenced*</code>.</div>
+                </div>
+
+                <div class="text-title">Hierarki Setelah Java 21</div>
+                <div class="hier-tree">
+                    <span class="h-old">java.lang.Iterable&lt;E&gt;</span>
+                    └─ <span class="h-old">java.util.Collection&lt;E&gt;</span>
+                    ├─ <span class="h-new">java.util.SequencedCollection&lt;E&gt;</span>  ← 🆕 BARU di Java 21
+                    │    │   getFirst(), getLast()
+                    │    │   addFirst(e), addLast(e)
+                    │    │   removeFirst(), removeLast()
+                    │    │   reversed() → SequencedCollection&lt;E&gt;
+                    │    │
+                    │    ├─ <span class="h-old">java.util.List&lt;E&gt;</span>
+                    │    │    ├─ <span class="h-impl">ArrayList&lt;E&gt;</span>       ← sekarang implement SequencedCollection
+                    │    │    ├─ <span class="h-impl">LinkedList&lt;E&gt;</span>
+                    │    │    └─ <span class="h-impl">Vector&lt;E&gt;</span>
+                    │    │
+                    │    ├─ <span class="h-new">java.util.SequencedSet&lt;E&gt;</span>    ← 🆕 BARU di Java 21
+                    │    │    │   reversed() → SequencedSet&lt;E&gt; (override, lebih spesifik)
+                    │    │    │
+                    │    │    ├─ <span class="h-old">java.util.SortedSet&lt;E&gt;</span>
+                    │    │    │    └─ <span class="h-old">NavigableSet&lt;E&gt;</span>
+                    │    │    │         └─ <span class="h-impl">TreeSet&lt;E&gt;</span>      ← sekarang implement SequencedSet
+                    │    │    │
+                    │    │    └─ <span class="h-impl">LinkedHashSet&lt;E&gt;</span>        ← sekarang implement SequencedSet
+                    │    │
+                    │    └─ <span class="h-old">Deque&lt;E&gt;</span>
+                    │         ├─ <span class="h-impl">ArrayDeque&lt;E&gt;</span>
+                    │         └─ <span class="h-impl">LinkedList&lt;E&gt;</span>
+                    │
+                    └─ <span class="h-old">java.util.Set&lt;E&gt;</span>
+                    └─ <span class="h-impl">HashSet&lt;E&gt;</span>              ← TIDAK implement SequencedCollection (urutan tidak ada)
+
+                    <span style="opacity:.5">──── Map (hierarki terpisah) ────</span>
+                    <span class="h-old">java.util.Map&lt;K,V&gt;</span>
+                    └─ <span class="h-new">java.util.SequencedMap&lt;K,V&gt;</span>     ← 🆕 BARU di Java 21
+                    │   firstEntry(), lastEntry()
+                    │   putFirst(k,v), putLast(k,v)
+                    │   reversed() → SequencedMap&lt;K,V&gt;
+                    │   sequencedKeySet(), sequencedValues(), sequencedEntrySet()
+                    │
+                    ├─ <span class="h-impl">LinkedHashMap&lt;K,V&gt;</span>            ← sekarang implement SequencedMap
+                    └─ <span class="h-old">SortedMap → NavigableMap</span>
+                    └─ <span class="h-impl">TreeMap&lt;K,V&gt;</span>             ← sekarang implement SequencedMap</div>
+
+                <div class="info-box warning">
+                    ⚠️ <strong>Perhatikan:</strong> <code>HashSet</code> dan <code>HashMap</code> <strong>tidak</strong> mengimplementasikan interface Sequenced karena keduanya tidak memiliki urutan yang terdefinisi. Sequenced Collections hanya berlaku untuk koleksi yang <em>memiliki urutan tetap</em> — insertion order, sorted order, atau urutan natural lainnya.
+                </div>
+
+                <div class="text-title">API Lengkap SequencedCollection</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Method</th><th>Keterangan</th><th>Jika Kosong</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>getFirst()</code></td><td>Ambil elemen pertama tanpa hapus</td><td>Throw <code>NoSuchElementException</code></td></tr>
+                        <tr><td><code>getLast()</code></td><td>Ambil elemen terakhir tanpa hapus</td><td>Throw <code>NoSuchElementException</code></td></tr>
+                        <tr><td><code>addFirst(e)</code></td><td>Sisipkan elemen di posisi pertama</td><td>—</td></tr>
+                        <tr><td><code>addLast(e)</code></td><td>Tambahkan elemen di posisi terakhir</td><td>—</td></tr>
+                        <tr><td><code>removeFirst()</code></td><td>Ambil dan hapus elemen pertama</td><td>Throw <code>NoSuchElementException</code></td></tr>
+                        <tr><td><code>removeLast()</code></td><td>Ambil dan hapus elemen terakhir</td><td>Throw <code>NoSuchElementException</code></td></tr>
+                        <tr><td><code>reversed()</code></td><td>Kembalikan <em>view</em> urutan terbalik (live view, bukan salinan!)</td><td>—</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- QUIZ 1 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 1</div>
+                    <p><strong>Q1.</strong> Mengapa <code>HashSet</code> tidak mengimplementasikan <code>SequencedCollection</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q1-1')">A. Karena <code>HashSet</code> tidak memiliki urutan elemen yang terdefinisi — tidak ada "pertama" atau "terakhir" yang berarti</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q1-1')">B. Karena HashSet adalah koleksi lama dan tidak bisa diupdate</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q1-1')">C. Karena HashSet tidak bisa di-reverse</button>
+                    <div class="quiz-feedback" id="q1-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Method <code>reversed()</code> di <code>SequencedCollection</code> mengembalikan apa?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q1-2')">A. Salinan (copy) baru dari koleksi dengan urutan terbalik</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q1-2')">B. Sebuah <em>live view</em> — perubahan pada koleksi asli terlihat di sini, dan sebaliknya</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q1-2')">C. Iterator yang berjalan dari belakang</button>
+                    <div class="quiz-feedback" id="q1-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 2: SEQUENCED COLLECTION ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">📋 SequencedCollection — CollectionTest.java</div>
+                    <div class="chapter-desc">Test pertama menggunakan <code>ArrayList</code> sebagai <code>SequencedCollection</code>. Di sini kita lihat seluruh API: addFirst, addLast, getFirst, getLast, reversed, removeFirst, removeLast — semuanya dalam satu test case.</div>
+                </div>
+
+                <div class="text-title">Source — CollectionTest.java</div>
+                <div class="code-block"><pre><code class="language-java">@Test
+void collection() {
+    SequencedCollection&lt;String&gt; list = new ArrayList&lt;&gt;();
+
+    list.addLast("Khannedy");   // ["Khannedy"]
+    list.addFirst("Kurniawan"); // ["Kurniawan", "Khannedy"]
+    list.addFirst("Eko");       // ["Eko", "Kurniawan", "Khannedy"]
+
+    Assertions.assertEquals(List.of("Eko", "Kurniawan", "Khannedy"), list);
+
+    Assertions.assertEquals("Eko",      list.getFirst()); // elemen index 0
+    Assertions.assertEquals("Khannedy", list.getLast());  // elemen index terakhir
+
+    SequencedCollection&lt;String&gt; reversed = list.reversed();
+    Assertions.assertEquals(List.of("Khannedy", "Kurniawan", "Eko"), reversed);
+
+    String value = list.removeFirst(); // hapus & ambil "Eko"
+    Assertions.assertEquals("Eko",       value);
+    Assertions.assertEquals("Kurniawan", list.getFirst()); // sekarang first = "Kurniawan"
+
+    value = list.removeLast();  // hapus & ambil "Khannedy"
+    Assertions.assertEquals("Khannedy",  value);
+    Assertions.assertEquals("Kurniawan", list.getLast()); // tinggal 1 elemen
+}</code></pre></div>
+
+                <div class="text-title">Visualisasi State — Langkah per Langkah</div>
+                <div class="state-vis">
+                    <div class="state-step">
+                        <span class="state-label">addLast("Khannedy")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first last">Khannedy</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">addFirst("Kurniawan")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Kurniawan</div>
+                            <div class="state-cell last">Khannedy</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">addFirst("Eko")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Eko</div>
+                            <div class="state-cell mid">Kurniawan</div>
+                            <div class="state-cell last">Khannedy</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">reversed()</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Khannedy</div>
+                            <div class="state-cell mid">Kurniawan</div>
+                            <div class="state-cell last">Eko</div>
+                        </div>
+                        <span class="state-arrow">← live view</span>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">removeFirst() → "Eko"</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Kurniawan</div>
+                            <div class="state-cell last">Khannedy</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">removeLast() → "Khannedy"</span>
+                        <div class="state-arr">
+                            <div class="state-cell first last">Kurniawan</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-size:var(--xs);opacity:.6;margin-top:var(--xs)"><span style="display:inline-block;width:12px;height:12px;background:var(--transsuccess-color);border:1px solid var(--success-color);border-radius:3px"></span> = First &nbsp; <span style="display:inline-block;width:12px;height:12px;background:var(--transdanger-color);border:1px solid var(--danger-color);border-radius:3px"></span> = Last</p>
+
+                <div class="text-title">Penjelasan Per Operasi</div>
+                <div class="line-explain">
+                    <span class="line-num">addFirst(e)</span>
+                    <span>Menyisipkan elemen di <strong>posisi 0</strong> — semua elemen yang ada bergeser ke kanan. Untuk ArrayList, ini O(n) karena harus geser elemen. Untuk LinkedList/ArrayDeque, ini O(1). Tapi dengan <code>SequencedCollection</code>, kamu tidak perlu tahu implementasinya — API-nya sama.</span>
+
+                    <span class="line-num">addLast(e)</span>
+                    <span>Menambahkan elemen di <strong>posisi terakhir</strong>. Untuk ArrayList ini setara dengan <code>list.add(e)</code>. Dengan Java 21, <code>addLast()</code> adalah cara yang lebih eksplisit dan ekspresif niatnya.</span>
+
+                    <span class="line-num">getFirst() / getLast()</span>
+                    <span>Mengambil elemen tanpa menghapusnya. Jika koleksi kosong, keduanya throw <code>NoSuchElementException</code>. Ini berbeda dari <code>peek()</code> di Queue yang return <code>null</code> jika kosong — pilih sesuai kebutuhan.</span>
+
+                    <span class="line-num">reversed()</span>
+                    <span>Mengembalikan <strong>live view</strong> dengan urutan terbalik. Ini bukan salinan — modifikasi pada list asli akan terlihat di reversed view, dan sebaliknya. Sangat efisien karena tidak mengkopi data.</span>
+
+                    <span class="line-num">removeFirst() / removeLast()</span>
+                    <span>Mengambil sekaligus menghapus elemen. Return value adalah elemen yang dihapus. Jika kosong, throw <code>NoSuchElementException</code>.</span>
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">❌ Sebelum Java 21 — Verbose</div>
+                        <div class="code-block"><pre><code class="language-java">List&lt;String&gt; list = new ArrayList&lt;&gt;();
+
+// addFirst? Tidak ada! Harus pakai:
+list.add(0, "Eko");  // insert at index 0
+
+// getLast? Tidak ada langsung!
+String last = list.get(list.size() - 1);
+
+// removeFirst?
+String first = list.remove(0);
+
+// removeLast?
+String last = list.remove(list.size() - 1);</code></pre></div>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">✅ Java 21 — Ekspresif & Seragam</div>
+                        <div class="code-block"><pre><code class="language-java">SequencedCollection&lt;String&gt; list = new ArrayList&lt;&gt;();
+
+list.addFirst("Eko");     // ← jelas
+list.addLast("Budi");     // ← jelas
+
+String last  = list.getLast();    // ← jelas
+String first = list.removeFirst(); // ← jelas
+String l     = list.removeLast();  // ← jelas</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>addFirst()</code> = <code>array_unshift($arr, $value)</code> atau <code>collect()->prepend($value)</code>.<br/>
+                        <code>addLast()</code> = <code>array_push($arr, $value)</code> atau <code>collect()->push($value)</code>.<br/>
+                        <code>getFirst()</code> = <code>reset($arr)</code> atau <code>collect()->first()</code>.<br/>
+                        <code>getLast()</code> = <code>end($arr)</code> atau <code>collect()->last()</code>.<br/>
+                        <code>reversed()</code> = <code>array_reverse($arr)</code> atau <code>collect()->reverse()</code> — tapi versi Java adalah live view, bukan copy!</p>
+                </div>
+
+                <!-- QUIZ 2 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q1.</strong> Setelah <code>addLast("A")</code>, <code>addFirst("B")</code>, <code>addFirst("C")</code> — apa hasil <code>getFirst()</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-1')">A. "A"</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-1')">B. "B"</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q2-1')">C. "C" — ditambahkan paling terakhir via addFirst, menjadi elemen terdepan</button>
+                    <div class="quiz-feedback" id="q2-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Apa yang terjadi jika kamu memanggil <code>getFirst()</code> pada <code>SequencedCollection</code> yang kosong?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-2')">A. Return <code>null</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q2-2')">B. Throw <code>NoSuchElementException</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q2-2')">C. Return <code>Optional.empty()</code></button>
+                    <div class="quiz-feedback" id="q2-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 3: SEQUENCED SET ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">🎯 SequencedSet — SetTest.java</div>
+                    <div class="chapter-desc"><code>SequencedSet</code> extends <code>SequencedCollection</code> dan <code>Set</code>. Menambahkan jaminan: tidak ada duplikat + memiliki urutan yang terdefinisi. Implementasi utamanya adalah <code>TreeSet</code> (sorted) dan <code>LinkedHashSet</code> (insertion-ordered).</div>
+                </div>
+
+                <div class="text-title">Source — SetTest.java</div>
+                <div class="code-block"><pre><code class="language-java">@Test
+void set() {
+    SequencedSet&lt;String&gt; set = new TreeSet&lt;&gt;(); // TreeSet: selalu sorted alphabetical
+
+    set.add("Eko");   // {"Eko"}
+    set.add("Budi");  // {"Budi", "Eko"}         ← TreeSet sort otomatis!
+    set.add("Joko");  // {"Budi", "Eko", "Joko"}
+
+    // getFirst/getLast sekarang tersedia di Set!
+    Assertions.assertEquals("Budi", set.getFirst()); // huruf B < E < J
+    Assertions.assertEquals("Joko", set.getLast());
+
+    // reversed() → view terbalik
+    SequencedSet&lt;String&gt; reversed = set.reversed();
+    Assertions.assertEquals("Budi", reversed.getLast());  // Budi tetap paling "kecil"
+    Assertions.assertEquals("Joko", reversed.getFirst()); // Joko jadi paling depan di reversed
+
+    // removeFirst/removeLast
+    String value = set.removeFirst();
+    Assertions.assertEquals("Budi", value); // hapus elemen terkecil
+
+    value = set.removeFirst();
+    Assertions.assertEquals("Eko", value);  // sekarang Eko jadi yang terkecil
+}</code></pre></div>
+
+                <div class="text-title">Visualisasi State — TreeSet (Sorted)</div>
+                <div class="state-vis">
+                    <div class="state-step">
+                        <span class="state-label">add("Eko"), add("Budi"), add("Joko")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Budi</div>
+                            <div class="state-cell mid">Eko</div>
+                            <div class="state-cell last">Joko</div>
+                        </div>
+                        <span class="state-arrow">← auto-sorted A→Z</span>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">reversed()</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Joko</div>
+                            <div class="state-cell mid">Eko</div>
+                            <div class="state-cell last">Budi</div>
+                        </div>
+                        <span class="state-arrow">← live view Z→A</span>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">removeFirst() → "Budi"</span>
+                        <div class="state-arr">
+                            <div class="state-cell first">Eko</div>
+                            <div class="state-cell last">Joko</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">removeFirst() → "Eko"</span>
+                        <div class="state-arr">
+                            <div class="state-cell first last">Joko</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line-explain">
+                    <span class="line-num">TreeSet sebagai SequencedSet</span>
+                    <span>TreeSet selalu mengurutkan elemen secara natural (alphabetical untuk String, ascending untuk Number). Ketika digunakan sebagai <code>SequencedSet</code>, <code>getFirst()</code> selalu mengembalikan elemen <em>terkecil</em>, dan <code>getLast()</code> selalu elemen <em>terbesar</em>.</span>
+
+                    <span class="line-num">reversed() di SequencedSet</span>
+                    <span>Interface <code>SequencedSet</code> meng-override <code>reversed()</code> agar return type-nya lebih spesifik: <code>SequencedSet&lt;E&gt;</code> bukan <code>SequencedCollection&lt;E&gt;</code>. Ini mempertahankan "Set-ness" — kamu tahu reversed view-nya juga tidak punya duplikat.</span>
+
+                    <span class="line-num">removeFirst() pada TreeSet</span>
+                    <span>Menghapus elemen terkecil (karena TreeSet sorted ascending). Setara dengan <code>TreeSet.pollFirst()</code> — tapi sekarang tersedia via interface <code>SequencedSet</code> yang lebih umum.</span>
+                </div>
+
+                <div class="info-box">
+                    💡 <strong>LinkedHashSet sebagai SequencedSet:</strong> Jika kamu pakai <code>LinkedHashSet</code>, <code>getFirst()</code> mengembalikan elemen yang <em>pertama kali dimasukkan</em> (insertion order), bukan yang paling kecil. <code>TreeSet</code> untuk sorted order, <code>LinkedHashSet</code> untuk insertion order.
+                </div>
+
+                <div class="compare-box">
+                    <div class="wrong">
+                        <div class="compare-label">TreeSet — getFirst() = elemen terkecil</div>
+                        <div class="code-block"><pre><code class="language-java">SequencedSet&lt;String&gt; set = new TreeSet&lt;&gt;();
+set.add("Eko"); set.add("Budi"); set.add("Joko");
+set.getFirst(); // → "Budi" (B < E < J)</code></pre></div>
+                        <p style="font-size:var(--xs)">Urutan berdasarkan <strong>natural order</strong> (alphabetical)</p>
+                    </div>
+                    <div class="correct">
+                        <div class="compare-label">LinkedHashSet — getFirst() = yang pertama dimasukkan</div>
+                        <div class="code-block"><pre><code class="language-java">SequencedSet&lt;String&gt; set = new LinkedHashSet&lt;&gt;();
+set.add("Eko"); set.add("Budi"); set.add("Joko");
+set.getFirst(); // → "Eko" (pertama di-add)</code></pre></div>
+                        <p style="font-size:var(--xs)">Urutan berdasarkan <strong>insertion order</strong></p>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p>PHP tidak punya Set bawaan, tapi <code>SequencedSet</code> mirip seperti <code>collect()->unique()->sort()</code> di Laravel — koleksi yang sudah di-dedup dan terurut, dengan akses mudah ke elemen pertama/terakhir. Bedanya <code>TreeSet</code> maintain sort secara otomatis setiap kali insert, tidak perlu <code>sort()</code> manual setelah setiap <code>add()</code>.</p>
+                </div>
+
+                <!-- QUIZ 3 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q1.</strong> Kamu add "Zebra", "Apple", "Mango" ke <code>TreeSet</code> sebagai <code>SequencedSet</code>. Apa hasil <code>getLast()</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q3-1')">A. "Mango" — yang terakhir di-add</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q3-1')">B. "Zebra" — TreeSet sorted alphabetical, Z adalah yang terbesar</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q3-1')">C. "Apple" — yang pertama di-add</button>
+                    <div class="quiz-feedback" id="q3-1"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 4: SEQUENCED MAP ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">🗺️ SequencedMap — MapTest.java</div>
+                    <div class="chapter-desc"><code>SequencedMap</code> memperkenalkan akses ke entry pertama/terakhir map secara seragam. Dua test case memperlihatkan dua skenario berbeda: <code>TreeMap</code> (sorted by key) dan <code>LinkedHashMap</code> (insertion order dengan putFirst/putLast).</div>
+                </div>
+
+                <div class="text-title">Test 1 — TreeMap sebagai SequencedMap</div>
+                <div class="code-block"><pre><code class="language-java">@Test
+void map() {
+    SequencedMap&lt;String, String&gt; map = new TreeMap&lt;&gt;(); // key selalu sorted
+
+    map.put("c", "Eko");
+    map.put("b", "Kurniawan");
+    map.put("a", "Khannedy");
+    // Setelah sort by key: {a=Khannedy, b=Kurniawan, c=Eko}
+
+    // firstEntry() → Map.Entry dengan key terkecil
+    Assertions.assertEquals("Khannedy", map.firstEntry().getValue()); // key "a"
+    // lastEntry() → Map.Entry dengan key terbesar
+    Assertions.assertEquals("Eko",      map.lastEntry().getValue());  // key "c"
+
+    // reversed() → live view dengan urutan key terbalik
+    SequencedMap&lt;String, String&gt; reversed = map.reversed();
+    // reversed: {c=Eko, b=Kurniawan, a=Khannedy}
+    Assertions.assertEquals("Khannedy", reversed.lastEntry().getValue()); // key "a" sekarang terakhir
+    Assertions.assertEquals("Eko",      reversed.firstEntry().getValue()); // key "c" sekarang pertama
+}</code></pre></div>
+
+                <div class="text-title">Visualisasi — TreeMap (Sorted by Key)</div>
+                <div class="state-vis">
+                    <div class="state-step">
+                        <span class="state-label">Setelah put a,b,c</span>
+                        <div class="state-arr" style="flex-direction:column;gap:4px">
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <div class="state-cell first" style="min-width:40px;text-align:center">a</div>
+                                <span style="opacity:.5">→</span>
+                                <div class="state-cell mid">Khannedy</div>
+                                <span class="state-arrow">← firstEntry()</span>
+                            </div>
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <div class="state-cell mid" style="min-width:40px;text-align:center">b</div>
+                                <span style="opacity:.5">→</span>
+                                <div class="state-cell mid">Kurniawan</div>
+                            </div>
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <div class="state-cell last" style="min-width:40px;text-align:center">c</div>
+                                <span style="opacity:.5">→</span>
+                                <div class="state-cell mid">Eko</div>
+                                <span class="state-arrow">← lastEntry()</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="state-step" style="margin-top:var(--m)">
+                        <span class="state-label">reversed()</span>
+                        <div class="state-arr" style="flex-direction:column;gap:4px">
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <div class="state-cell first" style="min-width:40px;text-align:center">c</div>
+                                <span style="opacity:.5">→</span>
+                                <div class="state-cell mid">Eko</div>
+                                <span class="state-arrow">← firstEntry() di reversed</span>
+                            </div>
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <div class="state-cell mid" style="min-width:40px;text-align:center">b</div>
+                                <span style="opacity:.5">→</span>
+                                <div class="state-cell mid">Kurniawan</div>
+                            </div>
+                            <div style="display:flex;gap:4px;align-items:center">
+                                <div class="state-cell last" style="min-width:40px;text-align:center">a</div>
+                                <span style="opacity:.5">→</span>
+                                <div class="state-cell mid">Khannedy</div>
+                                <span class="state-arrow">← lastEntry() di reversed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title">Test 2 — LinkedHashMap dengan putFirst/putLast</div>
+                <div class="code-block"><pre><code class="language-java">@Test
+void linkedMap() {
+    SequencedMap&lt;String, String&gt; map = new LinkedHashMap&lt;&gt;();
+
+    map.putFirst("a", "Eko");       // {a=Eko}
+    map.putFirst("b", "Kurniawan"); // {b=Kurniawan, a=Eko}  ← b disisipkan di depan!
+    map.putFirst("c", "Khannedy"); // {c=Khannedy, b=Kurniawan, a=Eko}
+
+    // firstEntry() = entry yang paling awal (c, karena putFirst terakhir)
+    Assertions.assertEquals("Khannedy", map.firstEntry().getValue());
+    // lastEntry() = entry yang paling akhir (a, yang pertama dimasukkan)
+    Assertions.assertEquals("Eko",      map.lastEntry().getValue());
+}</code></pre></div>
+
+                <div class="text-title">Visualisasi — LinkedHashMap dengan putFirst</div>
+                <div class="state-vis">
+                    <div class="state-step">
+                        <span class="state-label">putFirst("a", "Eko")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first last" style="font-size:var(--xs)">a=Eko</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">putFirst("b", "Kurniawan")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first" style="font-size:var(--xs)">b=Kurniawan</div>
+                            <div class="state-cell last" style="font-size:var(--xs)">a=Eko</div>
+                        </div>
+                    </div>
+                    <div class="state-step">
+                        <span class="state-label">putFirst("c", "Khannedy")</span>
+                        <div class="state-arr">
+                            <div class="state-cell first" style="font-size:var(--xs)">c=Khannedy</div>
+                            <div class="state-cell mid" style="font-size:var(--xs)">b=Kurniawan</div>
+                            <div class="state-cell last" style="font-size:var(--xs)">a=Eko</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title">API Lengkap SequencedMap</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Method</th><th>Keterangan</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>firstEntry()</code></td><td>Return <code>Map.Entry</code> pertama (tidak hapus). Return <code>null</code> jika kosong (beda dari SequencedCollection yang throw!)</td></tr>
+                        <tr><td><code>lastEntry()</code></td><td>Return <code>Map.Entry</code> terakhir (tidak hapus)</td></tr>
+                        <tr><td><code>pollFirstEntry()</code></td><td>Ambil dan hapus entry pertama</td></tr>
+                        <tr><td><code>pollLastEntry()</code></td><td>Ambil dan hapus entry terakhir</td></tr>
+                        <tr><td><code>putFirst(k, v)</code></td><td>Sisipkan entry di posisi pertama (LinkedHashMap)</td></tr>
+                        <tr><td><code>putLast(k, v)</code></td><td>Tambahkan entry di posisi terakhir</td></tr>
+                        <tr><td><code>reversed()</code></td><td>Live view dengan urutan entry terbalik</td></tr>
+                        <tr><td><code>sequencedKeySet()</code></td><td>Keys sebagai <code>SequencedSet</code></td></tr>
+                        <tr><td><code>sequencedValues()</code></td><td>Values sebagai <code>SequencedCollection</code></td></tr>
+                        <tr><td><code>sequencedEntrySet()</code></td><td>Entries sebagai <code>SequencedSet&lt;Map.Entry&lt;K,V&gt;&gt;</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warning">
+                    ⚠️ <strong>Perhatikan perbedaan null behavior:</strong> <code>SequencedMap.firstEntry()</code> return <code>null</code> jika map kosong (konsisten dengan <code>Map.Entry</code> yang nullable). Sedangkan <code>SequencedCollection.getFirst()</code> throw <code>NoSuchElementException</code>. Jangan anggap keduanya identik!
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-title">🐘 Analogi Laravel / PHP</div>
+                    <p><code>firstEntry()</code> = <code>collect($map)->first()</code> atau PHP <code>array_key_first($arr)</code> + nilai-nya.<br/>
+                        <code>lastEntry()</code> = <code>collect($map)->last()</code> atau PHP <code>array_key_last($arr)</code> + nilai-nya.<br/>
+                        <code>putFirst(k,v)</code> tidak ada padanan langsung di PHP — di PHP harus <code>$new = [$k => $v] + $arr</code> untuk menyisipkan di depan associative array.</p>
+                </div>
+
+                <!-- QUIZ 4 -->
+                <div class="quiz-box">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 4</div>
+                    <p><strong>Q1.</strong> Pada <code>SequencedMap</code>, apa yang dikembalikan <code>firstEntry()</code> jika map kosong?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-1')">A. Throw <code>NoSuchElementException</code></button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q4-1')">B. Return <code>null</code> — berbeda dari <code>SequencedCollection.getFirst()</code> yang throw exception</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-1')">C. Return <code>Optional.empty()</code></button>
+                    <div class="quiz-feedback" id="q4-1"></div>
+                    <br/>
+                    <p><strong>Q2.</strong> Setelah <code>putFirst("x","X")</code>, <code>putFirst("y","Y")</code>, <code>putFirst("z","Z")</code> pada LinkedHashMap — apa hasil <code>firstEntry().getKey()</code>?</p>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-2')">A. "x" — yang pertama di-put</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,true,'q4-2')">B. "z" — yang terakhir di-putFirst berada di posisi paling depan</button>
+                    <button class="quiz-option" onclick="checkQuiz(this,false,'q4-2')">C. Urutan tidak terjamin di LinkedHashMap</button>
+                    <div class="quiz-feedback" id="q4-2"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ===== CHAPTER 5: SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="ch5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-hero" style="background:linear-gradient(135deg,var(--transsuccess-color),var(--transprimary-color))">
+                    <div class="chapter-number">Chapter 5 — Summary</div>
+                    <div class="chapter-title">📌 Cheat Sheet &amp; Kapan Menggunakan Apa</div>
+                    <div class="chapter-desc">Semua yang perlu diingat dalam satu halaman.</div>
+                </div>
+
+                <div class="text-title">API Seragam — Satu Interface, Banyak Implementasi</div>
+                <div class="code-block"><pre><code class="language-java">// Semua ini bisa ditulis dengan cara yang SAMA persis:
+SequencedCollection&lt;String&gt; a = new ArrayList&lt;&gt;();
+SequencedCollection&lt;String&gt; b = new LinkedList&lt;&gt;();
+SequencedCollection&lt;String&gt; c = new ArrayDeque&lt;&gt;();
+
+// Kode ini bekerja identik untuk a, b, atau c:
+a.addFirst("X");  a.addLast("Z");
+String f = a.getFirst(); String l = a.getLast();
+SequencedCollection&lt;String&gt; rev = a.reversed();
+
+// Untuk Set:
+SequencedSet&lt;String&gt; s1 = new TreeSet&lt;&gt;();       // sorted by natural order
+SequencedSet&lt;String&gt; s2 = new LinkedHashSet&lt;&gt;();  // insertion order
+
+// Untuk Map:
+SequencedMap&lt;String,String&gt; m1 = new TreeMap&lt;&gt;();       // sorted by key
+SequencedMap&lt;String,String&gt; m2 = new LinkedHashMap&lt;&gt;();  // insertion order</code></pre></div>
+
+                <div class="text-title">Cheat Sheet — Semua Method + Behavior</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>Method</th><th>SequencedCollection</th><th>SequencedSet</th><th>SequencedMap</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Lihat elemen pertama</td><td><code>getFirst()</code></td><td><code>getFirst()</code></td><td><code>firstEntry()</code></td></tr>
+                        <tr><td>Lihat elemen terakhir</td><td><code>getLast()</code></td><td><code>getLast()</code></td><td><code>lastEntry()</code></td></tr>
+                        <tr><td>Tambah di depan</td><td><code>addFirst(e)</code></td><td><code>addFirst(e)</code></td><td><code>putFirst(k,v)</code></td></tr>
+                        <tr><td>Tambah di belakang</td><td><code>addLast(e)</code></td><td><code>addLast(e)</code></td><td><code>putLast(k,v)</code></td></tr>
+                        <tr><td>Ambil &amp; hapus pertama</td><td><code>removeFirst()</code></td><td><code>removeFirst()</code></td><td><code>pollFirstEntry()</code></td></tr>
+                        <tr><td>Ambil &amp; hapus terakhir</td><td><code>removeLast()</code></td><td><code>removeLast()</code></td><td><code>pollLastEntry()</code></td></tr>
+                        <tr><td>View terbalik</td><td><code>reversed()</code></td><td><code>reversed()</code></td><td><code>reversed()</code></td></tr>
+                        <tr><td>Jika kosong</td><td>Throw <code>NSE</code>*</td><td>Throw <code>NSE</code>*</td><td>Return <code>null</code></td></tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size:var(--xs);opacity:.6;margin-top:var(--xs)">* NSE = NoSuchElementException</p>
+                </div>
+
+                <div class="text-title">Panduan Memilih Implementasi</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Kebutuhan</th><th>Pilihan</th><th>Tipe Interface</th></tr></thead>
+                        <tbody>
+                        <tr><td>List dengan akses first/last yang ekspresif</td><td><code>ArrayList</code></td><td><code>SequencedCollection</code></td></tr>
+                        <tr><td>Queue / Stack dengan API first/last seragam</td><td><code>ArrayDeque</code></td><td><code>SequencedCollection</code></td></tr>
+                        <tr><td>Set tanpa duplikat, sorted alphabetical</td><td><code>TreeSet</code></td><td><code>SequencedSet</code></td></tr>
+                        <tr><td>Set tanpa duplikat, urutan insertion</td><td><code>LinkedHashSet</code></td><td><code>SequencedSet</code></td></tr>
+                        <tr><td>Map key-value, key sorted</td><td><code>TreeMap</code></td><td><code>SequencedMap</code></td></tr>
+                        <tr><td>Map key-value, urutan insertion + putFirst/putLast</td><td><code>LinkedHashMap</code></td><td><code>SequencedMap</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title">Java Version Timeline</div>
+                <div class="timeline">
+                    <div><span class="timeline-key">Java 1</span><div class="timeline-divider"></div></div>
+                    <div class="timeline-content max-width-500">
+                        <div class="timeline-content-title">Collections Framework awal</div>
+                        <div class="timeline-content-desc">Vector, Stack, Hashtable — semuanya synchronized, dianggap legacy sekarang</div>
+                    </div>
+                    <div><span class="timeline-key">Java 2</span><div class="timeline-divider"></div></div>
+                    <div class="timeline-content max-width-500">
+                        <div class="timeline-content-title">Collections Framework modern</div>
+                        <div class="timeline-content-desc">ArrayList, HashMap, TreeSet, LinkedList — fondasi yang masih dipakai sampai sekarang</div>
+                    </div>
+                    <div><span class="timeline-key">Java 8</span><div class="timeline-divider"></div></div>
+                    <div class="timeline-content max-width-500">
+                        <div class="timeline-content-title">Stream API + Default Methods</div>
+                        <div class="timeline-content-desc">forEach, removeIf, replaceAll ditambahkan ke Collection via default method. List.of(), Map.of() muncul di Java 9.</div>
+                    </div>
+                    <div><span class="timeline-key active">Java 21</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-500">
+                        <div class="timeline-content-title">Sequenced Collections (JEP 431) 🆕</div>
+                        <div class="timeline-content-desc">SequencedCollection, SequencedSet, SequencedMap — API seragam untuk akses first/last pada semua koleksi berurutan. Java 21 adalah LTS (Long-Term Support).</div>
+                    </div>
+                    <div><span class="timeline-key">Next</span></div>
+                    <div class="timeline-content max-width-500">
+                        <div class="timeline-content-title">Java terus berkembang</div>
+                        <div class="timeline-content-desc">Record Patterns, Pattern Matching, Project Loom (Virtual Threads) — Java modern terus berevolusi.</div>
+                    </div>
+                </div>
+
+                <hr class="section-divider"/>
+                <div class="info-box success" style="text-align:center;padding:var(--x)">
+                    <div style="font-size:2rem;margin-bottom:var(--s)">🎉</div>
+                    <div style="font-size:var(--l);font-weight:bold;margin-bottom:var(--s)">Selesai! Kamu Sudah Kuasai Java 21 Sequenced Collections</div>
+                    <p>Fitur ini kecil tapi impactful — setiap kali kamu perlu akses elemen pertama atau terakhir dari koleksi apapun, gunakan <code>SequencedCollection</code>, <code>SequencedSet</code>, atau <code>SequencedMap</code> sebagai tipe variabel. Kodenya menjadi lebih ekspresif, lebih seragam, dan lebih mudah dibaca oleh siapapun yang join tim kamu.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="text-align:center;padding:var(--x);opacity:.5;font-size:var(--xs)">
+        Java Sequenced Collections (JEP 431 · Java 21) &bull; Modul Self-Paced Learning
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script>
+    hljs.highlightAll();
+    function showMenu()     { document.getElementsByClassName("sidebar")[0].classList.toggle("show"); document.getElementById("get-menu").classList.toggle("opened"); }
+    function sidebarMinify(){ document.getElementsByClassName("sidebar")[0].classList.toggle("collapse"); document.getElementsByClassName("container")[0].classList.toggle("expanded"); }
+    function switchTheme()  { document.body.classList.toggle("dark-mode"); document.querySelector(".container-header-button-switch-theme").textContent = document.body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode"; }
+
+    const quizAnswers = {
+        'q0-1': 'Tepat! JEP 431 hadir karena tidak ada cara yang konsisten untuk akses elemen pertama/terakhir — setiap tipe koleksi punya cara berbeda. Kini semuanya seragam via interface <code>SequencedCollection</code>.',
+        'q1-1': 'Benar! <code>HashSet</code> menggunakan hash table — urutan elemen tidak terdefinisi dan bisa berubah. Tidak ada konsep "pertama" atau "terakhir" yang bermakna, sehingga tidak bisa implement <code>SequencedCollection</code>.',
+        'q1-2': 'Tepat! <code>reversed()</code> mengembalikan live view — bukan salinan data. Jika kamu ubah list asli (add/remove), perubahan itu langsung terlihat di reversed view. Ini sangat efisien karena tidak ada alokasi memori baru.',
+        'q2-1': 'Benar! <code>addFirst("A")</code> → [A], <code>addFirst("B")</code> → [B,A], <code>addFirst("C")</code> → [C,B,A]. "C" menjadi elemen paling depan.',
+        'q2-2': 'Tepat! <code>getFirst()</code> (dan <code>getLast()</code>, <code>removeFirst()</code>, <code>removeLast()</code>) melempar <code>NoSuchElementException</code> jika koleksi kosong — bukan return null. Cek dulu dengan <code>isEmpty()</code> jika koleksi mungkin kosong.',
+        'q3-1': 'Benar! TreeSet selalu sorted secara natural order. Untuk String, natural order adalah alphabetical. "Zebra" (Z) > "Mango" (M) > "Apple" (A), jadi "Zebra" adalah elemen terakhir / terbesar.',
+        'q4-1': 'Tepat! Ini perbedaan penting — <code>SequencedMap.firstEntry()</code> return <code>null</code> jika kosong (mengikuti konvensi <code>Map</code>), sedangkan <code>SequencedCollection.getFirst()</code> throw exception. Selalu cek <code>isEmpty()</code> sebelum memanggil <code>firstEntry()</code>.',
+        'q4-2': 'Benar! <code>putFirst("x")</code> → {x=X}. <code>putFirst("y")</code> → {y=Y, x=X}. <code>putFirst("z")</code> → {z=Z, y=Y, x=X}. Setiap <code>putFirst()</code> menyisipkan entry di depan, jadi yang terakhir di-putFirst selalu berada di posisi paling awal.',
+    };
+
+    function checkQuiz(btn, isCorrect, id) {
+        const all = btn.parentElement.querySelectorAll(".quiz-option");
+        all.forEach(b => { b.disabled = true; b.style.opacity = ".6"; b.style.cursor = "not-allowed"; });
+        if (isCorrect) { btn.classList.add("correct"); btn.style.opacity = "1"; }
+        else { btn.classList.add("wrong"); btn.style.opacity = "1"; all.forEach(b => { if (b !== btn && b.getAttribute("onclick")?.includes("true")) { b.classList.add("correct"); b.style.opacity = "1"; } }); }
+        const fb = document.getElementById(id);
+        if (fb) {
+            fb.classList.add("show");
+            fb.style.background   = isCorrect ? "var(--transsuccess-color)" : "var(--transdanger-color)";
+            fb.style.borderLeft   = isCorrect ? "4px solid var(--success-color)" : "4px solid var(--danger-color)";
+            fb.style.padding      = "var(--s)"; fb.style.borderRadius = "0 var(--radius-m) var(--radius-m) 0";
+            fb.innerHTML = (isCorrect ? "✅ <strong>Benar!</strong> " : "❌ <strong>Kurang tepat.</strong> ") + (quizAnswers[id] || "");
+        }
+    }
+
+    const sideLinks = document.querySelectorAll(".sidebar-menu-item[href]");
+    document.querySelectorAll("[id^='ch']").forEach(s =>
+        new IntersectionObserver(e => { e.forEach(x => { if (x.isIntersecting) { const id = x.target.id; sideLinks.forEach(l => { l.classList.remove("active"); if (l.getAttribute("href") === "#" + id) l.classList.add("active"); }); } }); }, { threshold: 0.3 }).observe(s)
+    );
+</script>
+</body>
+</html>

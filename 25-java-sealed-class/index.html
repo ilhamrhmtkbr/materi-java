@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Sealed Class — Modul Belajar untuk Developer PHP/Laravel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .quiz-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);border-radius:var(--radius-m);padding:var(--m);margin-top:var(--m)}
+        .quiz-box .quiz-title{font-weight:700;color:var(--primary-color);margin-bottom:var(--s)}
+        .quiz-option{display:flex;align-items:center;gap:var(--s);padding:var(--xs) var(--s);border-radius:var(--radius-s);cursor:pointer;margin-bottom:var(--xs);border:1px solid var(--border-color);background:var(--bg-color)}
+        .quiz-option:hover{background:var(--sidebar-hover-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{margin-top:var(--s);font-size:var(--s);font-weight:600}
+        .quiz-feedback.ok{color:var(--success-color)}
+        .quiz-feedback.err{color:var(--danger-color)}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-m);padding:var(--m);margin:var(--s) 0}
+        .info-box.tip{background:var(--transsuccess-color);border-left:4px solid var(--success-color)}
+        .info-box.warn{background:var(--transwarning-color);border-left:4px solid var(--warning-color)}
+        .info-box.laravel{background:var(--transsecond-primary-color);border-left:4px solid var(--second-primary-color)}
+        .info-box.danger{background:var(--transdanger-color);border-left:4px solid var(--danger-color)}
+        .info-box strong{display:block;margin-bottom:var(--xs)}
+        .code-wrap{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-m);margin:var(--s) 0}
+        .code-wrap pre{margin:0}
+        .code-wrap code{font-size:.85em}
+        .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);max-width:77dvw;overflow:auto}
+        @media(max-width:600px){.compare-grid{grid-template-columns:1fr}}
+        .compare-grid .wrong-box{border-left:4px solid var(--danger-color);background:var(--transdanger-color);border-radius:var(--radius-m);padding:var(--s)}
+        .compare-grid .right-box{border-left:4px solid var(--success-color);background:var(--transsuccess-color);border-radius:var(--radius-m);padding:var(--s)}
+        .compare-label{font-weight:700;font-size:var(--s);margin-bottom:var(--xs)}
+        .chapter-intro{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m)}
+        .chapter-intro .chapter-num{color:var(--primary-color);font-weight:700;font-size:var(--s);letter-spacing:.08em;text-transform:uppercase}
+        .chapter-intro h2{margin:var(--xs) 0 var(--s);font-size:var(--xx)}
+        .line-table{width:100%;border-collapse:collapse;font-size:var(--s)}
+        .line-table th,.line-table td{padding:var(--xs) var(--s);text-align:left;border-bottom:1px solid var(--border-color)}
+        .line-table th{background:var(--transprimary-color);color:var(--primary-color);font-weight:700}
+        .line-table tr:hover td{background:var(--sidebar-hover-color)}
+        .section-divider{border:none;border-top:1px solid var(--border-color);margin:var(--x) 0}
+        .summary-item{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) 0;border-bottom:1px solid var(--border-color)}
+        .summary-item:last-child{border-bottom:none}
+        .summary-icon{font-size:1.4rem;flex-shrink:0}
+        #progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--primary-color);transition:width .2s;z-index:9999}
+        .hierarchy-box{box-sizing:border-box;max-width:77dvw;overflow:auto;background:var(--sidebar-hover-color);border-radius:var(--radius-m);padding:var(--m);font-family:monospace;font-size:var(--s);line-height:2}
+        .keyword-sealed{color:#e06c75;font-weight:700}
+        .keyword-permits{color:#61afef;font-weight:700}
+        .keyword-final{color:#98c379;font-weight:700}
+        .keyword-nonsealed{color:#e5c07b;font-weight:700}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<div id="progress-bar"></div>
+
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-1">🔒 Sealed</a>
+    <a class="bottom-nav-item" href="#chapter-2">🔗 Interface</a>
+    <a class="bottom-nav-item" href="#chapter-3">🔓 Non-Sealed</a>
+    <a class="bottom-nav-item" href="#chapter-4">📝 Summary</a>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">🔒 Sealed Class</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#chapter-1" class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🔒</div><span>Sealed Class</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔗</div><span>Sealed Interface</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔓</div><span>Non-Sealed &amp; Final</span></a>
+        <a href="#chapter-3b" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📦</div><span>Record + Sealed</span></a>
+        <a href="#chapter-3c" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔍</div><span>Reflection API</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📝</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">🔒 Java Sealed Class</span></a>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--x);">
+                <div class="flex-ais-jcs gap-m" style="align-items:center;">
+                    <span style="font-size:3rem;">🔒</span>
+                    <div>
+                        <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Java 17+ — Fitur Modern</div>
+                        <h1 style="margin:var(--xs) 0 var(--s);">Java Sealed Class untuk Developer PHP/Laravel</h1>
+                        <p><strong>Sealed Class</strong> adalah fitur Java 17 yang memungkinkan kamu <em>mengontrol secara eksplisit</em> siapa saja yang boleh meng-extend atau mengimplementasi sebuah class/interface. Mirip konsep <strong>"restricted inheritance"</strong> — kamu menentukan daftar putih subclass yang diizinkan.</p>
+                    </div>
+                </div>
+                <hr style="border:none;border-top:1px solid var(--border-color);margin:var(--m) 0">
+                <div class="flex-ais-jcs gap-m">
+                    <div class="badge text-white bg-primary"><p>Java 17+</p></div>
+                    <div class="badge text-white bg-success"><p>PHP/Laravel Analogy</p></div>
+                    <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+                    <div class="badge badge-small bg-danger"><p>3 Keyword Baru</p></div>
+                </div>
+            </div>
+            <br>
+            <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">🧠 Masalah yang Dipecahkan Sealed Class</div>
+            <p style="margin-bottom:var(--s);">Sebelum Java 17, kamu hanya punya dua pilihan ekstrem:</p>
+            <div class="table-content">
+                <table>
+                    <thead><tr><th>Pendekatan</th><th>Masalah</th></tr></thead>
+                    <tbody>
+                    <tr><td><code>public class Shape</code> (biasa)</td><td>Siapa saja bisa extend — tidak ada kontrol</td></tr>
+                    <tr><td><code>final class Shape</code></td><td>Tidak bisa di-extend sama sekali — terlalu ketat</td></tr>
+                    <tr><td>✅ <code>sealed class Shape permits ...</code></td><td><strong>Hanya class yang terdaftar yang boleh extend</strong> — pas!</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">🗝️ Tiga Keyword Baru</div>
+            <div class="table-content">
+                <table>
+                    <thead><tr><th>Keyword</th><th>Dipakai di</th><th>Arti</th></tr></thead>
+                    <tbody>
+                    <tr><td><code>sealed</code></td><td>Class / Interface induk</td><td>Class ini punya daftar putih subclass — harus diikuti <code>permits</code></td></tr>
+                    <tr><td><code>permits</code></td><td>Setelah <code>sealed</code></td><td>Daftar class yang diizinkan extend/implement</td></tr>
+                    <tr><td><code>non-sealed</code></td><td>Class anak dari sealed</td><td>Class ini membuka kembali inheritance ke siapa saja</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CH1: SEALED CLASS -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 1</div>
+                    <h2>🔒 Sealed Class</h2>
+                    <p>Keyword <code>sealed</code> pada class diikuti <code>permits</code> yang berisi daftar class yang <em>diizinkan</em> untuk meng-extend-nya. Class lain di luar daftar akan mendapat <strong>compile error</strong>.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// Employee.java — Class induk yang di-seal
+public sealed class Employee permits Manager {
+  // Hanya class Manager yang boleh extends Employee.
+  // Class lain yang coba extends Employee → COMPILE ERROR!
+
+  private String id;
+  private String name;
+
+  public String getId()           { return id; }
+  public void setId(String id)    { this.id = id; }
+  public String getName()         { return name; }
+  public void setName(String name){ this.name = name; }
+}
+
+// Manager.java — Satu-satunya yang boleh extends Employee
+// WAJIB pilih salah satu: sealed / non-sealed / final
+public non-sealed class Manager extends Employee {
+  private String department;
+
+  public String getDepartment()           { return department; }
+  public void setDepartment(String dept)  { this.department = dept; }
+}
+
+// EmployeeTest.java
+@Test
+void employee() {
+  var employee = new Employee(); // OK
+}
+
+@Test
+void manager() {
+  var manager = new Manager(); // OK
+}</code></pre></div>
+
+                <div class="info-box danger">
+                    <strong>🚨 Class selain Manager yang coba extends Employee → Error!</strong>
+                    <div class="code-wrap" style="margin-top:var(--s);"><pre><code class="language-java">// Contoh di luar package yang sama:
+public class Director extends Employee { // COMPILE ERROR!
+  // java: class is not allowed to extend sealed class:
+  // programmerzamannow.sealedclass.data.Employee
+}</code></pre></div>
+                </div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📐 Aturan Penting Sealed Class</div>
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Aturan</th><th>Penjelasan</th></tr></thead>
+                        <tbody>
+                        <tr><td>Class permitted harus dalam <strong>package yang sama</strong></td><td>Atau modul yang sama (Java 9+ module system)</td></tr>
+                        <tr><td>Class anak <strong>WAJIB</strong> pilih salah satu modifier</td><td><code>sealed</code>, <code>non-sealed</code>, atau <code>final</code></td></tr>
+                        <tr><td><code>permits</code> <strong>bisa dihilangkan</strong></td><td>Jika semua subclass ada di <em>file yang sama</em>, Java auto-detect</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel/PHP</strong>
+                    PHP tidak punya sealed class. Padanan terdekatnya adalah konvensi dokumentasi seperti <code>@internal</code> atau <code>@final</code> di PHPDoc — hanya peringatan, tidak di-enforce oleh compiler. Sealed class Java di-enforce saat compile: jika tidak ada di daftar <code>permits</code>, kode tidak bisa dikompilasi sama sekali. Ini jauh lebih kuat karena merupakan <strong>kontrak yang di-enforce secara teknis</strong>, bukan hanya konvensi tim.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1</div>
+                    <p><strong>Jika <code>Employee</code> dideklarasikan sebagai <code>sealed class Employee permits Manager</code>, apa yang terjadi jika class <code>Director</code> mencoba <code>extends Employee</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅐</span> Runtime error saat program dijalankan</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',true)"><span>🅑</span> Compile error — Java langsung menolak saat kode dikompilasi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅒</span> Tidak ada error, tapi Director tidak mendapat method dari Employee</div>
+                    <div class="quiz-feedback" id="q1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2: SEALED INTERFACE -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 2</div>
+                    <h2>🔗 Sealed Interface</h2>
+                    <p>Sealed juga bisa diterapkan pada <strong>interface</strong>. Ini membatasi siapa saja yang boleh mengimplementasi interface tersebut — sangat berguna untuk membuat <em>type hierarchy tertutup</em> yang bisa dieksploitasi oleh pattern matching.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// SayHello.java — Sealed Interface
+public sealed interface SayHello permits Human, Dog, Cat {
+  String hello();
+}
+
+// Human.java — record yang implements SayHello
+public record Human() implements SayHello {
+  @Override
+  public String hello() {
+    return "hello";
+  }
+}
+
+// Dog.java
+public record Dog() implements SayHello {
+  @Override
+  public String hello() {
+    return "guk";
+  }
+}
+
+// Cat.java
+public record Cat() implements SayHello {
+  @Override
+  public String hello() {
+    return "meow";
+  }
+}</code></pre></div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// Shape.java — Sealed Interface lain
+public sealed interface Shape permits Circle, Rectangle, Triangle {
+  Long area();
+}
+
+// Rectangle.java — final: tidak bisa di-extend lagi
+public final class Rectangle implements Shape {
+  @Override
+  public Long area() {
+    return null;
+  }
+}
+
+// Circle.java — non-sealed: membuka inheritance ke siapa saja
+public non-sealed class Circle implements Shape {
+  @Override
+  public Long area() {
+    return null;
+  }
+}
+
+// Triangle.java — non-sealed
+public non-sealed class Triangle implements Shape {
+  @Override
+  public Long area() {
+    return null;
+  }
+}</code></pre></div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">🌲 Hierarki Lengkap Contoh Kode</div>
+                <div class="hierarchy-box">
+                    <span class="keyword-sealed">sealed interface</span> SayHello <span class="keyword-permits">permits</span> Human, Dog, Cat<br>
+                    &nbsp;&nbsp;├── record Human() implements SayHello ✅<br>
+                    &nbsp;&nbsp;├── record Dog() implements SayHello ✅<br>
+                    &nbsp;&nbsp;└── record Cat() implements SayHello ✅<br>
+                    <br>
+                    <span class="keyword-sealed">sealed interface</span> Shape <span class="keyword-permits">permits</span> Circle, Rectangle, Triangle<br>
+                    &nbsp;&nbsp;├── <span class="keyword-nonsealed">non-sealed class</span> Circle implements Shape → siapa saja bisa extends Circle<br>
+                    &nbsp;&nbsp;├── <span class="keyword-final">final class</span> Rectangle implements Shape → tidak bisa di-extend<br>
+                    &nbsp;&nbsp;└── <span class="keyword-nonsealed">non-sealed class</span> Triangle implements Shape<br>
+                    <br>
+                    <span class="keyword-sealed">sealed class</span> Employee <span class="keyword-permits">permits</span> Manager<br>
+                    &nbsp;&nbsp;└── <span class="keyword-nonsealed">non-sealed class</span> Manager extends Employee<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── class ManagerOther extends Manager ✅ (karena Manager non-sealed)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="keyword-final">final class</span> ManagerTest extends Manager ✅
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 Kenapa Sealed Interface + Pattern Matching adalah Kombinasi Killer?</strong>
+                    Karena compiler tahu <em>semua kemungkinan implementasi</em> dari sealed interface, <code>switch</code> expression (Java 21) bisa mendeteksi apakah semua kasus sudah ditangani — mirip exhaustive matching di Kotlin/Rust. Tidak perlu <code>default</code> jika semua permits sudah di-handle!
+                    <div class="code-wrap" style="margin-top:var(--s);"><pre><code class="language-java">// Pattern matching dengan sealed interface (Java 21)
+String result = switch (sayHello) {
+  case Human h -> "Manusia berkata: " + h.hello();
+  case Dog d   -> "Anjing berkata: " + d.hello();
+  case Cat c   -> "Kucing berkata: " + c.hello();
+  // Tidak perlu default! Compiler tahu hanya ada 3 kemungkinan
+};</code></pre></div>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel/PHP</strong>
+                    Sealed interface seperti <strong>union type PHP 8</strong> (<code>Human|Dog|Cat</code>) tapi dengan kontrol di sisi definisi type-nya, bukan hanya di parameter. Di PHP kamu bisa tulis <code>function greet(Human|Dog|Cat $animal)</code> untuk membatasi input, tapi di Java sealed interface membatasi <em>siapa yang bisa jadi tipe itu sama sekali</em> — lebih fundamental. Ini sangat berguna di domain modeling seperti DDD (Domain-Driven Design).
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 2</div>
+                    <p><strong>Apa keuntungan menggunakan <code>sealed interface</code> dibanding <code>interface</code> biasa saat dipakai bersama <code>switch</code> expression di Java 21?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅐</span> Switch jadi lebih cepat dieksekusi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',true)"><span>🅑</span> Compiler bisa memvalidasi bahwa semua implementasi sudah di-handle — tidak perlu <code>default</code> dan tidak ada kasus yang terlewat</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅒</span> Interface sealed bisa punya method dengan body (default method)</div>
+                    <div class="quiz-feedback" id="q2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3: NON-SEALED & FINAL -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3A</div>
+                    <h2>🔓 Non-Sealed &amp; Final — Dua Pilihan untuk Subclass</h2>
+                    <p>Setiap class yang di-permit oleh sealed class/interface <strong>wajib</strong> mendeklarasikan salah satu dari tiga modifier: <code>sealed</code> (lanjut restrict), <code>non-sealed</code> (buka kembali), atau <code>final</code> (tutup rapat).</p>
+                </div>
+
+                <div class="compare-grid">
+                    <div class="wrong-box" style="border-left-color:var(--warning-color);background:var(--transwarning-color);">
+                        <div class="compare-label" style="color:var(--warning-color);">🔓 non-sealed — Membuka Kembali</div>
+                        <div class="code-wrap"><pre><code class="language-java">// Manager: non-sealed
+// → siapa saja bisa extends Manager
+public non-sealed class Manager
+    extends Employee {
+  private String department;
+}
+
+// ManagerOther & ManagerTest bisa
+// extends Manager tanpa restrict!
+public class ManagerOther
+    extends Manager { }
+
+public final class ManagerTest
+    extends Manager { }</code></pre></div>
+                        <small>Gunakan kalau subclass dari kelas ini boleh bebas di-extend oleh siapa saja.</small>
+                    </div>
+                    <div class="right-box" style="border-left-color:var(--primary-color);background:var(--transprimary-color);">
+                        <div class="compare-label" style="color:var(--primary-color);">🔒 final — Tutup Rapat</div>
+                        <div class="code-wrap"><pre><code class="language-java">// Rectangle: final
+// → tidak bisa di-extend siapapun
+public final class Rectangle
+    implements Shape {
+  @Override
+  public Long area() {
+    return null;
+  }
+}
+
+// ERROR! Rectangle sudah final
+public class Square
+    extends Rectangle { }
+// → COMPILE ERROR!</code></pre></div>
+                        <small>Gunakan kalau class ini sudah "sempurna" dan tidak perlu ada turunan lebih lanjut.</small>
+                    </div>
+                </div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Modifier Subclass</th><th>Bisa di-extend lagi?</th><th>Kapan Dipakai</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>sealed ... permits ...</code></td><td>✅ Tapi hanya oleh yang di-permit</td><td>Hierarki multi-level yang tetap terkontrol</td></tr>
+                        <tr><td><code>non-sealed</code></td><td>✅ Oleh siapa saja</td><td>Bagian dari hierarki yang ingin dibuka untuk extensi bebas</td></tr>
+                        <tr><td><code>final</code></td><td>❌ Tidak bisa sama sekali</td><td>Leaf node — class paling bawah, tidak perlu turunan</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Wajib Pilih Salah Satu!</strong>
+                    Class yang ada di daftar <code>permits</code> WAJIB memakai salah satu dari tiga modifier ini. Jika tidak ditulis, Java akan memberikan compile error. Ini memastikan setiap level hierarki punya keputusan eksplisit tentang extensibility-nya.
+                    <div class="code-wrap" style="margin-top:var(--s);"><pre><code class="language-java">// ERROR! Manager tidak punya modifier
+public class Manager extends Employee { }
+// → COMPILE ERROR: 'Manager' must have a modifier
+// (sealed, non-sealed, or final)</code></pre></div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3A</div>
+                    <p><strong>Class <code>Manager</code> dideklarasikan <code>non-sealed</code> dan extend sealed class <code>Employee</code>. Lalu <code>ManagerOther extends Manager</code> tanpa modifier khusus. Apakah ini valid?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',true)"><span>🅐</span> Valid — karena Manager sudah <code>non-sealed</code>, hierarki di bawahnya bebas seperti inheritance biasa</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅑</span> Tidak valid — semua class dalam hierarki harus pakai <code>non-sealed</code> juga</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅒</span> Tidak valid — hanya class yang di-permit Employee yang boleh ada</div>
+                    <div class="quiz-feedback" id="q3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3B: RECORD + SEALED -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3B</div>
+                    <h2>📦 Record + Sealed — Kombinasi Sempurna</h2>
+                    <p><strong>Record</strong> (Java 16+) secara implisit adalah <code>final</code> — tidak bisa di-extend. Ini membuatnya sangat cocok sebagai anggota sealed interface karena memenuhi syarat "wajib pilih modifier" secara otomatis.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// SayHello.java — Sealed interface
+public sealed interface SayHello permits Human, Dog, Cat {
+  String hello();
+}
+
+// Human, Dog, Cat adalah RECORD yang implements SayHello
+// Record secara implisit = final → tidak perlu tulis 'final' atau 'non-sealed'
+
+public record Human() implements SayHello {
+  @Override
+  public String hello() { return "hello"; }
+}
+
+public record Dog() implements SayHello {
+  @Override
+  public String hello() { return "guk"; }
+}
+
+public record Cat() implements SayHello {
+  @Override
+  public String hello() { return "meow"; }
+}
+
+// Penggunaan
+SayHello animal = new Dog();
+System.out.println(animal.hello()); // "guk"
+
+// Pattern matching (Java 21) dengan exhaustive check
+String suara = switch (animal) {
+  case Human h -> h.hello(); // "hello"
+  case Dog d   -> d.hello(); // "guk"
+  case Cat c   -> c.hello(); // "meow"
+  // Tidak perlu default — compiler tahu semua kasus tercakup!
+};</code></pre></div>
+
+                <div class="info-box tip">
+                    <strong>💡 Record = Implicitly Final</strong>
+                    <ul style="margin:var(--xs) 0 0;padding-left:var(--m);">
+                        <li>Record tidak bisa di-extend (selalu final)</li>
+                        <li>Record otomatis generate: constructor, getter, <code>equals()</code>, <code>hashCode()</code>, <code>toString()</code></li>
+                        <li>Ideal sebagai <strong>data carrier</strong> dalam sealed hierarchy — misal: <code>Result</code> type, ADT (Algebraic Data Type)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel/PHP</strong>
+                    Kombinasi <code>sealed interface</code> + <code>record</code> sangat mirip dengan pola <strong>PHP Enum dengan interface</strong> (PHP 8.1+). Misalnya: <code>interface Animal { public function sound(): string; }</code> lalu <code>enum Pet: string implements Animal { case Dog = 'guk'; }</code>. Bedanya, sealed + record jauh lebih fleksibel — bisa punya data berbeda di setiap implementasi (tidak hanya nilai enum sederhana).
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3B</div>
+                    <p><strong>Mengapa <code>record</code> tidak perlu mendeklarasikan modifier <code>final</code> secara eksplisit saat menjadi anggota sealed interface?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3b',false)"><span>🅐</span> Karena record tidak bisa implement interface</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3b',true)"><span>🅑</span> Karena record secara implisit sudah <code>final</code> — ini memenuhi syarat wajib memilih modifier untuk subclass sealed</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3b',false)"><span>🅒</span> Karena compiler Java mengecualikan record dari aturan sealed</div>
+                    <div class="quiz-feedback" id="q3b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3C: REFLECTION -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3c">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3C</div>
+                    <h2>🔍 Reflection API untuk Sealed Class</h2>
+                    <p>Java Reflection API mendukung sealed class — kamu bisa memeriksa secara programatik apakah sebuah class/interface sealed, dan mendapatkan daftar subclass yang di-permit.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// SayHelloTest.java
+class SayHelloTest {
+
+  @Test
+  void reflection() {
+    // Cek apakah SayHello adalah sealed interface
+    assertTrue(SayHello.class.isSealed()); // true
+
+    // Dapatkan semua subclass yang di-permit
+    Class&lt;?&gt;[] subclasses = SayHello.class.getPermittedSubclasses();
+    assertEquals(3, subclasses.length); // Human, Dog, Cat
+
+    // Verifikasi urutan sesuai deklarasi 'permits'
+    assertEquals(Human.class, subclasses[0]);
+    assertEquals(Dog.class,   subclasses[1]);
+    assertEquals(Cat.class,   subclasses[2]);
+  }
+}</code></pre></div>
+
+                <div class="table-content" style="margin-top:var(--m);">
+                    <table class="line-table">
+                        <thead><tr><th>Method Reflection</th><th>Return</th><th>Deskripsi</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>Class.isSealed()</code></td><td><code>boolean</code></td><td>Cek apakah class/interface ini sealed</td></tr>
+                        <tr><td><code>Class.getPermittedSubclasses()</code></td><td><code>Class&lt;?&gt;[]</code></td><td>Dapatkan semua class yang di-permit (dalam urutan deklarasi)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 Kapan Reflection Sealed Berguna?</strong>
+                    Framework dan library bisa menggunakan ini untuk <strong>auto-discovery</strong>. Misalnya: serialization library bisa otomatis tahu semua subtipe dari sealed class dan mendaftarkan deserializer-nya — tanpa konfigurasi manual. Spring dan Jackson sudah mulai memanfaatkan ini untuk polymorphic JSON serialization.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3C</div>
+                    <p><strong>Apa yang dikembalikan oleh <code>SayHello.class.getPermittedSubclasses()</code> jika <code>SayHello</code> adalah <code>sealed interface ... permits Human, Dog, Cat</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3c',false)"><span>🅐</span> Mengembalikan semua class yang mengimplementasi SayHello di runtime</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3c',true)"><span>🅑</span> Mengembalikan array <code>[Human.class, Dog.class, Cat.class]</code> — persis sesuai urutan di <code>permits</code></div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3c',false)"><span>🅒</span> Mengembalikan <code>null</code> karena interface tidak punya subclass</div>
+                    <div class="quiz-feedback" id="q3c-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4: SUMMARY -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m);">
+                    <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Final Chapter</div>
+                    <h2 style="margin:var(--xs) 0 var(--s);">📝 Summary — Sealed Class Cheat Sheet</h2>
+                    <p>Sealed Class adalah fitur kecil tapi sangat powerful untuk domain modeling yang eksplisit dan aman.</p>
+                </div>
+
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">⚡ Cheat Sheet Lengkap</div>
+                <div class="code-wrap"><pre><code class="language-java">// ✅ SEALED CLASS — hanya class di permits yang boleh extend
+public sealed class Shape permits Circle, Rectangle, Triangle { }
+
+// ✅ SEALED INTERFACE — hanya class di permits yang boleh implement
+public sealed interface SayHello permits Human, Dog, Cat { }
+
+// ✅ Subclass WAJIB pilih salah satu:
+
+// 1. final → tidak bisa di-extend sama sekali
+public final class Rectangle implements Shape { }
+
+// 2. non-sealed → membuka kembali inheritance bebas
+public non-sealed class Circle implements Shape { }
+public class SubCircle extends Circle { } // valid!
+
+// 3. sealed → lanjutkan restrict ke level berikutnya
+public sealed class Circle implements Shape permits FilledCircle { }
+
+// ✅ Record → implicitly final, cocok sebagai permitted subclass
+public record Human() implements SayHello { }
+
+// ✅ Reflection API
+SayHello.class.isSealed();               // true
+SayHello.class.getPermittedSubclasses(); // [Human, Dog, Cat]</code></pre></div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🧠 Kapan Pakai Sealed Class?</div>
+                <div>
+                    <div class="summary-item"><div class="summary-icon">✅</div><div><strong>Domain modeling yang tertutup.</strong> Misalnya: <code>sealed interface PaymentMethod permits CreditCard, BankTransfer, Wallet</code> — kamu tahu semua metode pembayaran yang didukung sistem.</div></div>
+                    <div class="summary-item"><div class="summary-icon">✅</div><div><strong>Result/Error type.</strong> <code>sealed interface Result permits Success, Failure</code> — mirip <code>Either</code> di Haskell atau <code>Result</code> di Rust. Tidak ada kasus yang terlewat.</div></div>
+                    <div class="summary-item"><div class="summary-icon">✅</div><div><strong>State machine.</strong> Setiap state sebagai sealed subclass — compiler memastikan semua state di-handle di switch expression.</div></div>
+                    <div class="summary-item"><div class="summary-icon">❌</div><div><strong>Jangan pakai untuk extensibility yang memang terbuka.</strong> Kalau kamu ingin orang lain bisa extend class-mu dari library/project berbeda, jangan seal — gunakan interface biasa atau abstract class.</div></div>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🗺️ Roadmap Fitur Modern Java</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Java Dasar</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Java Thread</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Sealed Class</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Record Class</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Pattern Matching</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">6</div><div class="stepper-value">Spring Boot</div></div>
+                    </div>
+                </div>
+
+                <div class="info-box tip" style="margin-top:var(--m);">
+                    <strong>🎉 Sealed Class — Kecil tapi Powerful!</strong>
+                    Fitur ini mungkin terlihat sederhana, tapi dampaknya besar: kamu bisa menulis kode yang lebih <em>aman</em>, lebih <em>ekspresif</em>, dan lebih <em>mudah di-maintain</em>. Dikombinasikan dengan Record (Java 16) dan Pattern Matching (Java 21), Sealed Class membentuk fondasi untuk gaya pemrograman fungsional yang powerful di Java modern.
+                </div>
+            </div>
+        </div>
+
+        <div style="height:var(--x);"></div>
+    </section>
+    <footer></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+    });
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.body.classList.toggle("dark-mode");
+        document.querySelector('.container-header-button-switch-theme').textContent =
+            document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+    function checkQuiz(el, quizId, isCorrect) {
+        const parent = el.parentElement;
+        parent.querySelectorAll('.quiz-option').forEach(o => {
+            o.classList.remove('correct', 'wrong');
+            o.style.pointerEvents = 'none';
+        });
+        el.classList.add(isCorrect ? 'correct' : 'wrong');
+        const fb = document.getElementById(quizId + '-feedback');
+        fb.textContent = isCorrect ? '✅ Benar! Pemahaman kamu sudah tepat.' : '❌ Belum tepat. Coba baca kembali penjelasannya ya!';
+        fb.className = 'quiz-feedback ' + (isCorrect ? 'ok' : 'err');
+    }
+    const sections = document.querySelectorAll('[id^="chapter"]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item[href]');
+    sections.forEach(s => {
+        new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting)
+                    sidebarLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+            });
+        }, { threshold: 0.3 }).observe(s);
+    });
+    window.addEventListener('scroll', () => {
+        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+        document.getElementById('progress-bar').style.width = p + '%';
+    });
+</script>
+</body>
+</html>

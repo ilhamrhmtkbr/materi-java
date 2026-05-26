@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Lambda Expression — Modul Belajar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .code-block { box-sizing:border-box; max-width:77dvw; overflow-x:auto; border-radius:var(--radius-l); margin:var(--m) 0; }
+        .code-block pre { margin:0; }
+        .code-block code.hljs { border-radius:var(--radius-l); font-size:.82rem; line-height:1.6; }
+
+        .info-box { box-sizing:border-box; max-width:77dvw; overflow:auto; border-left:4px solid var(--primary-color); background:var(--transprimary-color); border-radius:0 var(--radius-m) var(--radius-m) 0; padding:var(--m); margin:var(--m) 0; }
+        .info-box.warning { border-left-color:var(--warning-color); background:var(--transwarning-color); }
+        .info-box.success { border-left-color:var(--success-color); background:var(--transsuccess-color); }
+        .info-box.danger  { border-left-color:var(--danger-color);  background:var(--transdanger-color);  }
+        .info-box .info-box-title { font-weight:700; margin-bottom:var(--xs); font-size:var(--s); }
+        .info-box p { margin:0; font-size:var(--s); }
+
+        .line-annotation { box-sizing:border-box; max-width:77dvw; overflow:auto; margin:var(--m) 0; }
+        .line-annotation table { width:100%; }
+        .line-annotation th { background:var(--transprimary-color); }
+
+        .quiz-option { display:flex; align-items:flex-start; gap:var(--s); padding:var(--s) var(--m); border-radius:var(--radius-m); border:var(--border); cursor:pointer; margin-bottom:var(--s); transition:background .15s; font-size:var(--s); }
+        .quiz-option:hover { background:var(--transprimary-color); }
+        .quiz-option.correct { background:var(--transsuccess-color); border-color:var(--success-color); }
+        .quiz-option.wrong   { background:var(--transdanger-color);  border-color:var(--danger-color);  }
+        .quiz-feedback { margin-top:var(--s); font-size:var(--s); font-weight:600; display:none; }
+        .quiz-feedback.show { display:block; }
+
+        .comparison-box { display:grid; grid-template-columns:1fr 1fr; gap:var(--m); max-width:77dvw; box-sizing:border-box; margin:var(--m) 0; }
+        @media(max-width:600px){ .comparison-box { grid-template-columns:1fr; } }
+        .comparison-wrong  { border:1px solid var(--danger-color);  border-radius:var(--radius-m); overflow:hidden; }
+        .comparison-correct{ border:1px solid var(--success-color); border-radius:var(--radius-m); overflow:hidden; }
+        .comparison-header { padding:var(--xs) var(--m); font-weight:700; font-size:var(--xs); }
+        .comparison-wrong  .comparison-header { background:var(--transdanger-color);  color:var(--danger-color);  }
+        .comparison-correct .comparison-header{ background:var(--transsuccess-color); color:var(--success-color); }
+        .comparison-body { font-size:.78rem; }
+        .comparison-body pre { margin:0; border-radius:0; }
+        .comparison-body code.hljs { border-radius:0; font-size:.78rem; }
+
+        .analogy-box { box-sizing:border-box; max-width:77dvw; overflow:auto; border:1px solid var(--second-primary-color); background:var(--transsecond-primary-color); border-radius:var(--radius-m); padding:var(--m); margin:var(--m) 0; }
+        .analogy-box .analogy-title { font-weight:700; color:var(--second-primary-color); margin-bottom:var(--xs); font-size:var(--s); }
+        .analogy-box p { margin:0; font-size:var(--s); }
+
+        .chapter-banner { box-sizing:border-box; max-width:77dvw; overflow:auto; background:linear-gradient(135deg,var(--transprimary-color) 0%,var(--transsecond-primary-color) 100%); border-radius:var(--radius-x); padding:var(--x) var(--l); margin-bottom:var(--m); }
+        .chapter-banner .chapter-number { font-size:var(--xs); font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--primary-color); margin-bottom:var(--xs); }
+        .chapter-banner .chapter-title  { font-size:var(--xx); font-weight:800; margin-bottom:var(--xs); }
+        .chapter-banner .chapter-desc   { font-size:var(--s); color:var(--transtext-color); margin:0; }
+
+        .summary-card { box-sizing:border-box; max-width:77dvw; overflow:auto; border:var(--border); border-radius:var(--radius-l); padding:var(--m); display:grid; gap:var(--s); }
+        .summary-row { display:flex; align-items:flex-start; gap:var(--m); padding:var(--s) 0; border-bottom:var(--border); font-size:var(--s); }
+        .summary-row:last-child { border-bottom:none; }
+        .summary-icon { font-size:var(--l); min-width:2rem; text-align:center; }
+        .summary-row strong { display:block; margin-bottom:2px; }
+
+        .bp-list { list-style:none; padding:0; margin:0; }
+        .bp-list li { display:flex; gap:var(--s); padding:var(--xs) 0; font-size:var(--s); border-bottom:1px dashed var(--border-color); }
+        .bp-list li:last-child { border-bottom:none; }
+
+        .section-divider { border:none; border-top:2px dashed var(--border-color); margin:var(--x) 0; }
+
+        /* Evolution stages */
+        .evolution-steps { display:grid; gap:var(--s); max-width:77dvw; box-sizing:border-box; margin:var(--m) 0; }
+        .evolution-step { border:var(--border); border-radius:var(--radius-m); overflow:hidden; }
+        .evolution-step-header { display:flex; align-items:center; gap:var(--s); padding:var(--xs) var(--m); font-size:var(--xs); font-weight:700; background:var(--transprimary-color); }
+        .evolution-step-body pre { margin:0; border-radius:0; }
+        .evolution-step-body code.hljs { border-radius:0; font-size:.8rem; }
+
+        /* Functional interface cards */
+        .fi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:var(--m); max-width:77dvw; box-sizing:border-box; margin:var(--m) 0; }
+        .fi-card { border:var(--border); border-radius:var(--radius-l); padding:var(--m); display:grid; gap:var(--xs); }
+        .fi-card-name  { font-weight:800; font-size:var(--m); color:var(--primary-color); }
+        .fi-card-sig   { font-family:monospace; font-size:var(--xs); background:var(--transprimary-color); padding:2px 8px; border-radius:var(--radius-s); display:inline-block; }
+        .fi-card-desc  { font-size:var(--xs); color:var(--transtext-color); }
+        .fi-card-ex    { font-family:monospace; font-size:.75rem; background:var(--transsecond-primary-color); padding:4px 8px; border-radius:var(--radius-s); }
+
+        /* Method ref table highlight */
+        .mr-type { display:inline-block; background:var(--transthird-primary-color); color:var(--third-primary-color); border-radius:999px; padding:1px 10px; font-size:var(--xs); font-weight:700; }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠 Intro</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 Chapters</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-1">1. Masalah Tanpa Lambda</a>
+                <a class="bottom-nav-item" href="#chapter-2">2. Functional Interface</a>
+                <a class="bottom-nav-item" href="#chapter-3">3. Sintaks Lambda</a>
+                <a class="bottom-nav-item" href="#chapter-4">4. Built-in FI</a>
+                <a class="bottom-nav-item" href="#chapter-5">5. Method Reference</a>
+                <a class="bottom-nav-item" href="#chapter-6">6. Lambda + Collections</a>
+                <a class="bottom-nav-item" href="#chapter-7">7. Lazy Evaluation</a>
+                <a class="bottom-nav-item" href="#chapter-8">8. Stream API</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+    <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+</nav>
+
+<aside class="sidebar">
+    <a href="../" class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java λ</div>
+    </a>
+    <div class="sidebar-menu">
+        <a href="#intro"     class="sidebar-menu-item active" data-title="Intro"><div class="sidebar-menu-item-svg">🧠</div><span>Intro & Why Lambda</span></a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Masalah Tanpa Lambda"><div class="sidebar-menu-item-svg">😫</div><span>1. Masalah Tanpa Lambda</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Functional Interface"><div class="sidebar-menu-item-svg">🔌</div><span>2. Functional Interface</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="Sintaks Lambda"><div class="sidebar-menu-item-svg">λ</div><span>3. Sintaks Lambda</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="Built-in FI"><div class="sidebar-menu-item-svg">🧰</div><span>4. Built-in FI</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="Method Reference"><div class="sidebar-menu-item-svg">🔗</div><span>5. Method Reference</span></a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Lambda + Collections"><div class="sidebar-menu-item-svg">📋</div><span>6. Lambda + Collections</span></a>
+        <a href="#chapter-7" class="sidebar-menu-item" data-title="Lazy Evaluation"><div class="sidebar-menu-item-svg">😴</div><span>7. Lazy Evaluation</span></a>
+        <a href="#chapter-8" class="sidebar-menu-item" data-title="Stream API"><div class="sidebar-menu-item-svg">🌊</div><span>8. Stream API</span></a>
+        <a href="#summary"   class="sidebar-menu-item" data-title="Summary"><div class="sidebar-menu-item-svg">📋</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">☕ Java Lambda</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a href="#chapter-1" class="container-header-nav-item"><span class="container-header-nav-item-text">Masalah</span></a>
+                    <a href="#chapter-3" class="container-header-nav-item"><span class="container-header-nav-item-text">Sintaks Lambda</span></a>
+                    <a href="#chapter-5" class="container-header-nav-item"><span class="container-header-nav-item-text">Method Ref</span></a>
+                    <a href="#chapter-8" class="container-header-nav-item"><span class="container-header-nav-item-text">Stream API</span></a>
+                    <a href="#summary"   class="container-header-nav-item"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ========== INTRO ========== -->
+        <div id="intro" class="card-wrapper max-width-1000">
+            <div style="text-align:center;padding:var(--m) 0;">
+                <div style="font-size:3.5rem;">λ</div>
+                <div class="text-title" style="font-size:var(--xxx);margin-top:var(--s);">Java Lambda Expression</div>
+                <p style="color:var(--transtext-color);font-size:var(--s);max-width:600px;margin:var(--s) auto 0;">
+                    Modul ini akan memandu kamu — developer PHP/Laravel — untuk memahami Lambda Expression di Java: dari alasan kehadirannya, cara kerjanya, hingga penggunaan nyata di Stream dan Collection.
+                </p>
+            </div>
+            <div class="flex-ais-jcc gap-m" style="margin:var(--m) 0;">
+                <div class="badge text-white bg-primary"><p>8 Chapters</p></div>
+                <div class="badge text-white bg-success"><p>Anonymous → Lambda → MethodRef</p></div>
+                <div class="badge text-white" style="background:var(--second-primary-color);"><p>PHP/Laravel Analogy</p></div>
+                <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="text-subtitle">🧠 Mengapa Lambda Ada di Java?</div>
+            <p>Java awalnya adalah bahasa <strong>Object-Oriented murni</strong>: semua hal harus dibungkus dalam class dan object. Akibatnya, untuk melewatkan sebuah "perilaku" (behavior) ke sebuah method, kamu harus membuat <strong>Anonymous Class</strong> yang bertele-tele. Lambda Expression (diperkenalkan di Java 8) hadir untuk menyederhanakan ini: kamu bisa melewatkan <em>perilaku sebagai nilai</em>, seperti melewatkan fungsi/closure di PHP.</p>
+
+            <div class="display-grid" style="gap:var(--m);margin:var(--m) 0;">
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Java < 8: Anonymous Class</div>
+                        <div class="timeline-content-desc">Untuk melewatkan behavior, harus tulis kelas anonim 5–8 baris hanya untuk logika 1 baris. Verbose, berisik, susah dibaca.</div>
+                        <div class="timeline-content-time">Sebelum Java 8</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Java 8: Lambda Expression</div>
+                        <div class="timeline-content-desc">Sintaks ringkas <code>(param) -> ekspresi</code>. Behavior bisa ditulis satu baris. Basis dari semua fitur fungsional Java 8+.</div>
+                        <div class="timeline-content-time">Java 8 (2014)</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Method Reference</div>
+                        <div class="timeline-content-desc">Shorthand lebih lanjut: jika lambda hanya memanggil satu method, bisa dipersingkat dengan <code>Kelas::method</code>. Paling bersih dan ekspresif.</div>
+                        <div class="timeline-content-time">Java 8 (bersamaan)</div>
+                    </div>
+                    <div><span class="timeline-key">4</span></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Stream API & Functional Programming</div>
+                        <div class="timeline-content-desc">Lambda + Stream memungkinkan gaya pemrograman fungsional: <code>map</code>, <code>filter</code>, <code>forEach</code> pada koleksi data — seperti <code>array_map</code>, <code>array_filter</code> di PHP, tapi lebih powerful.</div>
+                        <div class="timeline-content-time">Java 8+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analogy-box">
+                <div class="analogy-title">🔗 Titik Tolak dari PHP/Laravel</div>
+                <p>Di PHP, kamu sudah akrab dengan <strong>anonymous function / closure</strong>: <code>$fn = function($x) { return $x * 2; };</code> atau shorthand <code>$fn = fn($x) => $x * 2;</code>. Lambda Java bekerja dengan konsep yang sangat mirip. Perbedaan utama: Java bersifat <em>strongly-typed</em>, sehingga setiap lambda harus sesuai dengan sebuah <strong>Functional Interface</strong> (kontrak tipe) yang sudah didefinisikan. Tidak ada "function" sebagai tipe primitif di Java seperti di PHP.</p>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 1: MASALAH TANPA LAMBDA ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">😫 Masalah Tanpa Lambda: Anonymous Class</div>
+                    <p class="chapter-desc">Sebelum Java 8, satu-satunya cara melewatkan behavior adalah membuat <strong>Anonymous Class</strong>. Memahami masalah ini penting agar kamu benar-benar menghargai elegansnya Lambda.</p>
+                </div>
+
+                <div class="text-subtitle">Kode Tanpa Lambda — <code>AnonymousClassApp.java</code></div>
+                <p>Perhatikan betapa banyak boilerplate yang dibutuhkan hanya untuk mendefinisikan logika sederhana:</p>
+
+                <div class="code-block"><pre><code class="language-java">// AnonymousClassApp.java — cara LAMA sebelum Java 8
+import java.util.function.*;
+
+public class AnonymousClassApp {
+  public static void main(String[] args) {
+
+    // Mendefinisikan: "apakah string ini tidak null?"
+    // Butuh 5 baris untuk logika 1 baris!
+    Predicate&lt;String&gt; predicate = new Predicate&lt;String&gt;() {
+      @Override
+      public boolean test(String s) {
+        return s != null;   // &lt;-- ini satu-satunya baris yang penting
+      }
+    };
+
+    // Mendefinisikan: "ubah string ke uppercase"
+    Function&lt;String, String&gt; function = new Function&lt;String, String&gt;() {
+      @Override
+      public String apply(String s) {
+        return s.toUpperCase();  // &lt;-- ini satu-satunya baris yang penting
+      }
+    };
+
+    // Mendefinisikan: "print string ke console"
+    Consumer&lt;String&gt; consumer = new Consumer&lt;String&gt;() {
+      @Override
+      public void accept(String s) {
+        System.out.println(s);   // &lt;-- ini satu-satunya baris yang penting
+      }
+    };
+
+    // Mendefinisikan: "kembalikan string ini"
+    Supplier&lt;String&gt; supplier = new Supplier&lt;String&gt;() {
+      @Override
+      public String get() {
+        return "Programmer Zaman Now"; // &lt;-- ini satu-satunya baris yang penting
+      }
+    };
+
+    // Mendefinisikan: "apakah dua string ini sama?"
+    BiPredicate&lt;String, String&gt; biPredicate = new BiPredicate&lt;String, String&gt;() {
+      @Override
+      public boolean test(String s, String s2) {
+        return s.equals(s2);  // &lt;-- ini satu-satunya baris yang penting
+      }
+    };
+  }
+}</code></pre></div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Masalah Anonymous Class</div>
+                    <p>Untuk setiap logika 1 baris, kamu harus menulis ~5 baris boilerplate: <code>new InterfaceName() { @Override public returnType methodName(params) { ... } }</code>. Kode jadi sulit dibaca karena "sinyal" (logika sebenarnya) tenggelam dalam "kebisingan" (boilerplate). Lambda hadir untuk menghilangkan kebisingan ini.</p>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Elemen</th><th>Penjelasan</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>new Predicate&lt;String&gt;() { ... }</code></td><td>Membuat <em>anonymous class</em>: kelas tanpa nama yang langsung diinstansiasi. Java perlu tahu tipe konkret apa yang dibuat, sehingga harus menulis nama interface-nya.</td></tr>
+                            <tr><td><code>@Override</code></td><td>Annotation wajib yang menandai kita mengimplementasikan method dari interface. Ini adalah kontrak bahwa method ini ada di interface.</td></tr>
+                            <tr><td><code>Predicate&lt;String&gt;</code></td><td>Interface dari <code>java.util.function</code>. <code>&lt;String&gt;</code> adalah <em>generics</em> — type parameter yang menentukan tipe data yang diproses. Ini ekuivalen dengan PHP type hint tapi lebih ketat.</td></tr>
+                            <tr><td><code>Function&lt;String, String&gt;</code></td><td>Dua type parameter: pertama adalah tipe INPUT, kedua adalah tipe OUTPUT. <code>&lt;String, String&gt;</code> berarti: menerima String, mengembalikan String.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>Di PHP, kamu cukup menulis <code>$predicate = function($s) { return $s !== null; };</code> atau bahkan arrow function: <code>$predicate = fn($s) => $s !== null;</code>. Satu baris, bersih. Itulah yang Lambda Expression bawa ke Java — semua verbose di atas bisa diringkas menjadi satu baris.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">😫 Sebelum Java 8 — Anonymous Class</div>
+                        <div class="comparison-body"><pre><code class="language-java">// 5 baris untuk logika 1 baris
+Predicate&lt;String&gt; p = new Predicate&lt;String&gt;() {
+  @Override
+  public boolean test(String s) {
+    return s != null;
+  }
+};</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✨ Java 8+ — Lambda Expression</div>
+                        <div class="comparison-body"><pre><code class="language-java">// 1 baris, langsung ke intinya!
+Predicate&lt;String&gt; p = (s) -> s != null;
+
+// Atau bahkan:
+Predicate&lt;String&gt; p = s -> s != null;</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz1">
+                    <p style="font-size:var(--s);font-weight:600;">Apa masalah utama Anonymous Class di Java (sebelum Lambda)?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">A. Anonymous Class tidak bisa mengakses variabel lokal</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">B. Anonymous Class menyebabkan error di runtime</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,true)">C. Terlalu banyak boilerplate — logika 1 baris butuh ~5 baris kode wrappers</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">D. Anonymous Class tidak bisa digunakan bersamaan dengan Generics</div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 2: FUNCTIONAL INTERFACE ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">🔌 Functional Interface</div>
+                    <p class="chapter-desc">Lambda Expression di Java hanya bisa digunakan jika ada <strong>Functional Interface</strong> sebagai "wadah"-nya. Memahami konsep ini adalah kunci untuk mengerti mengapa Lambda Java berbeda dari closure PHP.</p>
+                </div>
+
+                <div class="text-subtitle">Apa itu Functional Interface?</div>
+                <p>Functional Interface adalah interface Java yang <strong>hanya memiliki tepat satu abstract method</strong>. Ini menjadi kontrak tipe untuk Lambda Expression. Kamu bisa menandainya dengan annotation <code>@FunctionalInterface</code> agar compiler memvalidasinya.</p>
+
+                <div class="code-block"><pre><code class="language-java">// LambdaInterfaceApp.java — membuat Functional Interface sendiri
+public class LambdaInterfaceApp {
+
+  // Mendefinisikan custom Functional Interface
+  @FunctionalInterface
+  interface ArgsConsumer&lt;T&gt; {
+    // Hanya boleh ada SATU abstract method!
+    void consume(T... arg);
+    // Jika kamu tambah method kedua → compile error!
+  }
+
+  public static void main(String[] args) {
+    // Lambda langsung diassign ke tipe ArgsConsumer&lt;String&gt;
+    // Java tahu method yang diimplementasikan adalah consume()
+    // karena itu satu-satunya abstract method
+    ArgsConsumer&lt;String&gt; consumer = LambdaInterfaceApp::printAll;
+    consumer.consume("eko", "kurniawan", "khannedy");
+  }
+
+  public static void printAll(String[] args) {
+    for (String value : args) {
+      System.out.println(value);
+    }
+  }
+}</code></pre></div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th><th>Under the Hood</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>@FunctionalInterface</code></td>
+                                <td>Annotation opsional tapi <strong>sangat disarankan</strong>. Jika dipasang, compiler akan error jika interface tidak memenuhi syarat Functional Interface (bukan tepat 1 abstract method).</td>
+                                <td>Murni compile-time check. Tidak ada runtime overhead. Mirip <code>@Override</code> — hanya instruksi ke compiler.</td>
+                            </tr>
+                            <tr>
+                                <td><code>interface ArgsConsumer&lt;T&gt;</code></td>
+                                <td>Interface generic. <code>T</code> adalah type parameter yang ditentukan saat penggunaan. Saat ditulis <code>ArgsConsumer&lt;String&gt;</code>, semua <code>T</code> dalam interface diganti dengan <code>String</code>.</td>
+                                <td>Java Generics di-erase saat compile (type erasure) — bytecode akhirnya menggunakan <code>Object</code>, tapi compiler yang memastikan tipe sebelumnya.</td>
+                            </tr>
+                            <tr>
+                                <td><code>void consume(T... arg)</code></td>
+                                <td><code>T...</code> adalah varargs — bisa menerima 0 atau lebih argumen bertipe T. Pemanggil bisa melewatkan banyak argumen tanpa membuat array secara eksplisit.</td>
+                                <td>Varargs secara internal diubah jadi array oleh compiler: <code>T[]</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>LambdaInterfaceApp::printAll</code></td>
+                                <td>Method Reference — akan dibahas detail di Chapter 5. Ini adalah cara untuk mereferensikan method <code>printAll</code> dari class <code>LambdaInterfaceApp</code> sebagai implementasi <code>consume()</code>.</td>
+                                <td>Java mencocokkan signature <code>printAll(String[])</code> dengan <code>consume(String...)</code> karena varargs dan array adalah hal yang sama secara bytecode.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Syarat Functional Interface</div>
+                    <p>Interface bisa jadi Functional Interface jika memenuhi syarat: (1) hanya punya <strong>satu</strong> abstract method, (2) boleh punya banyak <code>default</code> method dan <code>static</code> method — itu tidak dihitung. Contoh: <code>Comparator</code> adalah Functional Interface meskipun punya banyak <code>default</code> method, karena abstract method-nya hanya <code>compare()</code>.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>Di PHP, closure bisa diassign ke variabel tipe apapun (atau tidak perlu tipe sama sekali). Di Java, Lambda harus punya "kontrak" berupa Functional Interface. Bayangkan seperti PHP dengan strict type hints: <code>function prosesData(callable $fn): void { ... }</code> — <code>callable</code> adalah "Functional Interface"-nya PHP. Di Java, kamu mendefinisikan kontrak yang lebih presisi: bukan hanya "callable" tapi "callable yang menerima String dan mengembalikan boolean" (itu namanya <code>Predicate&lt;String&gt;</code>).</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Interface dengan 2 abstract method</div>
+                        <div class="comparison-body"><pre><code class="language-java">@FunctionalInterface  // Compile ERROR!
+interface MyInterface {
+  void doSomething();
+  void doSomethingElse(); // ← method kedua = BUKAN FI!
+}
+// Error: "Invalid '@FunctionalInterface' annotation"</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Hanya 1 abstract method</div>
+                        <div class="comparison-body"><pre><code class="language-java">@FunctionalInterface
+interface MyInterface {
+  void doSomething();       // ← satu-satunya abstract method
+
+  default void helper() {  // default method ✅ tidak dihitung
+    System.out.println("helper");
+  }
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz2">
+                    <p style="font-size:var(--s);font-weight:600;">Interface berikut, mana yang VALID sebagai Functional Interface?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">A. Interface dengan 0 abstract method</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,true)">B. Interface dengan 1 abstract method + 3 default method</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">C. Interface dengan 2 abstract method</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">D. Abstract class dengan 1 abstract method</div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 3: SINTAKS LAMBDA ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">λ Sintaks Lambda Expression</div>
+                    <p class="chapter-desc">Sintaks Lambda bisa ditulis dalam beberapa bentuk — dari yang paling eksplisit sampai yang paling ringkas. Pelajari urutan evolusi ini agar kamu tidak kaget ketika membaca kode orang lain.</p>
+                </div>
+
+                <div class="text-subtitle">Tiga Tahap Evolusi Penulisan Lambda</div>
+                <p>Untuk setiap Functional Interface, ada tiga cara penulisan yang ekuivalen. Mari kita lihat evolusinya menggunakan <code>Predicate&lt;String&gt;</code> sebagai contoh:</p>
+
+                <div class="evolution-steps">
+                    <div class="evolution-step">
+                        <div class="evolution-step-header"><span>😩</span> Tahap 1 — Anonymous Class (sebelum Java 8)</div>
+                        <div class="evolution-step-body"><pre><code class="language-java">// Paling verbose
+Predicate&lt;String&gt; predicate = new Predicate&lt;String&gt;() {
+  @Override
+  public boolean test(String s) {
+    return s != null;
+  }
+};</code></pre></div>
+                    </div>
+                    <div class="evolution-step">
+                        <div class="evolution-step-header"><span>😊</span> Tahap 2 — Lambda dengan Block Body</div>
+                        <div class="evolution-step-body"><pre><code class="language-java">// Lebih ringkas: hilangkan nama interface, @Override, nama method
+// Sisakan: (parameter) -> { body; }
+Predicate&lt;String&gt; predicate = (value) -> {
+  return value != null;   // curly brace + explicit return
+};</code></pre></div>
+                    </div>
+                    <div class="evolution-step">
+                        <div class="evolution-step-header"><span>😎</span> Tahap 3 — Lambda Expression (paling ringkas)</div>
+                        <div class="evolution-step-body"><pre><code class="language-java">// Jika body hanya satu ekspresi: hilangkan { }, return, dan titik koma
+Predicate&lt;String&gt; predicate = (value) -> value != null;
+
+// Jika hanya 1 parameter: tanda kurung juga bisa dihilangkan
+Predicate&lt;String&gt; predicate = value -> value != null;</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Semua Contoh dari <code>LambdaProgram.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// LambdaProgram.java — semua bentuk lambda dalam aksi
+
+// 1. Predicate&lt;T&gt; — test(T) : boolean
+Predicate&lt;String&gt; predicate = (value) -> value != null;
+System.out.println(predicate.test("A"));    // true
+System.out.println(predicate.test(null));   // false
+
+// 2. Function&lt;T, R&gt; — apply(T) : R
+Function&lt;String, String&gt; function = (value) -> value.toUpperCase();
+System.out.println(function.apply("eko"));  // EKO
+
+// 3. Consumer&lt;T&gt; — accept(T) : void
+Consumer&lt;String&gt; consumer = (value) -> System.out.println(value);
+consumer.accept("Hello Lambda");
+
+// 4. Supplier&lt;T&gt; — get() : T  (tidak ada parameter, pakai kurung kosong)
+Supplier&lt;String&gt; supplier = () -> "Programmer Zaman Now";
+System.out.println(supplier.get());
+
+// 5. BiPredicate&lt;T, U&gt; — test(T, U) : boolean (dua parameter)
+BiPredicate&lt;String, String&gt; biPredicate = (value1, value2) -> value1.equals(value2);
+System.out.println(biPredicate.test("eko", "eko"));    // true
+System.out.println(biPredicate.test("eko", "bukan"));  // false
+
+// 6. Lambda langsung sebagai argumen method (inline)
+printLambda(() -> "Eko Kurniawan"); // Supplier ditulis langsung di argumen!
+
+public static void printLambda(Supplier&lt;String&gt; supplier) {
+  System.out.println(supplier.get());
+}</code></pre></div>
+
+                <div class="text-subtitle">Aturan Sintaks Lambda — Ringkasan</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kondisi</th><th>Aturan Ringkas</th><th>Contoh</th></tr></thead>
+                            <tbody>
+                            <tr><td>0 parameter</td><td>Wajib pakai <code>()</code></td><td><code>() -> "hello"</code></td></tr>
+                            <tr><td>1 parameter</td><td><code>()</code> boleh dihilangkan</td><td><code>s -> s.toUpperCase()</code> atau <code>(s) -> s.toUpperCase()</code></td></tr>
+                            <tr><td>2+ parameter</td><td>Wajib pakai <code>()</code></td><td><code>(a, b) -> a.equals(b)</code></td></tr>
+                            <tr><td>Body 1 ekspresi</td><td>Hilangkan <code>{ }</code> dan <code>return</code></td><td><code>(s) -> s != null</code></td></tr>
+                            <tr><td>Body multi-baris</td><td>Wajib pakai <code>{ }</code> dan <code>return</code> eksplisit</td><td><code>(s) -> { String r = s.trim(); return r; }</code></td></tr>
+                            <tr><td>Return void</td><td>Tidak perlu <code>return</code></td><td><code>(s) -> System.out.println(s)</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Arrow Function</div>
+                    <p>Sintaks Lambda Java mirip sekali dengan arrow function PHP 7.4+. Perbandingan:<br>
+                        PHP: <code>$fn = fn($value) => strtoupper($value);</code><br>
+                        Java: <code>Function&lt;String,String&gt; fn = value -> value.toUpperCase();</code><br>
+                        Perbedaan: PHP tidak perlu deklarasi tipe, Java butuh Functional Interface. Tapi logika penulisan <code>param -> expression</code> adalah identik.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Lupa return di block body</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Jika pakai { }, WAJIB tulis return (untuk non-void)!
+Function&lt;String, String&gt; fn = (s) -> {
+  s.toUpperCase(); // ← COMPILE ERROR: missing return
+};
+// Java tidak otomatis mengembalikan nilai ekspresi terakhir</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Dua pilihan yang valid</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Pilihan 1: expression lambda (tanpa { })
+Function&lt;String, String&gt; fn = s -> s.toUpperCase();
+
+// Pilihan 2: block lambda (dengan { } + return eksplisit)
+Function&lt;String, String&gt; fn = (s) -> {
+  return s.toUpperCase(); // ← return wajib ada
+};</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz3">
+                    <p style="font-size:var(--s);font-weight:600;">Manakah penulisan lambda yang benar untuk <code>Supplier&lt;String&gt;</code> (0 parameter, kembalikan String)?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">A. <code>-> "hello"</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,true)">B. <code>() -> "hello"</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">C. <code>(void) -> "hello"</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">D. <code>() => "hello"</code></div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 4: BUILT-IN FUNCTIONAL INTERFACES ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">🧰 Built-in Functional Interface</div>
+                    <p class="chapter-desc">Java menyediakan sekumpulan Functional Interface siap pakai di package <code>java.util.function</code>. Kamu tidak perlu membuat sendiri untuk kasus-kasus umum. Kenali 5 yang paling sering digunakan.</p>
+                </div>
+
+                <div class="text-subtitle">Lima Functional Interface Utama</div>
+
+                <div class="fi-grid">
+                    <div class="fi-card">
+                        <div class="fi-card-name">Predicate&lt;T&gt;</div>
+                        <div class="fi-card-sig">test(T) : boolean</div>
+                        <div class="fi-card-desc">Menerima satu argumen, mengembalikan boolean. Digunakan untuk kondisi / filter.</div>
+                        <div class="fi-card-ex">Predicate&lt;String&gt; notNull<br>= s -> s != null;</div>
+                    </div>
+                    <div class="fi-card">
+                        <div class="fi-card-name">Function&lt;T, R&gt;</div>
+                        <div class="fi-card-sig">apply(T) : R</div>
+                        <div class="fi-card-desc">Menerima satu argumen tipe T, mengembalikan tipe R. Digunakan untuk transformasi.</div>
+                        <div class="fi-card-ex">Function&lt;String,String&gt; upper<br>= s -> s.toUpperCase();</div>
+                    </div>
+                    <div class="fi-card">
+                        <div class="fi-card-name">Consumer&lt;T&gt;</div>
+                        <div class="fi-card-sig">accept(T) : void</div>
+                        <div class="fi-card-desc">Menerima satu argumen, tidak mengembalikan nilai. Digunakan untuk operasi dengan side effect (print, simpan ke DB, dll).</div>
+                        <div class="fi-card-ex">Consumer&lt;String&gt; printer<br>= s -> System.out.println(s);</div>
+                    </div>
+                    <div class="fi-card">
+                        <div class="fi-card-name">Supplier&lt;T&gt;</div>
+                        <div class="fi-card-sig">get() : T</div>
+                        <div class="fi-card-desc">Tidak menerima argumen, mengembalikan nilai. Digunakan untuk lazy initialization atau factory.</div>
+                        <div class="fi-card-ex">Supplier&lt;String&gt; greet<br>= () -> "Hello World";</div>
+                    </div>
+                    <div class="fi-card">
+                        <div class="fi-card-name">BiPredicate&lt;T, U&gt;</div>
+                        <div class="fi-card-sig">test(T, U) : boolean</div>
+                        <div class="fi-card-desc">Seperti Predicate tapi menerima DUA argumen. Ada juga BiFunction, BiConsumer untuk versi dua-argumen lainnya.</div>
+                        <div class="fi-card-ex">BiPredicate&lt;String,String&gt; eq<br>= (a,b) -> a.equals(b);</div>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Tabel Lengkap Built-in Functional Interface</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Interface</th><th>Method</th><th>Input</th><th>Output</th><th>Use Case</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>Predicate&lt;T&gt;</code></td><td><code>test(T)</code></td><td>T</td><td>boolean</td><td>Filter, kondisi</td></tr>
+                            <tr><td><code>BiPredicate&lt;T,U&gt;</code></td><td><code>test(T,U)</code></td><td>T, U</td><td>boolean</td><td>Perbandingan dua nilai</td></tr>
+                            <tr><td><code>Function&lt;T,R&gt;</code></td><td><code>apply(T)</code></td><td>T</td><td>R</td><td>Transformasi/konversi</td></tr>
+                            <tr><td><code>BiFunction&lt;T,U,R&gt;</code></td><td><code>apply(T,U)</code></td><td>T, U</td><td>R</td><td>Transformasi 2 argumen</td></tr>
+                            <tr><td><code>UnaryOperator&lt;T&gt;</code></td><td><code>apply(T)</code></td><td>T</td><td>T</td><td>Function dengan T=R (misal String→String)</td></tr>
+                            <tr><td><code>Consumer&lt;T&gt;</code></td><td><code>accept(T)</code></td><td>T</td><td>void</td><td>Side effect (print, save)</td></tr>
+                            <tr><td><code>BiConsumer&lt;T,U&gt;</code></td><td><code>accept(T,U)</code></td><td>T, U</td><td>void</td><td>forEach pada Map</td></tr>
+                            <tr><td><code>Supplier&lt;T&gt;</code></td><td><code>get()</code></td><td>–</td><td>T</td><td>Lazy init, factory</td></tr>
+                            <tr><td><code>Runnable</code></td><td><code>run()</code></td><td>–</td><td>void</td><td>Task tanpa return (thread)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>Di PHP, semua closure hanya bertipe <code>callable</code> atau <code>Closure</code>. Tidak ada pembedaan antara "closure yang menerima string dan mengembalikan bool" vs "closure yang tidak mengembalikan nilai". Di Java, perbedaan ini penting karena sistem tipe yang strict. Gunakan ini sebagai panduan: butuh kondisi? → <code>Predicate</code>. Butuh transformasi? → <code>Function</code>. Butuh side effect? → <code>Consumer</code>. Butuh nilai tanpa argumen? → <code>Supplier</code>.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz4">
+                    <p style="font-size:var(--s);font-weight:600;">Kamu ingin menulis lambda yang menerima sebuah Integer dan mengembalikan String representasinya. Functional Interface mana yang tepat?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">A. <code>Consumer&lt;Integer&gt;</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">B. <code>Predicate&lt;Integer&gt;</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,true)">C. <code>Function&lt;Integer, String&gt;</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">D. <code>Supplier&lt;String&gt;</code></div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 5: METHOD REFERENCE ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 5</div>
+                    <div class="chapter-title">🔗 Method Reference</div>
+                    <p class="chapter-desc">Method Reference adalah shorthand dari Lambda Expression ketika lambda hanya melakukan satu hal: memanggil sebuah method. Sintaksnya <code>Kelas::namaMethod</code> atau <code>objek::namaMethod</code>. Ini adalah bentuk paling ekspresif dan idiomatis di Java modern.</p>
+                </div>
+
+                <div class="text-subtitle">Empat Jenis Method Reference</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Jenis</th><th>Sintaks</th><th>Kapan Digunakan</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><span class="mr-type">Static Method</span></td>
+                                <td><code>Kelas::staticMethod</code></td>
+                                <td>Lambda hanya memanggil method static dari suatu kelas</td>
+                            </tr>
+                            <tr>
+                                <td><span class="mr-type">Instance on Param</span></td>
+                                <td><code>Kelas::instanceMethod</code></td>
+                                <td>Lambda memanggil method pada parameter pertamanya sendiri</td>
+                            </tr>
+                            <tr>
+                                <td><span class="mr-type">Instance on Object</span></td>
+                                <td><code>objek::instanceMethod</code></td>
+                                <td>Lambda memanggil method pada objek spesifik yang sudah ada</td>
+                            </tr>
+                            <tr>
+                                <td><span class="mr-type">Constructor</span></td>
+                                <td><code>Kelas::new</code></td>
+                                <td>Lambda membuat instance baru dari kelas</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Kode Evolusi dari <code>LambdaMethodApp.java</code></div>
+
+                <div class="code-block"><pre><code class="language-java">// LambdaMethodApp.java — evolusi ke Method Reference
+
+// ─── Jenis 1: Static Method Reference ───────────────────────────────────
+// isNotNull() adalah static method di LambdaMethodApp
+
+// Tahap 1 - anonymous class
+Predicate&lt;String&gt; p = new Predicate&lt;String&gt;() {
+  @Override public boolean test(String s) {
+    return LambdaMethodApp.isNotNull(s);
+  }
+};
+// Tahap 2 - lambda
+Predicate&lt;String&gt; p = (value) -> LambdaMethodApp.isNotNull(value);
+// Tahap 3 - method reference ✨
+Predicate&lt;String&gt; predicate = LambdaMethodApp::isNotNull;
+// Dibaca: "gunakan method isNotNull dari LambdaMethodApp sebagai Predicate"
+
+
+// ─── Jenis 2: Instance Method on Parameter (type reference) ─────────────
+// isEmpty() adalah method dari OBJEK yang menjadi parameter lambda
+
+// Lambda:
+Predicate&lt;String&gt; p2 = (value) -> value.isEmpty();
+// Method reference ✨
+Predicate&lt;String&gt; predicate2 = String::isEmpty;
+// Dibaca: "panggil isEmpty() pada parameter String yang diterima"
+
+
+// ─── Jenis 3: Instance Method on Specific Object ─────────────────────────
+// concat() dipanggil pada OBJEK TERTENTU (hello)
+
+String hello = "Hello ";
+// Lambda:
+Function&lt;String, String&gt; f = (value) -> hello.concat(value);
+// Method reference ✨
+Function&lt;String, String&gt; function = hello::concat;
+// Dibaca: "panggil concat() pada objek 'hello', argumen lambda jadi parameter concat"
+
+
+// ─── Contoh lain: System.out::println ────────────────────────────────────
+// System.out adalah objek (PrintStream), println adalah instance method-nya
+
+// Lambda:
+Consumer&lt;String&gt; c = (value) -> System.out.println(value);
+// Method reference ✨
+Consumer&lt;String&gt; consumer = System.out::println;
+// System.out = objek spesifik, println = method-nya → Jenis 3!
+
+
+// ─── BiPredicate dengan Static Method ────────────────────────────────────
+// isEquals(val1, val2) adalah static method
+
+// Lambda:
+BiPredicate&lt;String, String&gt; bp = (v1, v2) -> LambdaMethodApp.isEquals(v1, v2);
+// Method reference ✨
+BiPredicate&lt;String, String&gt; biPredicate = LambdaMethodApp::isEquals;
+</code></pre></div>
+
+                <div class="text-subtitle">Cara Cepat Membaca Method Reference</div>
+                <div class="info-box">
+                    <div class="info-box-title">💡 Trik: Kapan Pakai Static vs Instance Reference?</div>
+                    <p>Lihat isi lambda-nya: kalau kode lambda berbentuk <code>param -> Kelas.method(param)</code> → gunakan <code>Kelas::method</code> (static). Kalau berbentuk <code>param -> param.method()</code> → gunakan <code>Kelas::method</code> (instance on param). Kalau berbentuk <code>param -> objek.method(param)</code> → gunakan <code>objek::method</code> (instance on object). Aturan sederhana: siapa yang ada di kiri <code>.</code> sebelum method name — itulah yang kamu tulis di kiri <code>::</code>.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>Di PHP, kamu bisa melewatkan method sebagai callable menggunakan array: <code>[$this, 'methodName']</code> atau <code>['ClassName', 'staticMethod']</code>. Di Java, Method Reference jauh lebih bersih: <code>this::methodName</code> atau <code>ClassName::staticMethod</code>. Contoh ekuivalen: PHP <code>array_map(['Str', 'upper'], $arr)</code> → Java <code>stream.map(String::toUpperCase)</code>.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">😐 Lambda (sudah bagus, tapi bisa lebih ringkas)</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Lambda yang hanya memanggil satu method
+list.forEach(value -> System.out.println(value));
+names.stream().map(s -> s.toUpperCase());
+biP = (v1, v2) -> MyClass.isEquals(v1, v2);</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✨ Method Reference (paling idiomatis)</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Langsung ke method-nya tanpa noise
+list.forEach(System.out::println);
+names.stream().map(String::toUpperCase);
+biP = MyClass::isEquals;</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz5">
+                    <p style="font-size:var(--s);font-weight:600;">Lambda <code>(s) -> s.isEmpty()</code> ekuivalen dengan method reference mana?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">A. <code>isEmpty::String</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,true)">B. <code>String::isEmpty</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">C. <code>String::new</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">D. <code>s::isEmpty</code></div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 6: LAMBDA + COLLECTIONS ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 6</div>
+                    <div class="chapter-title">📋 Lambda + Collections</div>
+                    <p class="chapter-desc">Salah satu use case paling sering dari Lambda adalah iterasi Collection. Method <code>forEach</code> di <code>List</code> dan <code>Map</code> menerima Functional Interface, sehingga bisa diisi Lambda atau Method Reference secara langsung.</p>
+                </div>
+
+                <div class="text-subtitle">Iterasi List — Tiga Cara</div>
+                <p>Codebase menunjukkan evolusi iterasi <code>List</code> yang sangat informatif:</p>
+
+                <div class="code-block"><pre><code class="language-java">// CollectionApp.java — evolusi iterasi List
+
+List&lt;String&gt; list = Arrays.asList("eko", "kurniawan", "khannedy");
+
+// ─── Cara 1: for-each klasik ──────────────────────────────────────────────
+for (String value : list) {
+  System.out.println(value);
+}
+
+// ─── Cara 2: forEach + Anonymous Class ───────────────────────────────────
+list.forEach(new Consumer&lt;String&gt;() {
+  @Override
+  public void accept(String s) {
+    System.out.println(s);
+  }
+});
+
+// ─── Cara 3: forEach + Lambda ─────────────────────────────────────────────
+list.forEach((value) -> System.out.println(value));
+
+// ─── Cara 4: forEach + Method Reference ✨ (paling idiomatis) ─────────────
+list.forEach(System.out::println);
+// forEach menerima Consumer&lt;String&gt; → accept(String) → cocok dengan println(String)
+</code></pre></div>
+
+                <div class="text-subtitle">Iterasi Map — Tiga Cara</div>
+
+                <div class="code-block"><pre><code class="language-java">// CollectionApp.java — evolusi iterasi Map
+
+Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+map.put("a", "eko"); map.put("b", "kurniawan"); map.put("c", "khannedy");
+
+// ─── Cara 1: entrySet() klasik ───────────────────────────────────────────
+for (Map.Entry&lt;String, String&gt; entry : map.entrySet()) {
+  System.out.println(entry.getKey() + " : " + entry.getValue());
+}
+
+// ─── Cara 2: forEach + Anonymous Class ───────────────────────────────────
+map.forEach(new BiConsumer&lt;String, String&gt;() {
+  @Override
+  public void accept(String key, String value) {
+    System.out.println(key + " : " + value);
+  }
+});
+
+// ─── Cara 3: forEach + Lambda ─────────────────────────────────────────────
+map.forEach((key, value) -> System.out.println(key + " : " + value));
+
+// ─── Cara 4: forEach + Method Reference ✨ ─────────────────────────────
+// printEntry(String key, String value) cocok dengan BiConsumer&lt;String,String&gt;
+map.forEach(CollectionApp::printEntry);
+
+// Method yang direferensikan:
+public static void printEntry(String key, String value) {
+  System.out.println(key + " : " + value);
+}</code></pre></div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>list.forEach(Consumer)</code></td>
+                                <td>Method <code>forEach</code> ada di interface <code>Iterable</code> (yang diimplementasikan oleh semua Collection). Menerima <code>Consumer&lt;T&gt;</code>. Lebih ekspresif dari for-each klasik karena bisa digabung langsung dengan method reference.</td>
+                            </tr>
+                            <tr>
+                                <td><code>map.forEach(BiConsumer)</code></td>
+                                <td>Method <code>forEach</code> di <code>Map</code> menerima <code>BiConsumer&lt;K, V&gt;</code> — lambda dengan dua parameter (key, value). Jauh lebih bersih dari iterasi <code>entrySet()</code> yang verbose.</td>
+                            </tr>
+                            <tr>
+                                <td><code>CollectionApp::printEntry</code></td>
+                                <td>Karena signature <code>printEntry(String key, String value)</code> cocok dengan <code>BiConsumer&lt;String, String&gt;.accept(String, String)</code>, method ini bisa langsung digunakan sebagai method reference. Java mencocokkan berdasarkan jumlah dan tipe parameter.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>Di PHP: <code>array_walk($list, function($val) { echo $val; });</code> atau lebih singkat <code>array_walk($list, 'echo');</code>. Di Java dengan method reference: <code>list.forEach(System.out::println);</code>. Untuk Map, PHP pakai <code>array_walk($map, function($v,$k) { echo "$k: $v"; })</code>, Java pakai <code>map.forEach((k,v) -> System.out.println(k+": "+v))</code>. Perbedaan: Java lebih type-safe karena tipe key dan value diketahui dari generics Map.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">😐 For-each klasik (masih valid, tapi verbose)</div>
+                        <div class="comparison-body"><pre><code class="language-java">for (String value : list) {
+  System.out.println(value);
+}
+for (Map.Entry&lt;K,V&gt; e : map.entrySet()) {
+  process(e.getKey(), e.getValue());
+}</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✨ Lambda / Method Reference (idiomatis)</div>
+                        <div class="comparison-body"><pre><code class="language-java">// List
+list.forEach(System.out::println);
+
+// Map — lambda
+map.forEach((k, v) -> process(k, v));
+
+// Map — method reference
+map.forEach(MyClass::process);</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz6">
+                    <p style="font-size:var(--s);font-weight:600;"><code>map.forEach()</code> menerima Functional Interface bertipe apa?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">A. <code>Consumer&lt;Map.Entry&lt;K,V&gt;&gt;</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,true)">B. <code>BiConsumer&lt;K, V&gt;</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">C. <code>Function&lt;K, V&gt;</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">D. <code>Predicate&lt;Map&gt;</code></div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 7: LAZY EVALUATION ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 7</div>
+                    <div class="chapter-title">😴 Lazy Evaluation dengan Supplier</div>
+                    <p class="chapter-desc">Ini adalah salah satu use case paling powerful dari Lambda yang sering diabaikan: menggunakan <code>Supplier&lt;T&gt;</code> untuk menunda eksekusi kode sampai benar-benar dibutuhkan. Teknik ini disebut <em>Lazy Evaluation</em>.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>LazyApp.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// LazyApp.java — Lazy Initialization Pattern dengan Supplier
+
+public class LazyApp {
+  private static ProductService productService = new ProductService();
+
+  public static void main(String[] args) {
+    // Lambda tidak langsung dieksekusi!
+    // () -> productService.createNewProduct("1") hanya DISIAPKAN, belum dijalankan
+    Product product1 = findOrCreate("1", () -> productService.createNewProduct("1"));
+    System.out.println(product1); // CREATE NEW — karena "1" belum ada
+
+    Product product2 = findOrCreate("2", () -> productService.createNewProduct("2"));
+    System.out.println(product2); // CREATE NEW — karena "2" belum ada
+
+    // Minta "1" lagi — kali ini TIDAK "CREATE NEW" karena sudah ada di database!
+    Product product1lagi = findOrCreate("1", () -> productService.createNewProduct("1"));
+    System.out.println(product1lagi); // Tidak ada output "CREATE NEW"
+  }
+
+  // Kunci: parameter newProduct adalah Supplier — bukan Product langsung!
+  // Jika parameter langsung Product, createNewProduct() akan SELALU dipanggil
+  // bahkan saat produk sudah ada. Dengan Supplier, pemanggilan hanya terjadi
+  // jika benar-benar diperlukan (product == null).
+  public static Product findOrCreate(String id, Supplier&lt;Product&gt; newProduct) {
+    Product product = productService.findById(id);
+    if (product != null) {
+      return product;         // &lt;--- Supplier.get() TIDAK pernah dipanggil
+    } else {
+      return newProduct.get(); // &lt;--- Supplier.get() dipanggil HANYA di sini
+    }
+  }
+
+  public static class ProductService {
+    private Map&lt;String, Product&gt; database = new HashMap&lt;&gt;();
+
+    public Product findById(String id) {
+      return database.get(id); // null jika tidak ada
+    }
+
+    public Product createNewProduct(String id) {
+      System.out.println("CREATE NEW"); // Side effect yang mahal!
+      Product product = new Product(id, null);
+      database.put(id, product);
+      return product;
+    }
+  }
+}</code></pre></div>
+
+                <div class="text-subtitle">Visualisasi Alur Eksekusi</div>
+                <div class="display-grid">
+                    <div class="timeline">
+                        <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">Panggil <code>findOrCreate("1", () -> create("1"))</code></div>
+                            <div class="timeline-content-desc">Lambda <code>() -> create("1")</code> dibuat sebagai objek Supplier. <strong>create() belum dipanggil!</strong> Lambda hanya "dipaket".</div>
+                            <div class="timeline-content-time">Step 1</div>
+                        </div>
+                        <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">Cek database: <code>findById("1")</code></div>
+                            <div class="timeline-content-desc">Jika hasilnya <code>null</code> (belum ada), lanjut ke step 3. Jika sudah ada, langsung return — <strong>Supplier tidak pernah dieksekusi</strong>.</div>
+                            <div class="timeline-content-time">Step 2</div>
+                        </div>
+                        <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title"><code>newProduct.get()</code> dipanggil</div>
+                            <div class="timeline-content-desc">Baru di sini lambda dieksekusi. <code>create("1")</code> dipanggil, "CREATE NEW" dicetak, produk disimpan ke database.</div>
+                            <div class="timeline-content-time">Step 3 (hanya jika perlu)</div>
+                        </div>
+                        <div><span class="timeline-key">4</span></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">Panggil lagi <code>findOrCreate("1", ...)</code></div>
+                            <div class="timeline-content-desc">Kali ini <code>findById("1")</code> tidak null → langsung return. Lambda di-skip sepenuhnya. Tidak ada "CREATE NEW".</div>
+                            <div class="timeline-content-time">Step 4 (efisien!)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Bedah Pola Lazy Evaluation</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th><th>Kenapa Penting</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>Supplier&lt;Product&gt; newProduct</code></td>
+                                <td>Parameter bukan <code>Product</code> langsung, tapi "resep untuk membuat Product". Resep tidak dieksekusi sampai <code>.get()</code> dipanggil.</td>
+                                <td>Jika operasi pembuatan produk mahal (query DB, HTTP call), ini menghemat resource secara signifikan.</td>
+                            </tr>
+                            <tr>
+                                <td><code>newProduct.get()</code></td>
+                                <td>Eksekusi lambda hanya di sini, saat terbukti dibutuhkan. Ini adalah <em>call-by-need</em> (lazy) vs <em>call-by-value</em> (eager).</td>
+                                <td>Analogi: perbedaan antara memesan makanan vs menyiapkannya dulu baru dipesan.</td>
+                            </tr>
+                            <tr>
+                                <td><code>@Data @AllArgsConstructor @NoArgsConstructor</code></td>
+                                <td>Annotation Lombok — library yang auto-generate getter, setter, constructor, dll saat compile time. Biasa digunakan di Spring Boot untuk mengurangi boilerplate di kelas model/entity.</td>
+                                <td>Di Laravel, model Eloquent sudah auto-handle properti. Di Java, harus manual atau pakai Lombok.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>Pola ini mirip dengan <code>Cache::remember('key', $ttl, function() { return DB::find(...); })</code> di Laravel. Closure hanya dieksekusi jika cache miss. Di Java, kamu bisa membangun pola yang sama dari scratch dengan <code>Supplier</code> — lebih fleksibel karena tidak terikat cache system. Ini adalah building block dari pattern seperti <em>lazy initialization</em>, <em>optional</em>, dan <em>memoization</em>.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Eager — Selalu buat objek meski tidak perlu</div>
+                        <div class="comparison-body"><pre><code class="language-java">// createNewProduct() SELALU dipanggil sebelum masuk findOrCreate
+// bahkan jika produk sudah ada!
+Product result = findOrCreate(
+  "1",
+  productService.createNewProduct("1") // ← eager, langsung eksekusi!
+);</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Lazy — Buat hanya jika benar-benar perlu</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Lambda hanya dieksekusi jika findById() return null
+Product result = findOrCreate(
+  "1",
+  () -> productService.createNewProduct("1") // ← lazy!
+);</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz7">
+                    <p style="font-size:var(--s);font-weight:600;">Pada <code>LazyApp</code>, berapa kali pesan "CREATE NEW" dicetak jika dipanggil berturut-turut: <code>findOrCreate("1", ...)</code>, <code>findOrCreate("2", ...)</code>, <code>findOrCreate("1", ...)</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,false)">A. 3 kali (setiap pemanggilan)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,true)">B. 2 kali (hanya saat pertama kali "1" dan pertama kali "2")</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,false)">C. 1 kali (hanya untuk "1" pertama)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7',this,false)">D. 0 kali (karena Supplier tidak pernah dieksekusi)</div>
+                    <div class="quiz-feedback" id="quiz7-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 8: STREAM API ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 8</div>
+                    <div class="chapter-title">🌊 Stream API</div>
+                    <p class="chapter-desc">Stream API adalah puncak dari ekosistem Lambda di Java. Dengan Stream, kamu bisa memproses koleksi data secara deklaratif menggunakan operasi pipeline: <code>map</code>, <code>filter</code>, <code>forEach</code> — mirip dengan <code>array_map</code>, <code>array_filter</code> di PHP, tapi jauh lebih powerful.</p>
+                </div>
+
+                <div class="text-subtitle">Evolusi Kode — <code>StreamApp.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// StreamApp.java — Evolusi kode streaming
+
+Stream&lt;String&gt; names = Stream.of("eko", "kurniawan", "khannedy");
+
+// ─── Cara 1: Anonymous class (verbose) ──────────────────────────────────
+names
+  .map(new Function&lt;String, String&gt;() {
+    @Override
+    public String apply(String s) {
+      return s.toUpperCase();
+    }
+  })
+  .forEach(new Consumer&lt;String&gt;() {
+    @Override
+    public void accept(String s) {
+      System.out.println(s);
+    }
+  });
+
+// ─── Cara 2: Lambda ───────────────────────────────────────────────────────
+names
+  .map((value) -> value.toUpperCase())
+  .forEach((value) -> System.out.println(value));
+
+// ─── Cara 3: Method Reference ✨ (paling idiomatis) ─────────────────────
+names
+  .map(String::toUpperCase)    // Function&lt;String,String&gt;: toUpperCase pada param
+  .forEach(System.out::println); // Consumer&lt;String&gt;: println pada System.out
+
+
+// ─── Pipeline dengan filter ───────────────────────────────────────────────
+List&lt;String&gt; fruits = Arrays.asList("apel","melon","alpukat","jeruk","belimbing");
+
+fruits.stream()
+  .map(String::toUpperCase)          // ["APEL","MELON","ALPUKAT","JERUK","BELIMBING"]
+  .filter((value) -> value.startsWith("A")) // ["APEL","ALPUKAT"]
+  .forEach(System.out::println);           // print: APEL, ALPUKAT
+</code></pre></div>
+
+                <div class="text-subtitle">Konsep Pipeline Stream</div>
+                <p>Stream bekerja seperti pipa — data mengalir dari sumber, diproses oleh satu atau lebih <em>intermediate operation</em>, dan diakhiri oleh satu <em>terminal operation</em>:</p>
+
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">1</div>
+                            <div class="stepper-value"><strong>Source:</strong> <code>list.stream()</code> atau <code>Stream.of(...)</code> — titik awal pipeline</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">2</div>
+                            <div class="stepper-value"><strong>Intermediate ops:</strong> <code>.map()</code>, <code>.filter()</code>, <code>.sorted()</code>, <code>.distinct()</code> — <em>lazy</em>, tidak dieksekusi sampai ada terminal op</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">3</div>
+                            <div class="stepper-value"><strong>Terminal op:</strong> <code>.forEach()</code>, <code>.collect()</code>, <code>.count()</code>, <code>.reduce()</code> — memicu seluruh pipeline dieksekusi</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key">4</div>
+                            <div class="stepper-value"><strong>Stream habis:</strong> Setelah terminal op dipanggil, stream tidak bisa digunakan lagi — harus buat stream baru dari source</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Tabel Operasi Stream Penting</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Operasi</th><th>Tipe</th><th>Functional IF</th><th>Fungsi</th><th>PHP Ekuivalen</th></tr></thead>
+                            <tbody>
+                            <tr><td><code>map(fn)</code></td><td>Intermediate</td><td><code>Function&lt;T,R&gt;</code></td><td>Transformasi setiap elemen</td><td><code>array_map()</code></td></tr>
+                            <tr><td><code>filter(fn)</code></td><td>Intermediate</td><td><code>Predicate&lt;T&gt;</code></td><td>Hanya lewatkan elemen yang memenuhi kondisi</td><td><code>array_filter()</code></td></tr>
+                            <tr><td><code>sorted()</code></td><td>Intermediate</td><td><code>Comparator&lt;T&gt;</code></td><td>Urutkan elemen</td><td><code>usort()</code></td></tr>
+                            <tr><td><code>distinct()</code></td><td>Intermediate</td><td>–</td><td>Hapus duplikat</td><td><code>array_unique()</code></td></tr>
+                            <tr><td><code>limit(n)</code></td><td>Intermediate</td><td>–</td><td>Batasi jumlah elemen</td><td><code>array_slice()</code></td></tr>
+                            <tr><td><code>forEach(fn)</code></td><td>Terminal</td><td><code>Consumer&lt;T&gt;</code></td><td>Proses setiap elemen (side effect)</td><td><code>array_walk()</code></td></tr>
+                            <tr><td><code>collect()</code></td><td>Terminal</td><td><code>Collector</code></td><td>Kumpulkan hasil ke List/Map/Set</td><td><code>array_values()</code></td></tr>
+                            <tr><td><code>count()</code></td><td>Terminal</td><td>–</td><td>Hitung jumlah elemen</td><td><code>count()</code></td></tr>
+                            <tr><td><code>reduce()</code></td><td>Terminal</td><td><code>BinaryOperator&lt;T&gt;</code></td><td>Akumulasi ke satu nilai</td><td><code>array_reduce()</code></td></tr>
+                            <tr><td><code>findFirst()</code></td><td>Terminal</td><td>–</td><td>Ambil elemen pertama → <code>Optional&lt;T&gt;</code></td><td><code>array_shift()</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP / Laravel Collection</div>
+                    <p>Jika kamu paham Laravel Collection, kamu sudah setengah jalan! <code>collect($arr)->map(fn($v) => strtoupper($v))->filter(fn($v) => str_starts_with($v,'A'))->values()</code> di Laravel sangat mirip dengan <code>list.stream().map(String::toUpperCase).filter(v -> v.startsWith("A")).collect(Collectors.toList())</code> di Java. Perbedaan utama: Stream Java bersifat <em>lazy</em> (tidak dieksekusi sampai terminal op), sedangkan Laravel Collection dieksekusi segera setiap operasi. Stream Java juga hanya bisa digunakan sekali — untuk digunakan ulang, buat stream baru.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Stream Tidak Bisa Digunakan Ulang!</div>
+                    <p>Setelah terminal operation dipanggil, stream "habis" dan tidak bisa dipakai lagi. Jika mencoba, akan dapat <code>IllegalStateException: stream has already been operated upon or closed</code>. Solusi: simpan sumber datanya (List, array), lalu panggil <code>.stream()</code> lagi setiap kali butuh stream baru.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Stream dipakai dua kali</div>
+                        <div class="comparison-body"><pre><code class="language-java">Stream&lt;String&gt; stream = list.stream();
+long count = stream.count(); // terminal op → stream habis!
+stream.forEach(System.out::println); // ← IllegalStateException!</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Buat stream baru setiap kali</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Simpan list-nya, bukan stream-nya
+List&lt;String&gt; list = Arrays.asList("a","b","c");
+
+long count = list.stream().count();        // ✅ stream #1
+list.stream().forEach(System.out::println); // ✅ stream #2 (baru)</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz8">
+                    <p style="font-size:var(--s);font-weight:600;">Apa yang dimaksud dengan "intermediate operation" pada Stream?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,false)">A. Operasi yang langsung mengeksekusi dan menghasilkan nilai akhir</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,true)">B. Operasi yang lazy — tidak dieksekusi sampai terminal operation dipanggil, dan mengembalikan Stream baru</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,false)">C. Operasi yang hanya bisa dipanggil di tengah pipeline</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8',this,false)">D. Operasi yang mengeksekusi dalam thread terpisah</div>
+                    <div class="quiz-feedback" id="quiz8-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SUMMARY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,var(--transsuccess-color) 0%,var(--transprimary-color) 100%);">
+                    <div class="chapter-number" style="color:var(--success-color);">Rangkuman Akhir</div>
+                    <div class="chapter-title">📋 Arsitektur Java Lambda Expression</div>
+                    <p class="chapter-desc">Gambaran lengkap bagaimana semua komponen Lambda, Functional Interface, Method Reference, dan Stream bekerja bersama-sama.</p>
+                </div>
+
+                <div class="text-subtitle">Peta Ekosistem Lambda Java</div>
+                <div class="summary-card">
+                    <div class="summary-row">
+                        <div class="summary-icon">🔌</div>
+                        <div>
+                            <strong>Functional Interface — Kontrak Tipe</strong>
+                            <span>Interface dengan tepat 1 abstract method. "Wadah" untuk Lambda. Bawaan: <code>Predicate</code>, <code>Function</code>, <code>Consumer</code>, <code>Supplier</code>, <code>BiPredicate</code>, dll di <code>java.util.function</code>. Bisa juga buat sendiri dengan <code>@FunctionalInterface</code>.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">λ</div>
+                        <div>
+                            <strong>Lambda Expression — Behavior sebagai Nilai</strong>
+                            <span>Sintaks <code>(param) -> ekspresi</code> atau <code>(param) -> { body; }</code>. Memungkinkan behavior dilewatkan sebagai argumen method. Menggantikan Anonymous Class yang verbose.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🔗</div>
+                        <div>
+                            <strong>Method Reference — Shorthand Lambda</strong>
+                            <span>4 jenis: <code>Kelas::staticMethod</code>, <code>Kelas::instanceMethod</code> (pada param), <code>obj::instanceMethod</code> (pada objek), <code>Kelas::new</code> (konstruktor). Digunakan ketika lambda hanya memanggil satu method.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">📋</div>
+                        <div>
+                            <strong>Lambda + Collections — forEach</strong>
+                            <span><code>List.forEach(Consumer)</code> dan <code>Map.forEach(BiConsumer)</code>. Cara idiomatis modern untuk iterasi. Bisa langsung pakai method reference: <code>list.forEach(System.out::println)</code>.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">😴</div>
+                        <div>
+                            <strong>Lazy Evaluation — Supplier sebagai "Resep"</strong>
+                            <span>Gunakan <code>Supplier&lt;T&gt;</code> ketika pembuatan objek mahal dan hanya boleh dieksekusi jika benar-benar perlu. Lambda "dipaket" tanpa dieksekusi, dijalankan hanya saat <code>.get()</code> dipanggil.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🌊</div>
+                        <div>
+                            <strong>Stream API — Pipeline Fungsional</strong>
+                            <span>Source → Intermediate ops (lazy: map, filter, sorted) → Terminal op (eager: forEach, collect, count). Stream hanya bisa digunakan sekali. Ekuivalen Laravel Collection tapi bersifat lazy.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">📊 Tabel Perbandingan: Java Lambda vs PHP Closure</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Aspek</th><th>PHP Closure / Arrow Function</th><th>Java Lambda Expression</th></tr></thead>
+                            <tbody>
+                            <tr><td>Deklarasi</td><td><code>fn($x) => $x * 2</code></td><td><code>x -> x * 2</code></td></tr>
+                            <tr><td>Tipe variabel penampung</td><td><code>Closure</code> atau <code>callable</code> (loosely typed)</td><td>Harus Functional Interface spesifik (<code>Function&lt;Integer,Integer&gt;</code>)</td></tr>
+                            <tr><td>Akses variabel luar</td><td>Wajib pakai <code>use ($var)</code></td><td>Otomatis capture (tapi harus effectively final)</td></tr>
+                            <tr><td>Multi-baris</td><td><code>function($x) { return $x; }</code></td><td><code>(x) -> { return x; }</code></td></tr>
+                            <tr><td>Method reference</td><td><code>['Class', 'method']</code> atau <code>Closure::fromCallable(...)</code></td><td><code>Class::method</code> — jauh lebih bersih</td></tr>
+                            <tr><td>Iterasi array/list</td><td><code>array_map(fn, $arr)</code></td><td><code>list.stream().map(fn).collect(...)</code></td></tr>
+                            <tr><td>Filter</td><td><code>array_filter($arr, fn)</code></td><td><code>stream.filter(predicate)</code></td></tr>
+                            <tr><td>Composability</td><td>Manual (nested call)</td><td>Native pipeline dengan <code>andThen()</code>, <code>compose()</code>, <code>and()</code>, <code>or()</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">🔑 Effectively Final — Aturan Capture Lambda</div>
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Variabel yang Di-capture Lambda Harus "Effectively Final"</div>
+                    <p>Lambda di Java bisa mengakses variabel dari scope luar (seperti PHP <code>use</code>), tapi dengan syarat: variabel tersebut tidak boleh diubah nilainya setelah di-capture. Java menyebut ini <em>effectively final</em> — tidak harus eksplisit ditulis <code>final</code>, tapi nilai tidak boleh di-assign ulang. Contoh: <code>String hello = "Hello "; Function&lt;String,String&gt; fn = hello::concat;</code> — ini aman karena <code>hello</code> tidak diubah. Tapi jika setelahnya ada <code>hello = "Hi ";</code>, compiler akan error.</p>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">🏆 Checklist Penguasaan Java Lambda</div>
+                <ul class="bp-list">
+                    <li><span>✅</span><span>Paham mengapa Lambda hadir: menggantikan Anonymous Class yang verbose</span></li>
+                    <li><span>✅</span><span>Tahu konsep Functional Interface: interface dengan tepat 1 abstract method, dan cara membuat sendiri dengan <code>@FunctionalInterface</code></span></li>
+                    <li><span>✅</span><span>Hafal 5 built-in FI: <code>Predicate</code>, <code>Function</code>, <code>Consumer</code>, <code>Supplier</code>, <code>BiPredicate</code> — kapan masing-masing dipakai</span></li>
+                    <li><span>✅</span><span>Bisa menulis Lambda dalam 3 bentuk: anonymous class, block lambda, expression lambda</span></li>
+                    <li><span>✅</span><span>Menguasai 4 jenis Method Reference: static, instance on param, instance on object, constructor</span></li>
+                    <li><span>✅</span><span>Bisa menggunakan <code>list.forEach()</code> dan <code>map.forEach()</code> dengan Lambda dan Method Reference</span></li>
+                    <li><span>✅</span><span>Paham Lazy Evaluation dengan Supplier: kenapa gunakan <code>Supplier&lt;T&gt;</code> bukan <code>T</code> langsung sebagai parameter</span></li>
+                    <li><span>✅</span><span>Bisa membuat pipeline Stream dengan <code>.map()</code>, <code>.filter()</code>, <code>.forEach()</code></span></li>
+                    <li><span>✅</span><span>Ingat bahwa Stream hanya bisa digunakan sekali (satu terminal operation)</span></li>
+                    <li><span>✅</span><span>Tahu aturan "effectively final" untuk variabel yang di-capture oleh Lambda</span></li>
+                </ul>
+
+                <div class="info-box success">
+                    <div class="info-box-title">🎉 Selamat! Kamu sudah menguasai Lambda Expression Java.</div>
+                    <p>Langkah selanjutnya: pelajari lebih dalam <strong>Stream API</strong> — operasi <code>collect(Collectors.toList())</code>, <code>reduce()</code>, <code>groupingBy()</code>. Lanjut ke <strong>Optional&lt;T&gt;</strong> yang memanfaatkan Lambda untuk null-safety. Di Spring Boot, Lambda digunakan intensif di <strong>Spring Security</strong> (konfigurasi lambda-DSL) dan <strong>Spring WebFlux</strong> (reactive programming dengan Flux dan Mono).</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="padding:var(--m);text-align:center;font-size:var(--xs);color:var(--transtext-color);">
+        Java Lambda Expression Learning Module · Dibuat untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script>
+    function showBottomSheet(p){document.getElementsByClassName('bottom-sheet')[p].classList.toggle('active')}
+    function sidebarMinify(){document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");document.getElementsByClassName("container")[0].classList.toggle("expanded")}
+    function switchTheme(){document.getElementsByTagName("body")[0].classList.toggle("dark-mode")}
+    function showMenu(){document.getElementsByClassName("sidebar")[0].classList.toggle("show");document.getElementById('get-menu').classList.toggle('opened')}
+
+    function checkQuiz(quizId, el, isCorrect) {
+        const container = document.getElementById(quizId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = "true";
+        container.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents='none');
+        if (isCorrect) {
+            el.classList.add('correct');
+            const fb = document.getElementById(quizId+'-feedback');
+            fb.style.color='var(--success-color)'; fb.textContent='✅ Jawaban benar! Bagus!'; fb.classList.add('show');
+        } else {
+            el.classList.add('wrong');
+            container.querySelectorAll('.quiz-option').forEach(opt => { if(opt.getAttribute('onclick').includes('true')) opt.classList.add('correct'); });
+            const fb = document.getElementById(quizId+'-feedback');
+            fb.style.color='var(--danger-color)'; fb.textContent='❌ Belum tepat. Perhatikan jawaban yang benar di atas.'; fb.classList.add('show');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+        const sections = document.querySelectorAll('[id^="chapter-"], #intro, #summary');
+        const menuItems = document.querySelectorAll('.sidebar-menu-item');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    const active = document.querySelector(`.sidebar-menu-item[href="#${entry.target.id}"]`);
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, {rootMargin:'-30% 0px -60% 0px'});
+        sections.forEach(s => observer.observe(s));
+    });
+</script>
+</body>
+</html>

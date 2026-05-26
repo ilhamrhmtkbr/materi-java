@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Unit Test dengan JUnit 5 & Mockito | Belajar Java</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .code-block{max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin:var(--m) 0;box-sizing:border-box}
+        .code-block pre{margin:0;border-radius:var(--radius-l)}
+        .code-block code{font-size:var(--s);line-height:1.65}
+        .ch-banner{background:linear-gradient(135deg,var(--primary-color),var(--second-primary-color));border-radius:var(--radius-x);padding:var(--x);color:white;max-width:77dvw;overflow:auto;box-sizing:border-box;margin-bottom:var(--m)}
+        .ch-banner.green{background:linear-gradient(135deg,var(--success-color),var(--third-primary-color))}
+        .ch-banner.orange{background:linear-gradient(135deg,#f97316,#dc2626)}
+        .ch-banner-num{font-size:var(--xs);opacity:.8;margin-bottom:var(--xs)}
+        .ch-banner-title{font-size:var(--xx);font-weight:bold;margin-bottom:var(--xs)}
+        .ch-banner-desc{opacity:.9;font-size:var(--s)}
+        .abox,.ibox,.ebox,.sbox{border-radius:var(--radius-m);padding:var(--m);max-width:77dvw;overflow:auto;box-sizing:border-box;margin:var(--m) 0}
+        .abox{background:var(--transprimary-color);border-left:4px solid var(--primary-color)}
+        .ibox{background:var(--transsecond-primary-color);border-left:4px solid var(--second-primary-color)}
+        .ebox{background:var(--transdanger-color);border-left:4px solid var(--danger-color)}
+        .sbox{background:var(--transsuccess-color);border-left:4px solid var(--success-color)}
+        .abox-title{font-weight:bold;color:var(--primary-color);margin-bottom:var(--xs)}
+        .ibox-title{font-weight:bold;color:var(--second-primary-color);margin-bottom:var(--xs)}
+        .le{box-sizing:border-box;max-width:77dvw;overflow-x:auto;display:grid;gap:var(--s);margin:var(--s) 0}
+        .le-item{display:flex;gap:var(--s);align-items:flex-start}
+        .ln{background:var(--primary-color);color:white;padding:2px 8px;border-radius:var(--radius-s);font-size:var(--xs);font-weight:bold;white-space:nowrap;flex-shrink:0;margin-top:3px}
+        .qbox{background:var(--transthird-primary-color);border:var(--border);border-radius:var(--radius-l);padding:var(--m);max-width:77dvw;overflow:auto;box-sizing:border-box;margin:var(--m) 0}
+        .qbox-title{font-weight:bold;color:var(--third-primary-color);margin-bottom:var(--s)}
+        .qopt{display:block;padding:var(--xs) var(--s);margin:var(--xs) 0;border-radius:var(--radius-m);cursor:pointer;border:var(--border);background:var(--bg-color);transition:background .2s;font-size:var(--s)}
+        .qopt:hover{background:var(--transprimary-color)}
+        .qopt.correct{background:var(--transsuccess-color);border-color:var(--success-color);color:var(--success-color);font-weight:bold}
+        .qopt.wrong{background:var(--transdanger-color);border-color:var(--danger-color);color:var(--danger-color)}
+        .qopt.disabled{pointer-events:none}
+        .qfeed{margin-top:var(--s);padding:var(--xs) var(--s);border-radius:var(--radius-m);font-size:var(--s);display:none}
+        .qfeed.show{display:block}
+        .qfeed.correct{background:var(--transsuccess-color);color:var(--success-color)}
+        .qfeed.wrong{background:var(--transdanger-color);color:var(--danger-color)}
+        .mt-l{margin-top:var(--l)}.mt-m{margin-top:var(--m)}.mb-m{margin-bottom:var(--m)}
+        ul{padding-left:1.4em;line-height:2}
+        .ann-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--s);margin:var(--m) 0}
+        .ann-card{border:var(--border);border-radius:var(--radius-m);padding:var(--s);background:var(--transprimary-color)}
+        .ann-card-name{font-weight:bold;color:var(--primary-color);font-size:var(--s);margin-bottom:4px}
+        .ann-card-desc{font-size:var(--xs);color:var(--transtext-color)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a href="#ch1" class="bottom-nav-item active">&#128295; JUnit 5</a>
+    <a href="#ch7" class="bottom-nav-item">&#129514; Mockito</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">&#128218; More</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a href="#ch2" class="bottom-nav-item">&#128203; Assertions</a>
+                <a href="#ch3" class="bottom-nav-item">&#9851; Lifecycle</a>
+                <a href="#ch4" class="bottom-nav-item">&#127959; Conditions</a>
+                <a href="#ch5" class="bottom-nav-item">&#128260; Parameterized</a>
+                <a href="#ch6" class="bottom-nav-item">&#128257; Repeat &amp; Order</a>
+                <a href="#ch7" class="bottom-nav-item">&#129514; Mockito</a>
+                <a href="#ch8" class="bottom-nav-item">&#9201; Timeout &amp; Parallel</a>
+                <a href="#ch9" class="bottom-nav-item">&#129680; Extensions</a>
+                <a href="#ch10" class="bottom-nav-item">&#128202; Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">Java Unit Test</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#ch1" class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">&#128295;</div><span>JUnit 5 Dasar</span></a>
+        <a href="#ch2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#128203;</div><span>Assertions</span></a>
+        <a href="#ch3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#9851;</div><span>Test Lifecycle</span></a>
+        <a href="#ch4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#127959;</div><span>Conditional Tests</span></a>
+        <details class="sidebar-menu-accordion">
+            <summary class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">&#128257;</strong><span>Test Variations</span></summary>
+            <div class="sidebar-menu-accordion-elements">
+                <a href="#ch5" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">&#128260;</strong><span>Parameterized Test</span></a>
+                <a href="#ch6" class="sidebar-menu-item"><strong class="sidebar-menu-item-svg">&#128257;</strong><span>Repeated &amp; Ordered</span></a>
+            </div>
+        </details>
+        <a href="#ch7" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#129514;</div><span>Mockito</span></a>
+        <a href="#ch8" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#9201;</div><span>Timeout &amp; Parallel</span></a>
+        <a href="#ch9" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#129680;</div><span>Extensions</span></a>
+        <a href="#ch10" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">&#128202;</div><span>Summary &amp; Best Practice</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 20 20" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">Java Unit Test Course</span></a>
+        </div>
+        <div class="container-header-button-show-sidebar" onclick="showMenu()">
+            <svg id="get-menu" viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+    <section class="container-content">
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div class="ch-banner">
+                <div class="ch-banner-num">&#128218; Self-Paced Learning Module</div>
+                <div class="ch-banner-title">Java Unit Test dengan JUnit 5 &amp; Mockito</div>
+                <div class="ch-banner-desc">Panduan lengkap unit testing di Java untuk developer PHP/Laravel. Dari @Test dasar hingga Mockito, Parameterized Test, Parallel Execution — semua dengan analogi PHPUnit yang familiar!</div>
+            </div>
+            <div class="flex-ais-jcs gap-m mt-m">
+                <div class="badge text-white bg-primary"><p>JUnit 5 Jupiter</p></div>
+                <div class="badge text-white bg-warning"><p>Mockito</p></div>
+                <div class="badge badge-small bg-success"><p>PHPUnit &#8594; JUnit</p></div>
+                <div class="badge badge-small bg-danger"><p>10 Chapters</p></div>
+            </div>
+            <p class="mt-m">Project yang kita pelajari: <strong>belajar-java-unit-test</strong> dari package <code>programmer.zaman.now.test</code>. Berisi contoh lengkap penggunaan JUnit 5 Jupiter + Mockito untuk unit testing di Java.</p>
+        </div>
+
+        <!-- CH1: JUnit 5 Dasar -->
+        <div class="padding-top-ideal-distance-to-header" id="ch1">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 1</div>
+                    <div class="ch-banner-title">&#128295; JUnit 5 Dasar: @Test, @DisplayName, @Disabled</div>
+                    <div class="ch-banner-desc">Pengenalan JUnit 5 Jupiter — framework unit testing standar di ekosistem Java. Pelajari perbedaannya dengan PHPUnit dan anatomi test class pertamamu!</div>
+                </div>
+                <div class="text-title">Subject Under Test: Calculator.java</div>
+                <p>Sebelum nulis test, kita butuh class yang ingin di-test. Ini disebut <strong>Subject Under Test (SUT)</strong> atau <strong>System Under Test</strong>.</p>
+                <div class="code-block"><pre><code class="language-java">// FILE: Calculator.java
+public class Calculator {
+
+    public Integer divide(Integer first, Integer second) {
+        if (second == 0) {                                   // Line 1
+            throw new IllegalArgumentException(
+                "Can not divide by zero"
+            );
+        } else {
+            return first / second;
+        }
+    }
+
+    public Integer add(Integer first, Integer second) {      // Line 2
+        return first + second;
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>throw new IllegalArgumentException(...)</code> — Melempar exception saat input tidak valid. Di PHP ini setara dengan <code>throw new \InvalidArgumentException('...')</code>. Ini adalah <strong>Guard Clause</strong> yang akan kita test dengan <code>assertThrows()</code>.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p>Method <code>add()</code> sangat simpel — ideal untuk mulai belajar testing. Di dunia nyata, method yang di-test bisa jauh lebih kompleks, melibatkan database, API call, dll.</p></div>
+                </div>
+
+                <div class="text-title mt-l">Anatomi Test Class: CalculatorTest.java</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: CalculatorTest.java
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@DisplayNameGeneration(SimpleDisplayNameGenerator.class)    // Line 1
+public class CalculatorTest {
+
+    private Calculator calculator = new Calculator();       // Line 2
+
+    @BeforeAll                                              // Line 3
+    public static void beforeAll() {
+        System.out.println("Before all");
+    }
+
+    @AfterAll                                               // Line 4
+    public static void afterAll() {
+        System.out.println("After all");
+    }
+
+    @BeforeEach                                             // Line 5
+    public void setUp() {
+        System.out.println("Before each");
+    }
+
+    @AfterEach                                              // Line 6
+    public void tearDown() {
+        System.out.println("After each");
+    }
+
+    @Test                                                   // Line 7
+    public void testAddSuccess() {
+        var result = calculator.add(10, 10);
+        assertEquals(20, result);
+    }
+
+    @Test
+    @Disabled                                               // Line 8
+    public void testComingSoon() {
+        // Test ini di-skip
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>@DisplayNameGeneration</code> — Menggunakan custom generator untuk nama tampilan test. <code>SimpleDisplayNameGenerator</code> menghasilkan nama seperti "Test CalculatorTest.testAddSuccess". Di PHPUnit, nama test method langsung menjadi label.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>private Calculator calculator = new Calculator();</code> — Instance SUT dibuat sebagai field. <strong>Penting:</strong> JUnit 5 default membuat instance test class baru untuk setiap test method (PER_METHOD lifecycle). Artinya <code>calculator</code> selalu fresh untuk setiap test!</p></div>
+                    <div class="le-item"><span class="ln">Line 3</span><p><code>@BeforeAll</code> — Dijalankan SEKALI sebelum semua test method di class ini. Harus <code>static</code> karena JUnit memanggil method ini sebelum membuat instance class. Setara dengan <code>setUpBeforeClass()</code> di PHPUnit.</p></div>
+                    <div class="le-item"><span class="ln">Line 4</span><p><code>@AfterAll</code> — Dijalankan SEKALI setelah semua test selesai. Harus <code>static</code> juga. Setara dengan <code>tearDownAfterClass()</code> di PHPUnit.</p></div>
+                    <div class="le-item"><span class="ln">Line 5</span><p><code>@BeforeEach</code> — Dijalankan sebelum SETIAP test method. Setara dengan <code>setUp()</code> di PHPUnit. Gunakan untuk inisialisasi yang dibutuhkan setiap test.</p></div>
+                    <div class="le-item"><span class="ln">Line 6</span><p><code>@AfterEach</code> — Dijalankan setelah setiap test method. Setara dengan <code>tearDown()</code> di PHPUnit. Gunakan untuk cleanup: close connection, delete temp files, dll.</p></div>
+                    <div class="le-item"><span class="ln">Line 7</span><p><code>@Test</code> — Menandai method sebagai test case. Setara dengan <code>/** @test */</code> atau prefix <code>test</code> di PHPUnit. Tidak ada parameter return — jika tidak throw exception, test dianggap LULUS.</p></div>
+                    <div class="le-item"><span class="ln">Line 8</span><p><code>@Disabled</code> — Skip test ini. Setara dengan <code>@test @skip</code> atau <code>markTestSkipped()</code> di PHPUnit. Berguna saat feature belum siap tapi test sudah ditulis.</p></div>
+                </div>
+
+                <div class="text-title mt-l">Perbandingan Lifecycle: PHPUnit vs JUnit 5</div>
+                <div class="table-content"><table>
+                    <thead><tr><th>Lifecycle</th><th>PHPUnit</th><th>JUnit 5</th></tr></thead>
+                    <tbody>
+                    <tr><td>Sebelum semua test</td><td><code>setUpBeforeClass()</code></td><td><code>@BeforeAll static void</code></td></tr>
+                    <tr><td>Sebelum setiap test</td><td><code>setUp()</code></td><td><code>@BeforeEach void</code></td></tr>
+                    <tr><td>Setelah setiap test</td><td><code>tearDown()</code></td><td><code>@AfterEach void</code></td></tr>
+                    <tr><td>Setelah semua test</td><td><code>tearDownAfterClass()</code></td><td><code>@AfterAll static void</code></td></tr>
+                    <tr><td>Tandai sebagai test</td><td><code>/** @test */</code> atau prefix <code>test</code></td><td><code>@Test</code></td></tr>
+                    <tr><td>Skip test</td><td><code>markTestSkipped()</code></td><td><code>@Disabled</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p>Di PHPUnit, kamu membuat class yang extend <code>TestCase</code>. Di JUnit 5, class tidak perlu extend apapun! JUnit 5 menggunakan annotation + reflection untuk mendeteksi test method. Ini jauh lebih fleksibel — kamu bisa extend class lain untuk reuse setup code (lihat <code>AbstractCalculatorTest</code> di Chapter 9).</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 1</div>
+                    <p class="mb-m"><strong>Q:</strong> Kenapa <code>@BeforeAll</code> dan <code>@AfterAll</code> harus <code>static</code> di JUnit 5 (dengan lifecycle default PER_METHOD)?</p>
+                    <div id="q1-opts">
+                        <div class="qopt" onclick="AQ('q1','a',this)">a) Karena method static berjalan lebih cepat di JVM</div>
+                        <div class="qopt" onclick="AQ('q1','b',this)">b) Karena JUnit memanggil method ini sebelum membuat instance class — hanya method static yang bisa dipanggil tanpa instance</div>
+                        <div class="qopt" onclick="AQ('q1','c',this)">c) Karena aturan Java mengharuskan method test selalu static</div>
+                        <div class="qopt" onclick="AQ('q1','d',this)">d) Tidak ada alasan khusus, itu hanya konvensi JUnit 5</div>
+                    </div>
+                    <div id="q1-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2: Assertions -->
+        <div class="padding-top-ideal-distance-to-header" id="ch2">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 2</div>
+                    <div class="ch-banner-title">&#128203; Assertions: Verifikasi Hasil Test</div>
+                    <div class="ch-banner-desc">Assertions adalah jantung dari setiap test — ini cara kamu "mengklaim" bahwa kode berjalan sesuai ekspektasi. JUnit 5 menyediakan API Assertions yang kaya.</div>
+                </div>
+                <div class="text-title">Assertions yang Digunakan dalam Project</div>
+                <div class="code-block"><pre><code class="language-java">import static org.junit.jupiter.api.Assertions.*;
+
+// 1. assertEquals — paling sering dipakai
+@Test
+public void testAddSuccess() {
+    var result = calculator.add(10, 10);
+    assertEquals(20, result);             // expected, actual
+}                                         // PHP: $this->assertEquals(20, $result)
+
+// 2. assertThrows — test bahwa exception dilempar
+@Test
+public void testDivideFailed() {
+    assertThrows(IllegalArgumentException.class, () -> {
+        calculator.divide(10, 0);         // Lambda yang harus throw exception
+    });
+}                                         // PHP: $this->expectException(\InvalidArgumentException::class)
+
+// 3. assertNotNull — pastikan hasil tidak null
+@Test
+void testRegisterSuccess() {
+    var person = personService.register("Eko");
+    assertNotNull(person);               // person tidak boleh null
+    assertNotNull(person.getId());       // id juga tidak boleh null
+    assertEquals("Eko", person.getName());
+}</code></pre></div>
+
+                <div class="text-title mt-l">Tabel Lengkap Assertions JUnit 5</div>
+                <div class="table-content"><table>
+                    <thead><tr><th>Method</th><th>Kegunaan</th><th>Analogi PHPUnit</th></tr></thead>
+                    <tbody>
+                    <tr><td><code>assertEquals(exp, actual)</code></td><td>Nilai sama persis</td><td><code>assertEquals()</code></td></tr>
+                    <tr><td><code>assertNotEquals(exp, actual)</code></td><td>Nilai berbeda</td><td><code>assertNotEquals()</code></td></tr>
+                    <tr><td><code>assertTrue(condition)</code></td><td>Kondisi bernilai true</td><td><code>assertTrue()</code></td></tr>
+                    <tr><td><code>assertFalse(condition)</code></td><td>Kondisi bernilai false</td><td><code>assertFalse()</code></td></tr>
+                    <tr><td><code>assertNull(obj)</code></td><td>Object adalah null</td><td><code>assertNull()</code></td></tr>
+                    <tr><td><code>assertNotNull(obj)</code></td><td>Object bukan null</td><td><code>assertNotNull()</code></td></tr>
+                    <tr><td><code>assertThrows(Class, lambda)</code></td><td>Lambda harus throw exception</td><td><code>expectException()</code></td></tr>
+                    <tr><td><code>assertAll(executables...)</code></td><td>Jalankan multiple assertions, laporkan semua kegagalan</td><td>Tidak ada padanan langsung</td></tr>
+                    <tr><td><code>assertTimeout(duration, exec)</code></td><td>Eksekusi harus selesai dalam durasi tertentu</td><td>Tidak ada padanan langsung</td></tr>
+                    </tbody>
+                </table></div>
+
+                <div class="ibox"><div class="ibox-title">&#128161; Insight: var di Java (Java 10+)</div>
+                    <p>Kamu pasti melihat <code>var result = calculator.add(10, 10);</code>. <code>var</code> adalah <strong>Local Variable Type Inference</strong> di Java 10+. Java menginfer tipe dari sisi kanan assignment: karena <code>add()</code> return <code>Integer</code>, maka <code>result</code> otomatis bertipe <code>Integer</code>. Ini mirip <code>$result = ...</code> di PHP tapi Java tetap strongly-typed — tipe sudah ditentukan saat kompilasi, hanya kamu tidak perlu menulisnya eksplisit.</p></div>
+
+                <div class="text-title mt-l">Assumptions: Conditionally Run Test</div>
+                <div class="code-block"><pre><code class="language-java">import static org.junit.jupiter.api.Assumptions.*;
+import org.opentest4j.TestAbortedException;
+
+// Cara 1: Manual throw TestAbortedException
+@Test
+public void testAborted() {
+    var profile = System.getenv("PROFILE");
+    if (!"DEV".equals(profile)) {
+        throw new TestAbortedException(       // Line A
+            "Test dibatalkan karena bukan DEV"
+        );
+    }
+    // Test ini hanya berjalan jika PROFILE=DEV
+}
+
+// Cara 2: Menggunakan assumeTrue (lebih ringkas)
+@Test
+public void testAssumptions() {
+    assumeTrue("DEV".equals(System.getenv("PROFILE"))); // Line B
+    // Jika asumsi false → test di-ABORT (bukan FAIL, bukan PASS)
+    // unit test untuk DEV saja
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>TestAbortedException</code> — Exception khusus JUnit yang menandai test sebagai <strong>ABORTED</strong> (bukan FAILED). Di report test, ini muncul sebagai "skipped" atau "aborted". Berbeda dengan assertion failure yang muncul sebagai "failed".</p></div>
+                    <div class="le-item"><span class="ln">Line B</span><p><code>assumeTrue(condition)</code> — Jika condition <code>false</code>, test langsung di-abort dengan <code>TestAbortedException</code>. Analoginya: "Saya <em>mengasumsikan</em> bahwa kita di environment DEV. Jika tidak, skip saja test ini."</p></div>
+                </div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p><code>assumeTrue()</code> di JUnit mirip dengan <code>$this->markTestSkipped('alasan')</code> di PHPUnit, tapi lebih elegan karena menggunakan kondisi. Di PHPUnit kamu juga bisa gunakan <code>@requires</code> annotation untuk kondisi PHP version, extension, dsb.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 2</div>
+                    <p class="mb-m"><strong>Q:</strong> Apa perbedaan antara test yang <strong>FAILED</strong> dan test yang <strong>ABORTED</strong> di JUnit 5?</p>
+                    <div id="q2-opts">
+                        <div class="qopt" onclick="AQ('q2','a',this)">a) Tidak ada perbedaan — keduanya berarti test gagal</div>
+                        <div class="qopt" onclick="AQ('q2','b',this)">b) FAILED berarti assertion gagal (bug ditemukan), ABORTED berarti prasyarat tidak terpenuhi sehingga test di-skip (bukan bug)</div>
+                        <div class="qopt" onclick="AQ('q2','c',this)">c) ABORTED berarti JVM crash, FAILED berarti test timeout</div>
+                        <div class="qopt" onclick="AQ('q2','d',this)">d) ABORTED berarti test lulus, FAILED berarti test di-skip</div>
+                    </div>
+                    <div id="q2-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3: Lifecycle -->
+        <div class="padding-top-ideal-distance-to-header" id="ch3">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 3</div>
+                    <div class="ch-banner-title">&#9851; Test Lifecycle: PER_METHOD vs PER_CLASS</div>
+                    <div class="ch-banner-desc">JUnit 5 default membuat instance test class baru untuk setiap test method. Ini penting dipahami untuk mengerti mengapa field test tidak bisa dibagikan antar test secara default!</div>
+                </div>
+                <div class="text-title">Default Lifecycle: PER_METHOD (Isolasi Maksimal)</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: LifecycleTest.java
+public class LifecycleTest {
+
+    private String temp;      // Field instance
+
+    @Test
+    void testA() {
+        temp = "Eko";         // Set field
+        System.out.println("testA: temp = " + temp); // "Eko"
+    }
+
+    @Test
+    void testB() {
+        System.out.println("testB: temp = " + temp); // null !
+    }
+}
+
+// JUnit 5 menjalankan seperti ini (PER_METHOD):
+// new LifecycleTest().testA()  → temp = "Eko" lalu dibuang
+// new LifecycleTest().testB()  → temp = null (instance baru!)</code></pre></div>
+
+                <div class="ibox"><div class="ibox-title">&#128161; Kenapa PER_METHOD?</div>
+                    <p>Test yang saling bergantung adalah <strong>test smell</strong> — tanda test yang buruk. Jika testB bergantung pada state yang diset testA, maka testB tidak bisa dijalankan secara independen. JUnit 5 memaksa isolasi dengan membuat instance baru per test, sehingga kamu tidak bisa "tidak sengaja" membagikan state antar test. Ini mendorong penulisan test yang <strong>independent</strong> dan <strong>idempotent</strong>.</p></div>
+
+                <div class="text-title mt-l">Mengubah ke PER_CLASS: @TestInstance</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: OrderedTest.java
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)  // Line 1
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class OrderedTest {
+
+    private int counter = 0;   // Field shared antar test!
+
+    @BeforeAll
+    void beforeAll() {         // TIDAK perlu static!
+        System.out.println("Before all");
+    }
+
+    @AfterAll
+    void afterAll() {          // TIDAK perlu static!
+        System.out.println("After all");
+    }
+
+    @Test
+    @Order(1)
+    void test3() {
+        counter++;
+        System.out.println(counter); // Output: 1
+    }
+
+    @Test
+    @Order(2)
+    void test1() {
+        counter++;
+        System.out.println(counter); // Output: 2
+    }
+
+    @Test
+    @Order(3)
+    void test2() {
+        counter++;
+        System.out.println(counter); // Output: 3
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>@TestInstance(PER_CLASS)</code> — Satu instance class digunakan untuk semua test method. Efeknya: (1) field <code>counter</code> tidak di-reset antar test, (2) <code>@BeforeAll</code> dan <code>@AfterAll</code> TIDAK perlu <code>static</code> — karena instance sudah ada saat method dipanggil.</p></div>
+                </div>
+
+                <div class="text-title mt-l">Nested Tests: @Nested</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: QueueTest.java
+@DisplayName("A Queue")
+public class QueueTest {
+
+    private Queue&lt;String&gt; queue;
+
+    @Nested                                   // Line A
+    @DisplayName("when new")
+    public class WhenNew {
+
+        @BeforeEach
+        void setUp() {
+            queue = new LinkedList&lt;&gt;();        // Setup untuk nested class
+        }
+
+        @Test
+        @DisplayName("when offer, size must be 1")
+        void offerNewData() {
+            queue.offer("Eko");
+            Assertions.assertEquals(1, queue.size());
+        }
+
+        @Test
+        @DisplayName("when offer 2 data, size must be 2")
+        void offerMoreData() {
+            queue.offer("Eko");
+            queue.offer("Kurniawan");
+            Assertions.assertEquals(2, queue.size());
+        }
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>@Nested</code> — Memungkinkan kamu mengelompokkan test yang berkaitan ke dalam inner class. Sangat berguna untuk mendeskripsikan berbagai <em>konteks</em> test (saat kosong, saat ada data, saat error, dll). Di report, test muncul terindentasi: "A Queue &gt; when new &gt; when offer, size must be 1". Ini membuat test report mudah dibaca seperti spesifikasi!</p></div>
+                </div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p>Di PHPUnit, kamu bisa bikin multiple test class untuk satu fitur, tapi tidak ada konsep "nested" secara native. Beberapa developer pakai Pest PHP yang punya <code>describe()</code>/<code>it()</code> untuk struktur serupa. <code>@Nested</code> di JUnit 5 memberikan struktur BDD-like yang sangat rapi tanpa library tambahan.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 3</div>
+                    <p class="mb-m"><strong>Q:</strong> Di <code>OrderedTest.java</code> dengan <code>@TestInstance(PER_CLASS)</code>, field <code>counter</code> dimulai dari 0. Setelah ketiga test dijalankan (dengan <code>@Order</code> 1,2,3), nilai <code>counter</code> adalah?</p>
+                    <div id="q3-opts">
+                        <div class="qopt" onclick="AQ('q3','a',this)">a) Selalu 1 — karena instance baru dibuat setiap test (PER_METHOD)</div>
+                        <div class="qopt" onclick="AQ('q3','b',this)">b) 3 — karena PER_CLASS menggunakan instance yang sama, counter++ dijalankan tiga kali akumulatif</div>
+                        <div class="qopt" onclick="AQ('q3','c',this)">c) 0 — karena @BeforeEach mereset counter setiap kali</div>
+                        <div class="qopt" onclick="AQ('q3','d',this)">d) Error — field tidak bisa di-share antar test di JUnit 5</div>
+                    </div>
+                    <div id="q3-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4: Conditional -->
+        <div class="padding-top-ideal-distance-to-header" id="ch4">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 4</div>
+                    <div class="ch-banner-title">&#127959; Conditional Tests: @Enabled &amp; @Disabled</div>
+                    <div class="ch-banner-desc">JUnit 5 menyediakan annotations untuk menjalankan test hanya pada kondisi tertentu — OS, versi JRE, system property, atau environment variable. Sangat powerful untuk CI/CD!</div>
+                </div>
+                <div class="text-title">Jenis-Jenis Conditional Annotations</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: ConditionTest.java
+import org.junit.jupiter.api.condition.*;
+
+public class ConditionTest {
+
+    // ===== OS-based =====
+    @Test
+    @EnabledOnOs({OS.WINDOWS})                   // Line 1
+    public void testRunOnlyOnWindows() { }
+
+    @Test
+    @DisabledOnOs({OS.WINDOWS})                  // Line 2
+    public void testDisabledOnWindows() { }
+
+    // ===== JRE Version-based =====
+    @Test
+    @EnabledOnJre({JRE.JAVA_8})
+    void testEnabledOnJava8() { }
+
+    @Test
+    @EnabledForJreRange(min = JRE.JAVA_11, max = JRE.JAVA_15) // Line 3
+    void testEnabledOnJava11To15() { }
+
+    // ===== System Property-based =====
+    @Test
+    @EnabledIfSystemProperties({
+        @EnabledIfSystemProperty(
+            named = "java.vendor",
+            matches = "Oracle Corporation"         // Line 4
+        )
+    })
+    void testEnabledOnJavaVendorOracle() { }
+
+    // ===== Environment Variable-based =====
+    @Test
+    @EnabledIfEnvironmentVariables({
+        @EnabledIfEnvironmentVariable(
+            named = "PROFILE",
+            matches = "DEV"                        // Line 5
+        )
+    })
+    void testEnabledOnProfileDev() { }
+
+    @Test
+    @DisabledIfEnvironmentVariables({
+        @DisabledIfEnvironmentVariable(named = "PROFILE", matches = "DEV")
+    })
+    void testDisabledOnProfileDev() { }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>@EnabledOnOs({OS.WINDOWS})</code> — Test hanya jalan di Windows. Berguna saat kamu punya kode yang menggunakan Windows-specific API (file path separator, registry, dll). OS yang tersedia: <code>WINDOWS</code>, <code>LINUX</code>, <code>MAC</code>, <code>SOLARIS</code>.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>@DisabledOnOs</code> — Kebalikan dari <code>@EnabledOnOs</code>. Setiap annotation <code>@Enabled*</code> punya pasangan <code>@Disabled*</code> yang melakukan hal sebaliknya.</p></div>
+                    <div class="le-item"><span class="ln">Line 3</span><p><code>@EnabledForJreRange(min=JAVA_11, max=JAVA_15)</code> — Test hanya jalan di Java 11 sampai 15 (inklusif). Sangat berguna saat testing fitur yang hanya ada di versi Java tertentu.</p></div>
+                    <div class="le-item"><span class="ln">Line 4</span><p><code>named="java.vendor", matches="Oracle Corporation"</code> — <code>named</code> adalah nama system property, <code>matches</code> adalah regex pattern. Lihat semua system property dengan <code>System.getProperties()</code>.</p></div>
+                    <div class="le-item"><span class="ln">Line 5</span><p><code>named="PROFILE", matches="DEV"</code> — <code>PROFILE</code> adalah environment variable. Ini sangat berguna di CI/CD: set <code>PROFILE=INTEGRATION</code> di server CI untuk menjalankan hanya integration test, atau <code>PROFILE=DEV</code> untuk test tertentu yang hanya relevan di development.</p></div>
+                </div>
+
+                <div class="ibox"><div class="ibox-title">&#128161; Insight: Melihat Semua System Properties</div>
+                    <div class="code-block"><pre><code class="language-java">@Test
+void testSystemProperties() {
+    Properties properties = System.getProperties();
+    properties.forEach((key, value) ->
+        System.out.println(key + ": " + value)
+    );
+    // Output contoh:
+    // java.vendor: Eclipse Adoptium
+    // java.version: 17.0.9
+    // os.name: Linux
+    // user.home: /home/user
+    // ... dsb
+}</code></pre></div>
+                    <p>Ini setara dengan <code>phpinfo()</code> atau <code>php_uname()</code> di PHP. Jalankan test ini untuk melihat semua system properties yang tersedia di environment kamu — berguna saat menulis <code>@EnabledIfSystemProperty</code>.</p></div>
+
+                <div class="text-title mt-l">TestInfo &amp; Tags</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: InformationTest.java
+@DisplayName("information test")
+public class InformationTest {
+
+    @Test
+    @Tags({@Tag("one"), @Tag("two")})     // Line A
+    @DisplayName("this is test1")
+    void test1(TestInfo info) {           // Line B — inject TestInfo
+        System.out.println(info.getDisplayName());   // "this is test1"
+        System.out.println(info.getTags());          // [one, two]
+        System.out.println(info.getTestClass()
+            .orElse(null));                          // class InformationTest
+        System.out.println(info.getTestMethod()
+            .orElse(null));                          // void test1(TestInfo)
+    }
+}
+
+// FILE: SampleIntegrationTest.java
+@Tags({@Tag("integration-test")})         // Line C — Tag di level class
+public class SampleIntegrationTest {
+    @Test void test1() { }
+    @Test void test2() { }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>@Tag</code> — Label yang bisa digunakan untuk filter test saat menjalankan. Misalnya: jalankan hanya test berlabel <code>"integration-test"</code> di server CI: <code>mvn test -Dgroups=integration-test</code>. Setara dengan <code>@group</code> di PHPUnit.</p></div>
+                    <div class="le-item"><span class="ln">Line B</span><p><code>TestInfo info</code> — JUnit 5 bisa inject <code>TestInfo</code> sebagai parameter method test! Ini adalah <strong>Dependency Injection</strong> native JUnit — framework otomatis menyediakan object <code>TestInfo</code> yang berisi metadata test yang sedang berjalan.</p></div>
+                    <div class="le-item"><span class="ln">Line C</span><p>Tag bisa ditaruh di level class — semua test di class itu otomatis mendapat tag tersebut. Berguna untuk memisahkan unit test dari integration test.</p></div>
+                </div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p>Di PHPUnit, kamu bisa skip test berdasarkan kondisi dengan <code>@requires</code> annotation atau <code>markTestSkipped()</code>. <code>@Tag</code> di JUnit setara dengan <code>@group</code> di PHPUnit yang bisa digunakan untuk menjalankan subset test: <code>phpunit --group integration</code>.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 4</div>
+                    <p class="mb-m"><strong>Q:</strong> Kamu punya test yang hanya relevan di environment CI/CD dan tidak perlu dijalankan di local dev. Annotation apa yang paling tepat?</p>
+                    <div id="q4-opts">
+                        <div class="qopt" onclick="AQ('q4','a',this)">a) <code>@Disabled</code> — skip selamanya</div>
+                        <div class="qopt" onclick="AQ('q4','b',this)">b) <code>@EnabledIfEnvironmentVariable(named="CI", matches="true")</code> — hanya jalan jika environment variable CI=true (umumnya di-set otomatis oleh CI/CD runner)</div>
+                        <div class="qopt" onclick="AQ('q4','c',this)">c) <code>@EnabledOnJre(JRE.JAVA_8)</code> — jalankan hanya di Java 8</div>
+                        <div class="qopt" onclick="AQ('q4','d',this)">d) <code>@DisabledOnOs(OS.WINDOWS)</code> — nonaktifkan di Windows</div>
+                    </div>
+                    <div id="q4-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5: Parameterized Test -->
+        <div class="padding-top-ideal-distance-to-header" id="ch5">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 5</div>
+                    <div class="ch-banner-title">&#128260; Parameterized Test: Satu Test, Banyak Data</div>
+                    <div class="ch-banner-desc">Daripada menulis 10 test method yang hampir identik, gunakan Parameterized Test! Satu test method dijalankan berulang dengan data berbeda.</div>
+                </div>
+                <div class="text-title">@ValueSource: Data Langsung di Annotation</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: RandomCalculatorTest.java
+
+@DisplayName("Test calculator")
+@ParameterizedTest(name = "{displayName} dengan parameter {0}")  // Line 1
+@ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 45, 34, 56})      // Line 2
+void testWithParameter(int value) {                              // Line 3
+    var expected = value + value;
+    var result = calculator.add(value, value);
+    Assertions.assertEquals(expected, result);
+}
+// JUnit akan menjalankan test ini 11 kali:
+// "Test calculator dengan parameter 1" → add(1,1) == 2  ✅
+// "Test calculator dengan parameter 2" → add(2,2) == 4  ✅
+// ... dst</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>@ParameterizedTest(name=...)</code> — Mengganti <code>@Test</code>. Parameter <code>name</code> adalah template nama untuk setiap iterasi: <code>{displayName}</code> = nama dari <code>@DisplayName</code>, <code>{0}</code> = nilai parameter pertama. Setiap iterasi muncul sebagai test terpisah di report.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>@ValueSource(ints = {...})</code> — Source data berupa array literal. Tersedia untuk: <code>ints</code>, <code>longs</code>, <code>doubles</code>, <code>strings</code>, <code>booleans</code>, <code>classes</code>, dll.</p></div>
+                    <div class="le-item"><span class="ln">Line 3</span><p>Parameter <code>int value</code> diisi otomatis oleh JUnit dari <code>@ValueSource</code>. Tidak perlu melakukan apa-apa — JUnit mengurus injeksi nilainya.</p></div>
+                </div>
+
+                <div class="text-title mt-l">@MethodSource: Data dari Method</div>
+                <div class="code-block"><pre><code class="language-java">// Method yang menyediakan data — harus static!
+public static List&lt;Integer&gt; parameterSource() {        // Line A
+    return List.of(1, 2, 34, 56, 33, 65, 67, 35);
+}
+
+@DisplayName("Test calculator")
+@ParameterizedTest(name = "{displayName} dengan parameter {0}")
+@MethodSource({"parameterSource"})                      // Line B
+void testWithMethodSource(Integer value) {
+    var expected = value + value;
+    var result = calculator.add(value, value);
+    Assertions.assertEquals(expected, result);
+}
+// Menjalankan test 8 kali dengan nilai dari List</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>public static List&lt;Integer&gt; parameterSource()</code> — Method sumber data harus <code>static</code> dan namanya cocok dengan string di <code>@MethodSource</code>. Bisa return <code>Stream</code>, <code>List</code>, <code>Iterable</code>, atau array. Berguna saat data perlu di-generate secara programatik atau dibaca dari file/database.</p></div>
+                    <div class="le-item"><span class="ln">Line B</span><p><code>@MethodSource({"parameterSource"})</code> — Referensikan nama method sumber data sebagai String. Bisa lebih dari satu method: <code>@MethodSource({"source1","source2"})</code>.</p></div>
+                </div>
+
+                <div class="ibox"><div class="ibox-title">&#128161; Insight: Kapan Pakai Parameterized Test?</div>
+                    <p>Gunakan Parameterized Test saat kamu punya:</p>
+                    <ul>
+                        <li><strong>Boundary values</strong>: test input 0, 1, -1, MAX_INT, MIN_INT</li>
+                        <li><strong>Multiple valid inputs</strong>: semua harus menghasilkan hasil yang sama</li>
+                        <li><strong>Data-driven test</strong>: data dibaca dari CSV/database/API</li>
+                        <li><strong>Equivalence classes</strong>: kelompok input yang diperlakukan sama oleh kode</li>
+                    </ul>
+                    <p>Ini setara dengan <code>@dataProvider</code> di PHPUnit!</p></div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <div class="code-block"><pre><code class="language-php">// PHPUnit @dataProvider
+public function additionProvider(): array {
+    return [[1,1,2], [2,2,4], [3,3,6]];
+}
+
+/** @dataProvider additionProvider */
+public function testAdd(int $a, int $b, int $expected): void {
+    $this->assertEquals($expected, $this->calculator->add($a, $b));
+}
+
+// JUnit 5 @MethodSource — konsep identik!
+public static Stream&lt;Arguments&gt; additionProvider() {
+    return Stream.of(
+        Arguments.of(1, 1, 2),
+        Arguments.of(2, 2, 4),
+        Arguments.of(3, 3, 6)
+    );
+}
+@ParameterizedTest
+@MethodSource("additionProvider")
+void testAdd(int a, int b, int expected) {
+    assertEquals(expected, calculator.add(a, b));
+}</code></pre></div></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 5</div>
+                    <p class="mb-m"><strong>Q:</strong> Jika <code>@ValueSource(ints = {1, 2, 3, 4, 5})</code>, berapa kali test method akan dijalankan oleh JUnit?</p>
+                    <div id="q5-opts">
+                        <div class="qopt" onclick="AQ('q5','a',this)">a) 1 kali — semua nilai dipass sekaligus sebagai array</div>
+                        <div class="qopt" onclick="AQ('q5','b',this)">b) 5 kali — satu kali untuk setiap nilai dalam array, masing-masing sebagai test terpisah</div>
+                        <div class="qopt" onclick="AQ('q5','c',this)">c) Sesuai jumlah assertion di dalam test method</div>
+                        <div class="qopt" onclick="AQ('q5','d',this)">d) 0 kali — @ParameterizedTest butuh @MethodSource, tidak bisa pakai @ValueSource</div>
+                    </div>
+                    <div id="q5-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH6: Repeated & Ordered -->
+        <div class="padding-top-ideal-distance-to-header" id="ch6">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 6</div>
+                    <div class="ch-banner-title">&#128257; Repeated Test &amp; Test Order</div>
+                    <div class="ch-banner-desc"><code>@RepeatedTest</code> untuk menjalankan test berulang kali (berguna untuk test random/flaky), dan <code>@TestMethodOrder</code> untuk mengontrol urutan eksekusi test.</div>
+                </div>
+                <div class="text-title">@RepeatedTest: Ulang Test N Kali</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: RandomCalculatorTest.java
+
+@DisplayName("Test random calculator")
+@RepeatedTest(                                           // Line 1
+    value = 10,
+    name = "{displayName} ke {currentRepetition} dari {totalRepetitions}"
+)
+void testRandomRepeat(TestInfo info, Random random) {    // Line 2
+    var a = random.nextInt();
+    var b = random.nextInt();
+    var result = calculator.add(a, b);
+    var expected = a + b;
+    Assertions.assertEquals(expected, result);
+}
+// Output di test report:
+// "Test random calculator ke 1 dari 10"
+// "Test random calculator ke 2 dari 10"
+// ... sampai ke 10
+
+// Versi dengan RepetitionInfo:
+@RepeatedTest(value = 10, name = "{displayName}")
+void testRandomRepeatInfo(
+    TestInfo info,
+    Random random,
+    RepetitionInfo repetitionInfo           // Line 3
+) {
+    System.out.println(
+        info.getDisplayName() + " ke "
+        + repetitionInfo.getCurrentRepetition()
+        + " dari " + repetitionInfo.getTotalRepetitions()
+    );
+    // ...
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>@RepeatedTest(value=10)</code> — Jalankan test ini 10 kali. Template <code>name</code> bisa menggunakan: <code>{displayName}</code>, <code>{currentRepetition}</code>, <code>{totalRepetitions}</code>. Berguna untuk test yang melibatkan randomness atau untuk mendeteksi <em>flaky test</em> (test yang kadang lulus kadang gagal).</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>void testRandomRepeat(TestInfo info, Random random)</code> — JUnit 5 inject parameter <code>TestInfo</code> dan <code>Random</code> otomatis! <code>Random</code> bisa di-inject karena ada <code>RandomParameterResolver</code> extension (lihat Chapter 9).</p></div>
+                    <div class="le-item"><span class="ln">Line 3</span><p><code>RepetitionInfo repetitionInfo</code> — Object yang berisi informasi repetisi saat ini. Berguna jika kamu perlu perilaku berbeda di repetisi tertentu (misal: inisialisasi berbeda di repetisi pertama).</p></div>
+                </div>
+
+                <div class="text-title mt-l">@TestMethodOrder: Urutan Eksekusi Test</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: OrderedTest.java
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)    // Line A
+public class OrderedTest {
+
+    private int counter = 0;
+
+    @Test @Order(1)       // Dijalankan PERTAMA
+    void test3() { counter++; System.out.println(counter); } // Output: 1
+
+    @Test @Order(2)       // Dijalankan KEDUA
+    void test1() { counter++; System.out.println(counter); } // Output: 2
+
+    @Test @Order(3)       // Dijalankan KETIGA
+    void test2() { counter++; System.out.println(counter); } // Output: 3
+}
+// Perhatikan: nama method tidak harus sesuai urutan @Order!</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>@TestMethodOrder(MethodOrderer.OrderAnnotation.class)</code> — Aktifkan pengurutan berdasarkan <code>@Order</code>. Alternatif lain: <code>MethodOrderer.MethodName.class</code> (urut by nama), <code>MethodOrderer.Random.class</code> (urutan random), <code>MethodOrderer.DisplayName.class</code> (urut by display name).</p></div>
+                </div>
+
+                <div class="ebox"><p><strong>&#9888; Peringatan: Hindari Test yang Bergantung Urutan!</strong><br>Test yang saling bergantung (<em>test coupling</em>) adalah praktik yang buruk. Jika test2 hanya lulus karena test1 sudah dijalankan sebelumnya, kamu punya masalah desain. Gunakan <code>@TestMethodOrder</code> hanya untuk kasus yang sangat spesifik, misalnya integration test yang mensimulasikan alur user (login → create → read → delete).</p></div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p><code>@RepeatedTest</code> tidak ada padanannya langsung di PHPUnit vanilla. Paling dekat adalah loop di dalam test method: <code>for($i=0;$i<10;$i++)</code>. Di JUnit, setiap repetisi muncul sebagai test terpisah di report — lebih informatif. Urutan test di PHPUnit tidak dijamin kecuali menggunakan <code>@depends</code>.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 6</div>
+                    <p class="mb-m"><strong>Q:</strong> Mengapa menggunakan <code>@RepeatedTest</code> lebih baik daripada menulis loop <code>for</code> di dalam test method untuk test random?</p>
+                    <div id="q6-opts">
+                        <div class="qopt" onclick="AQ('q6','a',this)">a) @RepeatedTest selalu lebih cepat dari loop for</div>
+                        <div class="qopt" onclick="AQ('q6','b',this)">b) Setiap repetisi muncul sebagai test terpisah di report — jika satu gagal, kamu tahu repetisi mana yang gagal dan bisa diidentifikasi lebih mudah</div>
+                        <div class="qopt" onclick="AQ('q6','c',this)">c) Loop for tidak bisa digunakan di dalam test method JUnit 5</div>
+                        <div class="qopt" onclick="AQ('q6','d',this)">d) @RepeatedTest otomatis retry test yang gagal</div>
+                    </div>
+                    <div id="q6-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH7: Mockito -->
+        <div class="padding-top-ideal-distance-to-header" id="ch7">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner orange">
+                    <div class="ch-banner-num">Chapter 7</div>
+                    <div class="ch-banner-title">&#129514; Mockito: Isolasi Dependency dengan Mock</div>
+                    <div class="ch-banner-desc">Mockito adalah library mocking paling populer di Java. Gunakan saat ingin mengisolasi SUT dari dependency eksternal (database, API, service lain).</div>
+                </div>
+                <div class="text-title">Arsitektur yang Akan Kita Test</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: PersonRepository.java — Interface (kontrak)
+public interface PersonRepository {
+    Person selectById(String id);
+    void insert(Person person);
+}
+
+// FILE: PersonService.java — Service yang bergantung pada Repository
+public class PersonService {
+
+    private PersonRepository personRepository;      // Dependency!
+
+    public PersonService(PersonRepository personRepository) {
+        this.personRepository = personRepository;   // Constructor Injection
+    }
+
+    public Person get(String id) {
+        Person person = personRepository.selectById(id);
+        if (person != null) {
+            return person;
+        } else {
+            throw new IllegalArgumentException("Person not found");
+        }
+    }
+
+    public Person register(String name) {
+        var person = new Person(UUID.randomUUID().toString(), name);
+        personRepository.insert(person);            // Panggil repository!
+        return person;
+    }
+}</code></pre></div>
+                <div class="ibox"><div class="ibox-title">&#128161; Mengapa Butuh Mock?</div>
+                    <p>Saat testing <code>PersonService</code>, kita ingin test logika <em>service-nya saja</em> — bukan logika database. Masalahnya: <code>PersonService</code> butuh <code>PersonRepository</code> untuk berjalan. Solusi: buat <strong>mock</strong> (objek palsu) dari <code>PersonRepository</code> yang kita kontrol sendiri perilakunya. Kita tidak perlu database sungguhan!</p></div>
+
+                <div class="text-title mt-l">Membuat Mock Secara Manual</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: MockTest.java — Mock manual tanpa Spring context
+
+@Test
+void testMock() {
+    List&lt;String&gt; list = Mockito.mock(List.class);   // Line 1
+
+    // Define behavior (stubbing)
+    Mockito.when(list.get(0)).thenReturn("Eko");     // Line 2
+    Mockito.when(list.get(100)).thenReturn("Khannedy");
+
+    // Use the mock
+    System.out.println(list.get(0));    // "Eko"
+    System.out.println(list.get(100));  // "Khannedy"
+    System.out.println(list.get(999));  // null (tidak di-stub)
+
+    // Verify interaction
+    Mockito.verify(list, Mockito.times(1)).get(0);   // Line 3
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>Mockito.mock(List.class)</code> — Buat objek mock dari <code>List</code>. Mock ini adalah objek palsu yang mengimplementasikan interface <code>List</code> tapi semua method-nya return nilai default (<code>null</code>, <code>0</code>, <code>false</code>) kecuali yang di-stub.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>Mockito.when(list.get(0)).thenReturn("Eko")</code> — <strong>Stubbing</strong>: "Ketika method <code>get(0)</code> dipanggil, kembalikan <code>"Eko"</code>". Ini mendefinisikan perilaku mock. Sintaks: <code>when(kondisi).thenReturn(nilai)</code>. Bisa juga: <code>thenThrow(exception)</code>, <code>thenAnswer(callback)</code>.</p></div>
+                    <div class="le-item"><span class="ln">Line 3</span><p><code>Mockito.verify(list, Mockito.times(1)).get(0)</code> — <strong>Verification</strong>: "Pastikan method <code>get(0)</code> dipanggil tepat 1 kali". Ini memverifikasi <em>interaction</em> dengan mock, bukan hanya nilai return. Opsi lain: <code>never()</code>, <code>atLeast(n)</code>, <code>atMost(n)</code>.</p></div>
+                </div>
+
+                <div class="text-title mt-l">Mockito dengan JUnit Extension: @Mock &amp; MockitoExtension</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: PersonServiceTest.java
+
+@Extensions({
+    @ExtendWith(MockitoExtension.class)              // Line A
+})
+public class PersonServiceTest {
+
+    @Mock                                            // Line B
+    private PersonRepository personRepository;
+
+    private PersonService personService;
+
+    @BeforeEach
+    void setUp() {
+        personService = new PersonService(personRepository); // Line C
+    }
+
+    // Test 1: Person tidak ditemukan
+    @Test
+    void testGetPersonNotFound() {
+        // personRepository.selectById("not found") return null by default
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            personService.get("not found");
+        });
+    }
+
+    // Test 2: Person ditemukan
+    @Test
+    void testGetPersonSuccess() {
+        Mockito.when(personRepository.selectById("eko"))    // Line D
+               .thenReturn(new Person("eko", "Eko"));
+
+        var person = personService.get("eko");
+
+        Assertions.assertNotNull(person);
+        Assertions.assertEquals("eko", person.getId());
+        Assertions.assertEquals("Eko", person.getName());
+    }
+
+    // Test 3: Register — verify insert dipanggil
+    @Test
+    void testRegisterSuccess() {
+        var person = personService.register("Eko");
+
+        Assertions.assertNotNull(person);
+        Assertions.assertEquals("Eko", person.getName());
+        Assertions.assertNotNull(person.getId()); // UUID random, pasti ada
+
+        Mockito.verify(personRepository, Mockito.times(1))  // Line E
+               .insert(new Person(person.getId(), "Eko"));
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>@ExtendWith(MockitoExtension.class)</code> — Aktifkan integrasi Mockito dengan JUnit 5. Extension ini akan memproses annotation <code>@Mock</code>, <code>@Spy</code>, <code>@Captor</code>, dll secara otomatis sebelum setiap test.</p></div>
+                    <div class="le-item"><span class="ln">Line B</span><p><code>@Mock private PersonRepository personRepository</code> — MockitoExtension membuat mock dari interface <code>PersonRepository</code> secara otomatis. Lebih ringkas dari <code>Mockito.mock(PersonRepository.class)</code> manual. Mock direset sebelum setiap test.</p></div>
+                    <div class="le-item"><span class="ln">Line C</span><p><code>personService = new PersonService(personRepository)</code> — Inject mock ke service via constructor injection. Mock <code>personRepository</code> sudah siap karena MockitoExtension memrosesnya sebelum <code>@BeforeEach</code>.</p></div>
+                    <div class="le-item"><span class="ln">Line D</span><p><code>when(personRepository.selectById("eko")).thenReturn(...)</code> — Stub hanya diperlukan untuk test yang membutuhkan nilai spesifik. Di test <code>testGetPersonNotFound</code>, tidak ada stub — mock secara default return <code>null</code> untuk method yang mengembalikan object.</p></div>
+                    <div class="le-item"><span class="ln">Line E</span><p><code>verify(personRepository, times(1)).insert(new Person(person.getId(),"Eko"))</code> — Verifikasi bahwa <code>insert()</code> dipanggil tepat sekali dengan Person yang <em>sama</em> (menggunakan <code>equals()</code>). Inilah mengapa <code>Person</code> mengimplementasikan <code>equals()</code> — tanpanya, verifikasi ini akan gagal!</p></div>
+                </div>
+
+                <div class="ibox"><div class="ibox-title">&#128161; Kenapa Person Perlu Override equals() &amp; hashCode()?</div>
+                    <div class="code-block"><pre><code class="language-java">// FILE: Person.java
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Person person = (Person) o;
+    if (id != null ? !id.equals(person.id) : person.id != null) return false;
+    return name != null ? name.equals(person.name) : person.name == null;
+}
+
+@Override
+public int hashCode() {
+    int result = id != null ? id.hashCode() : 0;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    return result;
+}
+// Mockito.verify() menggunakan equals() untuk mencocokkan argument
+// Java default: equals() membandingkan REFERENSI object (bukan nilai!)
+// Tanpa override: new Person("eko","Eko") != new Person("eko","Eko") ❌
+// Dengan override: new Person("eko","Eko") == new Person("eko","Eko") ✅</code></pre></div></div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit/Mockery</div>
+                    <div class="code-block"><pre><code class="language-php">// PHPUnit dengan Mockery
+$personRepo = Mockery::mock(PersonRepository::class);
+$personRepo->shouldReceive('selectById')
+           ->with('eko')
+           ->andReturn(new Person('eko', 'Eko'));
+
+// Mockito equivalent
+Mockito.when(personRepository.selectById("eko"))
+       .thenReturn(new Person("eko", "Eko"));
+
+// PHPUnit verify interaction
+$personRepo->shouldHaveReceived('insert')->once();
+
+// Mockito verify
+Mockito.verify(personRepository, Mockito.times(1)).insert(...);</code></pre></div>
+                    <p>Konsepnya sama persis! <code>when().thenReturn()</code> = <code>shouldReceive().andReturn()</code>. <code>Mockito.verify()</code> = <code>shouldHaveReceived()</code>. Hanya sintaksnya yang berbeda.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 7</div>
+                    <p class="mb-m"><strong>Q:</strong> Di <code>testGetPersonNotFound()</code>, tidak ada <code>Mockito.when()</code> stub. Apa nilai yang dikembalikan oleh <code>personRepository.selectById("not found")</code>?</p>
+                    <div id="q7-opts">
+                        <div class="qopt" onclick="AQ('q7','a',this)">a) Throw <code>NullPointerException</code> karena tidak ada stub</div>
+                        <div class="qopt" onclick="AQ('q7','b',this)">b) <code>null</code> — Mockito secara default mengembalikan null untuk method yang return Object jika tidak di-stub</div>
+                        <div class="qopt" onclick="AQ('q7','c',this)">c) Sebuah Person object kosong (empty Person)</div>
+                        <div class="qopt" onclick="AQ('q7','d',this)">d) Test langsung gagal karena tidak ada stub</div>
+                    </div>
+                    <div id="q7-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH8: Timeout & Parallel -->
+        <div class="padding-top-ideal-distance-to-header" id="ch8">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 8</div>
+                    <div class="ch-banner-title">&#9201; Timeout &amp; Parallel Execution</div>
+                    <div class="ch-banner-desc">Pastikan kode kamu cukup cepat dengan <code>@Timeout</code>, dan percepat test suite kamu dengan Parallel Execution!</div>
+                </div>
+                <div class="text-title">@Timeout: Test Harus Selesai Dalam Batas Waktu</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: SlowTest.java
+import org.junit.jupiter.api.Timeout;
+import java.util.concurrent.TimeUnit;
+
+@Execution(ExecutionMode.CONCURRENT)            // Line 1
+public class SlowTest {
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS) // Line 2
+    void testSlow1() throws InterruptedException {
+        Thread.sleep(4_000);  // 4 detik — masih dalam batas 5 detik ✅
+    }
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    void testSlow2() throws InterruptedException {
+        Thread.sleep(4_000);  // 4 detik ✅
+    }
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    void testSlow3() throws InterruptedException {
+        Thread.sleep(4_000);  // 4 detik ✅
+    }
+}
+// Tanpa CONCURRENT: 3 × 4 detik = ~12 detik total
+// Dengan CONCURRENT: berjalan paralel = ~4 detik total ✅</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>@Execution(ExecutionMode.CONCURRENT)</code> — Aktifkan eksekusi paralel untuk test-test di class ini. Tanpa ini, semua test dijalankan secara berurutan (sequential). Hasilnya: ketiga test yang masing-masing <code>sleep(4 detik)</code> akan berjalan bersamaan, total waktu ~4 detik bukan ~12 detik.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>@Timeout(value=5, unit=TimeUnit.SECONDS)</code> — Jika test tidak selesai dalam 5 detik, JUnit akan <code>fail</code> test tersebut dengan <code>TimeoutException</code>. Unit bisa: <code>SECONDS</code>, <code>MILLISECONDS</code>, <code>MINUTES</code>, dll. Berguna untuk mendeteksi deadlock atau operasi yang terlalu lambat.</p></div>
+                </div>
+
+                <div class="text-title mt-l">Konfigurasi Parallel Global (junit-platform.properties)</div>
+                <div class="code-block"><pre><code class="language-properties"># src/test/resources/junit-platform.properties
+
+# Aktifkan parallel execution secara global
+junit.jupiter.execution.parallel.enabled=true
+
+# Strategi: semua test class berjalan paralel (default: sequential)
+junit.jupiter.execution.parallel.mode.default=concurrent
+
+# Ukuran thread pool
+junit.jupiter.execution.parallel.config.strategy=fixed
+junit.jupiter.execution.parallel.config.fixed.parallelism=4</code></pre></div>
+
+                <div class="ibox"><div class="ibox-title">&#128161; Kapan Pakai Parallel Execution?</div>
+                    <p>Parallel execution mempercepat test suite secara signifikan tapi ada syaratnya:</p>
+                    <ul>
+                        <li><strong>Test harus thread-safe</strong>: tidak ada shared mutable state antar test</li>
+                        <li><strong>Test harus independent</strong>: tidak bergantung pada hasil test lain</li>
+                        <li><strong>Tidak ada race condition</strong>: test yang mengakses resource yang sama (DB, file) bisa konflik</li>
+                    </ul>
+                    <p>Untuk integration test yang pakai database: hati-hati! Parallel bisa menyebabkan data race. Gunakan isolated database per thread atau rollback transaction setelah setiap test.</p></div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p>PHPUnit tidak punya parallel execution native. Untuk test paralel di PHP, orang biasanya pakai <strong>paratest</strong> (library terpisah) atau menjalankan test suite secara terpisah di CI. Di JUnit 5, parallel execution adalah fitur built-in — jauh lebih mudah dikonfigurasi.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 8</div>
+                    <p class="mb-m"><strong>Q:</strong> Jika <code>testSlow1()</code>, <code>testSlow2()</code>, dan <code>testSlow3()</code> masing-masing <code>Thread.sleep(4_000)</code> dan berjalan dengan <code>ExecutionMode.CONCURRENT</code>, berapa kira-kira total waktu eksekusi ketiga test tersebut?</p>
+                    <div id="q8-opts">
+                        <div class="qopt" onclick="AQ('q8','a',this)">a) ~12 detik — ketiganya masih berjalan berurutan</div>
+                        <div class="qopt" onclick="AQ('q8','b',this)">b) ~4 detik — ketiganya berjalan paralel secara bersamaan</div>
+                        <div class="qopt" onclick="AQ('q8','c',this)">c) ~8 detik — hanya dua test yang berjalan paralel</div>
+                        <div class="qopt" onclick="AQ('q8','d',this)">d) Test akan langsung gagal karena Thread.sleep() tidak boleh di test</div>
+                    </div>
+                    <div id="q8-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH9: Extensions -->
+        <div class="padding-top-ideal-distance-to-header" id="ch9">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner">
+                    <div class="ch-banner-num">Chapter 9</div>
+                    <div class="ch-banner-title">&#129680; JUnit 5 Extensions: Custom &amp; Reusable</div>
+                    <div class="ch-banner-desc">Extensions adalah sistem plugin JUnit 5 yang memungkinkan kamu menambahkan perilaku custom ke test lifecycle — inject parameter, setup khusus, custom display name, dll.</div>
+                </div>
+                <div class="text-title">ParameterResolver: Inject Custom Object ke Test</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: RandomParameterResolver.java
+import org.junit.jupiter.api.extension.*;
+import java.util.Random;
+
+public class RandomParameterResolver implements ParameterResolver { // Line 1
+
+    private Random random = new Random();
+
+    @Override
+    public boolean supportsParameter(
+        ParameterContext parameterContext,
+        ExtensionContext extensionContext
+    ) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType() == Random.class; // Line 2
+    }
+
+    @Override
+    public Object resolveParameter(
+        ParameterContext parameterContext,
+        ExtensionContext extensionContext
+    ) throws ParameterResolutionException {
+        return random;     // Line 3
+    }
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line 1</span><p><code>implements ParameterResolver</code> — Interface yang harus diimplementasikan untuk membuat custom parameter injector. JUnit 5 sudah built-in resolver untuk: <code>TestInfo</code>, <code>RepetitionInfo</code>, <code>TestReporter</code>. Kita extend dengan resolver kustom untuk tipe apapun.</p></div>
+                    <div class="le-item"><span class="ln">Line 2</span><p><code>parameterContext.getParameter().getType() == Random.class</code> — "Apakah parameter yang diminta bertipe <code>Random</code>?" Jika <code>true</code>, extension ini akan menangani injeksi. JUnit memanggil <code>supportsParameter()</code> untuk setiap parameter yang tidak bisa di-resolve secara built-in.</p></div>
+                    <div class="le-item"><span class="ln">Line 3</span><p>Return <code>random</code> — instance <code>Random</code> yang akan di-inject ke parameter test. Karena <code>random</code> adalah field instance (bukan baru dibuat tiap kali), semua test mendapat instance yang sama.</p></div>
+                </div>
+
+                <div class="text-title mt-l">AbstractCalculatorTest: Reuse Setup via Inheritance</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: AbstractCalculatorTest.java
+@Extensions({
+    @ExtendWith(RandomParameterResolver.class)    // Line A
+})
+public class AbstractCalculatorTest {
+
+    protected Calculator calculator = new Calculator(); // Line B
+
+    @BeforeEach
+    void setUp() {
+        System.out.println("Before each");
+    }
+}
+
+// FILE: RandomCalculatorTest.java
+public class RandomCalculatorTest extends AbstractCalculatorTest { // Line C
+
+    @Test
+    void testRandom(TestInfo info, Random random) { // Line D
+        var a = random.nextInt();
+        var b = random.nextInt();
+        var result = calculator.add(a, b); // Dari parent class!
+        var expected = a + b;
+        Assertions.assertEquals(expected, result);
+    }
+    // @RepeatedTest dan @ParameterizedTest juga ada di sini...
+}</code></pre></div>
+                <div class="le">
+                    <div class="le-item"><span class="ln">Line A</span><p><code>@ExtendWith(RandomParameterResolver.class)</code> di abstract class — Extension ini diwarisi oleh semua subclass. Sehingga semua test class yang extend <code>AbstractCalculatorTest</code> bisa menerima parameter <code>Random</code> tanpa perlu menambah <code>@ExtendWith</code> lagi.</p></div>
+                    <div class="le-item"><span class="ln">Line B</span><p><code>protected Calculator calculator</code> — Field <code>protected</code> agar bisa diakses oleh subclass. Ini idiom umum di Java untuk berbagi SUT di hierarchy test class. Setara dengan mendeklarasikan property di parent class PHPUnit TestCase.</p></div>
+                    <div class="le-item"><span class="ln">Line C</span><p><code>extends AbstractCalculatorTest</code> — <code>RandomCalculatorTest</code> mewarisi semua setup dari abstract class: field <code>calculator</code>, <code>@BeforeEach</code>, dan extension <code>RandomParameterResolver</code>. Ini cara clean untuk reuse test infrastructure.</p></div>
+                    <div class="le-item"><span class="ln">Line D</span><p><code>void testRandom(TestInfo info, Random random)</code> — Dua parameter diinjeksi: <code>TestInfo</code> oleh JUnit built-in resolver, <code>Random</code> oleh <code>RandomParameterResolver</code> kustom. JUnit menentukan siapa yang menangani setiap parameter berdasarkan tipenya.</p></div>
+                </div>
+
+                <div class="text-title mt-l">DisplayNameGenerator: Custom Nama Test</div>
+                <div class="code-block"><pre><code class="language-java">// FILE: SimpleDisplayNameGenerator.java
+public class SimpleDisplayNameGenerator implements DisplayNameGenerator {
+
+    @Override
+    public String generateDisplayNameForClass(Class&lt;?&gt; testClass) {
+        return "Test " + testClass.getSimpleName();
+        // → "Test CalculatorTest"
+    }
+
+    @Override
+    public String generateDisplayNameForMethod(
+        Class&lt;?&gt; testClass, Method testMethod
+    ) {
+        return "Test " + testClass.getSimpleName()
+               + "." + testMethod.getName();
+        // → "Test CalculatorTest.testAddSuccess"
+    }
+
+    @Override
+    public String generateDisplayNameForNestedClass(Class&lt;?&gt; nestedClass) {
+        return null; // Gunakan default
+    }
+}
+
+// Penggunaannya:
+@DisplayNameGeneration(SimpleDisplayNameGenerator.class)
+public class CalculatorTest { ... }</code></pre></div>
+
+                <div class="abox"><div class="abox-title">&#128024; Analogi PHPUnit</div>
+                    <p>Di PHPUnit tidak ada mekanisme extension yang se-powerful JUnit 5. Yang paling dekat adalah: <code>setUp()</code> di parent class (mirip abstract class pattern), dan annotation <code>@group</code>, <code>@depends</code>. Mockito extension <code>MockitoExtension</code> yang kita pakai di Chapter 7 adalah contoh extension yang jauh lebih powerful dari apapun yang tersedia di PHPUnit secara native.</p></div>
+
+                <div class="qbox">
+                    <div class="qbox-title">&#129504; Mini Quiz — Chapter 9</div>
+                    <p class="mb-m"><strong>Q:</strong> Jika <code>RandomCalculatorTest</code> extends <code>AbstractCalculatorTest</code>, dan <code>AbstractCalculatorTest</code> punya <code>@ExtendWith(RandomParameterResolver.class)</code>, apakah <code>RandomCalculatorTest</code> juga bisa menerima parameter <code>Random</code> di test method-nya?</p>
+                    <div id="q9-opts">
+                        <div class="qopt" onclick="AQ('q9','a',this)">a) Tidak — setiap class harus mendaftarkan @ExtendWith sendiri</div>
+                        <div class="qopt" onclick="AQ('q9','b',this)">b) Ya — @ExtendWith yang didaftarkan di parent class diwarisi oleh semua subclass di JUnit 5</div>
+                        <div class="qopt" onclick="AQ('q9','c',this)">c) Hanya jika subclass juga menambahkan @ExtendWith yang sama</div>
+                        <div class="qopt" onclick="AQ('q9','d',this)">d) Tidak — @ExtendWith tidak bisa digunakan di abstract class</div>
+                    </div>
+                    <div id="q9-feed" class="qfeed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH10: Summary -->
+        <div class="padding-top-ideal-distance-to-header" id="ch10">
+            <div class="card-wrapper max-width-1000">
+                <div class="ch-banner green">
+                    <div class="ch-banner-num">Chapter 10 — Final</div>
+                    <div class="ch-banner-title">&#128202; Summary, Best Practice &amp; Cheat Sheet</div>
+                    <div class="ch-banner-desc">Rekap seluruh konsep JUnit 5 + Mockito, arsitektur project, best practice, dan tabel referensi cepat PHPUnit vs JUnit 5.</div>
+                </div>
+
+                <div class="text-title">Arsitektur Project Belajar Unit Test</div>
+                <div class="display-grid">
+                    <div class="timeline">
+                        <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#128295; Production Code (src/main)</div>
+                            <div class="timeline-content-desc"><code>Calculator.java</code> (SUT sederhana), <code>Person.java</code> (data class dengan equals/hashCode), <code>PersonRepository.java</code> (interface — kontrak), <code>PersonService.java</code> (service dengan dependency injection). Ini kode yang ditest.</div>
+                            <div class="timeline-content-time">Subject Under Test</div>
+                        </div>
+                        <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#129514; Test Infrastructure (src/test)</div>
+                            <div class="timeline-content-desc"><code>AbstractCalculatorTest.java</code> (base class dengan shared setup), <code>RandomParameterResolver.java</code> (custom parameter injector), <code>SimpleDisplayNameGenerator.java</code> (custom display name). Fondasi yang dipakai ulang oleh semua test.</div>
+                            <div class="timeline-content-time">Reusable Infrastructure</div>
+                        </div>
+                        <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#128203; Unit Tests</div>
+                            <div class="timeline-content-desc"><code>CalculatorTest</code> (lifecycle, assertions, disabled), <code>RandomCalculatorTest</code> (parameterized, repeated, custom resolver), <code>PersonServiceTest</code> (Mockito mock, stub, verify). Test murni tanpa external dependency.</div>
+                            <div class="timeline-content-time">Core Tests</div>
+                        </div>
+                        <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#127959; Specialized Tests</div>
+                            <div class="timeline-content-desc"><code>ConditionTest</code> (OS/JRE/env conditions), <code>SlowTest</code> (timeout + parallel execution), <code>OrderedTest</code> (PER_CLASS + order), <code>QueueTest</code> (nested tests). Demonstrasi fitur-fitur lanjutan JUnit 5.</div>
+                            <div class="timeline-content-time">Advanced Features</div>
+                        </div>
+                        <div><span class="timeline-key active">5</span></div>
+                        <div class="timeline-content max-width-400">
+                            <div class="timeline-content-title">&#128451; Integration Tests</div>
+                            <div class="timeline-content-desc"><code>SampleIntegrationTest</code> (tag "integration-test") — Dipisahkan dari unit test menggunakan <code>@Tag</code>. Bisa dijalankan selektif di CI: <code>mvn test -Dgroups=integration-test</code>. Pola yang sangat berguna di proyek besar.</div>
+                            <div class="timeline-content-time">Selective Execution</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Semua Annotation JUnit 5 dalam Satu Pandangan</div>
+                <div class="ann-grid">
+                    <div class="ann-card"><div class="ann-card-name">@Test</div><div class="ann-card-desc">Tandai method sebagai test case. Ganti: /** @test */ di PHPUnit.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@ParameterizedTest</div><div class="ann-card-desc">Test dengan multiple input. Ganti: @dataProvider di PHPUnit.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@RepeatedTest(n)</div><div class="ann-card-desc">Ulangi test N kali. Setiap repetisi muncul sebagai test terpisah.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@BeforeAll</div><div class="ann-card-desc">Jalankan sekali sebelum semua test. Harus static (default PER_METHOD). Ganti: setUpBeforeClass().</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@AfterAll</div><div class="ann-card-desc">Jalankan sekali setelah semua test selesai. Harus static. Ganti: tearDownAfterClass().</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@BeforeEach</div><div class="ann-card-desc">Jalankan sebelum setiap test method. Ganti: setUp().</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@AfterEach</div><div class="ann-card-desc">Jalankan setelah setiap test method. Ganti: tearDown().</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@Disabled</div><div class="ann-card-desc">Skip test ini. Ganti: @skip di PHPUnit atau markTestSkipped().</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@DisplayName</div><div class="ann-card-desc">Nama tampilan custom untuk test di report.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@Nested</div><div class="ann-card-desc">Inner class untuk mengelompokkan test berdasarkan konteks/skenario.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@Tag</div><div class="ann-card-desc">Label untuk filter selektif. Ganti: @group di PHPUnit.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@Timeout</div><div class="ann-card-desc">Test harus selesai dalam batas waktu tertentu.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@Order</div><div class="ann-card-desc">Urutan eksekusi test (butuh @TestMethodOrder di class).</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@TestInstance</div><div class="ann-card-desc">PER_METHOD (default, isolasi) atau PER_CLASS (shared state).</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@ExtendWith</div><div class="ann-card-desc">Daftarkan JUnit 5 Extension (MockitoExtension, custom resolver, dll).</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@EnabledOnOs / @DisabledOnOs</div><div class="ann-card-desc">Conditional berdasarkan OS.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@EnabledIfEnvironmentVariable</div><div class="ann-card-desc">Conditional berdasarkan env variable. Berguna untuk CI/CD.</div></div>
+                    <div class="ann-card"><div class="ann-card-name">@Mock (Mockito)</div><div class="ann-card-desc">Buat mock object otomatis via MockitoExtension.</div></div>
+                </div>
+
+                <div class="text-title mt-l">Checklist Unit Test yang Baik (F.I.R.S.T)</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">F</div><div class="stepper-value"><strong>Fast</strong> — Test harus cepat. Jika lambat, pakai Mock untuk mengganti database/API. Gunakan Parallel Execution untuk mempercepat suite.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">I</div><div class="stepper-value"><strong>Independent/Isolated</strong> — Setiap test tidak boleh bergantung pada test lain. JUnit default PER_METHOD membantu enforce ini. Jangan share mutable state antar test.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">R</div><div class="stepper-value"><strong>Repeatable</strong> — Test harus menghasilkan hasil yang sama setiap dijalankan, di environment apapun. Hindari dependency pada waktu, random tanpa seed, atau external API tanpa mock.</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">S</div><div class="stepper-value"><strong>Self-validating</strong> — Test harus otomatis menentukan lulus/gagal tanpa inspeksi manual. Gunakan assertions, bukan hanya System.out.println().</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">T</div><div class="stepper-value"><strong>Timely</strong> — Tulis test bersamaan atau sebelum kode produksi (TDD). Test yang ditulis belakangan sering melewatkan edge case.</div></div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Tabel Referensi Cepat: PHPUnit vs JUnit 5</div>
+                <div class="table-content"><table>
+                    <thead><tr><th>Konsep</th><th>PHPUnit</th><th>JUnit 5</th></tr></thead>
+                    <tbody>
+                    <tr><td>Tandai test</td><td><code>/** @test */</code> atau prefix <code>test</code></td><td><code>@Test</code></td></tr>
+                    <tr><td>Setup sebelum semua</td><td><code>setUpBeforeClass()</code></td><td><code>@BeforeAll static void</code></td></tr>
+                    <tr><td>Setup sebelum tiap test</td><td><code>setUp()</code></td><td><code>@BeforeEach void</code></td></tr>
+                    <tr><td>Teardown setelah tiap test</td><td><code>tearDown()</code></td><td><code>@AfterEach void</code></td></tr>
+                    <tr><td>Teardown setelah semua</td><td><code>tearDownAfterClass()</code></td><td><code>@AfterAll static void</code></td></tr>
+                    <tr><td>Skip test</td><td><code>markTestSkipped()</code></td><td><code>@Disabled</code></td></tr>
+                    <tr><td>Data provider</td><td><code>@dataProvider</code></td><td><code>@ParameterizedTest + @ValueSource / @MethodSource</code></td></tr>
+                    <tr><td>Assert sama</td><td><code>assertEquals($exp, $act)</code></td><td><code>assertEquals(expected, actual)</code></td></tr>
+                    <tr><td>Assert exception</td><td><code>expectException(Class::class)</code></td><td><code>assertThrows(Class.class, lambda)</code></td></tr>
+                    <tr><td>Assert null</td><td><code>assertNull($obj)</code></td><td><code>assertNull(obj)</code></td></tr>
+                    <tr><td>Mock object</td><td><code>Mockery::mock()</code></td><td><code>Mockito.mock(Class.class)</code></td></tr>
+                    <tr><td>Stub method</td><td><code>shouldReceive()->andReturn()</code></td><td><code>Mockito.when().thenReturn()</code></td></tr>
+                    <tr><td>Verify interaction</td><td><code>shouldHaveReceived()->once()</code></td><td><code>Mockito.verify(mock, times(1)).method()</code></td></tr>
+                    <tr><td>Group test</td><td><code>@group nama</code></td><td><code>@Tag("nama")</code></td></tr>
+                    <tr><td>Kondisi environment</td><td><code>@requires</code> (terbatas)</td><td><code>@EnabledIfEnvironmentVariable</code> (powerful)</td></tr>
+                    <tr><td>Ulangi test</td><td>Loop manual di dalam test</td><td><code>@RepeatedTest(n)</code></td></tr>
+                    <tr><td>Test paralel</td><td>paratest (library eksternal)</td><td>Built-in <code>@Execution(CONCURRENT)</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <div class="text-title mt-l">Flow Lengkap: PersonService Testing</div>
+                <div class="code-block"><pre><code class="language-java">// Pola ARRANGE - ACT - ASSERT (AAA)
+
+@Test
+void testGetPersonSuccess() {
+    // === ARRANGE ===
+    // Setup mock behavior
+    Mockito.when(personRepository.selectById("eko"))
+           .thenReturn(new Person("eko", "Eko"));
+
+    // === ACT ===
+    // Jalankan kode yang ingin ditest
+    var person = personService.get("eko");
+
+    // === ASSERT ===
+    // Verifikasi hasil
+    Assertions.assertNotNull(person);
+    Assertions.assertEquals("eko", person.getId());
+    Assertions.assertEquals("Eko", person.getName());
+    // Optional: verifikasi interaksi dengan mock
+    Mockito.verify(personRepository, Mockito.times(1))
+           .selectById("eko");
+}
+
+// Pola yang sama untuk exception test:
+@Test
+void testGetPersonNotFound() {
+    // ARRANGE: tidak perlu stub — default null
+
+    // ACT + ASSERT: wrapped dalam assertThrows
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        personService.get("not found"); // ACT di dalam lambda
+    });
+}</code></pre></div>
+
+                <div class="ibox"><div class="ibox-title">&#127881; Selamat! Kamu Telah Menguasai Java Unit Testing dengan JUnit 5 &amp; Mockito!</div>
+                    <p>Langkah selanjutnya yang disarankan:</p>
+                    <ul>
+                        <li>&#128301; <strong>TDD (Test-Driven Development)</strong> — Tulis test SEBELUM kode produksi. Siklus: Red (test gagal) → Green (buat lulus minimal) → Refactor.</li>
+                        <li>&#128258; <strong>Spring Boot Test</strong> — <code>@SpringBootTest</code>, <code>@WebMvcTest</code>, <code>@DataJpaTest</code> untuk integration test di Spring Boot.</li>
+                        <li>&#128423; <strong>TestContainers</strong> — Jalankan database nyata (PostgreSQL, MySQL) di Docker saat integration test. Isolasi penuh tanpa H2 in-memory.</li>
+                        <li>&#128200; <strong>Code Coverage</strong> — JaCoCo plugin untuk mengukur berapa persen kode yang sudah dicover oleh test. Target: minimal 80% untuk production code.</li>
+                        <li>&#129514; <strong>Mockito Advanced</strong> — <code>@Spy</code> (partial mock), <code>@Captor</code> (capture argument), <code>@InjectMocks</code> (auto-inject semua mock).</li>
+                        <li>&#127919; <strong>AssertJ</strong> — Library assertion yang lebih fluent dan expressive dari JUnit built-in: <code>assertThat(result).isEqualTo(20).isPositive()</code>.</li>
+                    </ul></div>
+            </div>
+        </div>
+    </section>
+    <footer style="padding:var(--l);text-align:center;color:var(--transtext-color);font-size:var(--xs);">
+        <p>&#129514; Java Unit Test dengan JUnit 5 &amp; Mockito — Self-Paced Learning Module</p>
+        <p>Dibuat untuk developer PHP/Laravel yang migrasi ke ekosistem Java &amp; Spring Boot</p>
+    </footer>
+</main>
+
+<script>
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode");
+        const btn = document.querySelector(".container-header-button-switch-theme");
+        if (btn) btn.textContent = document.body.classList.contains("dark-mode") ? "Light Mode" : "Dark Mode";
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById("get-menu").classList.toggle("opened");
+    }
+
+    const QD = {
+        q1:{ c:"b", ok:"Benar! JUnit 5 dengan lifecycle PER_METHOD (default) membuat instance class baru sebelum setiap test. @BeforeAll dipanggil SEBELUM instance apapun dibuat, sehingga harus static agar bisa dipanggil di level class, bukan di level instance.", ng:"Belum tepat. Alasannya adalah timing: @BeforeAll dieksekusi sebelum JUnit membuat instance test class. Method static bisa dipanggil tanpa instance, itulah mengapa harus static (kecuali pakai @TestInstance(PER_CLASS))." },
+        q2:{ c:"b", ok:"Tepat! FAILED = ada assertion yang tidak terpenuhi (bug ditemukan di kode). ABORTED = prasyarat test tidak terpenuhi (misalnya bukan environment DEV) sehingga test di-skip — bukan berarti ada bug. Keduanya dibedakan jelas di test report JUnit.", ng:"Belum tepat. FAILED berarti assertion gagal (kode berperilaku tidak sesuai ekspektasi). ABORTED berarti prasyarat tidak terpenuhi — test di-skip bukan karena bug, tapi karena kondisi environment tidak sesuai." },
+        q3:{ c:"b", ok:"Tepat! Dengan @TestInstance(PER_CLASS), satu instance OrderedTest digunakan untuk semua test. counter++ dijalankan tiga kali secara akumulatif: test3() → 1, test1() → 2, test2() → 3. @Order menentukan urutan eksekusi.", ng:"Belum tepat. @TestInstance(PER_CLASS) berarti satu instance untuk semua test. Field counter tidak di-reset karena instance tidak dibuat ulang. counter++ tiga kali dari nilai awal 0 = 3." },
+        q4:{ c:"b", ok:"Tepat! Sebagian besar CI/CD platform (GitHub Actions, GitLab CI, Jenkins) secara otomatis men-set environment variable CI=true. Dengan @EnabledIfEnvironmentVariable(named='CI', matches='true'), test hanya berjalan di CI environment.", ng:"Belum tepat. Solusi terbaik adalah menggunakan @EnabledIfEnvironmentVariable untuk membaca environment variable yang di-set oleh CI/CD platform. @Disabled menonaktifkan test selamanya, bukan kondisional." },
+        q5:{ c:"b", ok:"Benar! @ParameterizedTest menjalankan test method sekali untuk setiap nilai. Dengan @ValueSource(ints={1,2,3,4,5}), test dijalankan 5 kali. Setiap iterasi muncul sebagai test terpisah di report dengan nama yang berbeda.", ng:"Belum tepat. @ParameterizedTest menjalankan test method untuk setiap nilai dalam source secara terpisah. 5 nilai = 5 eksekusi test, masing-masing sebagai test independen di report." },
+        q6:{ c:"b", ok:"Benar! Ini keunggulan utama @RepeatedTest vs loop manual. Setiap repetisi muncul sebagai test terpisah dengan nama 'Test ke 3 dari 10'. Jika repetisi ke-7 gagal, kamu langsung tahu mana yang bermasalah. Loop di dalam test hanya muncul sebagai 1 test result.", ng:"Belum tepat. Keunggulan @RepeatedTest adalah granularitas reporting: setiap repetisi muncul sebagai test terpisah di report, sehingga lebih mudah mengidentifikasi repetisi mana yang gagal (berguna untuk mendeteksi flaky test)." },
+        q7:{ c:"b", ok:"Tepat! Mockito secara default mengembalikan null untuk method yang return Object (atau referensi type) jika tidak ada stub. Untuk primitif: 0 untuk int/long, false untuk boolean. Ini kenapa testGetPersonNotFound() bisa bekerja: selectById() return null, PersonService.get() throw IllegalArgumentException.", ng:"Belum tepat. Mockito default behavior: method yang return Object mengembalikan null jika tidak di-stub. Tidak ada NullPointerException — mock sudah menangani pemanggilan method yang tidak di-stub." },
+        q8:{ c:"b", ok:"Benar! Dengan ExecutionMode.CONCURRENT, JUnit menjalankan ketiga test secara paralel. Masing-masing sleep 4 detik secara bersamaan, sehingga total waktu ~4 detik (bukan 3x4=12 detik). Ini manfaat utama parallel execution!", ng:"Belum tepat. CONCURRENT berarti semua test berjalan di thread berbeda secara bersamaan. Ketiga test sleep 4 detik secara paralel, bukan berurutan. Total waktu mendekati 4 detik." },
+        q9:{ c:"b", ok:"Tepat! Di JUnit 5, @ExtendWith pada parent class diwarisi oleh subclass. RandomCalculatorTest yang extends AbstractCalculatorTest secara otomatis mendapat RandomParameterResolver tanpa perlu menambahkan @ExtendWith lagi. Ini salah satu manfaat inheritance dalam test infrastructure.", ng:"Belum tepat. JUnit 5 mendukung pewarisan extension: @ExtendWith yang didaftarkan di parent class otomatis tersedia di semua subclass. Ini memungkinkan reuse test infrastructure secara elegan." }
+    };
+
+    function AQ(qid, sel, el) {
+        const d = QD[qid];
+        const opts = document.querySelectorAll("#" + qid + "-opts .qopt");
+        const feed = document.getElementById(qid + "-feed");
+        opts.forEach(o => o.classList.add("disabled"));
+        const ok = sel === d.c;
+        el.classList.add(ok ? "correct" : "wrong");
+        if (!ok) opts.forEach(o => {
+            if (o.getAttribute("onclick").includes("'" + d.c + "'")) o.classList.add("correct");
+        });
+        feed.textContent = (ok ? "✅ " : "❌ ") + (ok ? d.ok : d.ng);
+        feed.className = "qfeed show " + (ok ? "correct" : "wrong");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("pre code").forEach(b => hljs.highlightElement(b));
+        const sections = document.querySelectorAll("[id^=ch]");
+        const items = document.querySelectorAll(".sidebar-menu-item");
+        new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    items.forEach(i => {
+                        i.classList.remove("active");
+                        if (i.getAttribute("href") === "#" + e.target.id) i.classList.add("active");
+                    });
+                }
+            });
+        }, { rootMargin: "-20% 0px -70% 0px" }).observe && sections.forEach(s => {
+            new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        items.forEach(i => {
+                            i.classList.remove("active");
+                            if (i.getAttribute("href") === "#" + e.target.id) i.classList.add("active");
+                        });
+                    }
+                });
+            }, { rootMargin: "-20% 0px -70% 0px" }).observe(s);
+        });
+    });
+</script>
+</body>
+</html>

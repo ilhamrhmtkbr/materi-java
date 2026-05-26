@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Kafka — Modul Belajar untuk Developer PHP/Laravel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .quiz-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);border-radius:var(--radius-m);padding:var(--m);margin-top:var(--m)}
+        .quiz-box .quiz-title{font-weight:700;color:var(--primary-color);margin-bottom:var(--s)}
+        .quiz-option{display:flex;align-items:center;gap:var(--s);padding:var(--xs) var(--s);border-radius:var(--radius-s);cursor:pointer;margin-bottom:var(--xs);border:1px solid var(--border-color);background:var(--bg-color)}
+        .quiz-option:hover{background:var(--sidebar-hover-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{margin-top:var(--s);font-size:var(--s);font-weight:600}
+        .quiz-feedback.ok{color:var(--success-color)}
+        .quiz-feedback.err{color:var(--danger-color)}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-radius:var(--radius-m);padding:var(--m);margin:var(--s) 0}
+        .info-box.tip{background:var(--transsuccess-color);border-left:4px solid var(--success-color)}
+        .info-box.warn{background:var(--transwarning-color);border-left:4px solid var(--warning-color)}
+        .info-box.laravel{background:var(--transsecond-primary-color);border-left:4px solid var(--second-primary-color)}
+        .info-box.danger{background:var(--transdanger-color);border-left:4px solid var(--danger-color)}
+        .info-box strong{display:block;margin-bottom:var(--xs)}
+        .code-wrap{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-m);margin:var(--s) 0}
+        .code-wrap pre{margin:0}
+        .code-wrap code{font-size:.85em}
+        .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);max-width:77dvw;overflow:auto}
+        @media(max-width:600px){.compare-grid{grid-template-columns:1fr}}
+        .compare-grid .wrong-box{border-left:4px solid var(--danger-color);background:var(--transdanger-color);border-radius:var(--radius-m);padding:var(--s)}
+        .compare-grid .right-box{border-left:4px solid var(--success-color);background:var(--transsuccess-color);border-radius:var(--radius-m);padding:var(--s)}
+        .compare-label{font-weight:700;font-size:var(--s);margin-bottom:var(--xs)}
+        .chapter-intro{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m)}
+        .chapter-intro .chapter-num{color:var(--primary-color);font-weight:700;font-size:var(--s);letter-spacing:.08em;text-transform:uppercase}
+        .chapter-intro h2{margin:var(--xs) 0 var(--s);font-size:var(--xx)}
+        .line-table{width:100%;border-collapse:collapse;font-size:var(--s)}
+        .line-table th,.line-table td{padding:var(--xs) var(--s);text-align:left;border-bottom:1px solid var(--border-color)}
+        .line-table th{background:var(--transprimary-color);color:var(--primary-color);font-weight:700}
+        .line-table tr:hover td{background:var(--sidebar-hover-color)}
+        .section-divider{border:none;border-top:1px solid var(--border-color);margin:var(--x) 0}
+        .summary-item{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) 0;border-bottom:1px solid var(--border-color)}
+        .summary-item:last-child{border-bottom:none}
+        .summary-icon{font-size:1.4rem;flex-shrink:0}
+        #progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--primary-color);transition:width .2s;z-index:9999}
+        .arch-box{box-sizing:border-box;max-width:77dvw;overflow:auto;background:var(--sidebar-hover-color);border-radius:var(--radius-m);padding:var(--m);font-family:monospace;font-size:var(--s);line-height:2.2}
+        .flow-row{display:flex;align-items:center;gap:var(--s);flex-wrap:wrap;margin:var(--xs) 0}
+        .flow-node{padding:var(--xs) var(--s);border-radius:var(--radius-s);font-weight:700;font-size:var(--s);white-space:nowrap}
+        .flow-arrow{color:var(--primary-color);font-weight:700;font-size:1.1rem}
+        .node-producer{background:var(--transprimary-color);color:var(--primary-color);border:1px solid var(--primary-color)}
+        .node-kafka{background:var(--transwarning-color);color:var(--warning-color);border:1px solid var(--warning-color)}
+        .node-consumer{background:var(--transsuccess-color);color:var(--success-color);border:1px solid var(--success-color)}
+        .node-topic{background:var(--transsecond-primary-color);color:var(--second-primary-color);border:1px solid var(--second-primary-color)}
+        .config-key{color:var(--primary-color);font-weight:700}
+        .config-val{color:var(--success-color)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<div id="progress-bar"></div>
+
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#chapter-1">📡 Kafka</a>
+    <a class="bottom-nav-item" href="#chapter-2">📤 Producer</a>
+    <a class="bottom-nav-item" href="#chapter-3">📥 Consumer</a>
+    <a class="bottom-nav-item" href="#chapter-4">⚙️ Config</a>
+    <a class="bottom-nav-item" href="#chapter-5">📝 Summary</a>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">📡 Java Kafka</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#chapter-1" class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">📡</div><span>Apa itu Kafka?</span></a>
+        <a href="#chapter-1b" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🏗️</div><span>Konsep Inti Kafka</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📤</div><span>Producer</span></a>
+        <a href="#chapter-2b" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔑</div><span>Key &amp; Partisi</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📥</div><span>Consumer</span></a>
+        <a href="#chapter-3b" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">👥</div><span>Consumer Group &amp; Offset</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚙️</div><span>Konfigurasi Lengkap</span></a>
+        <a href="#chapter-4b" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔧</div><span>Serializer &amp; Deserializer</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📝</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">📡 Java Kafka</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-1"><span class="container-header-nav-item-text">Apa itu Kafka?</span></a>
+                    <a class="container-header-nav-item" href="#chapter-2"><span class="container-header-nav-item-text">Producer</span></a>
+                    <a class="container-header-nav-item" href="#chapter-3"><span class="container-header-nav-item-text">Consumer</span></a>
+                    <a class="container-header-nav-item" href="#chapter-5"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- HERO -->
+        <div class="card-wrapper max-width-1000">
+            <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--x);">
+                <div class="flex-ais-jcs gap-m" style="align-items:center;">
+                    <span style="font-size:3rem;">📡</span>
+                    <div>
+                        <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Messaging &amp; Event Streaming</div>
+                        <h1 style="margin:var(--xs) 0 var(--s);">Apache Kafka dengan Java untuk Developer PHP/Laravel</h1>
+                        <p>Di Laravel kamu pakai <strong>Queue + Redis/SQS</strong> untuk async processing. Kafka adalah solusi yang jauh lebih powerful untuk skala enterprise — bukan hanya queue, tapi sebuah <strong>distributed event streaming platform</strong> yang bisa menyimpan, memutar ulang, dan memproses jutaan pesan per detik.</p>
+                    </div>
+                </div>
+                <hr style="border:none;border-top:1px solid var(--border-color);margin:var(--m) 0">
+                <div class="flex-ais-jcs gap-m">
+                    <div class="badge text-white bg-primary"><p>Apache Kafka</p></div>
+                    <div class="badge text-white bg-success"><p>PHP/Laravel Analogy</p></div>
+                    <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+                    <div class="badge badge-small bg-danger"><p>Producer &amp; Consumer</p></div>
+                </div>
+            </div>
+
+            <!-- Arsitektur Overview -->
+            <div style="margin-top:var(--m);">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">🏗️ Arsitektur Kafka — Gambaran Besar</div>
+                <div class="arch-box">
+                    <div class="flow-row">
+                        <span class="flow-node node-producer">📤 Producer App</span>
+                        <span class="flow-arrow">──send()──▶</span>
+                        <span class="flow-node node-kafka">⚡ Kafka Broker</span>
+                        <span class="flow-arrow">──poll()──▶</span>
+                        <span class="flow-node node-consumer">📥 Consumer App A</span>
+                    </div>
+                    <div class="flow-row" style="margin-left:180px">
+                        <span class="flow-arrow">──────────────────────────────────────────▶</span>
+                        <span class="flow-node node-consumer">📥 Consumer App B</span>
+                    </div>
+                    <div style="margin-top:var(--s);font-size:.9em;color:var(--second-text-color);">
+                        Kafka Broker menyimpan pesan dalam <span class="flow-node node-topic" style="display:inline-block;padding:2px 8px;">Topic</span> yang dibagi menjadi beberapa <span class="flow-node node-topic" style="display:inline-block;padding:2px 8px;">Partition</span>.
+                        Consumer bisa <strong>diputar ulang</strong> dari offset manapun — berbeda dari queue tradisional!
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--s);">⚖️ Kafka vs Laravel Queue</div>
+            <div class="table-content">
+                <table>
+                    <thead><tr><th>Fitur</th><th>Laravel Queue (Redis/SQS)</th><th>Apache Kafka</th></tr></thead>
+                    <tbody>
+                    <tr><td><strong>Pesan yang sudah diproses</strong></td><td>❌ Dihapus dari queue</td><td>✅ <strong>Tetap tersimpan</strong> (configurable retention)</td></tr>
+                    <tr><td><strong>Replay pesan</strong></td><td>❌ Tidak bisa</td><td>✅ <strong>Bisa dari offset manapun</strong></td></tr>
+                    <tr><td><strong>Throughput</strong></td><td>Ribuan/detik</td><td><strong>Jutaan pesan/detik</strong></td></tr>
+                    <tr><td><strong>Banyak consumer</strong></td><td>Satu pesan = satu worker</td><td>✅ <strong>Banyak consumer group bisa baca pesan yang sama</strong></td></tr>
+                    <tr><td><strong>Ordering</strong></td><td>FIFO per queue</td><td><strong>Ordered per partition</strong></td></tr>
+                    <tr><td><strong>Setup</strong></td><td>Mudah (built-in Laravel)</td><td>Perlu infrastruktur Kafka cluster</td></tr>
+                    <tr><td><strong>Use case</strong></td><td>Job async, email, notifikasi</td><td><strong>Event sourcing, audit log, microservice integration, real-time analytics</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CH1: APA ITU KAFKA -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 1</div>
+                    <h2>📡 Apa itu Apache Kafka?</h2>
+                    <p>Apache Kafka adalah <strong>distributed event streaming platform</strong> yang dirancang untuk menangani aliran data real-time dalam skala besar. Dibuat oleh LinkedIn, kini dipakai oleh Netflix, Uber, Airbnb, dan ribuan perusahaan lain untuk menghubungkan sistem-sistem mereka.</p>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel yang Paling Tepat</strong>
+                    Bayangkan kamu punya aplikasi Laravel dengan banyak service. Daripada setiap service langsung memanggil service lain (coupling ketat), kamu pakai Kafka sebagai <strong>"papan pengumuman raksasa"</strong>:
+                    <ul style="margin:var(--xs) 0 0;padding-left:var(--m);">
+                        <li><strong>Producer</strong> = Controller Laravel yang dispatch event (<code>event(new OrderPlaced($order))</code>)</li>
+                        <li><strong>Topic</strong> = Channel/queue spesifik (seperti nama queue di Laravel: <code>'orders'</code>)</li>
+                        <li><strong>Consumer</strong> = Listener/Worker yang proses event tersebut</li>
+                        <li><strong>Bedanya</strong>: 10 service berbeda bisa baca event yang SAMA secara independent — tidak seperti Laravel Queue di mana satu job hanya diproses satu worker!</li>
+                    </ul>
+                </div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📊 Kapan Sebaiknya Pakai Kafka?</div>
+                <div class="compare-grid">
+                    <div class="right-box">
+                        <div class="compare-label">✅ Pakai Kafka Kalau...</div>
+                        <ul style="margin:var(--xs) 0;padding-left:var(--m);font-size:var(--s);">
+                            <li>Volume pesan sangat besar (jutaan/hari)</li>
+                            <li>Banyak service perlu konsumsi event yang sama</li>
+                            <li>Butuh audit log / event history</li>
+                            <li>Butuh replay pesan (debug, backfill data)</li>
+                            <li>Real-time data pipeline / analytics</li>
+                            <li>Microservice event-driven architecture</li>
+                        </ul>
+                    </div>
+                    <div class="wrong-box" style="border-left-color:var(--warning-color);background:var(--transwarning-color);">
+                        <div class="compare-label" style="color:var(--warning-color);">⚠️ Cukup Laravel Queue Kalau...</div>
+                        <ul style="margin:var(--xs) 0;padding-left:var(--m);font-size:var(--s);">
+                            <li>Aplikasi monolith sederhana</li>
+                            <li>Volume job rendah-sedang</li>
+                            <li>Tidak butuh replay atau multi-consumer</li>
+                            <li>Tim belum siap manage Kafka cluster</li>
+                            <li>Budget infrastruktur terbatas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1</div>
+                    <p><strong>Apa perbedaan fundamental Kafka dengan message queue tradisional seperti Redis Queue?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅐</span> Kafka lebih cepat karena menggunakan memori, bukan disk</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',true)"><span>🅑</span> Pesan di Kafka tetap tersimpan setelah dikonsumsi dan bisa dibaca oleh banyak consumer group secara independen — berbeda dari queue tradisional yang menghapus pesan setelah diproses</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1',false)"><span>🅒</span> Kafka hanya bisa dipakai dengan Java, bukan PHP</div>
+                    <div class="quiz-feedback" id="q1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH1B: KONSEP INTI -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 1B</div>
+                    <h2>🏗️ Konsep Inti Kafka</h2>
+                    <p>Sebelum coding, pahami dulu "kosa kata" Kafka. Semua terminology ini akan sering muncul di kode dan konfigurasi.</p>
+                </div>
+
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Istilah</th><th>Definisi</th><th>Analogi Laravel</th></tr></thead>
+                        <tbody>
+                        <tr><td><strong>Broker</strong></td><td>Server Kafka yang menyimpan dan mendistribusikan pesan</td><td>Redis server / database server</td></tr>
+                        <tr><td><strong>Topic</strong></td><td>Kategori/channel tempat pesan dikirim — seperti "folder" pesan</td><td>Nama queue: <code>'emails'</code>, <code>'orders'</code></td></tr>
+                        <tr><td><strong>Partition</strong></td><td>Pembagian topic menjadi beberapa bagian untuk paralelisme</td><td>Tidak ada analoginya langsung</td></tr>
+                        <tr><td><strong>Offset</strong></td><td>Nomor urut posisi pesan dalam partition (0, 1, 2, ...)</td><td>ID auto-increment di tabel jobs</td></tr>
+                        <tr><td><strong>Producer</strong></td><td>Aplikasi yang mengirim pesan ke Kafka</td><td><code>Job::dispatch()</code> / <code>event()</code></td></tr>
+                        <tr><td><strong>Consumer</strong></td><td>Aplikasi yang membaca pesan dari Kafka</td><td>Queue Worker / Event Listener</td></tr>
+                        <tr><td><strong>Consumer Group</strong></td><td>Sekelompok consumer yang bekerja sama membaca topic</td><td>Grup workers untuk satu queue</td></tr>
+                        <tr><td><strong>Record/Message</strong></td><td>Satu pesan yang dikirim ke Kafka — terdiri dari key, value, header, timestamp</td><td>Job payload</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📦 Struktur Sebuah Kafka Record</div>
+                <div class="arch-box">
+                    <div style="margin-bottom:var(--s);">📨 <strong>ProducerRecord / ConsumerRecord</strong></div>
+                    ┌─────────────────────────────────────────────┐<br>
+                    │ <span style="color:var(--primary-color);font-weight:700;">topic</span>     : "helloworld"                       │<br>
+                    │ <span style="color:var(--warning-color);font-weight:700;">partition</span>  : 0 (auto atau manual)              │<br>
+                    │ <span style="color:var(--success-color);font-weight:700;">key</span>       : "0" (String)                      │<br>
+                    │ <span style="color:var(--second-primary-color);font-weight:700;">value</span>     : "Hello 0" (String)                │<br>
+                    │ timestamp  : 1716700000000                      │<br>
+                    │ offset     : 0 (ditetapkan oleh broker)         │<br>
+                    └─────────────────────────────────────────────┘
+                </div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">🗂️ Topic, Partition &amp; Offset — Cara Kafka Menyimpan Data</div>
+                <div class="arch-box">
+                    Topic: "helloworld" (3 partitions)<br><br>
+                    Partition 0: [msg0] [msg3] [msg6] [msg9] ← offset 0,1,2,3<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑ Consumer A membaca dari sini<br><br>
+                    Partition 1: [msg1] [msg4] [msg7] ← offset 0,1,2<br>
+                    Partition 2: [msg2] [msg5] [msg8] ← offset 0,1,2<br><br>
+                    <span style="color:var(--primary-color);">→ Key yang sama selalu masuk partition yang sama</span><br>
+                    <span style="color:var(--success-color);">→ Ordering hanya dijamin per partition, bukan lintas partition</span>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 Kenapa Ada Partition?</strong>
+                    Partition adalah kunci scalability Kafka. Setiap partition bisa ditangani oleh consumer yang berbeda secara paralel. Dengan 10 partition, kamu bisa punya 10 consumer membaca topic yang sama secara bersamaan — throughput 10x lipat! Di Laravel Queue, paralelisme hanya ditentukan dari jumlah worker process.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 1B</div>
+                    <p><strong>Apa fungsi "offset" dalam Kafka?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1b',false)"><span>🅐</span> Menentukan di broker mana pesan disimpan</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1b',true)"><span>🅑</span> Nomor urut posisi pesan dalam sebuah partition — consumer menyimpan offset untuk tahu pesan mana yang sudah dibaca</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q1b',false)"><span>🅒</span> Ukuran payload pesan dalam bytes</div>
+                    <div class="quiz-feedback" id="q1b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2: PRODUCER -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 2</div>
+                    <h2>📤 Producer — Mengirim Pesan ke Kafka</h2>
+                    <p>Producer adalah aplikasi yang mengirim pesan (record) ke Kafka. Di Java, kita menggunakan <code>KafkaProducer&lt;K, V&gt;</code> di mana <code>K</code> adalah tipe key dan <code>V</code> adalah tipe value pesan.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ProducerApp.java — Lengkap dengan penjelasan
+package programmerzamannow.kafka;
+
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class ProducerApp {
+
+  public static void main(String[] args) throws ExecutionException, InterruptedException {
+
+    // ── 1. KONFIGURASI ──────────────────────────────────────────
+    Properties properties = new Properties();
+
+    // Alamat Kafka Broker (bisa multiple: "host1:9092,host2:9092")
+    properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+
+    // Serializer: cara mengubah key/value Java → bytes untuk dikirim ke Kafka
+    properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,   StringSerializer.class.getName());
+    properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+    // ── 2. BUAT PRODUCER ────────────────────────────────────────
+    // KafkaProducer<KeyType, ValueType>
+    KafkaProducer&lt;String, String&gt; producer = new KafkaProducer&lt;&gt;(properties);
+
+    // ── 3. KIRIM 10 PESAN ───────────────────────────────────────
+    for (int i = 0; i &lt; 10; i++) {
+      ProducerRecord&lt;String, String&gt; message = new ProducerRecord&lt;&gt;(
+        "helloworld",        // topic — harus sudah ada di Kafka
+        Integer.toString(i), // key   — "0", "1", "2", ... (menentukan partition)
+        "Hello " + i         // value — payload pesan
+      );
+
+      producer.send(message).get(); // .get() = tunggu konfirmasi (synchronous)
+      // Tanpa .get() = fire-and-forget (async, lebih cepat tapi tidak tahu sukses/gagal)
+    }
+
+    // ── 4. TUTUP PRODUCER ───────────────────────────────────────
+    producer.close(); // flush semua pesan yang pending dan tutup koneksi
+  }
+}</code></pre></div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📖 Penjelasan Baris per Baris</div>
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Komponen</th><th>Keterangan</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>KafkaProducer&lt;String, String&gt;</code></td><td>Generic type: &lt;TipeKey, TipeValue&gt;. Keduanya String di sini.</td></tr>
+                        <tr><td><code>ProducerRecord(topic, key, value)</code></td><td>Satu pesan yang akan dikirim. Key opsional tapi penting untuk partitioning.</td></tr>
+                        <tr><td><code>producer.send(message)</code></td><td>Async: kirim pesan, return <code>Future&lt;RecordMetadata&gt;</code></td></tr>
+                        <tr><td><code>.get()</code></td><td>Blokir sampai broker konfirmasi pesan diterima. Jika gagal, throw exception.</td></tr>
+                        <tr><td><code>producer.close()</code></td><td>Wajib! Flush buffer yang pending dan tutup koneksi ke broker.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="compare-grid" style="margin-top:var(--m);">
+                    <div class="wrong-box" style="border-left-color:var(--warning-color);background:var(--transwarning-color);">
+                        <div class="compare-label" style="color:var(--warning-color);">⚠️ Async (Fire and Forget)</div>
+                        <div class="code-wrap"><pre><code class="language-java">// Tidak tahu berhasil atau gagal!
+producer.send(message);
+// Cepat, tapi bisa kehilangan pesan
+// jika broker down</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Sync dengan Konfirmasi</div>
+                        <div class="code-wrap"><pre><code class="language-java">// Tunggu konfirmasi dari broker
+RecordMetadata meta = producer.send(message).get();
+System.out.println("Offset: " + meta.offset());
+System.out.println("Partition: " + meta.partition());</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>producer.send(message)</code> seperti <code>Job::dispatch()</code> di Laravel. <code>.get()</code> seperti <code>Job::dispatchSync()</code> — tunggu sampai selesai. Tanpa <code>.get()</code> seperti <code>Job::dispatch()</code> biasa — fire and forget, tidak blocking.
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Jangan Lupa producer.close()!</strong>
+                    Producer Kafka mem-buffer pesan sebelum dikirim ke broker untuk efisiensi. Tanpa <code>close()</code>, pesan yang masih di buffer bisa hilang saat aplikasi keluar! <code>close()</code> akan flush semua buffer sebelum menutup koneksi.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 2</div>
+                    <p><strong>Apa yang terjadi jika kamu memanggil <code>producer.send(message)</code> tanpa <code>.get()</code>?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅐</span> Pesan gagal dikirim karena perlu konfirmasi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',true)"><span>🅑</span> Pesan dikirim secara async (fire-and-forget) — program tidak menunggu konfirmasi dari broker, lebih cepat tapi tidak tahu apakah berhasil</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2',false)"><span>🅒</span> Compile error karena send() wajib diikuti get()</div>
+                    <div class="quiz-feedback" id="q2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH2B: KEY & PARTISI -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 2B</div>
+                    <h2>🔑 Key &amp; Partisi — Mengontrol Routing Pesan</h2>
+                    <p><strong>Key</strong> pada ProducerRecord bukan hanya label — ia menentukan <strong>partition mana</strong> yang akan menerima pesan. Semua pesan dengan key yang sama akan selalu masuk ke partition yang sama, menjamin <strong>ordering per key</strong>.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// Variasi cara mengirim pesan
+
+// 1. Tanpa key — partition dipilih round-robin / random
+ProducerRecord&lt;String, String&gt; msg1 = new ProducerRecord&lt;&gt;(
+  "helloworld",  // topic
+  "Hello World"  // value (tidak ada key)
+);
+
+// 2. Dengan key — partition ditentukan oleh hash(key)
+ProducerRecord&lt;String, String&gt; msg2 = new ProducerRecord&lt;&gt;(
+  "helloworld",  // topic
+  "user-123",    // key — semua pesan dengan key "user-123" ke partition YANG SAMA
+  "Hello World"  // value
+);
+
+// 3. Dengan key + partition eksplisit (override routing)
+ProducerRecord&lt;String, String&gt; msg3 = new ProducerRecord&lt;&gt;(
+  "helloworld",  // topic
+  0,             // partition — paksa kirim ke partition 0
+  "user-123",    // key
+  "Hello World"  // value
+);
+
+// Callback async — tahu hasil tanpa blocking
+producer.send(message, (metadata, exception) -> {
+  if (exception != null) {
+    System.err.println("Error: " + exception.getMessage());
+  } else {
+    System.out.println("Sent to partition " + metadata.partition()
+        + " at offset " + metadata.offset());
+  }
+});</code></pre></div>
+
+                <div class="info-box tip">
+                    <strong>💡 Kapan Key Penting?</strong>
+                    Gunakan key ketika kamu butuh <strong>ordering per entity</strong>. Contoh: semua event untuk <code>order-456</code> (created, paid, shipped, delivered) harus dalam urutan yang benar → pakai <code>"order-456"</code> sebagai key sehingga semua masuk ke partition yang sama dan consumer membacanya berurutan.
+                </div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Jangan Tambah Partition Sembarangan!</strong>
+                    Setelah topic dibuat, menambah partition akan mengubah routing key ke partition. Pesan dengan key yang sama mungkin masuk ke partition berbeda setelah partition ditambah — ordering bisa rusak. Rencanakan jumlah partition dari awal!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 2B</div>
+                    <p><strong>Kenapa penting menggunakan key yang konsisten untuk event dari entity yang sama (misal: order)?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2b',false)"><span>🅐</span> Untuk menghemat bandwidth karena key dikompresi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2b',true)"><span>🅑</span> Karena key menentukan partition — entity yang sama selalu masuk partition yang sama, menjamin ordering event dibaca berurutan oleh consumer</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q2b',false)"><span>🅒</span> Key hanya dipakai untuk filtering oleh consumer, tidak ada efek teknis lain</div>
+                    <div class="quiz-feedback" id="q2b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3: CONSUMER -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3</div>
+                    <h2>📥 Consumer — Membaca Pesan dari Kafka</h2>
+                    <p>Consumer adalah aplikasi yang membaca (polling) pesan dari Kafka. Di Java, kita menggunakan <code>KafkaConsumer&lt;K, V&gt;</code>. Consumer Kafka menggunakan model <strong>poll-based</strong> — bukan push — jadi consumer yang aktif meminta data.</p>
+                </div>
+
+                <div class="code-wrap"><pre><code class="language-java">// ConsumerApp.java — Lengkap dengan penjelasan
+package programmerzamannow.kafka;
+
+import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.serialization.StringDeserializer;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Properties;
+
+public class ConsumerApp {
+
+  public static void main(String[] args) {
+
+    // ── 1. KONFIGURASI ──────────────────────────────────────────
+    Properties properties = new Properties();
+
+    // Alamat Kafka Broker
+    properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+
+    // Dari offset mana mulai baca jika consumer group baru (belum ada offset tersimpan)
+    // "earliest" = dari awal topic | "latest" = hanya pesan baru setelah consumer join
+    properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+    // Deserializer: cara mengubah bytes dari Kafka → tipe Java
+    properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,   StringDeserializer.class.getName());
+    properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+
+    // Group ID — WAJIB! Menentukan consumer group ini termasuk kelompok mana
+    properties.put(ConsumerConfig.GROUP_ID_CONFIG, "java");
+
+    // ── 2. BUAT CONSUMER ────────────────────────────────────────
+    KafkaConsumer&lt;String, String&gt; consumer = new KafkaConsumer&lt;&gt;(properties);
+
+    // ── 3. SUBSCRIBE KE TOPIC ───────────────────────────────────
+    consumer.subscribe(List.of("helloworld")); // bisa subscribe ke banyak topic
+
+    // ── 4. POLL LOOP ─────────────────────────────────────────────
+    while (true) {
+      // poll() — minta pesan dari Kafka, timeout 1 detik jika tidak ada pesan
+      ConsumerRecords&lt;String, String&gt; records = consumer.poll(Duration.ofSeconds(1));
+
+      // Iterasi setiap pesan yang diterima
+      for (ConsumerRecord&lt;String, String&gt; message : records) {
+        System.out.println("Received message: " + message.value());
+
+        // Data lengkap yang tersedia dari setiap record:
+        System.out.println("  Topic:     " + message.topic());
+        System.out.println("  Partition: " + message.partition());
+        System.out.println("  Offset:    " + message.offset());
+        System.out.println("  Key:       " + message.key());
+        System.out.println("  Value:     " + message.value());
+        System.out.println("  Timestamp: " + message.timestamp());
+      }
+    }
+  }
+}</code></pre></div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📖 Penjelasan Komponen Consumer</div>
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Komponen</th><th>Keterangan</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>consumer.subscribe(topics)</code></td><td>Daftarkan consumer ke satu atau lebih topic. Kafka akan assign partition ke consumer ini.</td></tr>
+                        <tr><td><code>consumer.poll(duration)</code></td><td>Minta batch pesan dari Kafka. Blokir paling lama <code>duration</code> jika tidak ada pesan baru. Return <code>ConsumerRecords</code>.</td></tr>
+                        <tr><td><code>ConsumerRecords</code></td><td>Kumpulan pesan hasil poll — bisa nol atau lebih pesan.</td></tr>
+                        <tr><td><code>ConsumerRecord</code></td><td>Satu pesan — berisi topic, partition, offset, key, value, timestamp.</td></tr>
+                        <tr><td><code>while (true)</code></td><td>Consumer umumnya berjalan terus (long-running process) — mirip queue worker Laravel.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    <code>while (true) { consumer.poll() }</code> persis seperti <code>php artisan queue:work --sleep=1</code> — loop terus, cek queue setiap sekian detik, proses kalau ada job. Di Laravel ini dihandle oleh framework, di Kafka kamu tulis polling loop-nya sendiri (atau pakai library seperti Spring Kafka yang handle ini otomatis).
+                </div>
+
+                <div class="compare-grid">
+                    <div class="wrong-box" style="border-left-color:var(--warning-color);background:var(--transwarning-color);">
+                        <div class="compare-label" style="color:var(--warning-color);">⚠️ auto_offset_reset: "latest"</div>
+                        <div class="code-wrap"><pre><code class="language-java">// "latest" = hanya baca pesan BARU
+// setelah consumer join.
+// Pesan lama yang sudah ada DILEWATI.
+// Cocok untuk: real-time stream
+// dimana pesan lama tidak relevan.</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ auto_offset_reset: "earliest"</div>
+                        <div class="code-wrap"><pre><code class="language-java">// "earliest" = baca dari AWAL topic
+// (jika consumer group belum pernah
+// baca topic ini sebelumnya).
+// Cocok untuk: reprocessing data,
+// consumer group baru yang perlu
+// semua history pesan.</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3</div>
+                    <p><strong>Apa yang dikembalikan oleh <code>consumer.poll(Duration.ofSeconds(1))</code> jika tidak ada pesan baru selama 1 detik?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅐</span> <code>null</code></div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',true)"><span>🅑</span> <code>ConsumerRecords</code> kosong (empty) — tidak null, tapi iterasinya tidak menghasilkan record apapun</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3',false)"><span>🅒</span> Melempar <code>TimeoutException</code></div>
+                    <div class="quiz-feedback" id="q3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH3B: CONSUMER GROUP & OFFSET -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 3B</div>
+                    <h2>👥 Consumer Group &amp; Offset Management</h2>
+                    <p><strong>Consumer Group</strong> adalah fitur paling powerful di Kafka. Dengan GROUP_ID yang sama, beberapa instance consumer akan otomatis dibagi partisi-partisinya — paralelisme built-in. Dengan GROUP_ID berbeda, semua consumer mendapat salinan penuh pesan yang sama.</p>
+                </div>
+
+                <div class="arch-box">
+                    <strong>Skenario: Topic "orders" dengan 3 Partitions</strong><br><br>
+                    <span style="color:var(--primary-color);">Group ID: "payment-service"</span><br>
+                    &nbsp;&nbsp;Consumer 1 → Partition 0 (proses pesanan 0,3,6,...)<br>
+                    &nbsp;&nbsp;Consumer 2 → Partition 1 (proses pesanan 1,4,7,...)<br>
+                    &nbsp;&nbsp;Consumer 3 → Partition 2 (proses pesanan 2,5,8,...)<br>
+                    &nbsp;&nbsp;→ Load balanced, tiap pesan diproses SEKALI oleh group ini<br><br>
+                    <span style="color:var(--success-color);">Group ID: "analytics-service"</span><br>
+                    &nbsp;&nbsp;Consumer 1 → Partition 0,1,2 (baca SEMUA pesan)<br>
+                    &nbsp;&nbsp;→ Service lain yang juga perlu semua data order!<br><br>
+                    <span style="color:var(--warning-color);">Kesimpulan: Satu topic, dua consumer group = dua service independen!</span>
+                </div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// ── Consumer Group: group yang sama = load balanced ──────────────
+
+// Instance 1 — Group "java" (group yang sama!)
+properties.put(ConsumerConfig.GROUP_ID_CONFIG, "java");
+consumer1.subscribe(List.of("helloworld"));
+// → Kafka assign sebagian partition ke consumer1
+
+// Instance 2 — Group "java" (group yang sama!)
+properties.put(ConsumerConfig.GROUP_ID_CONFIG, "java");
+consumer2.subscribe(List.of("helloworld"));
+// → Kafka assign partition sisanya ke consumer2
+// → Total: semua pesan dibagi rata, tidak ada duplikat dalam group
+
+// ── Consumer Group berbeda = masing-masing baca semua ─────────────
+
+// Service lain dengan group ID berbeda
+properties.put(ConsumerConfig.GROUP_ID_CONFIG, "analytics");
+consumerAnalytics.subscribe(List.of("helloworld"));
+// → Baca SEMUA pesan dari awal, tidak terpengaruh group "java"!
+
+// ── Manual Offset Management ──────────────────────────────────────
+// Default: auto-commit offset setiap 5 detik (bisa duplicate jika crash)
+// Manual: lebih aman — commit hanya setelah berhasil proses
+
+// Matikan auto-commit
+properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+
+while (true) {
+  var records = consumer.poll(Duration.ofSeconds(1));
+  for (var record : records) {
+    // proses pesan...
+    processMessage(record.value());
+  }
+  // Commit SETELAH semua pesan dalam batch berhasil diproses
+  consumer.commitSync(); // atau commitAsync() untuk performa lebih baik
+}</code></pre></div>
+
+                <div class="compare-grid">
+                    <div class="wrong-box">
+                        <div class="compare-label">❌ Auto Commit (Default) — Risiko Hilang Pesan</div>
+                        <div class="code-wrap"><pre><code class="language-java">// Auto commit offset setiap 5 detik
+// Skenario masalah:
+// 1. poll() → dapat 100 pesan
+// 2. Auto-commit → offset di-commit
+// 3. Proses pesan ke-50... CRASH!
+// 4. Consumer restart → baca dari
+//    offset yang sudah di-commit
+// 5. Pesan 51-100 HILANG! ❌</code></pre></div>
+                    </div>
+                    <div class="right-box">
+                        <div class="compare-label">✅ Manual Commit — At-Least-Once</div>
+                        <div class="code-wrap"><pre><code class="language-java">// Commit hanya setelah proses selesai
+// Skenario aman:
+// 1. poll() → dapat 100 pesan
+// 2. Proses semua 100 pesan
+// 3. commitSync() → offset di-commit
+// 4. Kalau crash sebelum commit:
+//    Consumer restart dari offset lama
+//    → pesan diproses ulang (at-least-once) ✅</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <strong>💡 At-Least-Once vs Exactly-Once</strong>
+                    Manual commit memberikan <strong>at-least-once</strong> delivery — pesan mungkin diproses lebih dari sekali jika crash sebelum commit. Untuk <strong>exactly-once</strong>, kamu perlu idempotent consumer (cek apakah sudah diproses sebelumnya) atau Kafka Transactions (topik advanced). Di kebanyakan use case, at-least-once sudah cukup dengan desain consumer yang idempotent.
+                </div>
+
+                <div class="info-box laravel">
+                    <strong>🟣 Analogi Laravel</strong>
+                    Consumer Group di Kafka persis seperti konsep <strong>multiple queue connection di Laravel</strong>. Bayangkan satu job bisa didengar oleh dua listener berbeda sekaligus: <code>OrderPaymentListener</code> dan <code>OrderAnalyticsListener</code> — keduanya terima semua order event secara independen. Di Laravel biasa, kamu butuh <code>event()->listen()</code> dengan banyak listener. Di Kafka, cukup pakai GROUP_ID berbeda!
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 3B</div>
+                    <p><strong>Ada 3 consumer dengan GROUP_ID yang SAMA subscribe ke topic dengan 6 partitions. Berapa partition yang dipegang setiap consumer?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3b',false)"><span>🅐</span> Setiap consumer dapat 6 partition (semua partition)</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3b',true)"><span>🅑</span> Setiap consumer dapat 2 partition — total 6 dibagi merata ke 3 consumer dalam group yang sama</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q3b',false)"><span>🅒</span> Hanya consumer pertama yang mendapat partition, sisanya standby</div>
+                    <div class="quiz-feedback" id="q3b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4: KONFIGURASI -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 4</div>
+                    <h2>⚙️ Konfigurasi Lengkap — Producer &amp; Consumer</h2>
+                    <p>Konfigurasi Kafka sangat banyak. Berikut config yang paling sering dipakai di production beserta penjelasannya.</p>
+                </div>
+
+                <div style="font-weight:700;margin:0 0 var(--s);">📤 Producer Config Penting</div>
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Config Key</th><th>Default</th><th>Keterangan</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>bootstrap.servers</code></td><td>-</td><td><strong>Wajib!</strong> Alamat broker. Format: <code>host:port</code>. Bisa banyak dipisah koma untuk fallback.</td></tr>
+                        <tr><td><code>key.serializer</code></td><td>-</td><td><strong>Wajib!</strong> Cara encode key Java → bytes.</td></tr>
+                        <tr><td><code>value.serializer</code></td><td>-</td><td><strong>Wajib!</strong> Cara encode value Java → bytes.</td></tr>
+                        <tr><td><code>acks</code></td><td><code>1</code></td><td><code>0</code>=no ack, <code>1</code>=leader ack, <code>all</code>=all replicas ack. Makin tinggi = makin aman, makin lambat.</td></tr>
+                        <tr><td><code>retries</code></td><td><code>2147483647</code></td><td>Berapa kali retry jika gagal kirim.</td></tr>
+                        <tr><td><code>batch.size</code></td><td><code>16384</code> (16KB)</td><td>Ukuran batch pesan sebelum dikirim ke broker. Lebih besar = throughput lebih tinggi.</td></tr>
+                        <tr><td><code>linger.ms</code></td><td><code>0</code></td><td>Tunggu sekian ms sebelum kirim batch (meski belum penuh). Meningkatkan throughput dengan sedikit tambahan latency.</td></tr>
+                        <tr><td><code>compression.type</code></td><td><code>none</code></td><td><code>gzip</code>, <code>snappy</code>, <code>lz4</code>, <code>zstd</code>. Kompresi payload untuk hemat bandwidth.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="font-weight:700;margin:var(--m) 0 var(--s);">📥 Consumer Config Penting</div>
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Config Key</th><th>Default</th><th>Keterangan</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>bootstrap.servers</code></td><td>-</td><td><strong>Wajib!</strong> Sama seperti producer.</td></tr>
+                        <tr><td><code>group.id</code></td><td>-</td><td><strong>Wajib!</strong> Nama consumer group. Consumer dengan group ID yang sama berbagi partition.</td></tr>
+                        <tr><td><code>key.deserializer</code></td><td>-</td><td><strong>Wajib!</strong> Cara decode bytes dari Kafka → tipe Java key.</td></tr>
+                        <tr><td><code>value.deserializer</code></td><td>-</td><td><strong>Wajib!</strong> Cara decode bytes dari Kafka → tipe Java value.</td></tr>
+                        <tr><td><code>auto.offset.reset</code></td><td><code>latest</code></td><td><code>earliest</code> = baca dari awal jika group baru. <code>latest</code> = hanya pesan baru. <code>none</code> = error jika tidak ada offset.</td></tr>
+                        <tr><td><code>enable.auto.commit</code></td><td><code>true</code></td><td>Auto-commit offset secara berkala. Set <code>false</code> untuk manual commit yang lebih aman.</td></tr>
+                        <tr><td><code>auto.commit.interval.ms</code></td><td><code>5000</code></td><td>Interval auto-commit (jika enable.auto.commit = true).</td></tr>
+                        <tr><td><code>max.poll.records</code></td><td><code>500</code></td><td>Maks pesan per poll(). Kurangi jika processing satu batch terlalu lama.</td></tr>
+                        <tr><td><code>session.timeout.ms</code></td><td><code>45000</code></td><td>Jika broker tidak dapat heartbeat dari consumer dalam waktu ini, consumer dianggap mati dan rebalance terjadi.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// Contoh konfigurasi production-ready Producer
+Properties producerProps = new Properties();
+producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9092,kafka2:9092,kafka3:9092");
+producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,   StringSerializer.class.getName());
+producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+producerProps.put(ProducerConfig.ACKS_CONFIG,           "all");    // tunggu semua replika
+producerProps.put(ProducerConfig.RETRIES_CONFIG,        3);        // retry 3x jika gagal
+producerProps.put(ProducerConfig.LINGER_MS_CONFIG,      5);        // batch sampai 5ms
+producerProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG,"snappy"); // kompresi
+
+// Contoh konfigurasi production-ready Consumer
+Properties consumerProps = new Properties();
+consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,       "kafka1:9092,kafka2:9092,kafka3:9092");
+consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG,                "payment-service");
+consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,  StringDeserializer.class.getName());
+consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class.getName());
+consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,       "earliest");
+consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,      "false"); // manual commit
+consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG,        100);     // 100 pesan per poll</code></pre></div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 4</div>
+                    <p><strong>Config <code>acks=all</code> vs <code>acks=1</code> — apa trade-off-nya?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',false)"><span>🅐</span> <code>acks=all</code> lebih cepat karena langsung lanjut tanpa menunggu</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',true)"><span>🅑</span> <code>acks=all</code> lebih aman (semua replika konfirmasi) tapi lebih lambat; <code>acks=1</code> lebih cepat (hanya leader konfirmasi) tapi pesan bisa hilang jika leader crash sebelum replikasi</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4',false)"><span>🅒</span> Tidak ada bedanya untuk single-broker setup</div>
+                    <div class="quiz-feedback" id="q4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH4B: SERIALIZER -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4b">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-intro">
+                    <div class="chapter-num">Chapter 4B</div>
+                    <h2>🔧 Serializer &amp; Deserializer</h2>
+                    <p>Kafka menyimpan data sebagai <strong>raw bytes</strong>. Serializer mengubah objek Java → bytes saat kirim. Deserializer mengubah bytes → objek Java saat terima. Harus simetris — serializer di producer harus ada pasangan deserializer di consumer.</p>
+                </div>
+
+                <div class="table-content">
+                    <table class="line-table">
+                        <thead><tr><th>Serializer/Deserializer</th><th>Untuk Tipe</th><th>Import dari</th></tr></thead>
+                        <tbody>
+                        <tr><td><code>StringSerializer / StringDeserializer</code></td><td>String</td><td><code>org.apache.kafka.common.serialization</code></td></tr>
+                        <tr><td><code>IntegerSerializer / IntegerDeserializer</code></td><td>Integer</td><td><code>org.apache.kafka.common.serialization</code></td></tr>
+                        <tr><td><code>LongSerializer / LongDeserializer</code></td><td>Long</td><td><code>org.apache.kafka.common.serialization</code></td></tr>
+                        <tr><td><code>ByteArraySerializer / ByteArrayDeserializer</code></td><td>byte[]</td><td><code>org.apache.kafka.common.serialization</code></td></tr>
+                        <tr><td><code>JsonSerializer / JsonDeserializer</code></td><td>Object → JSON</td><td>Spring Kafka / Jackson</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-wrap" style="margin-top:var(--m);"><pre><code class="language-java">// Contoh: Kirim JSON object (perlu library tambahan seperti Jackson)
+// 1. Buat class model
+public record OrderEvent(String orderId, String status, Long amount) {}
+
+// 2. Custom Serializer (atau pakai JsonSerializer dari Spring Kafka)
+// Producer: object → JSON string → bytes
+properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+    StringSerializer.class.getName()); // serialize ke String JSON dulu
+
+// Di kode producer:
+ObjectMapper mapper = new ObjectMapper();
+String json = mapper.writeValueAsString(new OrderEvent("ORD-123", "PAID", 150000L));
+producer.send(new ProducerRecord&lt;&gt;("orders", "ORD-123", json));
+
+// 3. Consumer: bytes → JSON string → object
+// Di kode consumer:
+for (var record : records) {
+  OrderEvent event = mapper.readValue(record.value(), OrderEvent.class);
+  System.out.println("Order " + event.orderId() + " is " + event.status());
+}
+
+// ── Cara lebih elegant dengan Spring Kafka ──────────────────────
+// Spring Kafka menyediakan JsonSerializer/JsonDeserializer otomatis
+// sehingga kamu bisa langsung kerja dengan object Java tanpa
+// manual conversion. Tapi itu topik Spring Kafka terpisah!</code></pre></div>
+
+                <div class="info-box warn">
+                    <strong>⚠️ Serializer harus simetris!</strong>
+                    Jika Producer menggunakan <code>StringSerializer</code>, Consumer wajib menggunakan <code>StringDeserializer</code>. Jika tidak cocok, consumer akan mendapat error saat mencoba decode bytes yang tidak kompatibel.
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-title">🧠 Mini Quiz — Chapter 4B</div>
+                    <p><strong>Producer menggunakan <code>StringSerializer</code>, tapi Consumer menggunakan <code>IntegerDeserializer</code>. Apa yang terjadi?</strong></p>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4b',false)"><span>🅐</span> Kafka otomatis mengkonversi String ke Integer</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4b',true)"><span>🅑</span> Error saat consumer mencoba deserialize — bytes yang di-encode sebagai UTF-8 String tidak valid sebagai Integer bytes</div>
+                    <div class="quiz-option" onclick="checkQuiz(this,'q4b',false)"><span>🅒</span> Consumer mendapat null untuk setiap pesan</div>
+                    <div class="quiz-feedback" id="q4b-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CH5: SUMMARY -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div style="box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color),var(--transthird-primary-color));border-radius:var(--radius-x);padding:var(--l);margin-bottom:var(--m);">
+                    <div style="font-weight:700;font-size:var(--s);color:var(--primary-color);text-transform:uppercase;letter-spacing:.08em;">Final Chapter</div>
+                    <h2 style="margin:var(--xs) 0 var(--s);">📝 Summary — Kafka Cheat Sheet</h2>
+                    <p>Ringkasan semua konsep penting Kafka dengan Java.</p>
+                </div>
+
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">⚡ Cheat Sheet Kode</div>
+                <div class="code-wrap"><pre><code class="language-java">// ── PRODUCER ─────────────────────────────────────────────────
+Properties props = new Properties();
+props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,   "localhost:9092");
+props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,   StringSerializer.class.getName());
+props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+KafkaProducer&lt;String, String&gt; producer = new KafkaProducer&lt;&gt;(props);
+
+// Kirim pesan (sync)
+producer.send(new ProducerRecord&lt;&gt;("topic", "key", "value")).get();
+
+// Kirim pesan (async dengan callback)
+producer.send(record, (metadata, ex) -> {
+  if (ex != null) ex.printStackTrace();
+  else System.out.println("Sent to offset: " + metadata.offset());
+});
+
+producer.close(); // JANGAN LUPA!
+
+// ── CONSUMER ─────────────────────────────────────────────────
+Properties cProps = new Properties();
+cProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,       "localhost:9092");
+cProps.put(ConsumerConfig.GROUP_ID_CONFIG,                "my-group");
+cProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,   StringDeserializer.class.getName());
+cProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+cProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,        "earliest");
+
+KafkaConsumer&lt;String, String&gt; consumer = new KafkaConsumer&lt;&gt;(cProps);
+consumer.subscribe(List.of("topic1", "topic2")); // bisa multi-topic
+
+while (true) {
+  ConsumerRecords&lt;String, String&gt; records = consumer.poll(Duration.ofSeconds(1));
+  for (ConsumerRecord&lt;String, String&gt; record : records) {
+    System.out.printf("topic=%s, partition=%d, offset=%d, key=%s, value=%s%n",
+        record.topic(), record.partition(), record.offset(),
+        record.key(), record.value());
+  }
+}</code></pre></div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🧠 Key Concepts — Ringkasan</div>
+                <div>
+                    <div class="summary-item"><div class="summary-icon">📡</div><div><strong>Kafka = Distributed Event Streaming Platform.</strong> Bukan sekadar message queue — pesan tersimpan, bisa di-replay, bisa dikonsumsi oleh banyak consumer group secara independen.</div></div>
+                    <div class="summary-item"><div class="summary-icon">🗂️</div><div><strong>Topic + Partition = Scalability.</strong> Topic dibagi menjadi partition untuk paralelisme. Consumer dalam group yang sama dibagi partition-partition ini. Lebih banyak partition = lebih banyak consumer paralel.</div></div>
+                    <div class="summary-item"><div class="summary-icon">🔑</div><div><strong>Key = Routing + Ordering.</strong> Pesan dengan key yang sama selalu masuk ke partition yang sama — menjamin ordering per key. Tanpa key, routing round-robin.</div></div>
+                    <div class="summary-item"><div class="summary-icon">👥</div><div><strong>Consumer Group = Load Balancing built-in.</strong> GROUP_ID yang sama = partition dibagi merata (satu pesan diproses sekali). GROUP_ID berbeda = semua consumer group mendapat salinan penuh semua pesan.</div></div>
+                    <div class="summary-item"><div class="summary-icon">📍</div><div><strong>Offset = Bookmark posisi baca.</strong> Consumer menyimpan offset per partition untuk tahu pesan mana yang sudah diproses. Manual commit = at-least-once delivery yang lebih aman dari auto-commit.</div></div>
+                    <div class="summary-item"><div class="summary-icon">🔧</div><div><strong>Serializer/Deserializer harus simetris.</strong> Producer dan consumer harus setuju format encoding. Gunakan String untuk sederhana, JSON untuk object, atau Avro/Protobuf untuk schema evolution di production.</div></div>
+                </div>
+
+                <hr class="section-divider">
+                <div style="font-weight:700;font-size:var(--l);margin-bottom:var(--m);">🗺️ Roadmap Selanjutnya</div>
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">✓</div><div class="stepper-value">Java Kafka Dasar</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">2</div><div class="stepper-value">Spring Kafka</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">3</div><div class="stepper-value">Kafka Streams</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">4</div><div class="stepper-value">Schema Registry</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">5</div><div class="stepper-value">Kafka Connect</div></div>
+                    </div>
+                </div>
+
+                <div class="info-box tip" style="margin-top:var(--m);">
+                    <strong>🎉 Selamat! Kamu sudah paham Kafka Dasar!</strong>
+                    Dengan pemahaman Producer, Consumer, Topic, Partition, Consumer Group, dan Offset ini, kamu siap mempelajari <strong>Spring Kafka</strong> — yang mengabstraksi semua boilerplate ini menjadi annotation-based seperti <code>@KafkaListener</code> dan <code>@KafkaTemplate</code>. Sangat mirip dengan cara Laravel Queue bekerja di balik layar, tapi dengan power Kafka!
+                </div>
+            </div>
+        </div>
+
+        <div style="height:var(--x);"></div>
+    </section>
+    <footer></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+    });
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.body.classList.toggle("dark-mode");
+        document.querySelector('.container-header-button-switch-theme').textContent =
+            document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+    function checkQuiz(el, quizId, isCorrect) {
+        const parent = el.parentElement;
+        parent.querySelectorAll('.quiz-option').forEach(o => {
+            o.classList.remove('correct', 'wrong');
+            o.style.pointerEvents = 'none';
+        });
+        el.classList.add(isCorrect ? 'correct' : 'wrong');
+        const fb = document.getElementById(quizId + '-feedback');
+        fb.textContent = isCorrect ? '✅ Benar! Pemahaman kamu sudah tepat.' : '❌ Belum tepat. Coba baca kembali penjelasannya ya!';
+        fb.className = 'quiz-feedback ' + (isCorrect ? 'ok' : 'err');
+    }
+    const sections = document.querySelectorAll('[id^="chapter"]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item[href]');
+    sections.forEach(s => {
+        new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting)
+                    sidebarLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+            });
+        }, { threshold: 0.25 }).observe(s);
+    });
+    window.addEventListener('scroll', () => {
+        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+        document.getElementById('progress-bar').style.width = p + '%';
+    });
+</script>
+</body>
+</html>

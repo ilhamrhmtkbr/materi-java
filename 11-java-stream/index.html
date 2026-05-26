@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Stream API — Modul Belajar Mandiri</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        :root {
+            --code-bg: #1e1e2e;
+        }
+        .chapter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border-radius: var(--radius-m);
+            padding: .25rem .65rem;
+            font-size: var(--xs);
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: .5rem;
+        }
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-left: 3px solid var(--primary-color);
+            background: var(--transprimary-color);
+            border-radius: 0 var(--radius-m) var(--radius-m) 0;
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .info-box.warning {
+            border-left-color: var(--warning-color);
+            background: var(--transwarning-color);
+        }
+        .info-box.success {
+            border-left-color: var(--success-color);
+            background: var(--transsuccess-color);
+        }
+        .info-box.danger {
+            border-left-color: var(--danger-color);
+            background: var(--transdanger-color);
+        }
+        .info-box .info-box-title {
+            font-weight: 700;
+            font-size: var(--s);
+            margin-bottom: .4rem;
+            color: var(--primary-color);
+        }
+        .info-box.warning .info-box-title { color: var(--warning-color); }
+        .info-box.success .info-box-title { color: var(--success-color); }
+        .info-box.danger .info-box-title { color: var(--danger-color); }
+        .code-block {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-radius: var(--radius-m);
+            margin: var(--m) 0;
+            background: #2d2d2d;
+        }
+        .code-block pre {
+            margin: 0 !important;
+            border-radius: var(--radius-m) !important;
+            font-size: .8rem !important;
+            overflow-x: auto;
+            padding: var(--m);
+        }
+        .code-block pre code {
+            white-space: pre !important;
+        }
+        .line-explain {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transprimary-color);
+            border-radius: var(--radius-m);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .line-explain .line-item {
+            display: flex;
+            gap: var(--s);
+            padding: .4rem 0;
+            border-bottom: 1px solid var(--translink-color);
+            font-size: var(--s);
+        }
+        .line-explain .line-item:last-child { border-bottom: none; }
+        .line-explain .line-num {
+            min-width: 60px;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: monospace;
+        }
+        .compare-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--m);
+            margin: var(--m) 0;
+        }
+        @media(max-width: 600px) {
+            .compare-box { grid-template-columns: 1fr; }
+        }
+        .compare-box .compare-item {
+            border-radius: var(--radius-m);
+            padding: var(--m);
+        }
+        .compare-box .compare-item.wrong {
+            background: var(--transdanger-color);
+            border: 1px solid var(--danger-color);
+        }
+        .compare-box .compare-item.right {
+            background: var(--transsuccess-color);
+            border: 1px solid var(--success-color);
+        }
+        .compare-box .compare-label {
+            font-weight: 700;
+            font-size: var(--s);
+            margin-bottom: .5rem;
+        }
+        .compare-box .compare-item.wrong .compare-label { color: var(--danger-color); }
+        .compare-box .compare-item.right .compare-label { color: var(--success-color); }
+        .quiz-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-x);
+            padding: var(--l);
+            margin: var(--l) 0;
+            background: var(--bg-color);
+        }
+        .quiz-box .quiz-title {
+            font-weight: 700;
+            font-size: var(--m);
+            margin-bottom: var(--m);
+            color: var(--primary-color);
+        }
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: var(--s);
+            padding: .6rem var(--m);
+            border-radius: var(--radius-m);
+            cursor: pointer;
+            margin-bottom: .4rem;
+            border: 1px solid var(--border-color);
+            font-size: var(--s);
+            transition: background .15s;
+            user-select: none;
+        }
+        .quiz-option:hover { background: var(--transprimary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong { background: var(--transdanger-color); border-color: var(--danger-color); }
+        .quiz-feedback {
+            margin-top: var(--s);
+            padding: var(--s) var(--m);
+            border-radius: var(--radius-m);
+            font-size: var(--s);
+            display: none;
+        }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.ko { background: var(--transdanger-color); color: var(--danger-color); }
+        .progress-bar-wrap {
+            background: var(--border-color);
+            border-radius: 99px;
+            height: 6px;
+            margin: var(--s) 0 var(--m);
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--second-primary-color));
+            border-radius: 99px;
+            transition: width .4s ease;
+        }
+        .hero-banner {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--second-primary-color) 100%);
+            border-radius: var(--radius-x);
+            padding: var(--xx) var(--x);
+            color: #fff;
+            margin-bottom: var(--l);
+        }
+        .hero-banner h1 {
+            font-size: var(--xx);
+            font-weight: 800;
+            margin-bottom: .5rem;
+        }
+        .hero-banner p { opacity: .9; font-size: var(--s); }
+        .analogy-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: var(--transsecond-primary-color);
+            border: 1px dashed var(--second-primary-color);
+            border-radius: var(--radius-m);
+            padding: var(--m);
+            margin: var(--m) 0;
+            font-size: var(--s);
+        }
+        .analogy-box .analogy-title {
+            font-weight: 700;
+            color: var(--second-primary-color);
+            margin-bottom: .4rem;
+        }
+        .text-small { font-size: var(--s); }
+        .text-xs { font-size: var(--xs); }
+        .mt-s { margin-top: var(--s); }
+        .mb-0 { margin-bottom: 0; }
+        .sidebar-menu-item-svg { font-size: 1.1rem; }
+        .chapter-divider {
+            border: none;
+            border-top: 2px dashed var(--border-color);
+            margin: var(--l) 0;
+        }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#pengantar">🏠 Home</a>
+    <a class="bottom-nav-item" href="#chapter-1">🌊 Stream</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bottom-nav-items-check-1">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bottom-nav-items-check-1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bottom-nav-items-check-1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-3">🔗 Pipeline</a>
+                <a class="bottom-nav-item" href="#chapter-5">🔍 Filter</a>
+                <a class="bottom-nav-item" href="#chapter-6">🔄 Map</a>
+                <a class="bottom-nav-item" href="#chapter-10">➕ Aggregate</a>
+                <a class="bottom-nav-item" href="#summary">📝 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java Stream</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#pengantar" class="sidebar-menu-item active" data-title="Pengantar">
+            <div class="sidebar-menu-item-svg">🏠</div>
+            <span>Pengantar</span>
+        </a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Apa itu Stream?">
+            <div class="sidebar-menu-item-svg">🌊</div>
+            <span>1. Apa itu Stream?</span>
+        </a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Membuat Stream">
+            <div class="sidebar-menu-item-svg">🏗️</div>
+            <span>2. Membuat Stream</span>
+        </a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="Stream Pipeline">
+            <div class="sidebar-menu-item-svg">🔗</div>
+            <span>3. Stream Pipeline</span>
+        </a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="Lazy Evaluation">
+            <div class="sidebar-menu-item-svg">💤</div>
+            <span>4. Lazy Evaluation</span>
+        </a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="Filtering">
+            <div class="sidebar-menu-item-svg">🔍</div>
+            <span>5. Filtering</span>
+        </a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Transformation (map)">
+            <div class="sidebar-menu-item-svg">🔄</div>
+            <span>6. Transformation</span>
+        </a>
+        <a href="#chapter-7" class="sidebar-menu-item" data-title="forEach & peek">
+            <div class="sidebar-menu-item-svg">👁️</div>
+            <span>7. forEach &amp; peek</span>
+        </a>
+        <a href="#chapter-8" class="sidebar-menu-item" data-title="Ordering">
+            <div class="sidebar-menu-item-svg">📊</div>
+            <span>8. Ordering</span>
+        </a>
+        <a href="#chapter-9" class="sidebar-menu-item" data-title="Retrieving">
+            <div class="sidebar-menu-item-svg">🎯</div>
+            <span>9. Retrieving</span>
+        </a>
+        <a href="#chapter-10" class="sidebar-menu-item" data-title="Aggregate">
+            <div class="sidebar-menu-item-svg">➕</div>
+            <span>10. Aggregate</span>
+        </a>
+        <a href="#chapter-11" class="sidebar-menu-item" data-title="Check Operations">
+            <div class="sidebar-menu-item-svg">✅</div>
+            <span>11. Check Operations</span>
+        </a>
+        <a href="#chapter-12" class="sidebar-menu-item" data-title="Collectors">
+            <div class="sidebar-menu-item-svg">📦</div>
+            <span>12. Collectors</span>
+        </a>
+        <a href="#chapter-13" class="sidebar-menu-item" data-title="Grouping">
+            <div class="sidebar-menu-item-svg">🗂️</div>
+            <span>13. Grouping</span>
+        </a>
+        <a href="#chapter-14" class="sidebar-menu-item" data-title="Primitive Stream">
+            <div class="sidebar-menu-item-svg">🔢</div>
+            <span>14. Primitive Stream</span>
+        </a>
+        <a href="#chapter-15" class="sidebar-menu-item" data-title="Parallel Stream">
+            <div class="sidebar-menu-item-svg">⚡</div>
+            <span>15. Parallel Stream</span>
+        </a>
+        <a href="#summary" class="sidebar-menu-item" data-title="Summary">
+            <div class="sidebar-menu-item-svg">📝</div>
+            <span>Summary</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">🌙 Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#chapter-1">
+                <span class="container-header-nav-item-text">Mulai Belajar</span>
+            </a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Topik</div>
+                <div class="container-header-nav-items-element">
+                    <a class="container-header-nav-item" href="#chapter-3">
+                        <span class="container-header-nav-item-text">Pipeline</span>
+                    </a>
+                    <a class="container-header-nav-item" href="#chapter-10">
+                        <span class="container-header-nav-item-text">Aggregate</span>
+                    </a>
+                    <a class="container-header-nav-item" href="#summary">
+                        <span class="container-header-nav-item-text">Summary</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ========== PENGANTAR ========== -->
+        <div class="card-wrapper max-width-1000" id="pengantar">
+            <div class="hero-banner">
+                <h1>🌊 Java Stream API</h1>
+                <p>Modul pembelajaran interaktif untuk developer PHP/Laravel yang baru migrasi ke Java modern.</p>
+                <p style="margin-top:.5rem; opacity:.8; font-size:.75rem;">15 Bab · Contoh Kode Real · Mini Quiz · Analogi Laravel</p>
+            </div>
+            <div class="text-title">Tentang Modul Ini</div>
+            <p>Modul ini mengajarkan <strong>Java Stream API</strong> secara bertahap dari dasar hingga mahir. Semua contoh kode diambil dari codebase nyata dan dijelaskan secara detail baris per baris.</p>
+            <div class="info-box">
+                <div class="info-box-title">👤 Target Pembaca</div>
+                <p class="text-small">Kamu sudah mahir PHP &amp; Laravel, dan sekarang belajar Java. Modul ini menjembatani konsep Stream dengan ekosistem yang sudah kamu kenal.</p>
+            </div>
+
+            <div class="text-title" style="margin-top:var(--l)">📍 Learning Path</div>
+            <div class="display-grid">
+                <div class="stepper">
+                    <div class="stepper-item">
+                        <div class="stepper-key active">1</div>
+                        <div class="stepper-value">Dasar Stream</div>
+                    </div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item">
+                        <div class="stepper-key">2</div>
+                        <div class="stepper-value">Operasi</div>
+                    </div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item">
+                        <div class="stepper-key">3</div>
+                        <div class="stepper-value">Collectors</div>
+                    </div>
+                    <div class="stepper-divider"></div>
+                    <div class="stepper-item">
+                        <div class="stepper-key">4</div>
+                        <div class="stepper-value">Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:var(--l)">
+                <div class="text-title">📊 Progress Belajar</div>
+                <div id="progress-label" class="text-small" style="color:var(--primary-color); font-weight:600;">0 / 15 bab selesai</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 1: Apa itu Stream? ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 1 · Fundamental</div>
+                <div class="text-title">🌊 Apa itu Java Stream?</div>
+                <p>Stream adalah cara Java modern untuk memproses kumpulan data (Collection) secara <strong>fungsional dan deklaratif</strong>. Bukan stream I/O seperti <code>FileInputStream</code> — ini adalah aliran <em>pipeline</em> data yang bisa diproses satu per satu.</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Definisi Singkat</div>
+                    <p class="text-small">Stream adalah <strong>urutan elemen</strong> yang mendukung operasi <em>sekuensial</em> maupun <em>paralel</em>. Stream tidak menyimpan data — ia hanya mendefinisikan <em>bagaimana</em> data diproses.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Mindset: Java vs PHP</div>
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">🐘 Cara PHP (Imperatif)</div>
+                        <div class="code-block">
+                            <pre><code class="language-php">$names = ["Eko", "Kurniawan", "Budi"];
+$result = [];
+foreach ($names as $name) {
+    if (strlen($name) > 3) {
+        $result[] = strtoupper($name);
+    }
+}
+// Harus kelola loop & variable manual</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">☕ Cara Java Stream (Deklaratif)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">List.of("Eko", "Kurniawan", "Budi")
+    .stream()
+    .filter(name -> name.length() > 3)
+    .map(String::toUpperCase)
+    .toList();
+// Describe WHAT, bukan HOW</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Collection</div>
+                    <p>Java Stream sangat mirip dengan <strong>Laravel Collection</strong>! Kalau kamu biasa pakai <code>collect($array)->filter()->map()->values()</code>, konsepnya sama persis. Bedanya, Stream Java bersifat <em>sekali pakai</em> (tidak bisa diulang setelah terminal operation), sementara Laravel Collection bisa dipakai berulang kali.</p>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Tiga Komponen Stream</div>
+                <div class="timeline">
+                    <div>
+                        <span class="timeline-key active">1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🏭 Source (Sumber)</div>
+                        <div class="timeline-content-desc">Dari mana data berasal: List, Array, Set, atau generator tak terbatas. Contoh: <code>list.stream()</code></div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">2</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">⚙️ Intermediate Operations (Lazy)</div>
+                        <div class="timeline-content-desc">Transformasi yang bisa di-chain: <code>filter()</code>, <code>map()</code>, <code>sorted()</code>. Operasi ini <strong>tidak langsung dieksekusi</strong> sampai ada terminal operation.</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">3</span>
+                    </div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">🎯 Terminal Operation</div>
+                        <div class="timeline-content-desc">Operasi yang memicu eksekusi dan menghasilkan nilai: <code>forEach()</code>, <code>collect()</code>, <code>count()</code>, <code>reduce()</code>. Setelah ini, Stream tidak bisa dipakai lagi.</div>
+                    </div>
+                </div>
+
+                <div class="info-box warning" style="margin-top:var(--l)">
+                    <div class="info-box-title">⚠️ Perbedaan Penting: Stream Sekali Pakai!</div>
+                    <p class="text-small">Berbeda dari PHP array atau Laravel Collection, <strong>Stream Java hanya bisa dikonsumsi SEKALI</strong>. Jika kamu memanggil terminal operation kedua kali pada Stream yang sama, kamu akan mendapat <code>IllegalStateException</code>. Selalu buat Stream baru dari source-nya.</p>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-box" id="quiz-1">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 1</div>
+                    <p class="text-small"><strong>Manakah tipe operasi yang LANGSUNG mengeksekusi pipeline Stream?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, false)">A. <code>filter()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, false)">B. <code>map()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, true)">C. <code>forEach()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-1', this, false)">D. <code>sorted()</code></div>
+                    <div class="quiz-feedback" id="quiz-1-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-1')">✅ Selesai — Lanjut ke Bab 2</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 2: Membuat Stream ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 2 · Fundamental</div>
+                <div class="text-title">🏗️ Cara Membuat Stream</div>
+                <p>Ada beberapa cara membuat Stream di Java. Pilihan tergantung dari <em>sumber data</em> yang kamu punya.</p>
+
+                <!-- Accordion: Stream dari berbagai sumber -->
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-2a" class="accordion-item-check" checked/>
+                    <label for="acc-2a" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>📌 1. Stream Kosong / Single Elemen</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Stream.empty(), Stream.of(), Stream.ofNullable()</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Stream kosong — tidak ada elemen
+Stream&lt;String&gt; emptyStream = Stream.empty();
+
+// Stream dengan tepat 1 elemen
+Stream&lt;String&gt; oneStream = Stream.of("Eko");
+
+// Stream bergantung null/tidak null
+String data = "Kurniawan";
+Stream&lt;String&gt; emptyOrNotStream = Stream.ofNullable(data);
+// Jika data == null → Stream kosong
+// Jika data != null → Stream berisi 1 elemen</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">Stream.empty()</span><span>Membuat Stream tanpa elemen. Berguna sebagai nilai default agar tidak NPE.</span></div>
+                            <div class="line-item"><span class="line-num">Stream.of()</span><span>Membuat Stream dari satu atau beberapa argumen langsung (varargs).</span></div>
+                            <div class="line-item"><span class="line-num">ofNullable()</span><span>Guard terhadap null. Di PHP kamu biasa pakai <code>$x ?? []</code>; ini ekuivalennya untuk Stream.</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-2b" class="accordion-item-check"/>
+                    <label for="acc-2b" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>📌 2. Stream dari Array</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Stream.of(array) atau Arrays.stream(array)</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Dari varargs langsung
+Stream&lt;String&gt; arrayStream = Stream.of("Eko", "Kurniawan", "Khannedy");
+
+// Dari array yang sudah ada
+String[] array = new String[]{"Eko", "Kurniawan", "Khannedy"};
+Stream&lt;String&gt; streamFromArray = Arrays.stream(array);</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">💡 Kapan pakai Arrays.stream()?</div>
+                            <p class="text-small">Gunakan <code>Arrays.stream(array)</code> saat kamu punya variable array yang sudah terdefinisi. <code>Arrays.stream()</code> juga bisa menerima range index: <code>Arrays.stream(arr, from, to)</code> untuk slice array.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-2c" class="accordion-item-check"/>
+                    <label for="acc-2c" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>📌 3. Stream dari Collection (List, Set)</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">collection.stream() — cara paling umum</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">Collection&lt;String&gt; collection = List.of("Eko", "Kurniawan", "Khannedy");
+
+// Buat Stream pertama
+Stream&lt;String&gt; stream1 = collection.stream();
+stream1.forEach(System.out::println);
+
+// Bisa buat Stream BARU dari collection yang sama
+Stream&lt;String&gt; stream2 = collection.stream();
+stream2.forEach(System.out::println);</code></pre>
+                        </div>
+                        <div class="info-box success">
+                            <div class="info-box-title">✅ Best Practice</div>
+                            <p class="text-small">Ini cara paling umum dan idiomatik. Kamu bisa buat Stream baru berkali-kali dari Collection yang sama, karena Collection-nya sendiri tidak berubah — yang berubah hanya "view"-nya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-2d" class="accordion-item-check"/>
+                    <label for="acc-2d" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>📌 4. Infinite Stream</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Stream.generate() dan Stream.iterate() — stream tanpa batas</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Stream.generate() — memanggil Supplier berulang kali
+Stream&lt;String&gt; generate = Stream.generate(() -> "Programmer Zaman Now");
+// JANGAN langsung forEach tanpa limit — infinite loop!
+generate.limit(5).forEach(System.out::println);
+
+// Stream.iterate() — seperti for-loop
+Stream&lt;Integer&gt; iterate = Stream.iterate(1, value -> value + 1);
+iterate.limit(10).forEach(System.out::println);
+// Output: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10</code></pre>
+                        </div>
+                        <div class="info-box warning">
+                            <div class="info-box-title">⚠️ Wajib Pakai limit()!</div>
+                            <p class="text-small">Infinite Stream akan berjalan selamanya jika tidak dibatasi. Selalu pasangkan <code>.limit(n)</code> atau <code>.takeWhile(predicate)</code> untuk menghentikannya.</p>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p><code>Stream.generate()</code> mirip <code>LazyCollection::generate()</code> di Laravel — keduanya lazy dan tak terbatas sampai kamu batasi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-2e" class="accordion-item-check"/>
+                    <label for="acc-2e" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>📌 5. Stream Builder</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Stream.builder() — bangun Stream elemen per elemen</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Cara verbose
+Stream.Builder&lt;String&gt; builder = Stream.builder();
+builder.accept("Eko");
+builder.add("Kurniawan").add("Khannedy");
+Stream&lt;String&gt; stream = builder.build();
+
+// Cara ringkas (method chaining)
+Stream&lt;Object&gt; stream = Stream.builder()
+    .add("Eko").add("Kurniawan").add("Khannedy")
+    .build();</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">📝 Kapan pakai Builder?</div>
+                            <p class="text-small">Gunakan Builder saat kamu perlu menambahkan elemen secara kondisional sebelum Stream dieksekusi — mirip seperti membangun array secara kondisional di PHP.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-box" id="quiz-2">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 2</div>
+                    <p class="text-small"><strong>Apa yang terjadi jika kamu memanggil <code>forEach()</code> pada <code>Stream.generate()</code> tanpa <code>limit()</code>?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, false)">A. Akan error kompilasi</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, true)">B. Program berjalan selamanya (infinite loop)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, false)">C. Otomatis berhenti setelah 100 iterasi</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-2', this, false)">D. Tidak ada output sama sekali</div>
+                    <div class="quiz-feedback" id="quiz-2-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-2')">✅ Selesai — Lanjut ke Bab 3</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 3: Stream Pipeline ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 3 · Core Concept</div>
+                <div class="text-title">🔗 Stream Pipeline</div>
+                <p>Pipeline adalah cara kerja Stream: kamu menyambung operasi satu ke lainnya seperti pipa air. Setiap operasi menghasilkan Stream baru, sampai terminal operation mengakhirinya.</p>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Cara Verbose (Jarang Dipakai)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">List&lt;String&gt; list = List.of("Eko", "Kurniawan", "Khannedy");
+
+Stream&lt;String&gt; stream = list.stream();
+Stream&lt;String&gt; streamUpper = stream.map(name -> name.toUpperCase());
+Stream&lt;String&gt; streamMr = streamUpper.map(upper -> "Mr." + upper);
+streamMr.forEach(System.out::println);</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Cara Benar (Fluent Chaining)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">List&lt;String&gt; list = List.of("Eko", "Kurniawan", "Khannedy");
+
+list.stream()
+    .map(name -> name.toUpperCase())
+    .map(upper -> "Mr." + upper)
+    .forEach(System.out::println);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">list.stream()</span><span><strong>Source</strong> — membuat Stream dari List. Collection tidak berubah.</span></div>
+                    <div class="line-item"><span class="line-num">.map(...)</span><span><strong>Intermediate</strong> — transformasi tiap elemen, menghasilkan Stream baru. Belum dieksekusi.</span></div>
+                    <div class="line-item"><span class="line-num">.map(...)</span><span><strong>Intermediate</strong> — bisa chain sebanyak yang dibutuhkan.</span></div>
+                    <div class="line-item"><span class="line-num">.forEach()</span><span><strong>Terminal</strong> — memicu seluruh pipeline dieksekusi dari awal ke akhir.</span></div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Stream Tidak Mengubah Source</div>
+                    <p class="text-small">Perhatikan contoh di <code>StreamOperationTest</code>: setelah <code>streamUpper.forEach()</code> selesai, kamu masih bisa memanggil <code>names.forEach()</code> — karena List <code>names</code> tidak berubah sama sekali. Stream hanya membuat "pandangan" baru atas data.</p>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">List&lt;String&gt; names = List.of("Eko", "Kurniawan", "Khannedy");
+
+Stream&lt;String&gt; streamNames = names.stream();
+Stream&lt;String&gt; streamUpper = streamNames.map(name -> name.toUpperCase());
+streamUpper.forEach(System.out::println); // EKO, KURNIAWAN, KHANNEDY
+
+names.forEach(System.out::println); // Eko, Kurniawan, Khannedy (tidak berubah!)</code></pre>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Builder</div>
+                    <p>Konsep Pipeline Stream sangat mirip <strong>Query Builder Laravel</strong>: <code>DB::table('users')->where()->select()->get()</code>. Kamu bisa chain banyak kondisi dan <strong>tidak ada query yang dieksekusi sampai kamu memanggil <code>get()</code></strong> (terminal). Perbedaannya, di Laravel Builder bisa di-reuse, Stream Java tidak.</p>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-box" id="quiz-3">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 3</div>
+                    <p class="text-small"><strong>Apakah Collection sumber berubah setelah diproses oleh Stream?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, false)">A. Ya, elemen yang difilter akan dihapus dari List asli</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, true)">B. Tidak, Stream hanya membuat "view" baru tanpa mengubah sumber</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, false)">C. Tergantung operasi yang digunakan</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-3', this, false)">D. Ya, tapi hanya jika menggunakan map()</div>
+                    <div class="quiz-feedback" id="quiz-3-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-3')">✅ Selesai — Lanjut ke Bab 4</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 4: Lazy Evaluation ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 4 · Core Concept</div>
+                <div class="text-title">💤 Lazy Evaluation</div>
+                <p>Ini adalah salah satu konsep <em>paling penting</em> di Stream: <strong>Intermediate operations tidak dieksekusi sampai ada terminal operation</strong>.</p>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Jebakan Pemula</div>
+                    <p class="text-small">Banyak developer baru ke Java mengira <code>.map()</code> langsung berjalan saat dipanggil. <strong>Ini SALAH.</strong> Coba lihat kode berikut — tidak ada output meskipun <code>map()</code> sudah dipanggil:</p>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// testIntermediateOperation — TIDAK ADA OUTPUT yang tercetak!
+List&lt;String&gt; names = List.of("Eko", "Kurniawan", "Khannedy");
+
+Stream&lt;String&gt; upper = names.stream()
+    .map(name -> {
+        System.out.println("Change " + name + " to UPPERCASE"); // TIDAK TERCETAK
+        return name.toUpperCase();
+    });
+
+// Pipeline dibuat tapi tidak pernah dieksekusi karena tidak ada terminal operation!</code></pre>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Baru Jalan Kalau Ada Terminal Operation</div>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// testTerminalOperation — forEach memicu semua operasi berjalan
+names.stream()
+    .map(name -> {
+        System.out.println("Change " + name + " to UPPERCASE"); // TERCETAK
+        return name.toUpperCase();
+    })
+    .map(upper -> {
+        System.out.println("Change " + upper + " to Mr."); // TERCETAK
+        return "Mr." + upper;
+    })
+    .forEach(mr -> {
+        System.out.println(mr); // TERCETAK
+    });</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Urutan Eksekusi yang Mengejutkan</div>
+                <p class="text-small">Stream memproses data <strong>satu elemen sekaligus melalui seluruh pipeline</strong>, bukan satu operasi selesai dulu sebelum operasi berikutnya. Output dari kode di atas:</p>
+
+                <div class="code-block">
+                    <pre><code class="language-bash">Change Eko to UPPERCASE
+Change EKO to Mr.
+Mr.EKO
+Change Kurniawan to UPPERCASE
+Change KURNIAWAN to Mr.
+Mr.KURNIAWAN
+Change Khannedy to UPPERCASE
+Change KHANNEDY to Mr.
+Mr.KHANNEDY</code></pre>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Lazy Collection</div>
+                    <p>Konsep ini identik dengan <strong>LazyCollection</strong> di Laravel. Saat kamu pakai <code>collect()->lazy()->map()->filter()</code>, operasi-operasi itu tidak langsung berjalan — baru berjalan saat kamu iterasi dengan <code>each()</code> atau convert ke Collection biasa. Keuntungannya sama: efisiensi memori untuk data besar.</p>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="quiz-box" id="quiz-4">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 4</div>
+                    <p class="text-small"><strong>Dalam satu pipeline Stream dengan 3 intermediate operations, kapan semua operasi tersebut dieksekusi untuk elemen pertama?</strong></div>
+                <div class="quiz-option" onclick="answerQuiz('quiz-4', this, false)">A. Satu per satu secara berurutan untuk semua elemen terlebih dahulu</div>
+                <div class="quiz-option" onclick="answerQuiz('quiz-4', this, true)">B. Ketika terminal operation dipanggil, elemen pertama melewati semua 3 operasi sekaligus</div>
+                <div class="quiz-option" onclick="answerQuiz('quiz-4', this, false)">C. Saat setiap intermediate operation dipanggil</div>
+                <div class="quiz-option" onclick="answerQuiz('quiz-4', this, false)">D. Tidak ada eksekusi sampai Stream di-close manual</div>
+                <div class="quiz-feedback" id="quiz-4-feedback"></div>
+            </div>
+            <button class="button btn-primary" onclick="markDone('chapter-4')">✅ Selesai — Lanjut ke Bab 5</button>
+        </div>
+        </div>
+
+        <!-- ========== CHAPTER 5: Filtering ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 5 · Intermediate Operations</div>
+                <div class="text-title">🔍 Filtering Operations</div>
+                <p>Filtering adalah operasi untuk menyaring elemen berdasarkan kondisi tertentu.</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-5a" class="accordion-item-check" checked/>
+                    <label for="acc-5a" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 filter() — Menyaring Elemen</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Mirip array_filter() di PHP atau where() di Laravel Collection</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Saring nama dengan panjang > 4 karakter
+List.of("Eko", "Kurniawan", "Khannedy", "Budi", "Joko").stream()
+    .filter(name -> name.length() > 4)
+    .forEach(System.out::println);
+// Output: Kurniawan, Khannedy
+
+// Saring angka genap
+List.of(1,2,3,4,5,6,7,8,9,10).stream()
+    .filter(number -> number % 2 == 0)
+    .forEach(System.out::println);
+// Output: 2, 4, 6, 8, 10</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">.filter()</span><span>Menerima <code>Predicate&lt;T&gt;</code> — lambda yang mengembalikan <code>boolean</code>. Elemen yang return <code>true</code> diteruskan, yang <code>false</code> dibuang.</span></div>
+                            <div class="line-item"><span class="line-num">name -> name.length() > 4</span><span>Lambda expression. Di PHP ini setara <code>fn($name) => strlen($name) > 4</code>.</span></div>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Identik dengan <code>collect($names)->filter(fn($name) => strlen($name) > 4)</code>. Bahkan syntaxnya sangat mirip!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-5b" class="accordion-item-check"/>
+                    <label for="acc-5b" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 distinct() — Hapus Duplikat</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Setara array_unique() PHP atau unique() Laravel Collection</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">List.of("Eko", "Kurniawan", "Eko", "Khannedy", "Budi", "Joko", "Budi")
+    .stream()
+    .distinct()
+    .forEach(System.out::println);
+// Output: Eko, Kurniawan, Khannedy, Budi, Joko (tanpa duplikat)</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">💡 Under the Hood</div>
+                            <p class="text-small"><code>distinct()</code> menggunakan <code>equals()</code> dan <code>hashCode()</code> dari objek untuk mendeteksi duplikat. Untuk custom object, pastikan kamu override kedua method tersebut, sama seperti kamu harus override <code>__toString</code> atau gunakan identitas unik di PHP.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">❌ Salah — Buat loop manual</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">List&lt;String&gt; result = new ArrayList&lt;&gt;();
+for (String name : names) {
+    if (name.length() > 4) {
+        result.add(name);
+    }
+}
+// Verbose, mutable state, error-prone</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">✅ Benar — Pakai filter()</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">List&lt;String&gt; result = names.stream()
+    .filter(name -> name.length() > 4)
+    .toList();
+// Bersih, immutable, intention jelas</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="quiz-box" id="quiz-5">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 5</div>
+                    <p class="text-small"><strong>Apa yang digunakan <code>distinct()</code> untuk menentukan apakah dua elemen "sama"?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, false)">A. Operator <code>==</code> (reference equality)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, true)">B. Method <code>equals()</code> dan <code>hashCode()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, false)">C. Method <code>compareTo()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-5', this, false)">D. Membandingkan serialized string dari object</div>
+                    <div class="quiz-feedback" id="quiz-5-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-5')">✅ Selesai — Lanjut ke Bab 6</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 6: Transformation ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 6 · Intermediate Operations</div>
+                <div class="text-title">🔄 Transformation: map() &amp; flatMap()</div>
+                <p>Transformasi adalah inti dari pemrosesan data fungsional — mengubah setiap elemen menjadi sesuatu yang baru.</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-6a" class="accordion-item-check" checked/>
+                    <label for="acc-6a" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 map() — Transformasi 1-to-1</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Setiap elemen diubah menjadi tepat 1 elemen baru</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">List.of("Eko", "Kurniawan", "Khannedy").stream()
+    .map(name -> name.toUpperCase())    // String -> String
+    .map(upper -> upper.length())       // String -> Integer
+    .forEach(length -> System.out.println(length));
+// Output: 3, 8, 8</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">map()</span><span>Menerima <code>Function&lt;T, R&gt;</code> — ubah dari tipe T ke tipe R. Bisa ganti tipe data sepenuhnya, seperti String → Integer di atas.</span></div>
+                            <div class="line-item"><span class="line-num">Chaining map</span><span>Kamu bisa chain <code>map()</code> berkali-kali untuk transformasi bertahap. Tipe data bisa berubah di setiap step.</span></div>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Identik dengan <code>collect($names)->map(fn($n) => strtoupper($n))->map(fn($n) => strlen($n))</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-6b" class="accordion-item-check"/>
+                    <label for="acc-6b" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 flatMap() — Transformasi 1-to-Many lalu Flatten</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Setiap elemen menghasilkan Stream, lalu semua Stream digabung menjadi satu</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">List.of("Eko", "Kurniawan", "Khannedy").stream()
+    .map(name -> name.toUpperCase())
+    .flatMap(upper -> Stream.of(upper, upper.length()))
+    // "EKO" -> Stream.of("EKO", 3)
+    // "KURNIAWAN" -> Stream.of("KURNIAWAN", 9)
+    .flatMap(value -> Stream.of(value, value, value))
+    // "EKO" -> Stream.of("EKO", "EKO", "EKO")
+    .forEach(System.out::println);</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">flatMap()</span><span>Seperti <code>map()</code> tapi lambda-nya mengembalikan <code>Stream&lt;R&gt;</code>, lalu semua Stream kecil di-flatten menjadi satu Stream besar.</span></div>
+                            <div class="line-item"><span class="line-num">Stream.of(a, b)</span><span>Membuat mini-Stream dengan 2 elemen dari 1 elemen input.</span></div>
+                        </div>
+                        <div class="compare-box">
+                            <div class="compare-item wrong">
+                                <div class="compare-label">❌ map() — hasilkan Stream of Stream</div>
+                                <div class="code-block">
+                                    <pre><code class="language-java">// Stream&lt;Stream&lt;String&gt;&gt; — bukan yang kita mau!
+.map(name -> Stream.of(name, name.length()))</code></pre>
+                                </div>
+                            </div>
+                            <div class="compare-item right">
+                                <div class="compare-label">✅ flatMap() — flatten otomatis</div>
+                                <div class="code-block">
+                                    <pre><code class="language-java">// Stream&lt;Object&gt; — satu level, siap pakai
+.flatMap(name -> Stream.of(name, name.length()))</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Mirip <code>collect()->flatMap()</code> di Laravel. Saat tiap item menghasilkan banyak item baru dan kamu tidak mau nested array, gunakan <code>flatMap</code> untuk meratakan hasilnya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 6 -->
+                <div class="quiz-box" id="quiz-6">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 6</div>
+                    <p class="text-small"><strong>Apa perbedaan utama antara <code>map()</code> dan <code>flatMap()</code>?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, false)">A. map() lebih cepat dari flatMap()</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, false)">B. flatMap() hanya bisa digunakan untuk tipe Integer</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, true)">C. flatMap() mengembalikan Stream dari lambda lalu me-flatten-nya; map() mengembalikan nilai biasa</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-6', this, false)">D. Tidak ada perbedaan, hanya nama yang berbeda</div>
+                    <div class="quiz-feedback" id="quiz-6-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-6')">✅ Selesai — Lanjut ke Bab 7</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 7: forEach & peek ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 7 · Operations</div>
+                <div class="text-title">👁️ forEach &amp; peek</div>
+                <p>Keduanya digunakan untuk "melihat" elemen yang melewati pipeline, tapi dengan tujuan yang sangat berbeda.</p>
+
+                <div class="data">
+                    <div class="data-key">forEach()</div>
+                    <div class="data-value">Terminal operation — mengakhiri pipeline, tidak mengembalikan Stream</div>
+                </div>
+                <br/>
+                <div class="data">
+                    <div class="data-key">peek()</div>
+                    <div class="data-value">Intermediate operation — untuk debug/logging, meneruskan elemen tanpa mengubah</div>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Cara Kerja peek()</div>
+                <div class="code-block">
+                    <pre><code class="language-java">List.of("Eko", "Kurniawan", "Khannedy").stream()
+    .peek(name -> System.out.println("Before: " + name))    // Intermediate
+    .map(name -> name.toUpperCase())
+    .peek(upper -> System.out.println("After map: " + upper)) // Intermediate
+    .forEach(name -> System.out.println("Final: " + name));  // Terminal</code></pre>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">🔍 Kegunaan peek()</div>
+                    <p class="text-small"><code>peek()</code> sangat berguna untuk <strong>debugging pipeline</strong> tanpa mengganggu alur data. Kamu bisa lihat isi Stream di setiap titik pipeline sambil tetap melanjutkan prosesnya — mirip seperti memasang <code>dd()</code> di Laravel tapi versi yang tidak menghentikan eksekusi.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Jangan Pakai peek() untuk Side Effects Penting</div>
+                    <p class="text-small"><code>peek()</code> adalah operasi <em>debug</em>. Jangan gunakan untuk operasi penting seperti menyimpan ke database atau mengirim email. Gunakan <code>forEach()</code> untuk itu, karena <code>peek()</code> mungkin tidak dipanggil di semua implementasi (terutama di parallel stream atau optimasi JVM).</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel tap()</div>
+                    <p><code>peek()</code> di Java mirip method <code>tap()</code> di Laravel Collection: <code>collect($data)->tap(fn($c) => logger($c))->map(...)</code>. Keduanya "meneropong" isi collection/stream tanpa mengubahnya.</p>
+                </div>
+
+                <!-- Quiz 7 -->
+                <div class="quiz-box" id="quiz-7">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 7</div>
+                    <p class="text-small"><strong>Kamu ingin mencetak log setiap nama sebelum di-uppercase, tanpa menghentikan pipeline. Mana yang tepat?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, false)">A. Gunakan forEach() sebelum map()</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, true)">B. Gunakan peek() sebelum map()</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, false)">C. Tidak bisa, harus buat Stream terpisah</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-7', this, false)">D. Gunakan filter() dengan kondisi selalu true</div>
+                    <div class="quiz-feedback" id="quiz-7-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-7')">✅ Selesai — Lanjut ke Bab 8</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 8: Ordering ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 8 · Intermediate Operations</div>
+                <div class="text-title">📊 Ordering: sorted()</div>
+                <p>Mengurutkan elemen dalam Stream, baik secara natural order maupun dengan Comparator custom.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// Urutan natural (alphabetical untuk String, numerik untuk Number)
+List.of("Eko", "Kurniawan", "Khannedy", "Programmer", "Zaman", "Now")
+    .stream()
+    .sorted()
+    .forEach(System.out::println);
+// Output: Eko, Khannedy, Kurniawan, Now, Programmer, Zaman
+
+// Urutan terbalik dengan Comparator
+Comparator&lt;String&gt; reverseComparator = Comparator.reverseOrder();
+List.of("Eko", "Kurniawan", "Khannedy", "Programmer", "Zaman", "Now")
+    .stream()
+    .sorted(reverseComparator)
+    .forEach(System.out::println);
+// Output: Zaman, Programmer, Now, Kurniawan, Khannedy, Eko</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">sorted()</span><span>Tanpa argumen: gunakan <em>natural ordering</em> — objek harus implement <code>Comparable</code>. String dan Number sudah implement ini.</span></div>
+                    <div class="line-item"><span class="line-num">sorted(comparator)</span><span>Dengan <code>Comparator&lt;T&gt;</code>: bisa sort berdasarkan kriteria custom, misalnya panjang string atau field dari object.</span></div>
+                    <div class="line-item"><span class="line-num">Comparator.reverseOrder()</span><span>Helper bawaan untuk membalik urutan natural. Lebih bersih dari menulis lambda manual.</span></div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Custom Comparator yang Berguna</div>
+                    <div class="code-block">
+                        <pre><code class="language-java">// Sort by panjang string
+.sorted(Comparator.comparingInt(String::length))
+
+// Sort by panjang, descending
+.sorted(Comparator.comparingInt(String::length).reversed())
+
+// Sort Object by field
+.sorted(Comparator.comparing(User::getName))
+
+// Multi-level sort
+.sorted(Comparator.comparing(User::getDept)
+                  .thenComparing(User::getName))</code></pre>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Mirip <code>collect($data)->sortBy('name')</code> atau <code>sortByDesc('created_at')</code>. Di Java, kamu lebih eksplisit dalam mendefinisikan kriteria sortnya via Comparator.</p>
+                </div>
+
+                <!-- Quiz 8 -->
+                <div class="quiz-box" id="quiz-8">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 8</div>
+                    <p class="text-small"><strong>Bagaimana cara mengurutkan Stream of String berdasarkan panjang string (terpendek ke terpanjang)?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8', this, false)">A. <code>.sorted()</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8', this, true)">B. <code>.sorted(Comparator.comparingInt(String::length))</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8', this, false)">C. <code>.sorted(Comparator.reverseOrder())</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-8', this, false)">D. <code>.sorted(String::length)</code></div>
+                    <div class="quiz-feedback" id="quiz-8-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-8')">✅ Selesai — Lanjut ke Bab 9</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 9: Retrieving ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-9">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 9 · Mixed Operations</div>
+                <div class="text-title">🎯 Retrieving Operations</div>
+                <p>Operasi untuk mengambil subset elemen atau mencari elemen tertentu dari Stream.</p>
+
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Tipe</th>
+                            <th>Deskripsi</th>
+                            <th>Analogi PHP/Laravel</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>limit(n)</code></td><td>Intermediate</td><td>Ambil maksimal n elemen pertama</td><td><code>take(n)</code></td></tr>
+                        <tr><td><code>skip(n)</code></td><td>Intermediate</td><td>Lewati n elemen pertama</td><td><code>skip(n)</code></td></tr>
+                        <tr><td><code>takeWhile(pred)</code></td><td>Intermediate</td><td>Ambil elemen selama kondisi true, berhenti saat false</td><td><code>takeWhile()</code></td></tr>
+                        <tr><td><code>dropWhile(pred)</code></td><td>Intermediate</td><td>Lewati elemen selama kondisi true, mulai ambil saat false</td><td><code>skipUntil()</code></td></tr>
+                        <tr><td><code>findFirst()</code></td><td>Terminal</td><td>Ambil elemen pertama (returns Optional)</td><td><code>first()</code></td></tr>
+                        <tr><td><code>findAny()</code></td><td>Terminal</td><td>Ambil elemen manapun (optimal di parallel)</td><td>—</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Contoh Kode Lengkap</div>
+                <div class="code-block">
+                    <pre><code class="language-java">List&lt;String&gt; names = List.of("Eko", "Edo", "Kurniawan", "Khannedy", "Budi", "Joko");
+
+// limit: ambil 2 pertama
+names.stream().limit(2).forEach(System.out::println);
+// Output: Eko, Edo
+
+// skip: lewati 2 pertama
+names.stream().skip(2).forEach(System.out::println);
+// Output: Kurniawan, Khannedy, Budi, Joko
+
+// takeWhile: ambil selama panjang <= 4, berhenti di Kurniawan
+names.stream().takeWhile(name -> name.length() <= 4).forEach(System.out::println);
+// Output: Eko, Edo (berhenti karena Kurniawan > 4)
+
+// dropWhile: lewati selama panjang <= 4, mulai dari Kurniawan
+names.stream().dropWhile(name -> name.length() <= 4).forEach(System.out::println);
+// Output: Kurniawan, Khannedy, Budi, Joko
+
+// findFirst: ambil elemen pertama, wrapped dalam Optional
+Optional&lt;String&gt; first = names.stream().findFirst();
+first.ifPresent(System.out::println); // Eko</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ takeWhile vs filter — Jangan Tertukar!</div>
+                    <p class="text-small"><code>takeWhile</code> <strong>berhenti total</strong> saat menemukan elemen yang tidak memenuhi kondisi. Sementara <code>filter</code> terus memeriksa semua elemen. Untuk data <code>["Eko", "Edo", "Kurniawan", "Budi"]</code> dengan kondisi panjang &lt;= 4: <code>filter</code> menghasilkan <code>[Eko, Edo, Budi]</code>, sementara <code>takeWhile</code> hanya <code>[Eko, Edo]</code> karena berhenti di Kurniawan.</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📌 Tentang Optional</div>
+                    <p class="text-small"><code>findFirst()</code> dan <code>findAny()</code> mengembalikan <code>Optional&lt;T&gt;</code> — sebuah wrapper yang bisa berisi nilai atau kosong. Ini cara Java modern menghindari <code>NullPointerException</code>. Gunakan <code>.ifPresent()</code>, <code>.orElse()</code>, atau <code>.orElseThrow()</code> untuk mengakses nilainya — jangan pernah langsung <code>.get()</code> tanpa cek.</p>
+                </div>
+
+                <!-- Quiz 9 -->
+                <div class="quiz-box" id="quiz-9">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 9</div>
+                    <p class="text-small"><strong>Diberikan <code>List.of("A", "BB", "CCC", "D", "EE")</code> dan operasi <code>.takeWhile(s -> s.length() &lt; 3)</code>, apa hasilnya?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9', this, true)">A. [A, BB] — berhenti di CCC karena length 3 tidak memenuhi &lt; 3</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9', this, false)">B. [A, BB, D, EE] — seperti filter, melewati CCC</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9', this, false)">C. [A, BB, CCC, D, EE] — semua elemen</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-9', this, false)">D. [A] — hanya yang panjangnya 1</div>
+                    <div class="quiz-feedback" id="quiz-9-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-9')">✅ Selesai — Lanjut ke Bab 10</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 10: Aggregate ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-10">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 10 · Terminal Operations</div>
+                <div class="text-title">➕ Aggregate Operations</div>
+                <p>Operasi agregasi menghasilkan satu nilai tunggal dari keseluruhan elemen Stream: max, min, count, sum, faktorial, dsb.</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-10a" class="accordion-item-check" checked/>
+                    <label for="acc-10a" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 max() dan min()</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Mencari nilai maksimum/minimum menggunakan Comparator</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Cari string paling besar secara alphabetical
+List.of("Eko", "Kurniawan", "Khannedy", "Programmer", "Zaman", "Now")
+    .stream()
+    .max(Comparator.naturalOrder())
+    .ifPresent(System.out::println); // Zaman
+
+// Cari string paling kecil
+List.of("Eko", "Kurniawan", "Khannedy", "Programmer", "Zaman", "Now")
+    .stream()
+    .min(Comparator.naturalOrder())
+    .ifPresent(System.out::println); // Eko</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">📌 Return Type: Optional</div>
+                            <p class="text-small"><code>max()</code> dan <code>min()</code> mengembalikan <code>Optional</code> karena Stream bisa kosong. Jika Stream kosong, tidak ada nilai max/min. Gunakan <code>ifPresent()</code> untuk handle kasus ini dengan aman.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-10b" class="accordion-item-check"/>
+                    <label for="acc-10b" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 count()</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Menghitung jumlah elemen dalam Stream</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">long count = List.of("Eko", "Kurniawan", "Khannedy", "Programmer", "Zaman", "Now")
+    .stream()
+    .count();
+System.out.println(count); // 6</code></pre>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">📌 Return Type: long</div>
+                            <p class="text-small"><code>count()</code> mengembalikan <code>long</code> (bukan <code>int</code>) karena dataset bisa sangat besar. Di PHP kamu biasa pakai <code>count($array)</code> yang return int.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-10c" class="accordion-item-check"/>
+                    <label for="acc-10c" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 reduce() — Operasi Paling Fleksibel</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Menggabungkan semua elemen menjadi satu nilai dengan akumulator</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Sum: 1+2+3+4+5 = 15
+var result = List.of(1, 2, 3, 4, 5).stream()
+    .reduce(0, (value, item) -> value + item);
+System.out.println(result); // 15
+
+// Factorial: 1*2*3*4*5 = 120
+var factorial = List.of(1, 2, 3, 4, 5).stream()
+    .reduce(1, (value, item) -> value * item);
+System.out.println(factorial); // 120</code></pre>
+                        </div>
+                        <div class="line-explain">
+                            <div class="line-item"><span class="line-num">reduce(0, ...)</span><span>Argumen pertama adalah <strong>identity</strong> (nilai awal / initial value). Untuk penjumlahan = 0, untuk perkalian = 1.</span></div>
+                            <div class="line-item"><span class="line-num">(value, item)</span><span><code>value</code> adalah akumulator (hasil sebelumnya), <code>item</code> adalah elemen saat ini.</span></div>
+                            <div class="line-item"><span class="line-num">value + item</span><span>Hasil dikembalikan dan menjadi <code>value</code> di iterasi berikutnya.</span></div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">📊 Trace Eksekusi reduce() untuk Sum</div>
+                            <div class="code-block">
+                                <pre><code class="language-bash">Initial: value=0
+Iterasi 1: value=0,  item=1 → result=1
+Iterasi 2: value=1,  item=2 → result=3
+Iterasi 3: value=3,  item=3 → result=6
+Iterasi 4: value=6,  item=4 → result=10
+Iterasi 5: value=10, item=5 → result=15 ✅</code></pre>
+                            </div>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel / PHP</div>
+                            <p>Identik dengan <code>array_reduce($arr, fn($carry, $item) => $carry + $item, 0)</code> di PHP, atau <code>collect($arr)->reduce(fn($carry, $item) => $carry + $item, 0)</code> di Laravel. Konsepnya persis sama!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 10 -->
+                <div class="quiz-box" id="quiz-10">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 10</div>
+                    <p class="text-small"><strong>Pada <code>reduce(1, (v, i) -> v * i)</code> untuk List [1,2,3,4,5], berapa nilai <code>v</code> pada iterasi ke-3?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-10', this, false)">A. 3</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-10', this, true)">B. 2 (hasil 1×1×2 dari iterasi sebelumnya)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-10', this, false)">C. 6</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-10', this, false)">D. 1</div>
+                    <div class="quiz-feedback" id="quiz-10-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-10')">✅ Selesai — Lanjut ke Bab 11</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 11: Check Operations ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-11">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 11 · Terminal Operations</div>
+                <div class="text-title">✅ Check Operations: anyMatch, allMatch, noneMatch</div>
+                <p>Operasi pengecekan untuk memvalidasi apakah elemen dalam Stream memenuhi kondisi tertentu. Semua mengembalikan <code>boolean</code>.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">List&lt;Integer&gt; numbers = List.of(1, 2, 3, 4, 5, 21, 6, 7, 8, 9, 10);
+
+// anyMatch: true jika ADA MINIMAL SATU elemen yang memenuhi kondisi
+boolean anyAbove20 = numbers.stream().anyMatch(n -> n > 20);
+System.out.println(anyAbove20); // true (21 > 20)
+
+// allMatch: true jika SEMUA elemen memenuhi kondisi
+boolean allPositive = numbers.stream().allMatch(n -> n > 0);
+System.out.println(allPositive); // true (semua > 0)
+
+// noneMatch: true jika TIDAK ADA satu pun elemen yang memenuhi kondisi
+boolean noneAbove100 = numbers.stream().noneMatch(n -> n > 100);
+System.out.println(noneAbove100); // true (tidak ada yang > 100)</code></pre>
+                </div>
+
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Return true jika...</th>
+                            <th>Short-circuit?</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>anyMatch(p)</code></td><td>Setidaknya 1 elemen memenuhi <code>p</code></td><td>✅ Ya (berhenti di elemen pertama yang true)</td></tr>
+                        <tr><td><code>allMatch(p)</code></td><td>Semua elemen memenuhi <code>p</code></td><td>✅ Ya (berhenti di elemen pertama yang false)</td></tr>
+                        <tr><td><code>noneMatch(p)</code></td><td>Tidak ada elemen yang memenuhi <code>p</code></td><td>✅ Ya (berhenti di elemen pertama yang true)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Short-Circuit = Efisien</div>
+                    <p class="text-small">Semua operasi check bersifat <em>short-circuit</em>: mereka berhenti sesegera mungkin. <code>anyMatch</code> pada 1 juta elemen berhenti segera setelah menemukan elemen pertama yang cocok. Ini jauh lebih efisien dari <code>filter().count() > 0</code>.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Collection</div>
+                    <p><code>anyMatch</code> → <code>collect()->contains(fn($x) => $x > 20)</code><br>
+                        <code>allMatch</code> → <code>collect()->every(fn($x) => $x > 0)</code><br>
+                        Tidak ada padanan langsung untuk <code>noneMatch</code> di Laravel, biasanya ditulis <code>!collect()->contains(...)</code>.</p>
+                </div>
+
+                <!-- Quiz 11 -->
+                <div class="quiz-box" id="quiz-11">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 11</div>
+                    <p class="text-small"><strong>Manakah cara paling efisien untuk mengecek apakah ada angka ganjil dalam List yang sangat besar?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-11', this, false)">A. <code>.filter(n -> n % 2 != 0).count() > 0</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-11', this, true)">B. <code>.anyMatch(n -> n % 2 != 0)</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-11', this, false)">C. <code>.allMatch(n -> n % 2 == 0)</code> dan invert hasilnya</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-11', this, false)">D. Ketiganya setara dalam hal efisiensi</div>
+                    <div class="quiz-feedback" id="quiz-11-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-11')">✅ Selesai — Lanjut ke Bab 12</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 12: Collectors ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-12">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 12 · Terminal Operations</div>
+                <div class="text-title">📦 Collectors — Mengumpulkan Hasil Stream</div>
+                <p><code>collect()</code> adalah terminal operation yang paling fleksibel: ia mengumpulkan semua elemen Stream menjadi Collection baru (List, Set, Map, dll) menggunakan berbagai strategi dari kelas <code>Collectors</code>.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">Stream&lt;String&gt; getStream() {
+    return Stream.of("Eko", "Kurniawan", "Khannedy");
+}
+
+// Kumpulkan ke Set (otomatis unik, urutan tidak terjamin)
+Set&lt;String&gt; set = getStream().collect(Collectors.toSet());
+
+// Kumpulkan ke Set immutable
+Set&lt;String&gt; immutableSet = getStream().collect(Collectors.toUnmodifiableSet());
+
+// Kumpulkan ke List (urutan terjaga)
+List&lt;String&gt; list = getStream().collect(Collectors.toList());
+
+// Kumpulkan ke List immutable
+List&lt;String&gt; immutableList = getStream().collect(Collectors.toUnmodifiableList());
+
+// Kumpulkan ke Map: nama -> panjang nama
+Map&lt;String, Integer&gt; map = getStream().collect(Collectors.toMap(
+    name -> name,        // Key: nama itu sendiri
+    name -> name.length() // Value: panjang nama
+));
+// Output: {Eko=3, Kurniawan=8, Khannedy=8}</code></pre>
+                </div>
+
+                <div class="line-explain">
+                    <div class="line-item"><span class="line-num">Collectors.toList()</span><span>Hasil: mutable <code>ArrayList</code>. Bisa di-add/remove setelah dibuat.</span></div>
+                    <div class="line-item"><span class="line-num">toUnmodifiableList()</span><span>Hasil: immutable List. Throw <code>UnsupportedOperationException</code> jika dimodifikasi. <strong>Direkomendasikan</strong> untuk keamanan.</span></div>
+                    <div class="line-item"><span class="line-num">Collectors.toMap()</span><span>Dua argumen: <code>keyMapper</code> dan <code>valueMapper</code> — fungsi untuk menghasilkan key dan value dari tiap elemen.</span></div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Duplicate Key di toMap()</div>
+                    <p class="text-small">Jika ada dua elemen menghasilkan key yang sama, <code>toMap()</code> akan throw <code>IllegalStateException</code>. Tambahkan argumen ketiga (merge function) untuk menangani duplikat: <code>Collectors.toMap(k, v, (v1, v2) -> v1)</code></p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p><code>collect()->toArray()</code> → <code>Collectors.toList()</code><br>
+                        <code>collect()->keyBy('name')</code> → <code>Collectors.toMap(o -> o.name, o -> o)</code><br>
+                        <code>collect()->pluck('length', 'name')</code> → <code>Collectors.toMap(name -> name, name -> name.length())</code></p>
+                </div>
+
+                <!-- Quiz 12 -->
+                <div class="quiz-box" id="quiz-12">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 12</div>
+                    <p class="text-small"><strong>Apa yang terjadi jika kamu pakai <code>Collectors.toMap()</code> dan ada dua elemen dengan key yang sama?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-12', this, false)">A. Entry kedua otomatis menimpa entry pertama</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-12', this, true)">B. Throw <code>IllegalStateException: Duplicate key</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-12', this, false)">C. Entry duplikat diabaikan secara diam-diam</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-12', this, false)">D. Menghasilkan <code>Map&lt;String, List&gt;</code> otomatis</div>
+                    <div class="quiz-feedback" id="quiz-12-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-12')">✅ Selesai — Lanjut ke Bab 13</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 13: Grouping ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-13">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 13 · Advanced Collectors</div>
+                <div class="text-title">🗂️ Grouping &amp; Partitioning</div>
+                <p>Dua Collector canggih untuk mengelompokkan data — fitur yang setara dengan <code>GROUP BY</code> di SQL atau <code>groupBy()</code> di Laravel.</p>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-13a" class="accordion-item-check" checked/>
+                    <label for="acc-13a" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 groupingBy() — Grouping oleh Key Custom</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Hasilkan Map&lt;K, List&lt;T&gt;&gt; berdasarkan kriteria pengelompokan</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Group angka berdasarkan "Besar" (>5) atau "Kecil" (<=5)
+Map&lt;String, List&lt;Integer&gt;&gt; grouped = Stream.of(1,2,3,4,5,6,7,8,9,10)
+    .collect(Collectors.groupingBy(number -> {
+        if (number > 5) return "Besar";
+        else return "Kecil";
+    }));
+// Output: {Kecil=[1,2,3,4,5], Besar=[6,7,8,9,10]}
+
+// Group nama berdasarkan panjang
+Map&lt;String, List&lt;String&gt;&gt; nameGroups = Stream.of("Eko","Kurniawan","Khannedy","Budi","Joko")
+    .collect(Collectors.groupingBy(name ->
+        name.length() > 4 ? "Panjang" : "Pendek"
+    ));
+// Output: {Pendek=[Eko, Budi, Joko], Panjang=[Kurniawan, Khannedy]}</code></pre>
+                        </div>
+                        <div class="analogy-box">
+                            <div class="analogy-title">🔗 Analogi Laravel</div>
+                            <p>Identik dengan <code>collect($names)->groupBy(fn($name) => strlen($name) > 4 ? 'Panjang' : 'Pendek')</code>. Bahkan hasil strukturnya sama persis — Map/array dengan key string dan value array elemen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="acc-13b" class="accordion-item-check"/>
+                    <label for="acc-13b" class="accordion-item-label">
+                        <div class="flex-aic-jcb">
+                            <p>🔹 partitioningBy() — Grouping Boolean (true/false)</p>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-item-label-subtitle">Hasilkan Map&lt;Boolean, List&lt;T&gt;&gt; — selalu dua kelompok: true dan false</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block">
+                            <pre><code class="language-java">// Partisi berdasarkan apakah angka > 5
+Map&lt;Boolean, List&lt;Integer&gt;&gt; partition = Stream.of(1,2,3,4,5,6,7,8,9,10)
+    .collect(Collectors.partitioningBy(number -> number > 5));
+// Output: {false=[1,2,3,4,5], true=[6,7,8,9,10]}</code></pre>
+                        </div>
+                        <div class="compare-box">
+                            <div class="compare-item wrong">
+                                <div class="compare-label">groupingBy — Key fleksibel (String, Enum, dll)</div>
+                                <div class="code-block"><pre><code class="language-java">Map&lt;String, List&lt;T&gt;&gt;
+// Key bisa apapun: "Besar", "Kecil",
+// "Active", "Inactive", dll</code></pre></div>
+                            </div>
+                            <div class="compare-item right">
+                                <div class="compare-label">partitioningBy — Key pasti Boolean</div>
+                                <div class="code-block"><pre><code class="language-java">Map&lt;Boolean, List&lt;T&gt;&gt;
+// Key selalu: true atau false
+// Lebih semantik untuk kondisi biner</code></pre></div>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-title">💡 Kapan pakai partitioningBy?</div>
+                            <p class="text-small">Gunakan <code>partitioningBy</code> saat kondisi pengelompokan bersifat biner (ya/tidak, aktif/nonaktif, lulus/tidak). Hasilnya lebih semantik dan selalu menghasilkan dua key: <code>true</code> dan <code>false</code> — bahkan jika salah satu kosong.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz 13 -->
+                <div class="quiz-box" id="quiz-13">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 13</div>
+                    <p class="text-small"><strong>Apa tipe return dari <code>Collectors.groupingBy()</code>?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-13', this, false)">A. <code>Map&lt;Boolean, List&lt;T&gt;&gt;</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-13', this, true)">B. <code>Map&lt;K, List&lt;T&gt;&gt;</code> dimana K adalah tipe return dari classifier function</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-13', this, false)">C. <code>List&lt;Map&lt;K,T&gt;&gt;</code></div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-13', this, false)">D. <code>Map&lt;String, T&gt;</code></div>
+                    <div class="quiz-feedback" id="quiz-13-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-13')">✅ Selesai — Lanjut ke Bab 14</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 14: Primitive Stream ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-14">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 14 · Specialized Streams</div>
+                <div class="text-title">🔢 Primitive Stream: IntStream, LongStream, DoubleStream</div>
+                <p>Java menyediakan Stream khusus untuk tipe primitif agar lebih efisien — tanpa boxing/unboxing ke wrapper class seperti <code>Integer</code> atau <code>Double</code>.</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">📌 Apa itu Boxing di Java?</div>
+                    <p class="text-small">Java punya dua jenis tipe data: <strong>primitif</strong> (<code>int</code>, <code>long</code>, <code>double</code>) dan <strong>wrapper class</strong> (<code>Integer</code>, <code>Long</code>, <code>Double</code>). <code>Stream&lt;Integer&gt;</code> menggunakan wrapper class yang menghabiskan lebih banyak memori. <code>IntStream</code> langsung pakai <code>int</code> primitif — jauh lebih efisien untuk data numerik besar.</p>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// IntStream.range(start, endExclusive) — seperti range() PHP
+IntStream intStream = IntStream.range(1, 100); // 1 sampai 99
+intStream.forEach(System.out::println);
+
+// LongStream untuk bilangan besar
+LongStream longStream = LongStream.of(1, 2, 3, 4);
+
+// DoubleStream untuk bilangan desimal
+DoubleStream doubleStream = DoubleStream.builder()
+    .add(0.1).add(0.2).build();</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">Operasi Spesial Primitive Stream</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// average() — hanya ada di IntStream, LongStream, DoubleStream
+OptionalDouble avg = IntStream.range(1, 100).average();
+avg.ifPresent(System.out::println); // 50.0
+
+// sum(), min(), max() langsung tersedia
+int sum = IntStream.range(1, 6).sum(); // 15
+int max = IntStream.of(3, 1, 4, 1, 5).max().getAsInt(); // 5
+
+// Konversi ke Stream&lt;String&gt; dengan mapToObj()
+IntStream.range(0, 100)
+    .mapToObj(number -> "Number : " + number)
+    .forEach(System.out::println);</code></pre>
+                </div>
+
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>IntStream</th>
+                            <th>LongStream</th>
+                            <th>DoubleStream</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>sum()</code></td><td>✅ int</td><td>✅ long</td><td>✅ double</td></tr>
+                        <tr><td><code>average()</code></td><td>✅ OptionalDouble</td><td>✅ OptionalDouble</td><td>✅ OptionalDouble</td></tr>
+                        <tr><td><code>min()</code></td><td>✅ OptionalInt</td><td>✅ OptionalLong</td><td>✅ OptionalDouble</td></tr>
+                        <tr><td><code>max()</code></td><td>✅ OptionalInt</td><td>✅ OptionalLong</td><td>✅ OptionalDouble</td></tr>
+                        <tr><td><code>range(s,e)</code></td><td>✅</td><td>✅</td><td>❌</td></tr>
+                        <tr><td><code>mapToObj()</code></td><td>✅</td><td>✅</td><td>✅</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p><code>IntStream.range(1, 100)</code> mirip <code>range(1, 99)</code> di PHP, tapi di Java argumen kedua <strong>exclusive</strong> (tidak termasuk). PHP <code>range(1, 99)</code> = Java <code>IntStream.range(1, 100)</code>. <code>IntStream.rangeClosed(1, 99)</code> untuk inclusive.</p>
+                </div>
+
+                <!-- Quiz 14 -->
+                <div class="quiz-box" id="quiz-14">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 14</div>
+                    <p class="text-small"><strong><code>IntStream.range(1, 5)</code> menghasilkan elemen berapa saja?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-14', this, false)">A. 1, 2, 3, 4, 5</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-14', this, true)">B. 1, 2, 3, 4 (5 tidak termasuk)</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-14', this, false)">C. 0, 1, 2, 3, 4</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-14', this, false)">D. 2, 3, 4 (1 tidak termasuk)</div>
+                    <div class="quiz-feedback" id="quiz-14-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-14')">✅ Selesai — Lanjut ke Bab 15</button>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 15: Parallel Stream ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-15">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Bab 15 · Advanced</div>
+                <div class="text-title">⚡ Parallel Stream — Pemrosesan Multi-Thread</div>
+                <p>Parallel Stream memungkinkan pemrosesan data secara bersamaan menggunakan beberapa thread — memanfaatkan prosesor multi-core modern.</p>
+
+                <div class="compare-box">
+                    <div class="compare-item wrong">
+                        <div class="compare-label">🔄 Sequential Stream (Default)</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">Stream.of(1,2,3,4,5,6,7,8,9,10)
+    .forEach(number -> {
+        System.out.println(
+            Thread.currentThread().getName() + " : " + number
+        );
+    });
+// Output (urutan terjaga):
+// main : 1
+// main : 2
+// main : 3 ... dst</code></pre>
+                        </div>
+                    </div>
+                    <div class="compare-item right">
+                        <div class="compare-label">⚡ Parallel Stream</div>
+                        <div class="code-block">
+                            <pre><code class="language-java">Stream.of(1,2,3,4,5,6,7,8,9,10)
+    .parallel()  // Satu method ini saja!
+    .forEach(number -> {
+        System.out.println(
+            Thread.currentThread().getName() + " : " + number
+        );
+    });
+// Output (urutan tidak terjaga):
+// ForkJoinPool.commonPool-worker-1 : 7
+// main : 6
+// ForkJoinPool.commonPool-worker-3 : 3 ... dst</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Parallel Stream Bukan Selalu Lebih Cepat!</div>
+                    <p class="text-small">Parallel Stream ada overhead-nya: membagi data, koordinasi thread, menggabungkan hasil. Untuk data kecil (&lt;10k elemen) atau operasi sederhana, <strong>sequential stream lebih cepat</strong>. Gunakan parallel hanya untuk:</p>
+                    <ul class="text-small" style="margin: .5rem 0 0 1.5rem;">
+                        <li>Dataset sangat besar (ratusan ribu+ elemen)</li>
+                        <li>Operasi yang computationally heavy per elemen</li>
+                        <li>Operasi yang tidak bergantung pada urutan</li>
+                    </ul>
+                </div>
+
+                <div class="info-box danger">
+                    <div class="info-box-title">🚨 Thread Safety — Jangan Modifikasi State Bersama!</div>
+                    <p class="text-small">Karena parallel stream berjalan di multiple thread, memodifikasi variable bersama (shared mutable state) akan menyebabkan <em>race condition</em>. Jangan pernah melakukan ini dalam parallel stream:</p>
+                    <div class="code-block">
+                        <pre><code class="language-java">// ❌ BERBAHAYA — race condition!
+List&lt;Integer&gt; result = new ArrayList&lt;&gt;();
+Stream.of(1,2,3).parallel().forEach(result::add); // TIDAK AMAN
+
+// ✅ AMAN — gunakan collect()
+List&lt;Integer&gt; result = Stream.of(1,2,3)
+    .parallel()
+    .collect(Collectors.toList()); // Thread-safe</code></pre>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP</div>
+                    <p>PHP secara default single-threaded, jadi tidak ada padanan langsung. Parallelism di PHP biasanya dilakukan lewat <code>pcntl_fork()</code>, Swoole, atau ReactPHP — yang jauh lebih kompleks. Di Java, cukup tambahkan <code>.parallel()</code> dan JVM yang mengurus threading via ForkJoin framework.</p>
+                </div>
+
+                <!-- Quiz 15 -->
+                <div class="quiz-box" id="quiz-15">
+                    <div class="quiz-title">🧠 Mini Quiz — Bab 15</div>
+                    <p class="text-small"><strong>Apa risiko utama saat memodifikasi <code>ArrayList</code> yang sama dari dalam Parallel Stream?</strong></p>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-15', this, false)">A. Program akan crash dengan OutOfMemoryError</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-15', this, false)">B. Elemen tidak akan ditambahkan sama sekali</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-15', this, true)">C. Race condition — hasil tidak konsisten atau data corrupt</div>
+                    <div class="quiz-option" onclick="answerQuiz('quiz-15', this, false)">D. Parallel stream otomatis menjadi sequential</div>
+                    <div class="quiz-feedback" id="quiz-15-feedback"></div>
+                </div>
+                <button class="button btn-primary" onclick="markDone('chapter-15')">🎉 Semua Bab Selesai! Lihat Summary</button>
+            </div>
+        </div>
+
+        <!-- ========== SUMMARY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-badge">Ringkasan Arsitektur</div>
+                <div class="text-title">📝 Summary: Java Stream API</div>
+                <p>Selamat! Kamu telah menyelesaikan semua bab. Berikut adalah peta lengkap operasi Stream yang bisa kamu jadikan referensi cepat.</p>
+
+                <div class="text-title" style="margin-top:var(--l)">🗺️ Peta Operasi Stream</div>
+                <div class="code-block">
+                    <pre><code class="language-java">// LENGKAP: Anatomy of a Stream Pipeline
+dataSource                          // Source
+    .stream()                       // Buat Stream
+    // ── INTERMEDIATE (Lazy) ────────────────────
+    .filter(predicate)              // Saring elemen
+    .map(function)                  // Transform 1-to-1
+    .flatMap(function)              // Transform 1-to-many + flatten
+    .distinct()                     // Hapus duplikat
+    .sorted()                       // Urutkan natural
+    .sorted(comparator)             // Urutkan custom
+    .peek(consumer)                 // Debug/side-effect
+    .limit(n)                       // Ambil n pertama
+    .skip(n)                        // Lewati n pertama
+    .takeWhile(predicate)           // Ambil selama kondisi true
+    .dropWhile(predicate)           // Lewati selama kondisi true
+    // ── TERMINAL (Eager) ───────────────────────
+    .forEach(consumer)              // Iterasi
+    .collect(Collectors.toList())   // → List
+    .collect(Collectors.toSet())    // → Set
+    .collect(Collectors.toMap(k,v)) // → Map
+    .collect(groupingBy(fn))        // → Map&lt;K, List&lt;T&gt;&gt;
+    .collect(partitioningBy(pred))  // → Map&lt;Boolean, List&lt;T&gt;&gt;
+    .count()                        // → long
+    .reduce(identity, accumulator)  // → T
+    .max(comparator)                // → Optional&lt;T&gt;
+    .min(comparator)                // → Optional&lt;T&gt;
+    .findFirst()                    // → Optional&lt;T&gt;
+    .findAny()                      // → Optional&lt;T&gt;
+    .anyMatch(predicate)            // → boolean
+    .allMatch(predicate)            // → boolean
+    .noneMatch(predicate)           // → boolean</code></pre>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">📊 Tabel Perbandingan Lengkap: Java Stream vs Laravel Collection</div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Java Stream</th>
+                            <th>Laravel Collection</th>
+                            <th>Catatan</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><code>filter()</code></td><td><code>filter()</code></td><td>Identik</td></tr>
+                        <tr><td><code>map()</code></td><td><code>map()</code></td><td>Identik</td></tr>
+                        <tr><td><code>flatMap()</code></td><td><code>flatMap()</code></td><td>Identik</td></tr>
+                        <tr><td><code>distinct()</code></td><td><code>unique()</code></td><td>Java pakai equals()/hashCode()</td></tr>
+                        <tr><td><code>sorted()</code></td><td><code>sortBy()</code></td><td>Java lebih eksplisit via Comparator</td></tr>
+                        <tr><td><code>limit(n)</code></td><td><code>take(n)</code></td><td>Identik</td></tr>
+                        <tr><td><code>skip(n)</code></td><td><code>skip(n)</code></td><td>Identik</td></tr>
+                        <tr><td><code>reduce()</code></td><td><code>reduce()</code></td><td>Identik</td></tr>
+                        <tr><td><code>count()</code></td><td><code>count()</code></td><td>Java return long</td></tr>
+                        <tr><td><code>collect(toList())</code></td><td><code>all()</code> / <code>toArray()</code></td><td>Java perlu Collectors</td></tr>
+                        <tr><td><code>groupingBy()</code></td><td><code>groupBy()</code></td><td>Identik secara konsep</td></tr>
+                        <tr><td><code>anyMatch()</code></td><td><code>contains(fn)</code></td><td>Sama — short-circuit</td></tr>
+                        <tr><td><code>allMatch()</code></td><td><code>every(fn)</code></td><td>Sama</td></tr>
+                        <tr><td><code>findFirst()</code></td><td><code>first()</code></td><td>Java return Optional</td></tr>
+                        <tr><td><code>peek()</code></td><td><code>tap()</code></td><td>Untuk debugging</td></tr>
+                        <tr><td><code>.parallel()</code></td><td>Tidak ada</td><td>PHP single-threaded by default</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title" style="margin-top:var(--l)">🔑 5 Golden Rules Java Stream</div>
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Stream adalah sekali pakai</div>
+                        <div class="timeline-content-desc">Setelah terminal operation dipanggil, Stream tidak bisa dipakai lagi. Buat Stream baru dari Collection-nya.</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Intermediate operations bersifat Lazy</div>
+                        <div class="timeline-content-desc">filter(), map(), sorted() tidak berjalan sampai ada terminal operation. Ini membuat Stream sangat efisien.</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Stream tidak mengubah sumber data</div>
+                        <div class="timeline-content-desc">List/Collection asli tidak berubah. Stream hanya membuat "view" transformasi atas data tersebut.</div>
+                    </div>
+                    <div><span class="timeline-key active">4</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Gunakan Primitive Stream untuk numerik</div>
+                        <div class="timeline-content-desc">IntStream, LongStream, DoubleStream menghindari boxing overhead. Gunakan untuk pemrosesan angka berskala besar.</div>
+                    </div>
+                    <div><span class="timeline-key">5</span></div>
+                    <div class="timeline-content max-width-700">
+                        <div class="timeline-content-title">Hati-hati dengan Parallel Stream</div>
+                        <div class="timeline-content-desc">Jangan modifikasi shared state dalam parallel stream. Selalu gunakan collect() yang thread-safe, bukan ArrayList manual.</div>
+                    </div>
+                </div>
+
+                <div class="flex-ais-jcs gap-m" style="margin-top:var(--l)">
+                    <div class="badge text-white bg-primary"><p>☕ Java 17+</p></div>
+                    <div class="badge text-white bg-success"><p>✅ Functional Style</p></div>
+                    <div class="badge text-white bg-warning"><p>⚡ Lazy Evaluation</p></div>
+                    <div class="badge badge-small bg-danger"><p>🚨 Thread Safety</p></div>
+                </div>
+
+                <div class="info-box success" style="margin-top:var(--l)">
+                    <div class="info-box-title">🎉 Kamu sudah memahami Java Stream API!</div>
+                    <p class="text-small">Dengan pemahaman ini, kamu bisa menulis kode Java yang bersih, ekspresif, dan efisien — setara bahkan melebihi kemampuan Laravel Collection yang sudah kamu kenal. Langkah selanjutnya: pelajari Optional&lt;T&gt; secara mendalam, dan eksplorasi java.util.function package (Function, Predicate, Consumer, Supplier).</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <footer style="padding:var(--l); text-align:center; font-size:var(--xs); color:var(--transtext-color);">
+        Java Stream API Learning Module · Dibuat untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+<script>
+    /* ── Sidebar / Theme ─────────────────────────────── */
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active');
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode");
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    /* ── Progress Tracking ───────────────────────────── */
+    const TOTAL_CHAPTERS = 15;
+    const doneSets = new Set(JSON.parse(localStorage.getItem('done_chapters') || '[]'));
+
+    function updateProgress() {
+        const pct = Math.round((doneSets.size / TOTAL_CHAPTERS) * 100);
+        document.getElementById('progress-fill').style.width = pct + '%';
+        document.getElementById('progress-label').textContent = doneSets.size + ' / ' + TOTAL_CHAPTERS + ' bab selesai';
+    }
+
+    function markDone(chapterId) {
+        doneSets.add(chapterId);
+        try { localStorage.setItem('done_chapters', JSON.stringify([...doneSets])); } catch(e){}
+        updateProgress();
+        // Scroll ke chapter berikutnya
+        const nextNum = parseInt(chapterId.replace('chapter-', '')) + 1;
+        const nextEl = document.getElementById('chapter-' + nextNum) || document.getElementById('summary');
+        if (nextEl) nextEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    updateProgress();
+
+    /* ── Quiz Logic ──────────────────────────────────── */
+    const quizAnswered = {};
+
+    function answerQuiz(quizId, optionEl, isCorrect) {
+        if (quizAnswered[quizId]) return;
+        quizAnswered[quizId] = true;
+
+        const feedback = document.getElementById(quizId + '-feedback');
+        const options = optionEl.parentElement.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.style.pointerEvents = 'none');
+
+        if (isCorrect) {
+            optionEl.classList.add('correct');
+            feedback.textContent = '✅ Benar! Jawaban kamu tepat.';
+            feedback.className = 'quiz-feedback show ok';
+        } else {
+            optionEl.classList.add('wrong');
+            // Highlight correct answer
+            options.forEach(opt => {
+                if (opt.getAttribute('onclick').includes('true')) opt.classList.add('correct');
+            });
+            feedback.textContent = '❌ Kurang tepat. Perhatikan jawaban yang benar (hijau).';
+            feedback.className = 'quiz-feedback show ko';
+        }
+    }
+
+    /* ── Active Sidebar on Scroll ────────────────────── */
+    const sidebarItems = document.querySelectorAll('.sidebar-menu-item[href]');
+    const sections = document.querySelectorAll('[id^="chapter-"], #summary, #pengantar');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                sidebarItems.forEach(item => {
+                    item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

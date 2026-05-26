@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Virtual Thread — Modul Belajar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        .code-block{box-sizing:border-box;max-width:77dvw;overflow-x:auto;border-radius:var(--radius-l);margin:var(--m) 0}
+        .code-block pre{margin:0}
+        .code-block code.hljs{border-radius:var(--radius-l);font-size:.82rem;line-height:1.6}
+        .info-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border-left:4px solid var(--primary-color);background:var(--transprimary-color);border-radius:0 var(--radius-m) var(--radius-m) 0;padding:var(--m);margin:var(--m) 0}
+        .info-box.warning{border-left-color:var(--warning-color);background:var(--transwarning-color)}
+        .info-box.success{border-left-color:var(--success-color);background:var(--transsuccess-color)}
+        .info-box.danger{border-left-color:var(--danger-color);background:var(--transdanger-color)}
+        .info-box .info-box-title{font-weight:700;margin-bottom:var(--xs);font-size:var(--s)}
+        .info-box p{margin:0;font-size:var(--s)}
+        .line-annotation{box-sizing:border-box;max-width:77dvw;overflow:auto;margin:var(--m) 0}
+        .line-annotation table{width:100%}
+        .line-annotation th{background:var(--transprimary-color)}
+        .quiz-option{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) var(--m);border-radius:var(--radius-m);border:var(--border);cursor:pointer;margin-bottom:var(--s);transition:background .15s;font-size:var(--s)}
+        .quiz-option:hover{background:var(--transprimary-color)}
+        .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
+        .quiz-option.wrong{background:var(--transdanger-color);border-color:var(--danger-color)}
+        .quiz-feedback{margin-top:var(--s);font-size:var(--s);font-weight:600;display:none}
+        .quiz-feedback.show{display:block}
+        .comparison-box{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);max-width:77dvw;box-sizing:border-box;margin:var(--m) 0}
+        @media(max-width:600px){.comparison-box{grid-template-columns:1fr}}
+        .comparison-wrong{border:1px solid var(--danger-color);border-radius:var(--radius-m);overflow:hidden}
+        .comparison-correct{border:1px solid var(--success-color);border-radius:var(--radius-m);overflow:hidden}
+        .comparison-header{padding:var(--xs) var(--m);font-weight:700;font-size:var(--xs)}
+        .comparison-wrong .comparison-header{background:var(--transdanger-color);color:var(--danger-color)}
+        .comparison-correct .comparison-header{background:var(--transsuccess-color);color:var(--success-color)}
+        .comparison-body{font-size:.78rem}
+        .comparison-body pre{margin:0;border-radius:0}
+        .comparison-body code.hljs{border-radius:0;font-size:.78rem}
+        .analogy-box{box-sizing:border-box;max-width:77dvw;overflow:auto;border:1px solid var(--second-primary-color);background:var(--transsecond-primary-color);border-radius:var(--radius-m);padding:var(--m);margin:var(--m) 0}
+        .analogy-box .analogy-title{font-weight:700;color:var(--second-primary-color);margin-bottom:var(--xs);font-size:var(--s)}
+        .analogy-box p{margin:0;font-size:var(--s)}
+        .chapter-banner{box-sizing:border-box;max-width:77dvw;overflow:auto;background:linear-gradient(135deg,var(--transprimary-color) 0%,var(--transsecond-primary-color) 100%);border-radius:var(--radius-x);padding:var(--x) var(--l);margin-bottom:var(--m)}
+        .chapter-banner .chapter-number{font-size:var(--xs);font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary-color);margin-bottom:var(--xs)}
+        .chapter-banner .chapter-title{font-size:var(--xx);font-weight:800;margin-bottom:var(--xs)}
+        .chapter-banner .chapter-desc{font-size:var(--s);color:var(--transtext-color);margin:0}
+        .summary-card{box-sizing:border-box;max-width:77dvw;overflow:auto;border:var(--border);border-radius:var(--radius-l);padding:var(--m);display:grid;gap:var(--s)}
+        .summary-row{display:flex;align-items:flex-start;gap:var(--m);padding:var(--s) 0;border-bottom:var(--border);font-size:var(--s)}
+        .summary-row:last-child{border-bottom:none}
+        .summary-icon{font-size:var(--l);min-width:2rem;text-align:center}
+        .summary-row strong{display:block;margin-bottom:2px}
+        .bp-list{list-style:none;padding:0;margin:0}
+        .bp-list li{display:flex;gap:var(--s);padding:var(--xs) 0;font-size:var(--s);border-bottom:1px dashed var(--border-color)}
+        .bp-list li:last-child{border-bottom:none}
+        .section-divider{border:none;border-top:2px dashed var(--border-color);margin:var(--x) 0}
+
+        /* Thread visualizer */
+        .thread-visual{box-sizing:border-box;max-width:77dvw;overflow:auto;margin:var(--m) 0;padding:var(--m);border:var(--border);border-radius:var(--radius-l);background:var(--transprimary-color)}
+        .thread-visual-title{font-weight:700;font-size:var(--s);margin-bottom:var(--s);color:var(--primary-color)}
+        .thread-row{display:flex;align-items:center;gap:var(--s);margin-bottom:var(--xs);font-size:var(--xs)}
+        .thread-bar{height:22px;border-radius:var(--radius-s);display:flex;align-items:center;padding:0 8px;font-size:.7rem;font-weight:700;color:#fff;white-space:nowrap;transition:width .3s}
+        .thread-bar.run{background:var(--success-color)}
+        .thread-bar.wait{background:var(--warning-color)}
+        .thread-bar.blocked{background:var(--danger-color)}
+        .thread-label{min-width:110px;font-size:.72rem;color:var(--transtext-color)}
+
+        /* Stat cards */
+        .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--m);max-width:77dvw;box-sizing:border-box;margin:var(--m) 0}
+        .stat-card{border:var(--border);border-radius:var(--radius-l);padding:var(--m);text-align:center}
+        .stat-card-val{font-size:var(--xxx);font-weight:800;color:var(--primary-color)}
+        .stat-card-label{font-size:var(--xs);color:var(--transtext-color)}
+
+        /* Badge chip */
+        .chip{display:inline-block;background:var(--transprimary-color);color:var(--primary-color);border-radius:999px;padding:2px 10px;font-size:var(--xs);font-weight:600;margin-right:4px}
+        .chip.green{background:var(--transsuccess-color);color:var(--success-color)}
+        .chip.orange{background:var(--transwarning-color);color:var(--warning-color)}
+        .chip.red{background:var(--transdanger-color);color:var(--danger-color)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠 Intro</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnc1">📚 Chapters</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnc1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnc1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-1">1. Masalah Konkurensi</a>
+                <a class="bottom-nav-item" href="#chapter-2">2. Platform Thread</a>
+                <a class="bottom-nav-item" href="#chapter-3">3. Virtual Thread</a>
+                <a class="bottom-nav-item" href="#chapter-4">4. ExecutorService</a>
+                <a class="bottom-nav-item" href="#chapter-5">5. Platform vs Virtual</a>
+                <a class="bottom-nav-item" href="#chapter-6">6. Best Practice & Spring Boot</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+    <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java VT</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro"     class="sidebar-menu-item active" data-title="Intro"><div class="sidebar-menu-item-svg">🧠</div><span>Intro & Konteks</span></a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Masalah Konkurensi"><div class="sidebar-menu-item-svg">😵</div><span>1. Masalah Konkurensi</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="Platform Thread"><div class="sidebar-menu-item-svg">🖥️</div><span>2. Platform Thread</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="Virtual Thread"><div class="sidebar-menu-item-svg">⚡</div><span>3. Virtual Thread</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="ExecutorService"><div class="sidebar-menu-item-svg">🏭</div><span>4. ExecutorService</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="Perbandingan"><div class="sidebar-menu-item-svg">⚖️</div><span>5. Platform vs Virtual</span></a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="Best Practice"><div class="sidebar-menu-item-svg">🚀</div><span>6. Best Practice</span></a>
+        <a href="#summary"   class="sidebar-menu-item" data-title="Summary"><div class="sidebar-menu-item-svg">📋</div><span>Summary</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active"><span class="container-header-nav-item-text">☕ Java Virtual Thread</span></a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a href="#chapter-2" class="container-header-nav-item"><span class="container-header-nav-item-text">Platform Thread</span></a>
+                    <a href="#chapter-3" class="container-header-nav-item"><span class="container-header-nav-item-text">Virtual Thread</span></a>
+                    <a href="#chapter-4" class="container-header-nav-item"><span class="container-header-nav-item-text">ExecutorService</span></a>
+                    <a href="#chapter-5" class="container-header-nav-item"><span class="container-header-nav-item-text">Perbandingan</span></a>
+                    <a href="#summary"   class="container-header-nav-item"><span class="container-header-nav-item-text">Summary</span></a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ========== INTRO ========== -->
+        <div id="intro" class="card-wrapper max-width-1000">
+            <div style="text-align:center;padding:var(--m) 0;">
+                <div style="font-size:3.5rem;">⚡</div>
+                <div class="text-title" style="font-size:var(--xxx);margin-top:var(--s);">Java Virtual Thread</div>
+                <p style="color:var(--transtext-color);font-size:var(--s);max-width:600px;margin:var(--s) auto 0;">
+                    Fitur revolusioner Java 21 yang memungkinkan jutaan konkurensi ringan tanpa overhead Platform Thread. Pahami masalahnya dulu, baru solusinya.
+                </p>
+            </div>
+            <div class="flex-ais-jcc gap-m" style="margin:var(--m) 0;">
+                <div class="badge text-white bg-primary"><p>Java 21 (GA)</p></div>
+                <div class="badge text-white bg-success"><p>Project Loom</p></div>
+                <div class="badge text-white" style="background:var(--second-primary-color);"><p>PHP/Laravel Analogy</p></div>
+                <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="text-subtitle">🧠 Konteks: Mengapa Ini Penting?</div>
+            <p>Bayangkan aplikasi web yang harus melayani <strong>10.000 request sekaligus</strong>. Setiap request butuh membaca database (ada latensi I/O ~50ms). Masalah ini adalah masalah konkurensi — bagaimana menangani banyak pekerjaan secara bersamaan tanpa membuang-buang resource?</p>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-card-val">~1MB</div>
+                    <div class="stat-card-label">Memory per Platform Thread (stack size default)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-val">~1KB</div>
+                    <div class="stat-card-label">Memory per Virtual Thread (jauh lebih hemat)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-val">~10K</div>
+                    <div class="stat-card-label">Batas praktis Platform Thread per server</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-val">Jutaan</div>
+                    <div class="stat-card-label">Virtual Thread yang bisa dibuat di JVM</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">💡 Virtual Thread adalah bagian dari Project Loom</div>
+                <p>Project Loom adalah inisiatif OpenJDK untuk membawa konkurensi ringan ke Java. Virtual Thread masuk sebagai fitur preview di Java 19, stabil di Java 21 (LTS). Jika kamu menggunakan Spring Boot 3.2+ dengan Java 21, Virtual Thread bisa diaktifkan hanya dengan satu baris konfigurasi.</p>
+            </div>
+
+            <div class="display-grid" style="gap:var(--m);margin:var(--m) 0;">
+                <div class="timeline">
+                    <div><span class="timeline-key active">1</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Era Platform Thread (Java 1.0 – sekarang)</div>
+                        <div class="timeline-content-desc">Satu Java Thread = satu OS Thread. Setiap thread memakai ~1MB stack memory. Membuat ribuan thread = memori meledak. Thread pool (ExecutorService) hadir sebagai mitigasi, tapi masih terbatas.</div>
+                        <div class="timeline-content-time">Java 1.0+</div>
+                    </div>
+                    <div><span class="timeline-key active">2</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Era Reactive Programming (Java 8–20)</div>
+                        <div class="timeline-content-desc">Framework seperti Project Reactor / WebFlux muncul sebagai solusi. Kode ditulis secara non-blocking dengan callback/Mono/Flux. Efisien tapi sangat sulit dibaca, di-debug, dan di-maintain.</div>
+                        <div class="timeline-content-time">Java 8–20</div>
+                    </div>
+                    <div><span class="timeline-key active">3</span><div class="timeline-divider active"></div></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Era Virtual Thread (Java 21+)</div>
+                        <div class="timeline-content-desc">JVM mengelola ribuan "virtual thread" di atas sejumlah kecil OS thread. Kode ditulis blocking seperti biasa, tapi JVM yang handle scheduling secara non-blocking di balik layar. <em>The best of both worlds.</em></div>
+                        <div class="timeline-content-time">Java 21 (LTS) ✨</div>
+                    </div>
+                    <div><span class="timeline-key">4</span></div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Spring Boot 3.2 + Virtual Thread</div>
+                        <div class="timeline-content-desc">Spring Boot 3.2 langsung mendukung Virtual Thread dengan konfigurasi minimal. Seluruh request handling web bisa berjalan di atas Virtual Thread secara otomatis.</div>
+                        <div class="timeline-content-time">Spring Boot 3.2+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 1: MASALAH KONKURENSI ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">😵 Masalah Konkurensi di Java</div>
+                    <p class="chapter-desc">Sebelum memahami solusinya, kita perlu benar-benar paham masalahnya. Kenapa banyak thread itu mahal? Apa itu blocking I/O? Mengapa ini problem besar untuk aplikasi web?</p>
+                </div>
+
+                <div class="text-subtitle">Bagaimana Thread Bekerja di Java (Sebelum Java 21)</div>
+                <p>Secara default, setiap Java Thread adalah <strong>Platform Thread</strong> — artinya satu Java Thread dipetakan langsung ke satu <strong>OS Thread</strong>. OS Thread adalah entitas yang dikelola langsung oleh sistem operasi, dan sangat mahal:</p>
+
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Biaya</th><th>Platform Thread</th><th>Dampak pada 10.000 Thread</th></tr></thead>
+                            <tbody>
+                            <tr><td>Stack Memory</td><td>~512KB – 1MB per thread</td><td>~5–10 GB RAM hanya untuk stack!</td></tr>
+                            <tr><td>Context Switch</td><td>OS harus simpan/restore CPU register</td><td>Overhead CPU besar, latensi meningkat</td></tr>
+                            <tr><td>Thread Creation</td><td>System call ke OS, relatif lambat</td><td>Startup time aplikasi lambat</td></tr>
+                            <tr><td>Scheduling</td><td>Dikelola OS (preemptive)</td><td>OS kewalahan mengelola ribuan thread</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Apa itu Blocking I/O?</div>
+                <p>Masalah terbesar bukan <em>jumlah komputasi</em>, tapi <em>waktu menunggu</em>. Saat thread melakukan operasi I/O (query database, HTTP call, baca file), thread tersebut <strong>memblokir</strong> — hanya duduk menunggu, tidak melakukan apa-apa, tapi tetap memakai memori dan slot OS thread.</p>
+
+                <div class="thread-visual">
+                    <div class="thread-visual-title">Visualisasi: Thread yang Sedang Menunggu I/O (Blocking)</div>
+                    <div class="thread-row">
+                        <div class="thread-label">Thread-1 (DB query)</div>
+                        <div class="thread-bar run" style="width:60px">RUN</div>
+                        <div class="thread-bar wait" style="width:200px">⏳ BLOCKED — menunggu DB response (50ms)</div>
+                        <div class="thread-bar run" style="width:40px">RUN</div>
+                    </div>
+                    <div class="thread-row">
+                        <div class="thread-label">Thread-2 (HTTP call)</div>
+                        <div class="thread-bar run" style="width:30px">RUN</div>
+                        <div class="thread-bar wait" style="width:250px">⏳ BLOCKED — menunggu API response (100ms)</div>
+                        <div class="thread-bar run" style="width:40px">RUN</div>
+                    </div>
+                    <div class="thread-row">
+                        <div class="thread-label">Thread-3 (baca file)</div>
+                        <div class="thread-bar run" style="width:50px">RUN</div>
+                        <div class="thread-bar wait" style="width:180px">⏳ BLOCKED — menunggu disk I/O (30ms)</div>
+                        <div class="thread-bar run" style="width:50px">RUN</div>
+                    </div>
+                    <p style="font-size:var(--xs);color:var(--transtext-color);margin:var(--s) 0 0;">Selama BLOCKED: thread duduk diam, tidak bisa dipakai untuk pekerjaan lain, tapi tetap memakan ~1MB RAM. Bayangkan 10.000 thread seperti ini sekaligus.</p>
+                </div>
+
+                <div class="text-subtitle">Solusi Lama: Thread Pool</div>
+                <p>Untuk mengatasi mahalnya pembuatan thread, dikembangkan <strong>Thread Pool</strong> melalui <code>ExecutorService</code>. Thread dibuat sekali, disimpan dalam pool, dan digunakan ulang. Tapi ini tetap tidak menyelesaikan masalah <em>blocking</em> — saat thread di pool sedang menunggu I/O, thread tersebut tidak bisa dipakai untuk request lain.</p>
+
+                <div class="code-block"><pre><code class="language-java">// Cara lama: Thread Pool dengan ukuran tetap
+ExecutorService pool = Executors.newFixedThreadPool(200);
+// Hanya bisa menangani 200 request concurrent!
+// Request ke-201 harus ANTRI sampai ada thread yang selesai.
+// Jika setiap thread blocking 50ms untuk DB, throughput sangat terbatas.</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP/Laravel</div>
+                    <p>Di PHP tradisional (FPM), setiap request mendapat satu proses/worker. Jika konfigurasi kamu <code>pm.max_children = 100</code>, artinya hanya 100 request yang bisa berjalan bersamaan. Request ke-101 harus menunggu. Masalah di Java Platform Thread mirip persis: jumlah thread = kapasitas concurrent request. Virtual Thread memecah batasan ini — seperti kalau PHP bisa menangani 1.000.000 request bersamaan dengan resource yang sama.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz1">
+                    <p style="font-size:var(--s);font-weight:600;">Mengapa Platform Thread tidak bisa dengan mudah dibuat dalam jumlah sangat besar (misal 1 juta thread)?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">A. Karena Java membatasi jumlah thread maksimum di source code-nya</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,true)">B. Karena setiap Platform Thread memetakan ke OS Thread yang mengonsumsi ~1MB stack memory dan overhead context switch yang besar</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">C. Karena CPU hanya bisa menjalankan satu thread sekaligus</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">D. Karena Platform Thread tidak mendukung operasi I/O</div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 2: PLATFORM THREAD ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">🖥️ Platform Thread — Cara Lama</div>
+                    <p class="chapter-desc">Platform Thread adalah thread Java klasik yang dipetakan langsung ke OS Thread. Di Java 21, API-nya diperbarui dengan builder pattern yang lebih ekspresif melalui <code>Thread.ofPlatform()</code>.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>PlatformThreadApp.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// PlatformThreadApp.java
+package belajar.virtual.thread;
+
+import java.time.Duration;
+
+public class PlatformThreadApp {
+
+  public static void main(String[] args) {
+    for (int i = 0; i < 10_000; i++) {
+
+      // Thread.ofPlatform() → Builder pattern baru di Java 21 untuk Platform Thread
+      Thread thread = Thread.ofPlatform()
+          .name("eko-" + i)     // Beri nama thread untuk debugging
+          .daemon(false)         // Bukan daemon thread — JVM tidak keluar sebelum ini selesai
+          .unstarted(() -> {     // Buat thread tapi JANGAN langsung jalankan
+            try {
+              Thread.sleep(Duration.ofSeconds(2)); // Simulasi I/O blocking 2 detik
+              System.out.println("Hello " + Thread.currentThread() + "!");
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            }
+          });
+
+      thread.start(); // Mulai thread secara eksplisit
+    }
+    // Tidak ada System.in.read() → main thread selesai, tapi non-daemon thread masih berjalan
+    // JVM TIDAK akan keluar sampai semua 10.000 thread selesai (karena daemon=false)
+  }
+}
+// ⚠️ PERINGATAN: Menjalankan ini akan membuat 10.000 OS Thread sekaligus
+// Ini bisa membuat server/laptop kehabisan memory atau crash!</code></pre></div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th><th>Under the Hood</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>Thread.ofPlatform()</code></td>
+                                <td>Static factory method baru di Java 21 yang mengembalikan <code>Thread.Builder.OfPlatform</code>. Ini adalah cara modern membuat Platform Thread. Cara lama: <code>new Thread(runnable)</code> masih valid tapi kurang ekspresif.</td>
+                                <td>Tidak langsung membuat OS Thread — hanya membuat builder object.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.name("eko-" + i)</code></td>
+                                <td>Set nama thread. Sangat penting untuk debugging: saat melihat thread dump di tools seperti JVisualVM atau IntelliJ, nama thread membantu identifikasi thread mana yang bermasalah.</td>
+                                <td>Nama disimpan sebagai field di objek Thread. OS juga bisa menerima nama ini (platform-dependent).</td>
+                            </tr>
+                            <tr>
+                                <td><code>.daemon(false)</code></td>
+                                <td><strong>Daemon thread</strong>: thread yang dianggap "pembantu" — JVM boleh keluar meski daemon thread masih berjalan. <strong>Non-daemon thread</strong>: JVM menunggu sampai semua selesai. Main thread adalah non-daemon. Default thread baru mengikuti parent-nya.</td>
+                                <td>JVM memonitor jumlah non-daemon thread aktif. Saat jumlahnya 0, JVM akan shutdown.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.unstarted(runnable)</code></td>
+                                <td>Buat thread tapi <em>belum dijalankan</em>. Berbeda dengan <code>.start(runnable)</code> yang langsung menjalankan. Berguna saat kamu butuh konfigurasi thread sebelum menjalankannya.</td>
+                                <td>Setelah <code>unstarted()</code>, OS Thread belum dibuat. Baru dibuat saat <code>thread.start()</code> dipanggil.</td>
+                            </tr>
+                            <tr>
+                                <td><code>Thread.sleep(Duration.ofSeconds(2))</code></td>
+                                <td>Cara modern menentukan durasi sleep (Java 9+): pakai <code>Duration</code> object, lebih readable dari <code>Thread.sleep(2000)</code> (millisecond). Thread akan <strong>blocking</strong> selama 2 detik.</td>
+                                <td>Saat sleep: OS thread masuk state TIMED_WAITING. OS tidak memberi CPU time, tapi slot OS thread tetap terpakai.</td>
+                            </tr>
+                            <tr>
+                                <td><code>10_000</code></td>
+                                <td>Underscore di angka literal adalah fitur Java 7+ untuk keterbacaan. <code>10_000</code> = 10000. Ini hanya sugar syntax — compiler mengabaikan underscore.</td>
+                                <td>Tidak ada perbedaan bytecode antara <code>10000</code> dan <code>10_000</code>.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Jangan Jalankan Ini di Production!</div>
+                    <p>Membuat 10.000 Platform Thread sekaligus sangat berbahaya: bisa menghabiskan ~10GB RAM hanya untuk stack thread, menyebabkan context switch storm, dan berpotensi crash JVM atau OS. Kode ini ada untuk tujuan demonstrasi perbedaan dengan Virtual Thread — bukan pola yang dianjurkan.</p>
+                </div>
+
+                <div class="text-subtitle">API Builder Lengkap: <code>Thread.ofPlatform()</code></div>
+                <div class="code-block"><pre><code class="language-java">// Semua opsi builder Platform Thread (Java 21+)
+Thread thread = Thread.ofPlatform()
+    .name("worker-", 0)         // Nama dengan prefix dan counter auto-increment
+    .daemon(true)               // Set sebagai daemon thread
+    .priority(Thread.MAX_PRIORITY) // Set prioritas (1-10, default 5)
+    .stackSize(512 * 1024)      // Custom stack size dalam bytes (hati-hati!)
+    .inheritInheritableThreadLocals(false) // Jangan inherit ThreadLocal dari parent
+    .unstarted(runnable);       // Buat belum start, atau .start(runnable) langsung start
+
+// Versi singkat — buat dan langsung start
+Thread.ofPlatform().start(() -> System.out.println("running!"));</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Worker</div>
+                    <p>Platform Thread di Java mirip dengan proses PHP-FPM worker. Setiap worker memiliki memori tersendiri, bisa berjalan mandiri, dan dikelola langsung oleh OS. Di PHP: jika <code>pm.max_children = 100</code> berarti 100 worker = 100 proses OS. Di Java: 10.000 Platform Thread = 10.000 OS Thread — sama-sama mahal per-unit-nya. Itulah mengapa keduanya butuh <em>pooling</em>: PHP FPM pool, Java Thread Pool (ExecutorService).</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz2">
+                    <p style="font-size:var(--s);font-weight:600;">Apa perbedaan antara <code>.unstarted(runnable)</code> dan <code>.start(runnable)</code> pada Thread builder?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">A. Tidak ada perbedaan, keduanya langsung menjalankan thread</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,true)">B. <code>unstarted()</code> membuat thread tapi belum menjalankannya — perlu panggil <code>.start()</code> secara eksplisit; <code>start()</code> langsung menjalankan</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">C. <code>unstarted()</code> untuk daemon thread, <code>start()</code> untuk non-daemon</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">D. <code>unstarted()</code> adalah cara lama, <code>start()</code> adalah cara baru</div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 3: VIRTUAL THREAD ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">⚡ Virtual Thread — Revolusi Java 21</div>
+                    <p class="chapter-desc">Virtual Thread adalah thread yang dikelola sepenuhnya oleh JVM, bukan OS. Mereka sangat ringan, murah dibuat, dan ribuan bisa berjalan di atas sejumlah kecil OS thread. Satu perubahan kecil dari <code>Thread.ofPlatform()</code> ke <code>Thread.ofVirtual()</code> — dampaknya luar biasa.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>VirtualThreadApp.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// VirtualThreadApp.java
+package belajar.virtual.thread;
+
+import java.io.IOException;
+import java.time.Duration;
+
+public class VirtualThreadApp {
+
+  public static void main(String[] args) throws IOException {
+    for (int i = 0; i < 10_000; i++) {
+
+      // Thread.ofVirtual() → HAMPIR IDENTIK dengan ofPlatform()
+      // Perubahan: ofPlatform() → ofVirtual()
+      // TIDAK ADA .daemon() karena Virtual Thread SELALU daemon
+      Thread thread = Thread.ofVirtual()
+          .name("eko-" + i)    // Nama tetap bisa di-set untuk debugging
+          .unstarted(() -> {
+            try {
+              Thread.sleep(Duration.ofSeconds(2)); // JVM akan "unmount" thread saat ini!
+              System.out.println("Hello " + Thread.currentThread() + "!");
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            }
+          });
+
+      thread.start();
+    }
+
+    System.in.read(); // Tunggu input agar main thread tidak langsung selesai
+    // (Virtual Thread adalah daemon, jadi tanpa ini JVM langsung exit)
+  }
+}
+// ✅ AMAN: 10.000 Virtual Thread hanya memakai memori ~10MB total!
+// Virtual Thread dikelola JVM di atas sejumlah kecil "carrier thread" (OS Thread)</code></pre></div>
+
+                <div class="text-subtitle">Bagaimana Virtual Thread Bekerja di Balik Layar</div>
+                <p>Konsep kunci yang perlu dipahami: Virtual Thread bukan OS Thread. Mereka berjalan di atas <strong>Carrier Thread</strong> (Platform Thread) yang jumlahnya terbatas (biasanya = jumlah CPU core).</p>
+
+                <div class="thread-visual">
+                    <div class="thread-visual-title">Arsitektur: Virtual Thread di atas Carrier Thread</div>
+                    <div style="display:grid;gap:var(--s);">
+                        <div style="border:1px solid var(--success-color);border-radius:var(--radius-m);padding:var(--s);">
+                            <div style="font-size:var(--xs);font-weight:700;color:var(--success-color);margin-bottom:var(--xs);">JVM Layer — Virtual Threads (jutaan bisa ada)</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                <div style="background:var(--transprimary-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-0 🟢 run</div>
+                                <div style="background:var(--transwarning-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-1 ⏸️ wait I/O</div>
+                                <div style="background:var(--transprimary-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-2 🟢 run</div>
+                                <div style="background:var(--transwarning-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-3 ⏸️ wait DB</div>
+                                <div style="background:var(--transwarning-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-4 ⏸️ wait HTTP</div>
+                                <div style="background:var(--transprimary-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-5 🟢 run</div>
+                                <div style="background:var(--transwarning-color);border-radius:var(--radius-s);padding:2px 8px;font-size:.7rem;">VT-6 ⏸️ wait I/O</div>
+                                <div style="font-size:.7rem;padding:2px 8px;color:var(--transtext-color);">... 9993 lainnya</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center;font-size:var(--xs);color:var(--primary-color);font-weight:700;">⬇️ JVM Scheduler (ForkJoinPool) — hanya mount VT yang aktif ke Carrier Thread</div>
+                        <div style="border:1px solid var(--primary-color);border-radius:var(--radius-m);padding:var(--s);">
+                            <div style="font-size:var(--xs);font-weight:700;color:var(--primary-color);margin-bottom:var(--xs);">OS Layer — Carrier Threads (= jumlah CPU core, misal 8)</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:var(--s);">
+                                <div style="background:var(--transprimary-color);border-radius:var(--radius-s);padding:4px 12px;font-size:.75rem;">CT-0 menjalankan VT-0</div>
+                                <div style="background:var(--transprimary-color);border-radius:var(--radius-s);padding:4px 12px;font-size:.75rem;">CT-1 menjalankan VT-2</div>
+                                <div style="background:var(--transprimary-color);border-radius:var(--radius-s);padding:4px 12px;font-size:.75rem;">CT-2 menjalankan VT-5</div>
+                                <div style="background:var(--transwarning-color);border-radius:var(--radius-s);padding:4px 12px;font-size:.75rem;">CT-3 idle (semua VT menunggu I/O)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size:var(--xs);color:var(--transtext-color);margin:var(--s) 0 0;">VT yang sedang menunggu I/O (⏸️) di-<em>unmount</em> dari Carrier Thread. Carrier Thread bebas menjalankan VT lain. Saat I/O selesai, VT di-<em>mount</em> kembali ke Carrier Thread yang tersedia.</p>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th><th>Perbedaan dari Platform Thread</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>Thread.ofVirtual()</code></td>
+                                <td>Static factory method untuk Virtual Thread. Mengembalikan <code>Thread.Builder.OfVirtual</code>. API-nya hampir identik dengan <code>ofPlatform()</code> — itulah keindahan desainnya.</td>
+                                <td>Bukan OS Thread — thread object yang ringan dikelola JVM.</td>
+                            </tr>
+                            <tr>
+                                <td>Tidak ada <code>.daemon()</code></td>
+                                <td>Virtual Thread <strong>selalu daemon</strong> — ini tidak bisa diubah. Artinya JVM bisa keluar meskipun masih ada Virtual Thread yang berjalan.</td>
+                                <td>Platform Thread bisa non-daemon. Itulah mengapa perlu <code>System.in.read()</code> di contoh ini — untuk mencegah main thread (dan JVM) langsung exit.</td>
+                            </tr>
+                            <tr>
+                                <td><code>Thread.sleep(Duration.ofSeconds(2))</code></td>
+                                <td>Pada Virtual Thread, <code>sleep()</code> tidak memblokir OS Thread! JVM akan <em>unmount</em> Virtual Thread dari Carrier Thread saat sleep, dan Carrier Thread bebas menjalankan Virtual Thread lain.</td>
+                                <td>Pada Platform Thread, sleep memblokir OS Thread sepenuhnya selama durasi sleep.</td>
+                            </tr>
+                            <tr>
+                                <td><code>System.in.read()</code></td>
+                                <td>Ini adalah trik untuk menjaga main thread tetap hidup. Karena Virtual Thread adalah daemon, JVM akan exit setelah semua non-daemon thread selesai. Main thread adalah non-daemon — dengan menunggu input, kita cegah JVM exit prematur.</td>
+                                <td>Di <code>PlatformThreadApp</code> tidak perlu ini karena Platform Thread bisa non-daemon (<code>.daemon(false)</code>).</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Kekuatan Virtual Thread: Mount/Unmount</div>
+                    <p>Saat Virtual Thread memanggil operasi <strong>blocking I/O</strong> (sleep, baca DB, HTTP call), JVM secara otomatis <em>unmounts</em> Virtual Thread dari Carrier Thread. Carrier Thread bebas menjalankan Virtual Thread lain. Saat I/O selesai, Virtual Thread di-<em>mount</em> kembali ke Carrier Thread yang tersedia. Ini terjadi transparan — kode kamu tetap ditulis secara blocking, tapi JVM yang handle non-blocking-nya.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi: Karyawan vs Tugas Menunggu</div>
+                    <p>Bayangkan kamu punya 8 karyawan (= 8 Carrier Thread / CPU core). Ada 10.000 tugas yang perlu diselesaikan, tapi 90% waktu setiap tugas adalah menunggu (I/O). Tanpa Virtual Thread: setiap tugas mendapat satu karyawan eksklusif, dan karyawan hanya duduk menunggu — sangat tidak efisien. Dengan Virtual Thread: jika karyawan sedang menunggu untuk satu tugas, tugas itu "diletakkan di meja" dan karyawan mengambil tugas lain. Saat tugas pertama sudah bisa dilanjutkan, karyawan mana saja bisa mengambilnya. Inilah scheduling yang dilakukan JVM secara otomatis.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">🖥️ Platform Thread — Mahal</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Setiap thread = 1 OS Thread = ~1MB RAM
+Thread t = Thread.ofPlatform()
+    .name("worker-" + i)
+    .daemon(false)
+    .unstarted(task);
+t.start();
+// 10.000 thread = ~10GB RAM ← berbahaya!</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">⚡ Virtual Thread — Ringan</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Setiap thread = JVM-managed = ~1KB memori
+Thread t = Thread.ofVirtual()
+    .name("worker-" + i)
+    // tidak ada .daemon() — selalu daemon
+    .unstarted(task);
+t.start();
+// 10.000 thread = ~10MB RAM ✅ aman!</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz3">
+                    <p style="font-size:var(--s);font-weight:600;">Saat Virtual Thread memanggil <code>Thread.sleep()</code>, apa yang terjadi pada Carrier Thread?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">A. Carrier Thread ikut tidur (blocking)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,true)">B. Virtual Thread di-unmount dari Carrier Thread; Carrier Thread bebas menjalankan Virtual Thread lain</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">C. Virtual Thread langsung dihentikan (terminated)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">D. JVM membuat Carrier Thread baru untuk menggantikan</div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 4: EXECUTOR SERVICE ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">🏭 ExecutorService + Virtual Thread</div>
+                    <p class="chapter-desc"><code>ExecutorService</code> adalah antarmuka standar Java untuk menjalankan task secara asynchronous. Dengan <code>Executors.newVirtualThreadPerTaskExecutor()</code>, setiap task mendapat Virtual Thread baru — cara paling idiomatis dan production-ready untuk menggunakan Virtual Thread.</p>
+                </div>
+
+                <div class="text-subtitle">Kode — <code>ExecutorServiceVirtualThreadApp.java</code></div>
+                <div class="code-block"><pre><code class="language-java">// ExecutorServiceVirtualThreadApp.java
+package belajar.virtual.thread;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ExecutorServiceVirtualThreadApp {
+
+  public static void main(String[] args) throws IOException {
+
+    // Membuat ExecutorService yang membuat 1 Virtual Thread baru per task
+    // Berbeda dengan fixed thread pool — tidak ada batas jumlah thread!
+    ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+
+    for (int i = 0; i < 10_000; i++) {
+      executorService.execute(() -> { // submit task → ExecutorService buat VT baru
+        try {
+          Thread.sleep(Duration.ofSeconds(2));
+          System.out.println("Hello " + Thread.currentThread() + "!");
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      });
+    }
+
+    System.in.read(); // Tunggu agar main thread tidak exit duluan
+  }
+}</code></pre></div>
+
+                <div class="text-subtitle">Ekosistem ExecutorService — Semua Pilihan</div>
+                <p>Java menyediakan berbagai factory method di kelas <code>Executors</code>. Pelajari semuanya agar bisa memilih yang tepat:</p>
+
+                <div class="code-block"><pre><code class="language-java">// Perbandingan semua ExecutorService factory methods
+
+// ─── LAMA / Thread Pool based ──────────────────────────────────────────────
+// Fixed size: maks N thread berjalan bersamaan, sisanya antri
+ExecutorService fixed = Executors.newFixedThreadPool(10);
+
+// Single thread: hanya 1 thread, semua task dieksekusi secara serial
+ExecutorService single = Executors.newSingleThreadExecutor();
+
+// Cached: buat thread baru jika semua sibuk, idle 60s → dihapus
+ExecutorService cached = Executors.newCachedThreadPool();
+
+// Scheduled: untuk task yang perlu dijalankan berkala atau terjadwal
+ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(5);
+
+// ─── BARU (Java 21) / Virtual Thread based ────────────────────────────────
+// 1 Virtual Thread per task — DIREKOMENDASIKAN untuk I/O-bound tasks
+ExecutorService virtual = Executors.newVirtualThreadPerTaskExecutor();
+
+// ─── Cara submit task ─────────────────────────────────────────────────────
+// execute(): fire and forget, tidak mengembalikan hasil
+executorService.execute(() -> System.out.println("task!"));
+
+// submit(): mengembalikan Future — bisa mendapat hasil atau status
+Future&lt;String&gt; future = executorService.submit(() -> "hasil task");
+String result = future.get(); // Blocking wait untuk hasil
+
+// ─── PENTING: Selalu shutdown setelah selesai ──────────────────────────────
+executorService.shutdown();         // Tunggu task yang ada selesai, lalu shutdown
+executorService.shutdownNow();      // Interrupt semua task, langsung shutdown
+
+// Atau gunakan try-with-resources (Java 19+, implements AutoCloseable)
+try (ExecutorService es = Executors.newVirtualThreadPerTaskExecutor()) {
+  es.execute(task1);
+  es.execute(task2);
+} // Otomatis shutdown saat keluar blok try</code></pre></div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Kode</th><th>Penjelasan</th><th>Kapan Digunakan</th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td><code>Executors.newVirtualThreadPerTaskExecutor()</code></td>
+                                <td>Factory method baru Java 21. Setiap task yang di-submit mendapat <strong>satu Virtual Thread baru</strong>. Tidak ada pooling — VT sangat murah sehingga tidak perlu di-pool. Thread langsung dibuang setelah task selesai.</td>
+                                <td>Aplikasi I/O-bound: web server, service yang banyak query DB / HTTP call ke service lain.</td>
+                            </tr>
+                            <tr>
+                                <td><code>executorService.execute(Runnable)</code></td>
+                                <td>Submit task tanpa menunggu hasil. Runnable = Functional Interface dengan method <code>run(): void</code>. Lambda bisa langsung dipakai. Cocok untuk task yang tidak perlu mengembalikan nilai.</td>
+                                <td>Task fire-and-forget: logging, kirim notifikasi, update cache.</td>
+                            </tr>
+                            <tr>
+                                <td><code>Thread.currentThread()</code></td>
+                                <td>Mengembalikan objek Thread yang sedang berjalan. Pada Virtual Thread, output-nya akan menampilkan info bahwa ini Virtual Thread, termasuk nama dan carrier thread-nya: <code>VirtualThread[#123,eko-1]/runnable@ForkJoinPool...</code></td>
+                                <td>Debugging: untuk tahu thread apa yang menjalankan kode ini.</td>
+                            </tr>
+                            <tr>
+                                <td><code>System.in.read()</code></td>
+                                <td>Memblokir main thread sampai ada input dari keyboard. Teknik sederhana untuk mencegah program keluar sebelum semua Virtual Thread selesai. Di produksi, kamu tidak butuh ini — aplikasi Spring Boot punya lifecycle management sendiri.</td>
+                                <td>Hanya untuk demo/testing standalone. Jangan gunakan di produksi.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Mengapa Tidak Perlu Thread Pool untuk Virtual Thread?</div>
+                    <p>Thread pool hadir karena membuat/menghancurkan Platform Thread itu mahal (system call ke OS). Virtual Thread jauh lebih murah — overhead pembuatannya mirip membuat objek biasa. Oleh karena itu, pola "1 VT per task" lebih baik dari pool: tidak ada antrian, tidak ada thread yang idle memakan memori, dan tidak ada batas kapasitas buatan.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Queue</div>
+                    <p>Di Laravel, kamu pakai <code>dispatch(new ProcessJob($data))</code> untuk mengirim job ke queue. <code>ExecutorService.execute(task)</code> bekerja mirip — kamu submit task, framework yang handle eksekusinya. Bedanya: Laravel Queue adalah asynchronous lintas proses (biasanya Redis/database sebagai broker), sedangkan <code>ExecutorService</code> adalah asynchronous dalam satu JVM process. Untuk konkurensi dalam satu aplikasi, <code>ExecutorService</code> lebih ringan dan langsung.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">🖥️ Fixed Thread Pool — Kapasitas Terbatas</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Hanya 200 task bisa berjalan bersamaan
+// Task ke-201 ANTRI sampai ada slot
+ExecutorService pool = Executors.newFixedThreadPool(200);
+for (int i = 0; i &lt; 10_000; i++) {
+  pool.execute(task); // 9800 task mengantri!
+}</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">⚡ Virtual Thread Per Task — Tidak Ada Batas</div>
+                        <div class="comparison-body"><pre><code class="language-java">// Semua 10.000 task langsung mendapat VT-nya sendiri
+// Tidak ada antrian, tidak ada batas kapasitas!
+ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
+for (int i = 0; i &lt; 10_000; i++) {
+  es.execute(task); // Semua langsung mulai! ✅
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz4">
+                    <p style="font-size:var(--s);font-weight:600;">Mengapa Virtual Thread tidak perlu di-pool (berbeda dengan Platform Thread yang biasanya dipakai dalam Thread Pool)?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">A. Karena Virtual Thread tidak bisa menjalankan task berulang</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">B. Karena Virtual Thread secara otomatis di-pool oleh JVM</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,true)">C. Karena overhead pembuatan Virtual Thread sangat kecil, sehingga membuat baru per task lebih efisien daripada mengelola pool</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">D. Karena Virtual Thread tidak bisa digunakan kembali setelah selesai</div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 5: PERBANDINGAN ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 5</div>
+                    <div class="chapter-title">⚖️ Platform Thread vs Virtual Thread</div>
+                    <p class="chapter-desc">Perbandingan mendalam antara Platform Thread dan Virtual Thread dari berbagai aspek: performa, use case, keterbatasan, dan kapan harus memilih masing-masing.</p>
+                </div>
+
+                <div class="text-subtitle">Tabel Perbandingan Lengkap</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Aspek</th><th>🖥️ Platform Thread</th><th>⚡ Virtual Thread</th></tr></thead>
+                            <tbody>
+                            <tr><td><strong>Dasar</strong></td><td>1:1 mapping dengan OS Thread</td><td>N:M mapping — banyak VT di atas sedikit Carrier Thread</td></tr>
+                            <tr><td><strong>Memory per thread</strong></td><td>~512KB – 1MB (stack tetap)</td><td>~1KB awal, tumbuh dinamis sesuai kebutuhan</td></tr>
+                            <tr><td><strong>Pembuatan (creation)</strong></td><td>Mahal — system call ke OS</td><td>Murah — seperti membuat objek biasa</td></tr>
+                            <tr><td><strong>Context Switch</strong></td><td>Mahal — OS yang handle</td><td>Murah — JVM yang handle (user-space scheduling)</td></tr>
+                            <tr><td><strong>Daemon</strong></td><td>Bisa daemon atau non-daemon</td><td>Selalu daemon (tidak bisa diubah)</td></tr>
+                            <tr><td><strong>Thread Priority</strong></td><td>Bisa diset (1-10)</td><td>Selalu NORM_PRIORITY (5), tidak bisa diubah</td></tr>
+                            <tr><td><strong>ThreadLocal</strong></td><td>Aman digunakan</td><td>Hati-hati — membuat banyak VT dengan ThreadLocal bisa makan banyak memori</td></tr>
+                            <tr><td><strong>Blocking I/O</strong></td><td>Memblokir OS Thread</td><td>JVM unmount VT dari Carrier Thread — Carrier bebas</td></tr>
+                            <tr><td><strong>CPU-bound task</strong></td><td>Cocok</td><td>Tidak lebih baik — tetap butuh CPU core</td></tr>
+                            <tr><td><strong>I/O-bound task</strong></td><td>Tidak efisien (blocking)</td><td>Sangat cocok — bisa jutaan concurrent</td></tr>
+                            <tr><td><strong>Synchronized block</strong></td><td>Normal</td><td>⚠️ Bisa menyebabkan "pinning" — VT tidak bisa di-unmount saat dalam synchronized block (Java 21). Diperbaiki di Java 24.</td></tr>
+                            <tr><td><strong>Debugging</strong></td><td>Mudah — terlihat di thread dump</td><td>Jutaan VT sulit di-dump semua; butuh tools khusus</td></tr>
+                            <tr><td><strong>Direkomendasikan untuk</strong></td><td>CPU-intensive (kompresi, enkripsi, kalkulasi)</td><td>I/O-bound (DB query, HTTP call, file read)</td></tr>
+                            <tr><td><strong>Java versi minimum</strong></td><td>Java 1.0</td><td>Java 21 (GA, stable)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="text-subtitle">Kapan Memilih Yang Mana?</div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong" style="border-color:var(--warning-color);">
+                        <div class="comparison-header" style="background:var(--transwarning-color);color:var(--warning-color);">🖥️ Gunakan Platform Thread ketika...</div>
+                        <div class="comparison-body"><pre><code class="language-java">// CPU-intensive: tidak ada I/O, murni komputasi
+// VT tidak memberi keuntungan di sini
+Thread cpuTask = Thread.ofPlatform().start(() -> {
+  long result = 0;
+  for (long j = 0; j &lt; 1_000_000_000L; j++) {
+    result += j; // Pure CPU work
+  }
+  System.out.println(result);
+});
+
+// Atau ketika butuh:
+// - Set priority thread
+// - Non-daemon behavior tanpa workaround
+// - Sangat ketergantungan pada ThreadLocal
+// - Kompatibilitas dengan library lama</code></pre></div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">⚡ Gunakan Virtual Thread ketika...</div>
+                        <div class="comparison-body"><pre><code class="language-java">// I/O-bound: banyak menunggu (DB, HTTP, file)
+// VT sangat menguntungkan di sini
+ExecutorService es =
+  Executors.newVirtualThreadPerTaskExecutor();
+
+es.execute(() -> {
+  String data = httpClient.get("https://api.example.com");
+  // Thread.sleep/I/O → VT otomatis unmount!
+  database.save(data);
+});
+
+// Ideal untuk:
+// - REST API server (Spring Boot + Java 21)
+// - Microservice dengan banyak HTTP call
+// - Aplikasi yang banyak query DB</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Pinning — Keterbatasan Virtual Thread di Java 21</div>
+                    <p>Di Java 21, ada satu situasi di mana Virtual Thread tidak bisa di-unmount dari Carrier Thread: ketika berada di dalam <code>synchronized</code> block/method atau memanggil native method. Ini disebut <strong>pinning</strong>. Saat pinned, Virtual Thread berperilaku seperti Platform Thread — Carrier Thread ikut blocking. Solusi: ganti <code>synchronized</code> dengan <code>ReentrantLock</code> dari <code>java.util.concurrent.locks</code>. Masalah ini diperbaiki di Java 24.</p>
+                </div>
+
+                <div class="code-block"><pre><code class="language-java">// ⚠️ PINNING — hindari synchronized dengan VT di Java 21
+
+// MASALAH: synchronized menyebabkan pinning
+synchronized (lock) {
+  Thread.sleep(Duration.ofSeconds(1)); // VT PINNED! Carrier Thread ikut blocking
+}
+
+// ✅ SOLUSI: Gunakan ReentrantLock
+ReentrantLock lock = new ReentrantLock();
+lock.lock();
+try {
+  Thread.sleep(Duration.ofSeconds(1)); // VT bisa di-unmount ✅
+} finally {
+  lock.unlock();
+}</code></pre></div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi PHP Async</div>
+                    <p>Bahasa lain sudah punya solusi ini lebih lama: Node.js pakai event loop (single-threaded tapi non-blocking), Python punya <code>asyncio</code>, PHP modern punya Swoole/ReactPHP. Java Virtual Thread mengambil pendekatan berbeda: kode ditulis <em>secara blocking seperti biasa</em>, tapi JVM yang mengoptimalkan di belakang layar. Ini adalah keunggulan besar — kamu tidak perlu belajar pola pemrograman baru seperti <code>async/await</code> atau callback hell. Kode Java yang sudah ada (blocking) langsung mendapat manfaat konkurensi tinggi hanya dengan menggantinya ke Virtual Thread.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz5">
+                    <p style="font-size:var(--s);font-weight:600;">Situasi apa yang menyebabkan Virtual Thread mengalami "pinning" (tidak bisa di-unmount) di Java 21?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">A. Saat Virtual Thread memanggil <code>Thread.sleep()</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,true)">B. Saat Virtual Thread berada di dalam blok <code>synchronized</code> atau memanggil native method</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">C. Saat Virtual Thread melakukan operasi baca file</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">D. Saat ada lebih dari 1000 Virtual Thread berjalan bersamaan</div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHAPTER 6: BEST PRACTICE & SPRING BOOT ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 6</div>
+                    <div class="chapter-title">🚀 Best Practice & Spring Boot Integration</div>
+                    <p class="chapter-desc">Cara paling efektif menggunakan Virtual Thread di aplikasi nyata — terutama di Spring Boot 3.2+ yang merupakan stack paling umum di ekosistem Java enterprise.</p>
+                </div>
+
+                <div class="text-subtitle">Spring Boot 3.2 + Virtual Thread — Satu Konfigurasi</div>
+                <p>Spring Boot 3.2 menyediakan cara termudah mengaktifkan Virtual Thread untuk seluruh aplikasi web:</p>
+
+                <div class="code-block"><pre><code class="language-java">// BelajarJavaVirtualThreadApplication.java
+// (Dari codebase — entry point Spring Boot)
+@SpringBootApplication
+public class BelajarJavaVirtualThreadApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(BelajarJavaVirtualThreadApplication.class, args);
+  }
+}</code></pre></div>
+
+                <div class="code-block"><pre><code class="language-properties"># application.properties — satu konfigurasi untuk mengaktifkan Virtual Thread
+# Spring Boot 3.2+ dengan Java 21
+spring.threads.virtual.enabled=true
+
+# Dengan ini, Tomcat (embedded web server) akan menggunakan Virtual Thread
+# untuk menangani setiap HTTP request — otomatis, tanpa ubah kode controller!</code></pre></div>
+
+                <div class="code-block"><pre><code class="language-java">// Atau via konfigurasi bean eksplisit (lebih kontrol)
+@Configuration
+public class ThreadConfig {
+
+  // Override default executor Tomcat dengan Virtual Thread executor
+  @Bean
+  public TomcatProtocolHandlerCustomizer&lt;?&gt; virtualThreadCustomizer() {
+    return handler ->
+      handler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+  }
+
+  // Untuk Spring @Async — method async juga pakai Virtual Thread
+  @Bean
+  public AsyncTaskExecutor applicationTaskExecutor() {
+    return new TaskExecutorAdapter(
+      Executors.newVirtualThreadPerTaskExecutor()
+    );
+  }
+}</code></pre></div>
+
+                <div class="text-subtitle">Best Practices Virtual Thread</div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="bp1" class="accordion-item-check"/>
+                    <label for="bp1" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>✅ BP #1: Jangan Pool Virtual Thread</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Virtual Thread murah — buat per task, jangan pool</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block"><pre><code class="language-java">// ❌ Salah: pooling Virtual Thread (menghilangkan manfaatnya)
+ExecutorService wrongPool = Executors.newFixedThreadPool(
+  100,
+  Thread.ofVirtual().factory() // VT factory, tapi tetap fixed pool
+);
+
+// ✅ Benar: satu VT per task
+ExecutorService correct = Executors.newVirtualThreadPerTaskExecutor();
+// Atau langsung:
+Thread.ofVirtual().start(task);</code></pre></div>
+                        <p style="font-size:var(--s);">Thread pool dengan Virtual Thread menghilangkan keunggulan utamanya: kemampuan membuat ribuan thread tanpa antrian. Pooling hanya cocok untuk Platform Thread yang mahal.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="bp2" class="accordion-item-check"/>
+                    <label for="bp2" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>✅ BP #2: Hindari synchronized, Pakai ReentrantLock</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Cegah pinning di Java 21 dengan ReentrantLock</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block"><pre><code class="language-java">// ❌ synchronized → pinning di Java 21
+private synchronized void updateCache(String key, String val) {
+  Thread.sleep(Duration.ofMillis(10)); // pinned! carrier thread blocking
+  cache.put(key, val);
+}
+
+// ✅ ReentrantLock → tidak pinning
+private final ReentrantLock lock = new ReentrantLock();
+
+private void updateCache(String key, String val) throws InterruptedException {
+  lock.lock();
+  try {
+    Thread.sleep(Duration.ofMillis(10)); // VT bisa unmount ✅
+    cache.put(key, val);
+  } finally {
+    lock.unlock(); // WAJIB di finally!
+  }
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="bp3" class="accordion-item-check"/>
+                    <label for="bp3" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>✅ BP #3: Hati-hati dengan ThreadLocal</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">ThreadLocal + jutaan VT = potensi memory leak</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block"><pre><code class="language-java">// ⚠️ ThreadLocal dengan banyak VT bisa makan banyak memori
+// Setiap VT mendapat salinan data ThreadLocal sendiri
+ThreadLocal&lt;Connection&gt; dbConn = ThreadLocal.withInitial(
+  () -> dataSource.getConnection() // 1 juta VT = 1 juta Connection? 😱
+);
+
+// ✅ Solusi 1: Scoped Values (Java 21, pengganti ThreadLocal untuk VT)
+// Immutable, tidak diwariskan ke child thread, lebih efisien
+ScopedValue&lt;User&gt; CURRENT_USER = ScopedValue.newInstance();
+ScopedValue.where(CURRENT_USER, user).run(() -> {
+  // CURRENT_USER.get() tersedia di seluruh scope ini
+  processRequest();
+});
+
+// ✅ Solusi 2: Eksplisit cleanup ThreadLocal
+try {
+  threadLocal.set(value);
+  doWork();
+} finally {
+  threadLocal.remove(); // WAJIB! Mencegah memory leak
+}</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="bp4" class="accordion-item-check"/>
+                    <label for="bp4" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>✅ BP #4: Gunakan try-with-resources untuk ExecutorService</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">Java 19+ ExecutorService implements AutoCloseable</div>
+                    </label>
+                    <div class="accordion-content">
+                        <div class="code-block"><pre><code class="language-java">// ❌ Lupa shutdown — resource leak!
+ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
+es.execute(task1);
+es.execute(task2);
+// Lupa es.shutdown() → thread tidak dibersihkan
+
+// ✅ try-with-resources — otomatis shutdown (Java 19+)
+try (ExecutorService es = Executors.newVirtualThreadPerTaskExecutor()) {
+  es.execute(task1);
+  es.execute(task2);
+  // es.shutdown() + es.awaitTermination() dipanggil otomatis saat keluar try
+} // ← shutdown otomatis di sini</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <input type="checkbox" id="bp5" class="accordion-item-check"/>
+                    <label for="bp5" class="accordion-item-label">
+                        <div class="flex-aic-jcb"><p>⚠️ BP #5: Virtual Thread Bukan Solusi untuk CPU-bound</p><span>▼</span></div>
+                        <div class="accordion-item-label-subtitle">VT tidak lebih cepat untuk komputasi murni</div>
+                    </label>
+                    <div class="accordion-content">
+                        <p style="font-size:var(--s);">Virtual Thread hanya unggul saat ada <strong>waktu menunggu</strong> (blocking I/O). Jika task kamu adalah murni CPU (sorting 10 juta data, enkripsi, kalkulasi matematika), Virtual Thread tidak memberi keuntungan — bahkan overhead scheduling-nya bisa sedikit lebih tinggi. Untuk CPU-bound, tetap gunakan Platform Thread dengan jumlah = jumlah CPU core, atau pakai <code>ForkJoinPool</code> dengan parallelStream.</p>
+                        <div class="code-block"><pre><code class="language-java">// CPU-bound: gunakan ForkJoinPool (parallel stream)
+List&lt;Long&gt; results = LongStream.range(0, 1_000_000)
+  .parallel() // ForkJoinPool.commonPool() — dioptimalkan untuk CPU
+  .map(n -> n * n)
+  .boxed()
+  .collect(Collectors.toList());
+
+// BUKAN Virtual Thread untuk ini!</code></pre></div>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Quick Wins di Spring Boot 3.2 + Java 21</div>
+                    <p>Hanya dengan menambahkan <code>spring.threads.virtual.enabled=true</code> di <code>application.properties</code>, seluruh request HTTP di aplikasi Spring Boot akan dihandle oleh Virtual Thread secara otomatis. Tidak perlu ubah kode controller, service, atau repository sama sekali. Throughput aplikasi web yang I/O-bound bisa meningkat dramatis tanpa perubahan arsitektur.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel Octane</div>
+                    <p>Laravel Octane (dengan Swoole atau RoadRunner) melakukan hal yang konsepnya mirip: menggunakan model concurrency yang lebih efisien dari PHP-FPM. Swoole menggunakan coroutine (mirip dengan Virtual Thread). Bedanya: Octane butuh installer khusus, konfigurasi server berbeda, dan ada beberapa breaking change di kode. Virtual Thread Java jauh lebih transparan — cukup satu konfigurasi, kode existing tidak berubah sama sekali.</p>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz6">
+                    <p style="font-size:var(--s);font-weight:600;">Untuk mengaktifkan Virtual Thread di semua request HTTP dalam aplikasi Spring Boot 3.2+, apa yang perlu dilakukan?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">A. Rewrite semua Controller untuk menggunakan <code>CompletableFuture</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">B. Ganti semua anotasi <code>@RestController</code> menjadi <code>@VirtualController</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,true)">C. Tambahkan <code>spring.threads.virtual.enabled=true</code> di <code>application.properties</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">D. Install plugin khusus dan rebuild aplikasi dari awal</div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SUMMARY ========== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background:linear-gradient(135deg,var(--transsuccess-color) 0%,var(--transprimary-color) 100%);">
+                    <div class="chapter-number" style="color:var(--success-color);">Rangkuman Akhir</div>
+                    <div class="chapter-title">📋 Arsitektur Java Virtual Thread</div>
+                    <p class="chapter-desc">Gambaran lengkap dari konsep, implementasi, hingga penerapan Virtual Thread di aplikasi produksi.</p>
+                </div>
+
+                <div class="text-subtitle">Peta Konsep Virtual Thread</div>
+                <div class="summary-card">
+                    <div class="summary-row">
+                        <div class="summary-icon">😵</div>
+                        <div>
+                            <strong>Masalah: Platform Thread + Blocking I/O</strong>
+                            <span>Platform Thread = OS Thread = ~1MB RAM. Untuk aplikasi web yang I/O-bound, sebagian besar waktu thread dihabiskan untuk menunggu (blocking), bukan komputasi. Membuat ribuan Platform Thread tidak praktis dan tidak efisien.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">⚡</div>
+                        <div>
+                            <strong>Solusi: Virtual Thread (Java 21)</strong>
+                            <span>Thread ringan yang dikelola JVM di atas sejumlah kecil Carrier Thread (Platform Thread). Saat Virtual Thread blocking (sleep, I/O), JVM unmount VT dari Carrier Thread — Carrier bebas menjalankan VT lain. Kode ditulis blocking seperti biasa, JVM yang handle scheduling non-blocking.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🖥️</div>
+                        <div>
+                            <strong>Platform Thread API (Java 21)</strong>
+                            <span><code>Thread.ofPlatform().name().daemon().unstarted(task)</code>. Builder pattern baru. Setiap instance = 1 OS Thread. Cocok untuk CPU-bound tasks. JVM tidak exit selama ada non-daemon Platform Thread aktif.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">⚡</div>
+                        <div>
+                            <strong>Virtual Thread API (Java 21)</strong>
+                            <span><code>Thread.ofVirtual().name().unstarted(task)</code>. API hampir identik dengan Platform Thread. Selalu daemon. Ringan (~1KB). Saat blocking I/O → auto unmount. <code>System.in.read()</code> atau Spring Boot lifecycle mencegah JVM exit prematur.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🏭</div>
+                        <div>
+                            <strong>ExecutorService + Virtual Thread</strong>
+                            <span><code>Executors.newVirtualThreadPerTaskExecutor()</code> — cara production-ready. Setiap task mendapat VT baru. Tidak perlu pooling. Gunakan <code>execute()</code> untuk fire-and-forget, <code>submit()</code> untuk mendapat Future. Gunakan try-with-resources (Java 19+) untuk auto-shutdown.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">⚠️</div>
+                        <div>
+                            <strong>Keterbatasan: Pinning (Java 21)</strong>
+                            <span>Virtual Thread tidak bisa di-unmount saat berada dalam <code>synchronized</code> block atau native method. Solusi: ganti <code>synchronized</code> dengan <code>ReentrantLock</code>. Diperbaiki di Java 24.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🚀</div>
+                        <div>
+                            <strong>Spring Boot 3.2 Integration</strong>
+                            <span>Aktifkan dengan satu baris: <code>spring.threads.virtual.enabled=true</code>. Seluruh HTTP request handling otomatis menggunakan Virtual Thread. Tidak perlu ubah kode existing sama sekali.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">📊 Tabel Perbandingan: Java vs Ekosistem Lain</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead><tr><th>Pendekatan</th><th>Ekosistem</th><th>Model</th><th>Kode</th><th>Kesulitan</th></tr></thead>
+                            <tbody>
+                            <tr><td>Platform Thread Pool</td><td>Java (classic)</td><td>Blocking, pooled</td><td>Mudah</td><td>Terbatas kapasitas</td></tr>
+                            <tr><td>Reactive (WebFlux)</td><td>Java (Spring)</td><td>Non-blocking, event loop</td><td>Sangat sulit</td><td>High throughput</td></tr>
+                            <tr><td><strong>Virtual Thread ✨</strong></td><td><strong>Java 21+</strong></td><td><strong>Blocking kode, non-blocking JVM</strong></td><td><strong>Mudah</strong></td><td><strong>High throughput</strong></td></tr>
+                            <tr><td>async/await</td><td>Node.js / Python</td><td>Cooperative, event loop</td><td>Sedang</td><td>High throughput</td></tr>
+                            <tr><td>Coroutine</td><td>Kotlin / Go</td><td>Cooperative scheduling</td><td>Sedang</td><td>High throughput</td></tr>
+                            <tr><td>PHP-FPM Worker</td><td>PHP (traditional)</td><td>Blocking, forked process</td><td>Mudah</td><td>Sangat terbatas</td></tr>
+                            <tr><td>Swoole/Octane</td><td>PHP (modern)</td><td>Coroutine/async</td><td>Sulit</td><td>High throughput</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p style="font-size:var(--xs);color:var(--transtext-color);">✨ Virtual Thread menawarkan kombinasi terbaik: kode mudah (blocking style) + throughput tinggi (non-blocking JVM) — tanpa trade-off.</p>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">🏆 Checklist Penguasaan Java Virtual Thread</div>
+                <ul class="bp-list">
+                    <li><span>✅</span><span>Paham mengapa Platform Thread tidak efisien untuk I/O-bound tasks (blocking = waste OS Thread)</span></li>
+                    <li><span>✅</span><span>Tahu konsep mount/unmount: Virtual Thread di-unmount dari Carrier Thread saat blocking, Carrier Thread bebas menjalankan VT lain</span></li>
+                    <li><span>✅</span><span>Bisa membuat Virtual Thread dengan <code>Thread.ofVirtual().name().unstarted(task)</code></span></li>
+                    <li><span>✅</span><span>Tahu perbedaan: <code>.unstarted()</code> vs <code>.start()</code>, daemon vs non-daemon, Platform vs Virtual Thread</span></li>
+                    <li><span>✅</span><span>Bisa menggunakan <code>Executors.newVirtualThreadPerTaskExecutor()</code> untuk production use case</span></li>
+                    <li><span>✅</span><span>Paham mengapa Virtual Thread tidak perlu di-pool (overhead pembuatan sangat kecil)</span></li>
+                    <li><span>✅</span><span>Tahu masalah pinning di Java 21 dan solusinya (<code>ReentrantLock</code> vs <code>synchronized</code>)</span></li>
+                    <li><span>✅</span><span>Ingat kapan Virtual Thread cocok (I/O-bound) vs tidak (CPU-bound)</span></li>
+                    <li><span>✅</span><span>Bisa mengaktifkan Virtual Thread di Spring Boot 3.2+ dengan <code>spring.threads.virtual.enabled=true</code></span></li>
+                    <li><span>✅</span><span>Tahu keterbatasan ThreadLocal dengan banyak Virtual Thread dan alternatifnya (ScopedValue)</span></li>
+                </ul>
+
+                <div class="info-box success">
+                    <div class="info-box-title">🎉 Selamat! Kamu sudah memahami Java Virtual Thread.</div>
+                    <p>Langkah selanjutnya: Pelajari <strong>Structured Concurrency</strong> (Java 21 preview, stable di Java 23) — fitur pelengkap Virtual Thread untuk mengelola sekelompok task concurrent sebagai satu unit. Juga pelajari <strong>Scoped Values</strong> sebagai pengganti <code>ThreadLocal</code> yang lebih efisien untuk Virtual Thread. Di Spring Boot, coba ukur perbedaan throughput sebelum dan sesudah mengaktifkan Virtual Thread menggunakan tool seperti Apache JMeter atau k6.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="padding:var(--m);text-align:center;font-size:var(--xs);color:var(--transtext-color);">
+        Java Virtual Thread Learning Module · Java 21 (Project Loom) · Dibuat untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script>
+    function showBottomSheet(p){document.getElementsByClassName('bottom-sheet')[p].classList.toggle('active')}
+    function sidebarMinify(){document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");document.getElementsByClassName("container")[0].classList.toggle("expanded")}
+    function switchTheme(){document.getElementsByTagName("body")[0].classList.toggle("dark-mode")}
+    function showMenu(){document.getElementsByClassName("sidebar")[0].classList.toggle("show");document.getElementById('get-menu').classList.toggle('opened')}
+
+    function checkQuiz(quizId, el, isCorrect) {
+        const container = document.getElementById(quizId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = "true";
+        container.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents='none');
+        if (isCorrect) {
+            el.classList.add('correct');
+            const fb = document.getElementById(quizId+'-feedback');
+            fb.style.color='var(--success-color)'; fb.textContent='✅ Jawaban benar! Bagus!'; fb.classList.add('show');
+        } else {
+            el.classList.add('wrong');
+            container.querySelectorAll('.quiz-option').forEach(opt => { if(opt.getAttribute('onclick').includes('true')) opt.classList.add('correct'); });
+            const fb = document.getElementById(quizId+'-feedback');
+            fb.style.color='var(--danger-color)'; fb.textContent='❌ Belum tepat. Perhatikan jawaban yang benar di atas.'; fb.classList.add('show');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+        const sections = document.querySelectorAll('[id^="chapter-"], #intro, #summary');
+        const menuItems = document.querySelectorAll('.sidebar-menu-item');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    const active = document.querySelector(`.sidebar-menu-item[href="#${entry.target.id}"]`);
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, {rootMargin:'-30% 0px -60% 0px'});
+        sections.forEach(s => observer.observe(s));
+    });
+</script>
+</body>
+</html>

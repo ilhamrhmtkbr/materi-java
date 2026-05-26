@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Internationalization — Modul Belajar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+
+        /* Code block styling */
+        .code-block {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow-x: auto;
+            border-radius: var(--radius-l);
+            font-size: var(--s);
+            margin: var(--m) 0;
+        }
+        .code-block pre {
+            margin: 0;
+        }
+        .code-block code.hljs {
+            border-radius: var(--radius-l);
+            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+
+        /* Info boxes */
+        .info-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border-left: 4px solid var(--primary-color);
+            background: var(--transprimary-color);
+            border-radius: 0 var(--radius-m) var(--radius-m) 0;
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .info-box.warning {
+            border-left-color: var(--warning-color);
+            background: var(--transwarning-color);
+        }
+        .info-box.success {
+            border-left-color: var(--success-color);
+            background: var(--transsuccess-color);
+        }
+        .info-box.danger {
+            border-left-color: var(--danger-color);
+            background: var(--transdanger-color);
+        }
+        .info-box .info-box-title {
+            font-weight: 700;
+            margin-bottom: var(--xs);
+            font-size: var(--s);
+        }
+        .info-box p { margin: 0; font-size: var(--s); }
+
+        /* Line annotation table */
+        .line-annotation {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            margin: var(--m) 0;
+        }
+        .line-annotation table { width: 100%; }
+        .line-annotation th { background: var(--transprimary-color); }
+
+        /* Quiz section */
+        .quiz-option {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--s);
+            padding: var(--s) var(--m);
+            border-radius: var(--radius-m);
+            border: var(--border);
+            cursor: pointer;
+            margin-bottom: var(--s);
+            transition: background 0.15s;
+            font-size: var(--s);
+        }
+        .quiz-option:hover { background: var(--transprimary-color); }
+        .quiz-option.correct { background: var(--transsuccess-color); border-color: var(--success-color); }
+        .quiz-option.wrong { background: var(--transdanger-color); border-color: var(--danger-color); }
+        .quiz-feedback {
+            margin-top: var(--s);
+            font-size: var(--s);
+            font-weight: 600;
+            display: none;
+        }
+        .quiz-feedback.show { display: block; }
+
+        /* Salah vs Benar */
+        .comparison-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--m);
+            max-width: 77dvw;
+            box-sizing: border-box;
+            margin: var(--m) 0;
+        }
+        @media (max-width: 600px) {
+            .comparison-box { grid-template-columns: 1fr; }
+        }
+        .comparison-wrong {
+            border: 1px solid var(--danger-color);
+            border-radius: var(--radius-m);
+            overflow: hidden;
+        }
+        .comparison-correct {
+            border: 1px solid var(--success-color);
+            border-radius: var(--radius-m);
+            overflow: hidden;
+        }
+        .comparison-header {
+            padding: var(--xs) var(--m);
+            font-weight: 700;
+            font-size: var(--xs);
+        }
+        .comparison-wrong .comparison-header { background: var(--transdanger-color); color: var(--danger-color); }
+        .comparison-correct .comparison-header { background: var(--transsuccess-color); color: var(--success-color); }
+        .comparison-body { font-size: 0.78rem; }
+        .comparison-body pre { margin: 0; border-radius: 0; }
+        .comparison-body code.hljs { border-radius: 0; font-size: 0.78rem; }
+
+        /* Analogy box */
+        .analogy-box {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border: 1px solid var(--second-primary-color);
+            background: var(--transsecond-primary-color);
+            border-radius: var(--radius-m);
+            padding: var(--m);
+            margin: var(--m) 0;
+        }
+        .analogy-box .analogy-title {
+            font-weight: 700;
+            color: var(--second-primary-color);
+            margin-bottom: var(--xs);
+            font-size: var(--s);
+        }
+        .analogy-box p { margin: 0; font-size: var(--s); }
+
+        /* Chapter intro banner */
+        .chapter-banner {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            background: linear-gradient(135deg, var(--transprimary-color) 0%, var(--transsecond-primary-color) 100%);
+            border-radius: var(--radius-x);
+            padding: var(--x) var(--l);
+            margin-bottom: var(--m);
+        }
+        .chapter-banner .chapter-number {
+            font-size: var(--xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            margin-bottom: var(--xs);
+        }
+        .chapter-banner .chapter-title {
+            font-size: var(--xx);
+            font-weight: 800;
+            margin-bottom: var(--xs);
+        }
+        .chapter-banner .chapter-desc {
+            font-size: var(--s);
+            color: var(--transtext-color);
+            margin: 0;
+        }
+
+        /* Summary card */
+        .summary-card {
+            box-sizing: border-box;
+            max-width: 77dvw;
+            overflow: auto;
+            border: var(--border);
+            border-radius: var(--radius-l);
+            padding: var(--m);
+            display: grid;
+            gap: var(--s);
+        }
+        .summary-row {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--m);
+            padding: var(--s) 0;
+            border-bottom: var(--border);
+            font-size: var(--s);
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-icon { font-size: var(--l); min-width: 2rem; text-align: center; }
+        .summary-row strong { display: block; margin-bottom: 2px; }
+
+        /* Best practice list */
+        .bp-list { list-style: none; padding: 0; margin: 0; }
+        .bp-list li {
+            display: flex;
+            gap: var(--s);
+            padding: var(--xs) 0;
+            font-size: var(--s);
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .bp-list li:last-child { border-bottom: none; }
+
+        /* Section divider */
+        .section-divider {
+            border: none;
+            border-top: 2px dashed var(--border-color);
+            margin: var(--x) 0;
+        }
+
+        /* tag chip */
+        .tag-chip {
+            display: inline-block;
+            background: var(--transprimary-color);
+            color: var(--primary-color);
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-size: var(--xs);
+            font-weight: 600;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../27-java-rabbitmq">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<!-- Bottom Nav Mobile -->
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠 Intro</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bottom-nav-items-check-1">📚 Chapters</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bottom-nav-items-check-1">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bottom-nav-items-check-1">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-1">1. Locale</a>
+                <a class="bottom-nav-item" href="#chapter-2">2. ResourceBundle</a>
+                <a class="bottom-nav-item" href="#chapter-3">3. NumberFormat</a>
+                <a class="bottom-nav-item" href="#chapter-4">4. Currency</a>
+                <a class="bottom-nav-item" href="#chapter-5">5. DateFormat</a>
+                <a class="bottom-nav-item" href="#chapter-6">6. MessageFormat</a>
+                <a class="bottom-nav-item" href="#chapter-7">7. Format Types</a>
+                <a class="bottom-nav-item" href="#chapter-8">8. ChoiceFormat</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+    <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+</nav>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <a href="../" class="sidebar-header">
+        <div class="sidebar-header-logo">
+            <img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg">
+        </div>
+        <div class="sidebar-header-title">Java i18n</div>
+    </a>
+    <div class="sidebar-menu">
+        <a href="#intro" class="sidebar-menu-item active" data-title="Intro & Mindset">
+            <div class="sidebar-menu-item-svg">🧠</div>
+            <span>Intro & Mindset</span>
+        </a>
+        <a href="#chapter-1" class="sidebar-menu-item" data-title="Locale">
+            <div class="sidebar-menu-item-svg">🌍</div>
+            <span>1. Locale</span>
+        </a>
+        <a href="#chapter-2" class="sidebar-menu-item" data-title="ResourceBundle">
+            <div class="sidebar-menu-item-svg">📦</div>
+            <span>2. ResourceBundle</span>
+        </a>
+        <a href="#chapter-3" class="sidebar-menu-item" data-title="NumberFormat">
+            <div class="sidebar-menu-item-svg">🔢</div>
+            <span>3. NumberFormat</span>
+        </a>
+        <a href="#chapter-4" class="sidebar-menu-item" data-title="Currency">
+            <div class="sidebar-menu-item-svg">💰</div>
+            <span>4. Currency</span>
+        </a>
+        <a href="#chapter-5" class="sidebar-menu-item" data-title="DateFormat">
+            <div class="sidebar-menu-item-svg">📅</div>
+            <span>5. DateFormat</span>
+        </a>
+        <a href="#chapter-6" class="sidebar-menu-item" data-title="MessageFormat">
+            <div class="sidebar-menu-item-svg">💬</div>
+            <span>6. MessageFormat</span>
+        </a>
+        <a href="#chapter-7" class="sidebar-menu-item" data-title="Format Types">
+            <div class="sidebar-menu-item-svg">🎛️</div>
+            <span>7. Format Types</span>
+        </a>
+        <a href="#chapter-8" class="sidebar-menu-item" data-title="ChoiceFormat">
+            <div class="sidebar-menu-item-svg">🔀</div>
+            <span>8. ChoiceFormat</span>
+        </a>
+        <a href="#summary" class="sidebar-menu-item" data-title="Summary">
+            <div class="sidebar-menu-item-svg">📋</div>
+            <span>Summary</span>
+        </a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52"
+             viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality"
+             fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active">
+                <span class="container-header-nav-item-text">☕ Java i18n</span>
+            </a>
+            <div class="container-header-nav-items">
+                <div class="container-header-nav-item">Chapters</div>
+                <div class="container-header-nav-items-element">
+                    <a href="#chapter-1" class="container-header-nav-item">
+                        <span class="container-header-nav-item-text">Locale</span>
+                    </a>
+                    <a href="#chapter-3" class="container-header-nav-item">
+                        <span class="container-header-nav-item-text">NumberFormat</span>
+                    </a>
+                    <a href="#chapter-6" class="container-header-nav-item">
+                        <span class="container-header-nav-item-text">MessageFormat</span>
+                    </a>
+                    <a href="#summary" class="container-header-nav-item">
+                        <span class="container-header-nav-item-text">Summary</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1"
+                      d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3"
+                      d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ===== INTRO ===== -->
+        <div id="intro" class="card-wrapper max-width-1000">
+            <div style="text-align:center; padding: var(--m) 0;">
+                <div style="font-size: 3rem;">☕🌍</div>
+                <div class="text-title" style="font-size: var(--xxx); margin-top: var(--s);">Java Internationalization</div>
+                <p style="color: var(--transtext-color); font-size: var(--s); max-width: 600px; margin: var(--s) auto 0;">
+                    Modul belajar mandiri untuk developer PHP/Laravel yang migrasi ke Java. Kita akan belajar cara Java mengelola bahasa, format angka, mata uang, tanggal, dan pesan teks secara multi-bahasa.
+                </p>
+            </div>
+
+            <div class="flex-ais-jcc gap-m" style="margin: var(--m) 0;">
+                <div class="badge text-white bg-primary"><p>8 Chapters</p></div>
+                <div class="badge text-white bg-success"><p>Beginner Friendly</p></div>
+                <div class="badge text-white" style="background:var(--second-primary-color);"><p>PHP/Laravel Analogy</p></div>
+                <div class="badge text-white bg-warning"><p>Mini Quiz</p></div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="text-subtitle">🧠 Perbedaan Mindset: Java vs PHP</div>
+            <p>Sebelum masuk ke kode, ada beberapa perbedaan fundamental antara Java dan PHP yang perlu kamu pahami. Ini bukan cuma soal sintaks — ini soal <strong>cara berpikir</strong>.</p>
+
+            <div class="display-grid" style="gap: var(--m); margin: var(--m) 0;">
+                <div class="timeline">
+                    <div>
+                        <span class="timeline-key active">1</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Strongly-typed vs Loosely-typed</div>
+                        <div class="timeline-content-desc">Di PHP, <code>$angka = "100"</code> otomatis bisa dihitung sebagai angka. Di Java, tipe data WAJIB dideklarasikan secara eksplisit: <code>int angka = 100;</code>. Compiler Java akan menolak kode yang tipe datanya tidak cocok — ini bukan bug, ini fitur keamanan.</div>
+                        <div class="timeline-content-time">Mindset #1</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">2</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Kompilasi vs Interpretasi</div>
+                        <div class="timeline-content-desc">PHP dibaca dan dieksekusi langsung (interpreted). Java dikompilasi dulu menjadi bytecode (.class), lalu dijalankan oleh JVM. Artinya banyak error yang di PHP baru ketahuan saat runtime, di Java sudah ketahuan saat compile time.</div>
+                        <div class="timeline-content-time">Mindset #2</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key active">3</span>
+                        <div class="timeline-divider active"></div>
+                    </div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Locale sebagai First-Class Citizen</div>
+                        <div class="timeline-content-desc">Di Laravel, i18n biasanya diatur lewat config <code>app.locale</code> global. Di Java, <strong>setiap operasi formatting bisa mendapat Locale yang berbeda secara individual</strong>. Ini lebih fleksibel, tapi juga lebih eksplisit — kamu harus selalu sadar "format ini untuk locale mana?"</div>
+                        <div class="timeline-content-time">Mindset #3</div>
+                    </div>
+                    <div>
+                        <span class="timeline-key">4</span>
+                    </div>
+                    <div class="timeline-content max-width-400">
+                        <div class="timeline-content-title">Exception Handling Wajib</div>
+                        <div class="timeline-content-desc">Java punya <strong>checked exception</strong> — beberapa exception WAJIB di-handle dengan try-catch, tidak bisa diabaikan. Ini berbeda dengan PHP yang lebih permisif. Contoh: <code>ParseException</code> saat parsing tanggal/angka harus selalu ditangani.</div>
+                        <div class="timeline-content-time">Mindset #4</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">💡 Tentang Package <code>java.util</code> dan <code>java.text</code></div>
+                <p>Semua kelas yang akan kita pelajari berasal dari dua package bawaan Java: <code>java.util</code> (Locale, ResourceBundle, Currency) dan <code>java.text</code> (NumberFormat, DateFormat, MessageFormat, ChoiceFormat). Kamu tidak perlu tambah dependency apapun — ini sudah built-in di JDK!</p>
+            </div>
+
+            <div class="info-box warning">
+                <div class="info-box-title">⚠️ Catatan: Kode Indonesia di Java</div>
+                <p>Menariknya, Java menggunakan kode bahasa <code>"in"</code> untuk Bahasa Indonesia (bukan <code>"id"</code>). Ini karena Java mengikuti standar lama ISO 639-1. Jadi selalu gunakan <code>new Locale("in", "ID")</code> untuk Indonesia.</p>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 1: LOCALE ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 1</div>
+                    <div class="chapter-title">🌍 Locale</div>
+                    <p class="chapter-desc">Locale adalah objek yang mewakili kombinasi bahasa + negara. Ini adalah fondasi dari seluruh sistem i18n Java. Seperti "identitas budaya" yang memberi tahu Java: "format ini untuk orang Indonesia" atau "format ini untuk orang Amerika."</p>
+                </div>
+
+                <div class="text-subtitle">Apa itu Locale?</div>
+                <p>Locale terdiri dari dua komponen utama: <strong>kode bahasa</strong> (2 huruf, lowercase) dan <strong>kode negara</strong> (2 huruf, uppercase). Misalnya <code>"in"</code> = Bahasa Indonesia, <code>"ID"</code> = Indonesia (negara).</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// LocaleTest.java
+@Test
+void testNewLocale() {
+    var language = "in";    // Kode bahasa: "in" untuk Indonesia
+    var country = "ID";     // Kode negara: "ID" untuk Indonesia
+    var locale = new Locale(language, country);
+
+    System.out.println(locale.getLanguage());       // Output: in
+    System.out.println(locale.getCountry());        // Output: ID
+    System.out.println(locale.getDisplayLanguage()); // Output: Indonesian
+    System.out.println(locale.getDisplayCountry()); // Output: Indonesia
+}
+
+@Test
+void testNewLocaleUs() {
+    var language = "en";   // English
+    var country = "US";    // United States
+    var locale = new Locale(language, country);
+
+    System.out.println(locale.getLanguage());       // Output: en
+    System.out.println(locale.getCountry());        // Output: US
+    System.out.println(locale.getDisplayLanguage()); // Output: English
+    System.out.println(locale.getDisplayCountry()); // Output: United States
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Baris</th>
+                                <th>Kode</th>
+                                <th>Penjelasan</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>3</td>
+                                <td><code>var language = "in"</code></td>
+                                <td>Kode bahasa ISO 639-1. Untuk Indonesia gunakan <code>"in"</code> (bukan <code>"id"</code>). Java mengikuti standar lama.</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><code>var country = "ID"</code></td>
+                                <td>Kode negara ISO 3166-1 alpha-2. Selalu uppercase.</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><code>new Locale(language, country)</code></td>
+                                <td>Membuat objek Locale. Constructor menerima (language, country). Ini bukan koneksi ke server — hanya objek nilai (value object) di memory.</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td><code>getLanguage()</code></td>
+                                <td>Mengembalikan kode bahasa raw (<code>"in"</code>).</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td><code>getDisplayLanguage()</code></td>
+                                <td>Mengembalikan nama bahasa yang human-readable dalam bahasa default JVM (<code>"Indonesian"</code>).</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, locale diatur global via <code>config/app.php</code> → <code>'locale' => 'id'</code>. Di Java, <code>Locale</code> adalah <strong>objek yang bisa kamu bawa ke mana saja</strong>. Bayangkan kalau di Laravel kamu bisa memanggil <code>__('pesan', [], 'id')</code> dan <code>__('message', [], 'en')</code> sekaligus dalam satu request — itulah fleksibilitas Locale di Java.</p>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Best Practice</div>
+                    <p>Gunakan konstanta bawaan seperti <code>Locale.US</code>, <code>Locale.JAPAN</code>, <code>Locale.UK</code> daripada membuat Locale manual untuk locale yang umum. Lebih aman dan tidak typo. Sayangnya tidak ada <code>Locale.INDONESIA</code> bawaan, jadi untuk Indonesia tetap harus <code>new Locale("in", "ID")</code>.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Kode negara salah case</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// Kode negara harus UPPERCASE
+new Locale("in", "id"); // SALAH! "id" bukan "ID"
+new Locale("IN", "ID"); // SALAH! bahasa harus lowercase</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Konsisten dengan standar ISO</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// language lowercase, country UPPERCASE
+new Locale("in", "ID"); // ✅ Benar untuk Indonesia
+new Locale("en", "US"); // ✅ Benar untuk Amerika</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+
+                <div id="quiz1">
+                    <p style="font-size: var(--s); font-weight: 600;">Kode Locale yang benar untuk Bahasa Jepang / Negara Jepang adalah...</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">A. <code>new Locale("JP", "jp")</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">B. <code>new Locale("japan", "JAPAN")</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, true)">C. <code>new Locale("ja", "JP")</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz1', this, false)">D. <code>Locale.of("ja", "jp")</code></div>
+                    <div class="quiz-feedback" id="quiz1-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 2: RESOURCE BUNDLE ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 2</div>
+                    <div class="chapter-title">📦 ResourceBundle</div>
+                    <p class="chapter-desc">ResourceBundle adalah mekanisme Java untuk memuat file terjemahan berdasarkan Locale. Ini adalah padanan langsung dari folder <code>lang/</code> di Laravel. Kamu bisa punya file <code>message.properties</code>, <code>message_in_ID.properties</code>, dan <code>message_en_US.properties</code>.</p>
+                </div>
+
+                <div class="text-subtitle">Bagaimana Cara Kerjanya?</div>
+                <p>ResourceBundle bekerja dengan sistem <strong>naming convention file</strong>. Jika kamu memanggil <code>ResourceBundle.getBundle("message", locale)</code>, Java akan mencari file di classpath dengan urutan:</p>
+
+                <div class="display-grid">
+                    <div class="stepper">
+                        <div class="stepper-item">
+                            <div class="stepper-key active">1</div>
+                            <div class="stepper-value"><code>message_in_ID.properties</code> (spesifik bahasa + negara)</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key active">2</div>
+                            <div class="stepper-value"><code>message_in.properties</code> (hanya bahasa)</div>
+                        </div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item">
+                            <div class="stepper-key">3</div>
+                            <div class="stepper-value"><code>message.properties</code> (default/fallback)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="margin-top: var(--m);">File <code>.properties</code> adalah file teks biasa berisi pasangan key-value:</p>
+
+                <div class="code-block">
+                    <pre><code class="language-properties"># message_in_ID.properties (untuk Indonesia)
+hello=Halo
+goodbye=Selamat Tinggal
+welcome.message=Halo {0}, selamat datang di {1}
+
+# message_en_US.properties (untuk Amerika / fallback)
+hello=Hello
+goodbye=Goodbye
+welcome.message=Hello {0}, welcome to {1}</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// ResourceBundleTest.java
+@Test
+void testResourceBundle() {
+    // Tanpa locale → menggunakan default JVM
+    var resourceBundle = ResourceBundle.getBundle("message");
+
+    System.out.println(resourceBundle.getString("hello"));   // Hello
+    System.out.println(resourceBundle.getString("goodbye")); // Goodbye
+}
+
+@Test
+void testResourceBundleIndonesia() {
+    var indonesia = new Locale("in", "ID");
+    // Java mencari: message_in_ID.properties → message_in.properties → message.properties
+    var resourceBundle = ResourceBundle.getBundle("message", indonesia);
+
+    System.out.println(resourceBundle.getString("hello"));   // Halo
+    System.out.println(resourceBundle.getString("goodbye")); // Selamat Tinggal
+}
+
+@Test
+void testResourceBundleNotFound() {
+    // Locale "en_US" tidak punya file khusus → fallback ke message.properties
+    var us = new Locale("en", "US");
+    var resourceBundle = ResourceBundle.getBundle("message", us);
+
+    System.out.println(resourceBundle.getString("hello"));   // Hello (dari default)
+}
+
+@Test
+void testResourceBundleMultipleTimes() {
+    var indonesia = new Locale("en", "US");
+    var resourceBundle1 = ResourceBundle.getBundle("message", indonesia);
+    var resourceBundle2 = ResourceBundle.getBundle("message", indonesia);
+
+    // Output: true — ResourceBundle di-cache! Panggilan kedua tidak baca ulang file
+    System.out.println(resourceBundle1 == resourceBundle2);
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Kode</th><th>Penjelasan</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>ResourceBundle.getBundle("message")</code></td>
+                                <td>Method statis (seperti facade Laravel). Parameter <code>"message"</code> adalah nama base dari file properties. File harus ada di <code>src/main/resources/</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>getBundle("message", locale)</code></td>
+                                <td>Versi dengan Locale. Java akan melakukan lookup dengan urutan fallback seperti dijelaskan di atas.</td>
+                            </tr>
+                            <tr>
+                                <td><code>resourceBundle.getString("hello")</code></td>
+                                <td>Mengambil nilai berdasarkan key. Persis seperti <code>__('hello')</code> di Laravel. Jika key tidak ditemukan, akan melempar <code>MissingResourceException</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>resourceBundle1 == resourceBundle2</code></td>
+                                <td>Ini adalah perbandingan referensi objek (bukan nilai). <code>true</code> berarti kedua variabel menunjuk ke objek yang SAMA di memory — bukti bahwa ResourceBundle menggunakan internal cache untuk efisiensi. Di PHP tidak ada konsep ini karena tiap request fresh.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, kamu punya <code>resources/lang/id/messages.php</code> dan <code>resources/lang/en/messages.php</code>. Di Java, konsepnya sama persis: <code>src/main/resources/message_in_ID.properties</code> dan <code>src/main/resources/message_en_US.properties</code>. Pemanggilan <code>ResourceBundle.getBundle("message", locale)</code> setara dengan <code>app()->setLocale('id'); __('messages.hello');</code>. Bedanya: Java bisa set locale per-operasi, tanpa mengubah state global aplikasi.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Common Mistake: Key Tidak Ditemukan</div>
+                    <p>Jika kamu memanggil <code>getString("kunci_yang_tidak_ada")</code>, Java akan melempar <code>MissingResourceException</code> saat runtime. Di PHP, <code>__('kunci.tidak.ada')</code> hanya mengembalikan string kunci itu sendiri tanpa error. Selalu pastikan key ada di file properties, atau gunakan try-catch untuk menangani kemungkinan ini.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — File di lokasi yang salah</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// File message.properties diletakkan di
+// src/main/java/ ← SALAH!
+// Java tidak akan menemukannya
+var rb = ResourceBundle.getBundle("message");
+// → Akan throw MissingResourceException</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — File di resources folder</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// File harus di:
+// src/main/resources/message.properties ✅
+// src/main/resources/message_in_ID.properties ✅
+var rb = ResourceBundle.getBundle("message");
+// → Berhasil dimuat</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz2">
+                    <p style="font-size: var(--s); font-weight: 600;">Jika file <code>message_in_ID.properties</code> tidak ada, tapi <code>message.properties</code> ada, apa yang terjadi ketika kamu memanggil <code>ResourceBundle.getBundle("message", new Locale("in","ID"))</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">A. Melempar MissingResourceException karena file spesifik tidak ditemukan</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, true)">B. Fallback ke <code>message.properties</code> sebagai default</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">C. Mengembalikan ResourceBundle kosong</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz2', this, false)">D. Otomatis membuat file baru</div>
+                    <div class="quiz-feedback" id="quiz2-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 3: NUMBER FORMAT ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 3</div>
+                    <div class="chapter-title">🔢 NumberFormat</div>
+                    <p class="chapter-desc">NumberFormat adalah kelas untuk memformat dan mem-parsing angka sesuai konvensi lokal. Di Indonesia, pemisah ribuan pakai titik (<code>1.000.000</code>), di Amerika pakai koma (<code>1,000,000</code>). NumberFormat mengurus semua ini secara otomatis.</p>
+                </div>
+
+                <div class="text-subtitle">Format & Parse Angka</div>
+                <p><strong>Format</strong> = mengubah angka (double/int) menjadi String yang enak dibaca. <strong>Parse</strong> = kebalikannya, mengubah String kembali menjadi angka.</p>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// NumberFormatTest.java
+
+@Test
+void testNumberFormat() {
+    // Tanpa locale → gunakan default JVM (biasanya US untuk server)
+    var numberFormat = NumberFormat.getInstance();
+    var format = numberFormat.format(10000000.255);
+    System.out.println(format); // Output (jika JVM US): 10,000,000.255
+}
+
+@Test
+void testNumberFormatIndonesia() {
+    var indonesia = new Locale("in", "ID");
+    var numberFormat = NumberFormat.getInstance(indonesia);
+    var format = numberFormat.format(10000000.255);
+    System.out.println(format); // Output: 10.000.000,255
+    // Perhatikan: titik untuk ribuan, koma untuk desimal — kebalikan dari US!
+}
+
+@Test
+void testNumberFormatParseIndonesia() {
+    var indonesia = new Locale("in", "ID");
+    var numberFormat = NumberFormat.getInstance(indonesia);
+
+    try {
+        // Parse string format Indonesia kembali ke double
+        var result = numberFormat.parse("10.000.000,255").doubleValue();
+        System.out.println(result); // Output: 1.0000000255E7 (= 10000000.255)
+    } catch (ParseException e) {
+        // ParseException adalah CHECKED EXCEPTION → wajib ditangani!
+        System.out.println("Error parse : " + e.getMessage());
+    }
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Kode</th><th>Penjelasan</th><th>Under the Hood</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>NumberFormat.getInstance()</code></td>
+                                <td>Factory method (static) untuk membuat instance NumberFormat. Ini adalah pola <em>Factory Pattern</em> — kamu tidak memanggil <code>new NumberFormat()</code> langsung.</td>
+                                <td>Mengembalikan subclass konkret dari NumberFormat (biasanya <code>DecimalFormat</code>) yang sudah dikonfigurasi sesuai locale.</td>
+                            </tr>
+                            <tr>
+                                <td><code>numberFormat.format(10000000.255)</code></td>
+                                <td>Mengubah double ke String. Method ini <em>thread-safe</em> jika dipanggil pada instance berbeda, tapi <strong>tidak thread-safe</strong> jika instance yang sama dipakai dari multiple thread.</td>
+                                <td>Membaca konfigurasi DecimalFormatSymbols yang berisi karakter pemisah ribuan dan desimal untuk locale tersebut.</td>
+                            </tr>
+                            <tr>
+                                <td><code>numberFormat.parse("...")</code></td>
+                                <td>Mengembalikan <code>Number</code> (supertype), bukan <code>double</code>. Makanya perlu panggil <code>.doubleValue()</code>. Melempar <code>ParseException</code> (checked) jika format tidak sesuai.</td>
+                                <td>Parse dilakukan dari kiri ke kanan. Jika karakter pertama tidak bisa diparse, langsung lempar exception.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Insight: Thread Safety</div>
+                    <p>Instance <code>NumberFormat</code> (dan semua Format class di Java) <strong>tidak thread-safe</strong>. Jangan simpan satu instance sebagai variabel static atau singleton yang diakses concurrent. Di aplikasi Spring Boot, buat instance baru setiap kali diperlukan, atau gunakan <code>ThreadLocal</code>.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel/PHP, kamu biasanya pakai <code>number_format(10000000.255, 3, ',', '.')</code> untuk format Indonesia. Parameter harus diisi manual setiap kali. Di Java, cukup buat <code>NumberFormat.getInstance(indonesia)</code> sekali, dan semua aturan formatting (titik, koma, jumlah desimal) sudah otomatis ter-konfigurasi sesuai locale. Lebih DRY (Don't Repeat Yourself)!</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Parse tanpa locale yang tepat</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// Pakai locale US untuk parse angka format Indonesia
+var usFormat = NumberFormat.getInstance(Locale.US);
+// String "10.000.000,255" diparse sebagai US
+// US membaca "10.000" = 10 (titik ribuan)
+// Tapi ",255" tidak valid → error atau hasil salah!
+var result = usFormat.parse("10.000.000,255");</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Locale harus konsisten</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// Gunakan locale yang SAMA saat format dan parse
+var id = new Locale("in", "ID");
+var fmt = NumberFormat.getInstance(id);
+String str = fmt.format(10000000.255);   // format ke ID
+Number n   = fmt.parse(str);             // parse dari ID
+// Konsisten → tidak ada ambiguitas!</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz3">
+                    <p style="font-size: var(--s); font-weight: 600;">Apa output dari kode berikut?<br><code>NumberFormat.getInstance(new Locale("in","ID")).format(1500.5)</code></p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">A. <code>1,500.5</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, true)">B. <code>1.500,5</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">C. <code>1500.5</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz3', this, false)">D. <code>1500,5</code></div>
+                    <div class="quiz-feedback" id="quiz3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 4: CURRENCY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 4</div>
+                    <div class="chapter-title">💰 Currency & NumberFormat Currency</div>
+                    <p class="chapter-desc">Java menyediakan kelas <code>Currency</code> untuk informasi mata uang (nama, kode, simbol) dan method <code>NumberFormat.getCurrencyInstance()</code> untuk format/parse angka dalam format mata uang lokal.</p>
+                </div>
+
+                <div class="text-subtitle">Informasi Mata Uang dengan Kelas <code>Currency</code></div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// CurrencyTest.java
+
+@Test
+void testCurrencyIndonesia() {
+    var indonesia = new Locale("in", "ID");
+    // Currency.getInstance() mengambil mata uang dari locale
+    var currency = Currency.getInstance(indonesia);
+
+    System.out.println(currency.getDisplayName());       // Indonesian Rupiah
+    System.out.println(currency.getCurrencyCode());      // IDR
+    System.out.println(currency.getSymbol(indonesia));   // Rp
+}
+
+@Test
+void testCurrencyUSA() {
+    var america = new Locale("en", "US");
+    var currency = Currency.getInstance(america);
+
+    System.out.println(currency.getDisplayName());  // US Dollar
+    System.out.println(currency.getCurrencyCode()); // USD
+    System.out.println(currency.getSymbol(america));// $
+}
+
+@Test
+void testNumberFormatCurrencyIndonesia() {
+    var indonesia = new Locale("in", "ID");
+    // Gunakan getCurrencyInstance() bukan getInstance() untuk format mata uang
+    var numberFormat = NumberFormat.getCurrencyInstance(indonesia);
+
+    var format = numberFormat.format(1000000.333);
+    System.out.println(format); // Output: Rp1.000.000,33
+    // Perhatikan: desimal di-round ke 2 digit (standar mata uang)
+}
+
+@Test
+void testNumberFormatCurrencyParseIndonesia() {
+    var indonesia = new Locale("in", "ID");
+    var numberFormat = NumberFormat.getCurrencyInstance(indonesia);
+
+    try {
+        // Parse string mata uang kembali ke double
+        var parse = numberFormat.parse("Rp900.000,25").doubleValue();
+        System.out.println(parse); // Output: 900000.25
+    } catch (ParseException e) {
+        System.out.println("Error parse : " + e.getMessage());
+    }
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Kode</th><th>Penjelasan</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>Currency.getInstance(locale)</code></td>
+                                <td>Factory method statis. Menggunakan Locale untuk menentukan mata uang yang berlaku di negara tersebut. Mengembalikan singleton per mata uang (IDR, USD, dll) — objek Currency per kode adalah unik.</td>
+                            </tr>
+                            <tr>
+                                <td><code>currency.getDisplayName()</code></td>
+                                <td>Nama mata uang dalam bahasa default JVM. Berguna untuk label di UI.</td>
+                            </tr>
+                            <tr>
+                                <td><code>currency.getCurrencyCode()</code></td>
+                                <td>Kode ISO 4217 (<code>IDR</code>, <code>USD</code>, <code>EUR</code>). Gunakan ini untuk penyimpanan di database, bukan simbol!</td>
+                            </tr>
+                            <tr>
+                                <td><code>currency.getSymbol(locale)</code></td>
+                                <td>Simbol yang ditampilkan untuk locale tertentu. Simbol bisa berbeda per locale untuk mata uang yang sama (misal: <code>$</code> vs <code>US$</code> tergantung konteks).</td>
+                            </tr>
+                            <tr>
+                                <td><code>NumberFormat.getCurrencyInstance()</code></td>
+                                <td>Membuat NumberFormat khusus mata uang. Otomatis menambahkan simbol mata uang, menentukan jumlah digit desimal (biasanya 2), dan menggunakan pemisah yang tepat.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Best Practice: Simpan Mata Uang sebagai Kode ISO</div>
+                    <p>Jangan simpan nilai mata uang dengan simbolnya (<code>"Rp1.000.000"</code>) di database. Simpan angka murni dan kode ISO secara terpisah: <code>amount = 1000000</code>, <code>currency_code = "IDR"</code>. Gunakan <code>getCurrencyCode()</code> untuk mendapatkan kode yang konsisten, dan format hanya untuk tampilan UI.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di ekosistem PHP, library seperti <code>moneyphp/money</code> atau <code>brick/money</code> dipakai untuk ini. Di Java, semua sudah built-in di JDK tanpa dependency tambahan. Konsep <code>Currency.getInstance()</code> mirip dengan <code>Money::of(1000000, 'IDR')</code> — kamu tetap perlu mendefinisikan mata uang secara eksplisit, bukan otomatis ditentukan dari setting global.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Menyimpan simbol di DB</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// JANGAN simpan string yang sudah diformat ke DB!
+String formatted = numberFormat.format(1000000.333);
+database.save(formatted); // "Rp1.000.000,33" — SALAH
+// Nanti susah diparse balik, dan tidak portable</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Simpan data mentah</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// Simpan angka dan kode mata uang terpisah
+double amount = 1000000.333;
+String code = Currency.getInstance(locale)
+                       .getCurrencyCode(); // "IDR"
+database.save(amount, code); // ✅ Portable & parseable</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz4">
+                    <p style="font-size: var(--s); font-weight: 600;">Apa perbedaan antara <code>NumberFormat.getInstance()</code> dan <code>NumberFormat.getCurrencyInstance()</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">A. Tidak ada perbedaan, keduanya sama</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">B. <code>getCurrencyInstance()</code> hanya untuk parse, bukan format</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, true)">C. <code>getCurrencyInstance()</code> otomatis menambahkan simbol mata uang dan membatasi desimal ke standar mata uang</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz4', this, false)">D. <code>getInstance()</code> lebih akurat untuk angka desimal</div>
+                    <div class="quiz-feedback" id="quiz4-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 5: DATE FORMAT ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 5</div>
+                    <div class="chapter-title">📅 DateFormat & SimpleDateFormat</div>
+                    <p class="chapter-desc"><code>SimpleDateFormat</code> memungkinkan kamu memformat dan mem-parsing tanggal dengan pola kustom yang locale-aware. Nama hari dan nama bulan akan otomatis berbeda tergantung locale yang digunakan.</p>
+                </div>
+
+                <div class="text-subtitle">Format Tanggal dengan SimpleDateFormat</div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// DateFormatTest.java
+
+@Test
+void testDateFormat() {
+    var pattern = "EEEE dd MMMM yyyy";
+    // Tanpa locale → default JVM (biasanya English)
+    var dateFormat = new SimpleDateFormat(pattern);
+    System.out.println(dateFormat.format(new Date())); // Monday 25 May 2026
+}
+
+@Test
+void testDateFormatIndonesia() {
+    var pattern = "EEEE dd MMMM yyyy";
+    var indonesia = new Locale("in", "ID");
+    var dateFormat = new SimpleDateFormat(pattern, indonesia);
+    System.out.println(dateFormat.format(new Date())); // Senin 25 Mei 2026
+}
+
+@Test
+void testDateFormatJapan() {
+    var pattern = "EEEE dd MMMM yyyy";
+    var japan = new Locale("ja", "JP");
+    var dateFormat = new SimpleDateFormat(pattern, japan);
+    System.out.println(dateFormat.format(new Date())); // 月曜日 25 5月 2026
+}
+
+@Test
+void testDateFormatParseIndonesia() {
+    var pattern = "EEEE dd MMMM yyyy";
+    var indonesia = new Locale("in", "ID");
+    var dateFormat = new SimpleDateFormat(pattern, indonesia);
+
+    try {
+        // Parse dari String format Indonesia ke objek Date
+        var date = dateFormat.parse("Rabu 03 Maret 2021");
+        System.out.println(date); // Wed Mar 03 00:00:00 WIB 2021
+    } catch (ParseException e) {
+        System.out.println("Error parse : " + e.getMessage());
+    }
+}
+
+@Test
+void testDateFormatParseJapan() {
+    var pattern = "EEEE dd MMMM yyyy";
+    var japan = new Locale("ja", "JP");
+    var dateFormat = new SimpleDateFormat(pattern, japan);
+
+    try {
+        var date = dateFormat.parse("水曜日 03 3月 2021");
+        System.out.println(date); // Wed Mar 03 00:00:00 WIB 2021
+    } catch (ParseException e) {
+        System.out.println("Error parse : " + e.getMessage());
+    }
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Referensi Simbol Pola Tanggal</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Simbol</th><th>Arti</th><th>Contoh (ID)</th><th>Contoh (US)</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td><code>EEEE</code></td><td>Nama hari (panjang)</td><td>Senin</td><td>Monday</td></tr>
+                            <tr><td><code>EEE</code></td><td>Nama hari (singkat)</td><td>Sen</td><td>Mon</td></tr>
+                            <tr><td><code>dd</code></td><td>Tanggal (2 digit)</td><td>03</td><td>03</td></tr>
+                            <tr><td><code>d</code></td><td>Tanggal (1-2 digit)</td><td>3</td><td>3</td></tr>
+                            <tr><td><code>MMMM</code></td><td>Nama bulan (panjang)</td><td>Maret</td><td>March</td></tr>
+                            <tr><td><code>MMM</code></td><td>Nama bulan (singkat)</td><td>Mar</td><td>Mar</td></tr>
+                            <tr><td><code>MM</code></td><td>Bulan (angka 2 digit)</td><td>03</td><td>03</td></tr>
+                            <tr><td><code>yyyy</code></td><td>Tahun (4 digit)</td><td>2021</td><td>2021</td></tr>
+                            <tr><td><code>HH</code></td><td>Jam (24 jam)</td><td>14</td><td>14</td></tr>
+                            <tr><td><code>hh</code></td><td>Jam (12 jam)</td><td>02</td><td>02</td></tr>
+                            <tr><td><code>mm</code></td><td>Menit</td><td>30</td><td>30</td></tr>
+                            <tr><td><code>ss</code></td><td>Detik</td><td>00</td><td>00</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, kamu pakai <code>Carbon::parse('2021-03-03')->locale('id')->isoFormat('dddd DD MMMM YYYY')</code> untuk mendapat nama hari/bulan dalam Bahasa Indonesia. Di Java, <code>SimpleDateFormat</code> dengan Locale Indonesia sudah melakukan hal yang sama. Perbedaannya: Java pakai <code>Date</code> (class lama) sementara Java modern (8+) lebih disarankan pakai <code>LocalDate</code> + <code>DateTimeFormatter</code> dari package <code>java.time</code> — tapi konsepnya sama.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ SimpleDateFormat Sudah Dianggap Legacy!</div>
+                    <p>Di Java 8+, ada API tanggal yang lebih baik: <code>java.time.LocalDate</code>, <code>LocalDateTime</code>, <code>ZonedDateTime</code>, dan <code>DateTimeFormatter</code>. <code>SimpleDateFormat</code> masih dipakai di banyak kode lawas, tapi untuk kode baru gunakan <code>DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy", locale)</code>. API baru ini juga <strong>thread-safe</strong> — berbeda dengan SimpleDateFormat yang tidak thread-safe.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Legacy (masih valid, tapi hindari)</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// SimpleDateFormat — tidak thread-safe
+var sdf = new SimpleDateFormat("EEEE dd MMMM yyyy",
+    new Locale("in", "ID"));
+String result = sdf.format(new Date());
+// new Date() juga sudah legacy</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Modern Java 8+ (lebih baik)</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// DateTimeFormatter — thread-safe, immutable
+var formatter = DateTimeFormatter
+    .ofPattern("EEEE dd MMMM yyyy",
+        new Locale("in", "ID"));
+String result = LocalDate.now().format(formatter);
+// Lebih aman untuk concurrent use</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz5">
+                    <p style="font-size: var(--s); font-weight: 600;">Mengapa <code>SimpleDateFormat</code> tidak boleh disimpan sebagai variabel <code>static</code> yang diakses oleh multiple thread secara bersamaan?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">A. Karena SimpleDateFormat menggunakan terlalu banyak memory</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, true)">B. Karena SimpleDateFormat tidak thread-safe — state internalnya bisa korup jika diakses concurrent</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">C. Karena static variable tidak bisa menyimpan objek Format</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz5', this, false)">D. Karena Java melarang SimpleDateFormat di context static</div>
+                    <div class="quiz-feedback" id="quiz5-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 6: MESSAGE FORMAT ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 6</div>
+                    <div class="chapter-title">💬 MessageFormat</div>
+                    <p class="chapter-desc">MessageFormat memungkinkan kamu membuat template pesan dengan placeholder yang diisi secara dinamis. Ini adalah fitur inti untuk pesan yang perlu di-localize sekaligus memiliki data dinamis — seperti "Selamat datang, {nama}!"</p>
+                </div>
+
+                <div class="text-subtitle">MessageFormat Dasar</div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// MessageFormatTest.java
+
+@Test
+void testMessageFormat() {
+    // {0} adalah placeholder untuk argumen pertama (index dimulai dari 0)
+    var pattern = "Hi {0}, Anda bisa mencari data Anda dengan mengetikkan \"{0}\" di pencarian.";
+    var messageFormat = new MessageFormat(pattern);
+
+    // format() menerima Object[] — array bisa berisi tipe apa saja
+    var format = messageFormat.format(new Object[]{"Eko"});
+
+    System.out.println(format);
+    // Output: Hi Eko, Anda bisa mencari data Anda dengan mengetikkan "Eko" di pencarian.
+    // {0} yang sama digantikan berkali-kali oleh nilai yang sama ("Eko")
+}
+
+@Test
+void testMessageFormatResourceBundle() {
+    var locale = new Locale("in", "ID");
+    var resourceBundle = ResourceBundle.getBundle("message", locale);
+
+    // Pattern diambil dari ResourceBundle:
+    // welcome.message=Halo {0}, selamat datang di {1}
+    var pattern = resourceBundle.getString("welcome.message");
+
+    var messageFormat = new MessageFormat(pattern);
+    var format = messageFormat.format(new Object[]{
+        "Eko",                   // {0} → nama pengguna
+        "Programmer Zaman Now"   // {1} → nama aplikasi
+    });
+
+    System.out.println(format);
+    // Output: Halo Eko, selamat datang di Programmer Zaman Now
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Bedah Baris per Baris</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Kode</th><th>Penjelasan</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>{0}</code>, <code>{1}</code></td>
+                                <td>Placeholder berindeks (mulai dari 0). Angka menunjukkan posisi argumen dalam array yang dipass ke <code>format()</code>. Placeholder yang sama bisa muncul berkali-kali dalam satu pattern.</td>
+                            </tr>
+                            <tr>
+                                <td><code>new MessageFormat(pattern)</code></td>
+                                <td>Membuat instance dengan pattern. Pattern di-parse dan di-compile saat konstruksi. Kalau pattern salah sintaks, <code>IllegalArgumentException</code> dilempar di sini — bukan saat <code>format()</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>messageFormat.format(new Object[]{"Eko"})</code></td>
+                                <td>Parameter adalah <code>Object[]</code> (array of Object). Ini berarti kamu bisa memasukkan tipe apa saja: String, int, Date, dll. Java akan secara otomatis melakukan boxing untuk primitif (int → Integer).</td>
+                            </tr>
+                            <tr>
+                                <td>Pattern di ResourceBundle</td>
+                                <td>Praktik terbaik: pisahkan pattern dari kode. Simpan di file <code>.properties</code> supaya bisa di-localize tanpa mengubah kode Java. Ini adalah prinsip i18n yang benar.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel kamu menulis: <code>__('messages.welcome', ['name' => 'Eko', 'app' => 'PZN'])</code> dengan file lang: <code>'welcome' => 'Halo :name, selamat datang di :app'</code>. Di Java, MessageFormat + ResourceBundle bekerja persis sama. Perbedaan sintaks: Laravel pakai <code>:name</code> (named placeholder), Java pakai <code>{0}</code>, <code>{1}</code> (indexed placeholder). Java juga mendukung format lebih kaya dari sekedar string replacement — lihat Chapter 7!</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — String concatenation</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// JANGAN lakukan ini untuk pesan yang di-localize!
+String name = "Eko";
+String msg = "Halo " + name + ", selamat datang!";
+// Masalah: bagaimana dengan bahasa lain?
+// "Hello " + name + ", welcome!" harus tulis ulang kode!</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Pakai MessageFormat + ResourceBundle</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// Pattern di file .properties, bisa di-localize
+// message_in_ID.properties: welcome=Halo {0}!
+// message_en_US.properties: welcome=Hello {0}!
+var pattern = rb.getString("welcome");
+var msg = new MessageFormat(pattern)
+    .format(new Object[]{"Eko"});
+// Ganti locale → pesan otomatis berubah bahasa!</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz6">
+                    <p style="font-size: var(--s); font-weight: 600;">Berapa jumlah argumen (elemen dalam Object[]) yang dibutuhkan untuk pattern <code>"Dear {1}, your order {0} is confirmed on {2}"</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">A. 1 (hanya satu placeholder)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">B. 2 (dua nomor berbeda)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, true)">C. 3 (index 0, 1, dan 2 → minimal 3 elemen)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz6', this, false)">D. Tidak terbatas, berapa saja bisa</div>
+                    <div class="quiz-feedback" id="quiz6-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 7: MESSAGE FORMAT TYPES ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-7">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 7</div>
+                    <div class="chapter-title">🎛️ MessageFormat dengan Tipe & Locale</div>
+                    <p class="chapter-desc">MessageFormat bisa lebih dari sekedar mengganti placeholder dengan String. Dengan sintaks <code>{index,type,style}</code>, placeholder bisa secara otomatis memformat angka sebagai mata uang, tanggal sebagai tanggal lokal, dan lain-lain — semuanya dalam satu pattern.</p>
+                </div>
+
+                <div class="text-subtitle">Format Tersimpan di ResourceBundle</div>
+                <p>Contoh pattern di file <code>message_in_ID.properties</code>:</p>
+                <div class="code-block">
+                    <pre><code class="language-properties"># message_in_ID.properties
+status=Halo {0}, tanggal {1,date,EEEE dd MMMM yyyy} saldo Anda adalah {2,number,currency}
+
+# message_en_US.properties
+status=Hello {0}, on {1,date,EEEE dd MMMM yyyy} your balance is {2,number,currency}</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// MessageFormatTypeTest.java
+
+@Test
+void testMessageFormatType() {
+    var locale = new Locale("in", "ID");
+    var resourceBundle = ResourceBundle.getBundle("message", locale);
+
+    // Pattern: "Halo {0}, tanggal {1,date,EEEE dd MMMM yyyy} saldo Anda adalah {2,number,currency}"
+    var pattern = resourceBundle.getString("status");
+
+    // Wajib pass locale ke MessageFormat agar format tanggal/angka ikut locale!
+    var messageFormat = new MessageFormat(pattern, locale);
+    var format = messageFormat.format(new Object[]{
+        "Eko",        // {0} → String biasa
+        new Date(),   // {1,date,...} → diformat sebagai tanggal Indonesia
+        1000000       // {2,number,currency} → diformat sebagai Rp1.000.000,00
+    });
+
+    System.out.println(format);
+    // Output: Halo Eko, tanggal Senin 25 Mei 2026 saldo Anda adalah Rp1.000.000,00
+}
+
+@Test
+void testMessageFormatTypeAmerica() {
+    var locale = new Locale("en", "US");
+    var resourceBundle = ResourceBundle.getBundle("message", locale);
+
+    var pattern = resourceBundle.getString("status");
+
+    var messageFormat = new MessageFormat(pattern, locale);
+    var format = messageFormat.format(new Object[]{
+        "Eko",
+        new Date(),
+        1000000
+    });
+
+    System.out.println(format);
+    // Output: Hello Eko, on Monday 25 May 2026 your balance is $1,000,000.00
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Sintaks Placeholder Lengkap: <code>{index,type,style}</code></div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Placeholder</th><th>Tipe</th><th>Style/Contoh</th><th>Output (ID)</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td><code>{0}</code></td><td>default</td><td>toString() biasa</td><td><code>Eko</code></td></tr>
+                            <tr><td><code>{1,date}</code></td><td>date</td><td>Format tanggal default</td><td><code>25 Mei 2026</code></td></tr>
+                            <tr><td><code>{1,date,short}</code></td><td>date</td><td>Format tanggal singkat</td><td><code>25/05/26</code></td></tr>
+                            <tr><td><code>{1,date,EEEE dd MMMM yyyy}</code></td><td>date</td><td>Pola kustom</td><td><code>Senin 25 Mei 2026</code></td></tr>
+                            <tr><td><code>{2,number}</code></td><td>number</td><td>Format angka default</td><td><code>1.000.000</code></td></tr>
+                            <tr><td><code>{2,number,currency}</code></td><td>number</td><td>Format mata uang</td><td><code>Rp1.000.000,00</code></td></tr>
+                            <tr><td><code>{2,number,percent}</code></td><td>number</td><td>Format persentase</td><td><code>100.000.000%</code></td></tr>
+                            <tr><td><code>{2,number,#,###.00}</code></td><td>number</td><td>Pola kustom DecimalFormat</td><td><code>1.000.000,00</code></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Kenapa Harus Pass Locale ke MessageFormat?</div>
+                    <p>Perhatikan: <code>new MessageFormat(pattern, locale)</code> bukan <code>new MessageFormat(pattern)</code>. Jika tanpa locale, format tanggal dan angka akan menggunakan locale default JVM (biasanya server Anda, bisa US atau lainnya). Selalu eksplisit pass locale ke MessageFormat ketika pattern mengandung format date/number.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, kamu butuh kombinasi beberapa hal untuk mencapai ini: <code>__('messages.status', ['name' => 'Eko', 'date' => Carbon::now()->isoFormat('dddd DD MMMM YYYY'), 'balance' => number_format(1000000, 2, ',', '.')])</code>. Di Java, semua formatting itu bisa diinstruksikan langsung dari dalam pattern dengan sintaks <code>{1,date,EEEE dd MMMM yyyy}</code> — lebih ringkas dan locale-aware secara otomatis!</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Lupa pass Locale ke MessageFormat</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">var locale = new Locale("in", "ID");
+var rb = ResourceBundle.getBundle("message", locale);
+var pattern = rb.getString("status");
+
+// LUPA pass locale → format pakai JVM default!
+var mf = new MessageFormat(pattern); // ← SALAH!
+// Tanggal & angka mungkin muncul dalam format US</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Konsisten gunakan locale yang sama</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">var locale = new Locale("in", "ID");
+var rb = ResourceBundle.getBundle("message", locale);
+var pattern = rb.getString("status");
+
+// Pass locale → format date & number ikut Indonesia
+var mf = new MessageFormat(pattern, locale); // ✅
+mf.format(new Object[]{"Eko", new Date(), 1000000});</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz7">
+                    <p style="font-size: var(--s); font-weight: 600;">Apa yang dihasilkan oleh placeholder <code>{0,number,currency}</code> jika argumen ke-0 adalah <code>500000</code> dan locale adalah <code>en_US</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">A. <code>Rp500.000,00</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7', this, true)">B. <code>$500,000.00</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">C. <code>500000</code></div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz7', this, false)">D. <code>USD500000</code></div>
+                    <div class="quiz-feedback" id="quiz7-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAPTER 8: CHOICE FORMAT ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-8">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner">
+                    <div class="chapter-number">Chapter 8</div>
+                    <div class="chapter-title">🔀 ChoiceFormat</div>
+                    <p class="chapter-desc">ChoiceFormat memungkinkan pemilihan teks yang berbeda berdasarkan nilai numerik. Ini adalah solusi Java untuk masalah pluralization dan kondisi numerik dalam pesan — seperti "0 item", "1 item", "banyak item". Di Laravel, ini setara dengan helper <code>trans_choice()</code>.</p>
+                </div>
+
+                <div class="text-subtitle">ChoiceFormat Langsung</div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">// ChoiceFormatTest.java
+
+@Test
+void testChoiceFormat() {
+    // Sintaks: "batas#teks | batas#teks | batas<teks"
+    // "#" → tepat sama atau lebih besar dari batas
+    // "<" → lebih besar (strict greater than) dari batas
+    var pattern = "-1#negatif | 0#kosong | 1#satu | 1<banyak";
+    var choiceFormat = new ChoiceFormat(pattern);
+
+    System.out.println(choiceFormat.format(-2)); // negatif (≤-1)
+    System.out.println(choiceFormat.format(-1)); // negatif (=-1)
+    System.out.println(choiceFormat.format(0));  // kosong  (=0)
+    System.out.println(choiceFormat.format(1));  // satu    (=1)
+    System.out.println(choiceFormat.format(2));  // banyak  (>1)
+    System.out.println(choiceFormat.format(3));  // banyak  (>1)
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">ChoiceFormat di Dalam MessageFormat</div>
+                <p>Kekuatan sebenarnya adalah menggabungkan ChoiceFormat di dalam MessageFormat via ResourceBundle. Contoh pattern di file properties:</p>
+
+                <div class="code-block">
+                    <pre><code class="language-properties"># message_in_ID.properties
+balance=Saldo Anda adalah {0,choice,-1#negatif|0#kosong|0&lt;{0,number,currency}}
+
+# message_en_US.properties
+balance=Your balance is {0,choice,-1#negative|0#empty|0&lt;{0,number,currency}}</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <pre><code class="language-java">@Test
+void testChoiceFormatInMessageFormat() {
+    var locale = new Locale("in", "ID");
+    var resourceBundle = ResourceBundle.getBundle("message", locale);
+
+    var pattern = resourceBundle.getString("balance");
+    var messageFormat = new MessageFormat(pattern, locale);
+
+    System.out.println(messageFormat.format(new Object[]{-1000000}));
+    // Output: Saldo Anda adalah negatif
+
+    System.out.println(messageFormat.format(new Object[]{0}));
+    // Output: Saldo Anda adalah kosong
+
+    System.out.println(messageFormat.format(new Object[]{1000000}));
+    // Output: Saldo Anda adalah Rp1.000.000,00
+    // ← Ketika > 0, format sebagai currency!
+}
+
+@Test
+void testChoiceFormatInMessageFormatAmerica() {
+    var locale = new Locale("en", "US");
+    var resourceBundle = ResourceBundle.getBundle("message", locale);
+
+    var pattern = resourceBundle.getString("balance");
+    var messageFormat = new MessageFormat(pattern, locale);
+
+    System.out.println(messageFormat.format(new Object[]{-1000000}));
+    // Output: Your balance is negative
+
+    System.out.println(messageFormat.format(new Object[]{0}));
+    // Output: Your balance is empty
+
+    System.out.println(messageFormat.format(new Object[]{1000000}));
+    // Output: Your balance is $1,000,000.00
+}</code></pre>
+                </div>
+
+                <div class="text-subtitle">Bedah Pattern ChoiceFormat</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Operator</th><th>Arti</th><th>Contoh</th><th>Berlaku untuk</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td><code>#</code></td><td>Lebih besar atau sama (≥)</td><td><code>0#kosong</code></td><td>Nilai ≥ 0 (sampai batas berikutnya)</td></tr>
+                            <tr><td><code>&lt;</code></td><td>Lebih besar secara ketat (&gt;)</td><td><code>1&lt;banyak</code></td><td>Nilai &gt; 1</td></tr>
+                            <tr><td><code>|</code></td><td>Pemisah antar range</td><td><code>0#kosong|1#satu</code></td><td>Antar kondisi</td></tr>
+                            <tr><td>Nested pattern</td><td>Format di dalam choice</td><td><code>0&lt;{0,number,currency}</code></td><td>Jalankan formatter lain jika kondisi cocok</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="analogy-box">
+                    <div class="analogy-title">🔗 Analogi Laravel</div>
+                    <p>Di Laravel, pluralization dilakukan dengan <code>trans_choice('messages.balance|messages.empty|messages.positive', $count)</code> menggunakan sintaks <code>|</code> di file lang. Di Java, ChoiceFormat lebih fleksibel karena berbasis <strong>range numerik</strong>, bukan hanya singular/plural. Kamu bisa definisikan kondisi negatif, nol, satu, banyak — semuanya dalam satu pattern string. Plus, bisa dikombinasikan dengan formatter lain (seperti currency) langsung di dalam pattern yang sama.</p>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ Best Practice: Taruh Pattern di ResourceBundle</div>
+                    <p>Pattern ChoiceFormat bisa berbeda per bahasa (bahasa tertentu punya aturan pluralisasi yang kompleks). Selalu simpan pattern di file <code>.properties</code> yang terpisah per locale, bukan hard-coded di Java. Ini memungkinkan translator menyesuaikan aturan tanpa mengubah kode.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="comparison-wrong">
+                        <div class="comparison-header">❌ Salah — Hard-code plural logic di Java</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// JANGAN hard-code logika plural di Java!
+String msg;
+if (count == 0) msg = "kosong";
+else if (count == 1) msg = "satu item";
+else msg = count + " item";
+// Tidak bisa di-localize! Harus ubah kode untuk tiap bahasa</code></pre>
+                        </div>
+                    </div>
+                    <div class="comparison-correct">
+                        <div class="comparison-header">✅ Benar — Pakai ChoiceFormat + ResourceBundle</div>
+                        <div class="comparison-body">
+                            <pre><code class="language-java">// Pattern di .properties, diambil via ResourceBundle
+// "0#kosong|1#satu item|1<{0} item"
+var pattern = rb.getString("item.count");
+var mf = new MessageFormat(pattern, locale);
+String msg = mf.format(new Object[]{count});
+// Translator bisa ubah rule tanpa sentuh kode Java!</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="text-subtitle">🧪 Mini Quiz</div>
+                <div id="quiz8">
+                    <p style="font-size: var(--s); font-weight: 600;">Untuk pattern <code>"-1#negatif | 0#kosong | 1#satu | 1&lt;banyak"</code>, apa output dari <code>choiceFormat.format(0.5)</code>?</p>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8', this, false)">A. <code>satu</code> (karena 0.5 dibulatkan ke 1)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8', this, true)">B. <code>kosong</code> (karena 0.5 ≥ 0 tapi &lt; 1, jadi masuk range 0)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8', this, false)">C. <code>banyak</code> (karena 0.5 &gt; 0)</div>
+                    <div class="quiz-option" onclick="checkQuiz('quiz8', this, false)">D. Error karena 0.5 bukan integer</div>
+                    <div class="quiz-feedback" id="quiz8-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUMMARY ===== -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner" style="background: linear-gradient(135deg, var(--transsuccess-color) 0%, var(--transprimary-color) 100%);">
+                    <div class="chapter-number" style="color: var(--success-color);">Rangkuman Akhir</div>
+                    <div class="chapter-title">📋 Arsitektur Java Internationalization</div>
+                    <p class="chapter-desc">Berikut adalah gambaran lengkap bagaimana semua komponen i18n di Java bekerja bersama-sama.</p>
+                </div>
+
+                <div class="text-subtitle">Peta Arsitektur Sistem i18n Java</div>
+                <p>Sistem i18n Java dibangun seperti layer yang saling mendukung:</p>
+
+                <div class="summary-card">
+                    <div class="summary-row">
+                        <div class="summary-icon">🌍</div>
+                        <div>
+                            <strong>Locale — Fondasi</strong>
+                            <span>Objek value yang mewakili bahasa + negara. Semua komponen lain menerima Locale sebagai parameter. Gunakan <code>new Locale("in", "ID")</code> untuk Indonesia. Ini adalah titik masuk ke seluruh ekosistem i18n.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">📦</div>
+                        <div>
+                            <strong>ResourceBundle — Penyimpan Terjemahan</strong>
+                            <span>Memuat file <code>.properties</code> berdasarkan Locale dengan mekanisme fallback otomatis. Di-cache oleh JVM, jadi efisien. Analog dengan folder <code>lang/</code> Laravel.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🔢</div>
+                        <div>
+                            <strong>NumberFormat — Format Angka</strong>
+                            <span>Factory class untuk format & parse angka biasa (<code>getInstance</code>) dan mata uang (<code>getCurrencyInstance</code>). Otomatis menentukan pemisah ribuan dan desimal per locale. <strong>Tidak thread-safe</strong> — buat instance baru setiap kali.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">💰</div>
+                        <div>
+                            <strong>Currency — Informasi Mata Uang</strong>
+                            <span>Menyediakan kode ISO 4217, nama, dan simbol mata uang dari suatu locale. Singleton per kode mata uang. Gunakan <code>getCurrencyCode()</code> untuk persistensi ke DB.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">📅</div>
+                        <div>
+                            <strong>SimpleDateFormat — Format Tanggal (Legacy)</strong>
+                            <span>Format tanggal dengan pola kustom yang locale-aware (nama hari/bulan otomatis). <strong>Tidak thread-safe</strong>. Untuk kode baru, gunakan <code>DateTimeFormatter</code> dari <code>java.time</code> (Java 8+).</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">💬</div>
+                        <div>
+                            <strong>MessageFormat — Template Pesan</strong>
+                            <span>Template string dengan placeholder berindeks (<code>{0}</code>, <code>{1}</code>). Bisa digabungkan dengan format date/number via sintaks <code>{index,type,style}</code>. Selalu pass Locale jika pattern mengandung format date/number.</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-icon">🔀</div>
+                        <div>
+                            <strong>ChoiceFormat — Kondisi Numerik</strong>
+                            <span>Memilih teks berbeda berdasarkan range nilai numerik. Pattern: <code>batas#teks | batas&lt;teks</code>. Bisa di-nested di dalam MessageFormat untuk pluralisasi yang powerful dan locale-aware.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">📊 Perbandingan: Java i18n vs Laravel i18n</div>
+                <div class="line-annotation">
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                            <tr><th>Kebutuhan</th><th>Laravel</th><th>Java</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Set bahasa aplikasi</td>
+                                <td><code>app()->setLocale('id')</code></td>
+                                <td><code>new Locale("in", "ID")</code></td>
+                            </tr>
+                            <tr>
+                                <td>File terjemahan</td>
+                                <td><code>resources/lang/id/messages.php</code></td>
+                                <td><code>src/main/resources/message_in_ID.properties</code></td>
+                            </tr>
+                            <tr>
+                                <td>Ambil terjemahan</td>
+                                <td><code>__('messages.hello')</code></td>
+                                <td><code>ResourceBundle.getBundle("message", locale).getString("hello")</code></td>
+                            </tr>
+                            <tr>
+                                <td>Pesan dengan parameter</td>
+                                <td><code>__('messages.welcome', ['name' => 'Eko'])</code></td>
+                                <td><code>new MessageFormat(pattern).format(new Object[]{"Eko"})</code></td>
+                            </tr>
+                            <tr>
+                                <td>Format angka</td>
+                                <td><code>number_format($n, 0, ',', '.')</code></td>
+                                <td><code>NumberFormat.getInstance(locale).format(n)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Format mata uang</td>
+                                <td>Library eksternal (moneyphp)</td>
+                                <td><code>NumberFormat.getCurrencyInstance(locale).format(n)</code> — built-in!</td>
+                            </tr>
+                            <tr>
+                                <td>Format tanggal lokal</td>
+                                <td><code>Carbon::now()->locale('id')->isoFormat('dddd')</code></td>
+                                <td><code>new SimpleDateFormat("EEEE", locale).format(new Date())</code></td>
+                            </tr>
+                            <tr>
+                                <td>Pluralisasi</td>
+                                <td><code>trans_choice('messages.item', $count)</code></td>
+                                <td><code>ChoiceFormat</code> di dalam <code>MessageFormat</code></td>
+                            </tr>
+                            <tr>
+                                <td>Fallback jika terjemahan tidak ada</td>
+                                <td>Key itu sendiri dikembalikan</td>
+                                <td>Fallback ke file default, lalu <code>MissingResourceException</code> jika tidak ada</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="text-subtitle">🏆 Checklist Penguasaan Java i18n</div>
+                <ul class="bp-list">
+                    <li><span>✅</span><span>Paham cara membuat <code>Locale</code> untuk Indonesia (<code>"in","ID"</code>) dan negara lain</span></li>
+                    <li><span>✅</span><span>Tahu cara membuat file <code>.properties</code> di <code>src/main/resources/</code> dan memuatnya dengan <code>ResourceBundle</code></span></li>
+                    <li><span>✅</span><span>Bisa menggunakan <code>NumberFormat.getInstance()</code> dan <code>getCurrencyInstance()</code> untuk format angka & mata uang</span></li>
+                    <li><span>✅</span><span>Tahu perbedaan format angka Indonesia vs Amerika (titik vs koma sebagai pemisah)</span></li>
+                    <li><span>✅</span><span>Bisa menggunakan <code>SimpleDateFormat</code> dengan Locale untuk format nama hari/bulan dalam berbagai bahasa</span></li>
+                    <li><span>✅</span><span>Paham kenapa <code>SimpleDateFormat</code> legacy dan lebih baik pakai <code>DateTimeFormatter</code> untuk kode baru</span></li>
+                    <li><span>✅</span><span>Bisa membuat template pesan dengan <code>MessageFormat</code> dan mengisi placeholder dengan data dinamis</span></li>
+                    <li><span>✅</span><span>Paham sintaks <code>{index,type,style}</code> di MessageFormat untuk auto-format tanggal dan angka</span></li>
+                    <li><span>✅</span><span>Bisa menggunakan <code>ChoiceFormat</code> untuk pluralisasi dan kondisi numerik dalam pesan</span></li>
+                    <li><span>✅</span><span>Selalu handle <code>ParseException</code> (checked exception) saat menggunakan method <code>parse()</code></span></li>
+                    <li><span>✅</span><span>Ingat bahwa <code>NumberFormat</code> dan <code>SimpleDateFormat</code> <strong>tidak thread-safe</strong></span></li>
+                    <li><span>✅</span><span>Simpan pattern terjemahan di ResourceBundle, bukan hard-coded di kode Java</span></li>
+                </ul>
+
+                <hr class="section-divider">
+
+                <div class="info-box success">
+                    <div class="info-box-title">🎉 Selamat! Kamu sudah menyelesaikan modul ini.</div>
+                    <p>Langkah selanjutnya yang disarankan: eksplorasi <code>java.time</code> package (LocalDate, DateTimeFormatter) sebagai pengganti modern untuk Date dan SimpleDateFormat. Di Spring Boot, kamu juga bisa mengintegrasikan ResourceBundle dengan <code>MessageSource</code> bean untuk i18n yang lebih terintegrasi dengan framework.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="padding: var(--m); text-align: center; font-size: var(--xs); color: var(--transtext-color);">
+        Java Internationalization Learning Module · Dibuat untuk developer PHP/Laravel yang migrasi ke Java
+    </footer>
+</main>
+
+<script>
+    // Framework functions
+    function showBottomSheet(param) {
+        document.getElementsByClassName('bottom-sheet')[param].classList.toggle('active')
+    }
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse")
+        document.getElementsByClassName("container")[0].classList.toggle("expanded")
+    }
+    function switchTheme() {
+        document.getElementsByTagName("body")[0].classList.toggle("dark-mode")
+    }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show")
+        let iconGetMenu = document.getElementById('get-menu');
+        iconGetMenu.classList.toggle('opened')
+    }
+
+    // Quiz logic
+    function checkQuiz(quizId, el, isCorrect) {
+        const container = document.getElementById(quizId);
+        // Prevent re-answering
+        if (container.dataset.answered) return;
+        container.dataset.answered = "true";
+
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(opt => {
+            opt.style.pointerEvents = 'none';
+        });
+
+        if (isCorrect) {
+            el.classList.add('correct');
+            const fb = document.getElementById(quizId + '-feedback');
+            fb.style.color = 'var(--success-color)';
+            fb.textContent = '✅ Jawaban benar! Bagus!';
+            fb.classList.add('show');
+        } else {
+            el.classList.add('wrong');
+            // Highlight correct answer
+            options.forEach(opt => {
+                if (opt.getAttribute('onclick').includes('true')) {
+                    opt.classList.add('correct');
+                }
+            });
+            const fb = document.getElementById(quizId + '-feedback');
+            fb.style.color = 'var(--danger-color)';
+            fb.textContent = '❌ Belum tepat. Perhatikan jawaban yang benar di atas.';
+            fb.classList.add('show');
+        }
+    }
+
+    // Active sidebar item on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+
+        const sections = document.querySelectorAll('[id^="chapter-"], #intro, #summary');
+        const menuItems = document.querySelectorAll('.sidebar-menu-item');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    menuItems.forEach(item => item.classList.remove('active'));
+                    const active = document.querySelector(`.sidebar-menu-item[href="#${entry.target.id}"]`);
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+
+        sections.forEach(s => observer.observe(s));
+    });
+</script>
+</body>
+</html>

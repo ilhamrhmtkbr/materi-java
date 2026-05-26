@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Belajar Java RabbitMQ — Modul Interaktif</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iamra/css/dist/style.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        @media screen and (max-width: 800px) {
+            .helper{
+                right: -63dvw !important;
+            }
+        }
+        .helper-show{
+            right: 0!important;
+        }
+        .helper-item:hover, .helper-item.active{
+            background: var(--bg-color);
+        }
+        @font-face {
+            font-family: Light;
+            src: url("../assets_fonts/Poppins-Light.ttf");
+        }
+
+        @font-face {
+            font-family: Regular;
+            src: url("../assets_fonts/Poppins-Regular.ttf");
+        }
+
+        @font-face {
+            font-family: Medium;
+            src: url("../assets_fonts/Poppins-Medium.ttf");
+        }
+
+        @font-face {
+            font-family: Bold;
+            src: url("../assets_fonts/Poppins-Bold.ttf");
+        }
+        pre {
+            background: #11111b; color: #cdd6f4;
+            border-radius: var(--radius-x); padding: var(--m);
+            max-width: 77dvw; overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: .71rem; line-height: 1.75;
+            box-sizing: border-box; border: 1px solid #313244;
+        }
+        code { font-family: 'JetBrains Mono', monospace; font-size: .72rem; }
+        pre .kw  { color: #cba6f7; }
+        pre .cls { color: #89dceb; }
+        pre .str { color: #a6e3a1; }
+        pre .num { color: #fab387; }
+        pre .ann { color: #f9e2af; }
+        pre .cmt { color: #585b70; font-style: italic; }
+        pre .met { color: #89b4fa; }
+        pre .typ { color: #94e2d5; }
+        pre .lam { color: #f38ba8; }
+
+        .info-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); }
+        .info-box.primary { background: var(--transprimary-color); border-left: 4px solid var(--primary-color); }
+        .info-box.success { background: var(--transsuccess-color); border-left: 4px solid var(--success-color); }
+        .info-box.warning { background: var(--transwarning-color); border-left: 4px solid var(--warning-color); }
+        .info-box.danger  { background: var(--transdanger-color);  border-left: 4px solid var(--danger-color);  }
+
+        .line-explain { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; gap: var(--s); margin-top: var(--m); }
+        .line-explain-item { display: flex; gap: var(--s); align-items: flex-start; }
+        .line-num { background: var(--transprimary-color); color: var(--primary-color); border-radius: var(--radius-s); padding: 2px var(--xs); font-family: 'JetBrains Mono', monospace; font-size: .63rem; white-space: nowrap; flex-shrink: 0; font-weight: 600; }
+        .line-desc { font-size: var(--s); }
+
+        .compare-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; display: grid; grid-template-columns: 1fr 1fr; gap: var(--m); margin-top: var(--m); }
+        @media (max-width: 640px) { .compare-box { grid-template-columns: 1fr; } }
+        .compare-wrong { border-radius: var(--radius-x); padding: var(--m); background: var(--transdanger-color); border: 1px solid var(--danger-color); }
+        .compare-right { border-radius: var(--radius-x); padding: var(--m); background: var(--transsuccess-color); border: 1px solid var(--success-color); }
+        .compare-label { font-weight: 700; margin-bottom: var(--s); font-size: var(--s); }
+        .compare-wrong .compare-label { color: var(--danger-color); }
+        .compare-right .compare-label { color: var(--success-color); }
+
+        .laravel-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); background: var(--transsecond-primary-color); border-left: 4px solid var(--second-primary-color); }
+        .laravel-box-title { font-weight: 700; color: var(--second-primary-color); margin-bottom: var(--xs); }
+
+        .quiz-box { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); background: var(--transprimary-color); border: 1px solid var(--primary-color); }
+        .quiz-title { font-weight: 700; color: var(--primary-color); margin-bottom: var(--s); }
+        .quiz-options { display: grid; gap: var(--xs); margin-top: var(--s); }
+        .quiz-option { display: flex; align-items: flex-start; gap: var(--xs); padding: var(--xs) var(--s); border-radius: var(--radius-m); cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-color); transition: all .2s; font-size: var(--s); line-height: 1.5; }
+        .quiz-option:hover { border-color: var(--primary-color); background: var(--transprimary-color); }
+        .quiz-option.correct { border-color: var(--success-color); background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-option.wrong   { border-color: var(--danger-color);  background: var(--transdanger-color);  color: var(--danger-color); }
+        .quiz-feedback { margin-top: var(--s); font-size: var(--s); padding: var(--xs) var(--s); border-radius: var(--radius-m); display: none; line-height: 1.6; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok { background: var(--transsuccess-color); color: var(--success-color); }
+        .quiz-feedback.no { background: var(--transdanger-color);  color: var(--danger-color); }
+
+        .chapter-banner { box-sizing: border-box; max-width: 77dvw; overflow: auto; border-radius: var(--radius-x); padding: var(--l) var(--m); color: #fff; margin-bottom: var(--m); }
+        .chapter-banner.default { background: linear-gradient(135deg, var(--primary-color) 0%, var(--second-primary-color) 100%); }
+        .chapter-banner.green   { background: linear-gradient(135deg,#16a34a 0%,#15803d 100%); }
+        .chapter-banner.orange  { background: linear-gradient(135deg,#d97706 0%,#b45309 100%); }
+        .chapter-banner.red     { background: linear-gradient(135deg,#dc2626 0%,#991b1b 100%); }
+        .chapter-banner.teal    { background: linear-gradient(135deg,#0d9488 0%,#0f766e 100%); }
+        .chapter-banner.violet  { background: linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%); }
+        .chapter-banner.sky     { background: linear-gradient(135deg,#0284c7 0%,#0369a1 100%); }
+        .chapter-banner.rabbit  { background: linear-gradient(135deg,#f97316 0%,#ea580c 100%); }
+        .chapter-num   { font-size: .63rem; opacity: .8; letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .chapter-title { font-size: var(--xx); font-weight: 700; margin-top: 4px; }
+        .chapter-sub   { font-size: var(--s); opacity: .85; margin-top: 4px; }
+
+        .hero { border-radius: var(--radius-x); padding: var(--xxxx) var(--xx); background: linear-gradient(135deg,#11111b 0%,#1a0a00 60%,#2d1500 100%); color: #cdd6f4; text-align: center; margin-bottom: var(--x); box-sizing: border-box; max-width: 77dvw; overflow: auto; position: relative; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(249,115,22,.15) 0%, transparent 65%); border-radius: var(--radius-x); pointer-events: none; }
+        .hero h1 { font-size: var(--xx); font-weight: 800; color: #f97316; font-family: 'JetBrains Mono', monospace; position: relative; }
+        .hero p { font-size: var(--s); color: #a6adc8; margin-top: var(--s); position: relative; line-height: 1.7; }
+        .hero .tag-row { display: flex; flex-wrap: wrap; gap: var(--xs); justify-content: center; margin-top: var(--m); position: relative; }
+        .hero-tag { background: rgba(249,115,22,.13); border: 1px solid rgba(249,115,22,.4); color: #f97316; border-radius: 999px; padding: 3px var(--s); font-size: .63rem; font-family: 'JetBrains Mono', monospace; }
+
+        p code, li code, .line-desc code, td code { background: var(--transprimary-color); color: var(--primary-color); padding: 1px 5px; border-radius: var(--radius-s); font-family: 'JetBrains Mono', monospace; }
+
+        .output-box { background: #1e1e2e; border: 1px dashed #45475a; border-radius: var(--radius-m); padding: var(--s) var(--m); font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: #a6e3a1; max-width: 77dvw; overflow-x: auto; margin-top: var(--s); line-height: 1.7; }
+        .output-box .out-label { color: #6c7086; font-size: .58rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+
+        /* Architecture/flow diagram */
+        .flow-diagram { box-sizing: border-box; max-width: 77dvw; overflow-x: auto; background: #11111b; border: 1px solid #313244; border-radius: var(--radius-x); padding: var(--m); margin-top: var(--m); font-family: 'JetBrains Mono', monospace; font-size: .7rem; line-height: 2; color: #cdd6f4; }
+        .fd-prod  { color: #89b4fa; }
+        .fd-exch  { color: #f9e2af; }
+        .fd-queue { color: #a6e3a1; }
+        .fd-cons  { color: #f38ba8; }
+        .fd-arrow { color: #6c7086; }
+        .fd-label { color: #585b70; font-size: .6rem; }
+
+        /* Concept cards */
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--m); margin-top: var(--m); box-sizing: border-box; max-width: 77dvw; }
+        @media (max-width: 640px) { .concept-grid { grid-template-columns: 1fr; } }
+        .concept-card { border-radius: var(--radius-x); padding: var(--m); border: 1px solid var(--border-color); background: var(--card-bg-color); }
+        .concept-card-title { font-weight: 700; font-size: var(--s); margin-bottom: var(--xs); display: flex; gap: var(--xs); align-items: center; }
+        .concept-card-body { font-size: var(--s); color: var(--transtext-color); line-height: 1.7; }
+
+        .mt-s{margin-top:var(--s)} .mt-m{margin-top:var(--m)} .mt-l{margin-top:var(--l)}
+    </style>
+</head>
+<body>
+<svg width="0" height="0" style="display: none">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="folder">
+        <path d="M16.069 9.952l3.367.102.458.064c.532.089 1.05.236 1.53.488v-.851l-.085-2.264c-.09-.635-.286-1.197-.755-1.659a3.08 3.08 0 0 0-.242-.214c-.512-.408-1.125-.575-1.82-.652-.669-.075-1.512-.075-2.545-.074h-.353c-.982 0-1.334-.006-1.653-.086-.187-.047-.367-.113-.536-.197-.284-.14-.532-.351-1.228-.967l-.474-.42-.481-.404a4.29 4.29 0 0 0-2.182-.802C8.886 2 8.696 2 8.413 2h-.116c-.641 0-1.063 0-1.431.061-1.605.268-2.903 1.39-3.219 2.875-.072.338-.072.725-.072 1.283v4.388c.479-.253.998-.399 1.53-.488l.458-.064c.904-.102 2.037-.102 3.367-.102h7.139z"></path>
+        <path fill-rule="evenodd" d="M3.358 12.779c-.61.941-.358 2.25.145 4.868.363 1.885.544 2.827 1.172 3.452.163.162.345.306.543.428C5.982 22 6.995 22 9.022 22h6.955c2.027 0 3.04 0 3.804-.472.198-.122.38-.266.543-.428.628-.625.809-1.568 1.172-3.452.504-2.618.756-3.927.145-4.868-.156-.24-.348-.458-.57-.645-.871-.736-2.279-.736-5.094-.736H9.022c-2.816 0-4.223 0-5.094.736-.222.188-.414.405-.57.645zm6.337 4.402c0-.399.342-.723.765-.723h4.08c.422 0 .765.324.765.723s-.343.723-.765.723h-4.08c-.423 0-.765-.324-.765-.723z"></path>
+    </symbol>
+</svg>
+<div class="helper" style="z-index:99;width: max-content;position: fixed; top: 50%; transform: translateY(-50%); right: -400px; display: flex; align-items: center; transition: .3s">
+    <div onclick="this.parentElement.classList.toggle('helper-show')" class="border-style-default font-medium cursor-pointer flex-aic-jcc" style="width:30px;padding:9px 0;margin-right:-2px;z-index:2;background: var(--sidebar-color);writing-mode: vertical-lr; text-orientation: upright; border-right: unset; border-radius: 4px 0 0 4px">Open</div>
+    <div class="border-style-default max-width-400" style="width:63dvw;box-sizing:border-box;background: var(--sidebar-color);padding: var(--xs); max-height: 50dvh; overflow: auto; border-right: unset; border-radius: 4px 0 0 4px">
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../01-java-dasar">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Dasar</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../02-java-oop">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java OOP</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../03-studi-kasus-java-oop-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java OOP Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../04-java-date-time">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Date Time</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../05-java-io">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java IO</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../06-java-json">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java JSON</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../07-java-csv">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java CSV</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../08-java-internationalization">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Internationalization</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../09-java-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../10-java-generic">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Generic</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../11-java-stream">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Stream</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../12-java-lambda">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../13-java-lambda-expression">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lambda Expression</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../14-java-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../15-java-virtual-thread">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Virtual Thread</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../16-java-reflection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Reflection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../17-java-validation">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Validation</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../18-java-lombok">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Lombok</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../19-java-logging">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Logging</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../20-java-unit-test">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Unit Test</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../21-java-database">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Database</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../22-java-persistance-api">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Persistance API</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../23-studi-kasus-java-database-aplikasi-todolist">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Studi Kasus Java Database Aplikasi Todolist</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../24-java-record">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Record</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../25-java-sealed-class">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sealed Class</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../26-java-sequenced-collection">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Sequenced Collection</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item active" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java RabbitMQ</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../28-java-kafka">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Kafka</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../29-java-resilience4j">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Resilience4j</p>
+        </a>
+
+        <a class="flex-aic-jcs gap-s border-style-default helper-item" style="border-radius: var(--radius-s); margin-bottom: var(--xs); padding: var(--xs)" href="../30-java-web-servlet">
+            <svg class="svg-x fill-primary">
+                <use xlink:href="#folder"></use>
+            </svg>
+            <p>Java Web Servlet</p>
+        </a>
+    </div>
+</div>
+<nav class="bottom-nav">
+    <a class="bottom-nav-item active" href="#intro">🏠</a>
+    <a class="bottom-nav-item" href="#chapter-1">⚙️ Setup</a>
+    <div class="bottom-nav-items">
+        <label class="bottom-nav-item" for="bnav-check">📚 Bab</label>
+        <input type="checkbox" class="bottom-nav-items-check" id="bnav-check">
+        <div class="bottom-nav-items-elements-modal">
+            <div class="bottom-nav-items-elements-content">
+                <label class="bottom-nav-items-elements-close" for="bnav-check">&Cross;</label>
+                <a class="bottom-nav-item" href="#chapter-2">📤 Producer</a>
+                <a class="bottom-nav-item" href="#chapter-3">📥 Consumer</a>
+                <a class="bottom-nav-item" href="#chapter-4">🔁 Exchange &amp; Routing</a>
+                <a class="bottom-nav-item" href="#chapter-5">📨 Message Properties</a>
+                <a class="bottom-nav-item" href="#chapter-6">✅ Ack &amp; Reliability</a>
+                <a class="bottom-nav-item" href="#summary">📋 Summary</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-header-logo"><img class="sidebar-header-logo-img" alt="logo" src="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"></div>
+        <div class="sidebar-header-title">RabbitMQ</div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#intro"     class="sidebar-menu-item active"><div class="sidebar-menu-item-svg">🏠</div><span>Pengantar</span></a>
+        <a href="#chapter-1" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">⚙️</div><span>Setup Koneksi</span></a>
+        <a href="#chapter-2" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📤</div><span>Producer — Kirim Pesan</span></a>
+        <a href="#chapter-3" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📥</div><span>Consumer — Terima Pesan</span></a>
+        <a href="#chapter-4" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">🔁</div><span>Exchange &amp; Routing Key</span></a>
+        <a href="#chapter-5" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📨</div><span>Message Properties</span></a>
+        <a href="#chapter-6" class="sidebar-menu-item"><div class="sidebar-menu-item-svg">✅</div><span>Ack &amp; Reliability</span></a>
+        <a href="#summary"   class="sidebar-menu-item"><div class="sidebar-menu-item-svg">📋</div><span>Ringkasan</span></a>
+    </div>
+    <div class="sidebar-button-hide sidebar-menu-item" onclick="sidebarMinify()">
+        <svg class="sidebar-menu-item-svg" xmlns="http://www.w3.org/2000/svg" width="35.52" height="35.52" viewBox="0 0 20 20" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd">
+            <path d="M10 0h9s1 1 1 2v17l-1 1h-9l-1-1V2c0-1 1-2 1-2zm8 14v2 1h-1l-2-1v-1l2-1c0-1 0-1 1-1v1z"/>
+            <rect width="7.211" height="20.232" rx="2" ry="4"/>
+        </svg>
+        <span>Hide</span>
+    </div>
+</aside>
+
+<main class="container">
+    <header class="container-header">
+        <div class="container-header-button-switch-theme" onclick="switchTheme()">Dark Mode</div>
+        <div class="container-header-nav">
+            <a class="container-header-nav-item active" href="#intro"><span class="container-header-nav-item-text">🐰 Java RabbitMQ Course</span></a>
+        </div>
+        <div class='container-header-button-show-sidebar' onclick="showMenu()">
+            <svg id='get-menu' viewBox="0 0 100 100">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"/>
+                <path class="line line2" d="M 20,50 H 80"/>
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="container-content">
+
+        <!-- ============ HERO ============ -->
+        <div class="card-wrapper max-width-1000" id="intro">
+            <div class="hero">
+                <h1>🐰 Java RabbitMQ</h1>
+                <p>Modul pembelajaran interaktif untuk developer PHP/Laravel yang migrasi ke Java.<br>
+                    Materi: AMQP Protocol, ConnectionFactory, Channel, Producer &amp; Consumer, Exchange, Routing Key, Message Properties, dan Acknowledgement.</p>
+                <div class="tag-row">
+                    <span class="hero-tag">AMQP 0-9-1</span>
+                    <span class="hero-tag">RabbitMQ Java Client</span>
+                    <span class="hero-tag">ConnectionFactory</span>
+                    <span class="hero-tag">Channel</span>
+                    <span class="hero-tag">Exchange &amp; Queue</span>
+                    <span class="hero-tag">DeliverCallback</span>
+                    <span class="hero-tag">basicPublish / basicConsume</span>
+                </div>
+            </div>
+
+            <p>RabbitMQ adalah <strong>message broker</strong> — perantara yang menerima pesan dari satu aplikasi (Producer) dan meneruskannya ke aplikasi lain (Consumer). Ini memungkinkan komunikasi <strong>asinkron</strong> antar service tanpa kedua pihak harus online secara bersamaan.</p>
+
+            <div class="text-title mt-m">Empat Konsep Inti yang Harus Dipahami Dulu</div>
+            <div class="concept-grid mt-m">
+                <div class="concept-card">
+                    <div class="concept-card-title">📤 Producer</div>
+                    <div class="concept-card-body">Aplikasi yang <strong>mengirim</strong> pesan ke RabbitMQ. Di project ini: <code>ProducerApp.java</code>. Producer tidak tahu siapa yang akan menerima pesan — ia hanya mengirim ke <em>exchange</em>.</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-card-title">🔁 Exchange</div>
+                    <div class="concept-card-body">Router pesan. Menerima pesan dari Producer dan memutuskan ke <em>queue</em> mana pesan diteruskan — berdasarkan <strong>routing key</strong> dan tipe exchange (direct, fanout, topic, headers).</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-card-title">📬 Queue</div>
+                    <div class="concept-card-body">Antrian pesan — tempat penyimpanan sementara sebelum dikonsumsi. Pesan tersimpan di queue sampai Consumer mengambilnya. Queue bersifat <strong>persistent</strong> — bisa survive restart RabbitMQ.</div>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-card-title">📥 Consumer</div>
+                    <div class="concept-card-body">Aplikasi yang <strong>menerima dan memproses</strong> pesan dari queue. Di project ini: <code>ConsumerApp.java</code>. Consumer bisa berjalan terus (long-running) atau ambil satu-satu.</div>
+                </div>
+            </div>
+
+            <div class="text-title mt-l">Alur Lengkap: Producer → Exchange → Queue → Consumer</div>
+            <div class="flow-diagram">
+                <span class="fd-prod">ProducerApp</span>
+                <span class="fd-arrow">│  channel.basicPublish(exchange, routingKey, props, body)</span>
+                <span class="fd-arrow">│</span>
+                <span class="fd-arrow">▼</span>
+                <span class="fd-exch">Exchange: "notification"</span>  <span class="fd-label">(type: direct / fanout / topic)</span>
+                <span class="fd-arrow">│  binding: routingKey = "whatsapp" → queue "whatsapp"</span>
+                <span class="fd-arrow">│  binding: routingKey = "email"    → queue "email"</span>
+                <span class="fd-arrow">│</span>
+                <span class="fd-arrow">▼</span>
+                <span class="fd-queue">Queue: "whatsapp"</span>          <span class="fd-label">(pesan tersimpan, menunggu consumer)</span>
+                <span class="fd-arrow">│</span>
+                <span class="fd-arrow">▼</span>
+                <span class="fd-cons">ConsumerApp</span>
+                <span class="fd-arrow">   channel.basicConsume("whatsapp", autoAck, deliverCallback, cancelCallback)</span>
+            </div>
+
+            <div class="accordion-item mt-m">
+                <input type="checkbox" id="acc-sync" class="accordion-item-check"/>
+                <label for="acc-sync" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>⚡ Async vs Sync — Mengapa Butuh Message Broker?</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Masalah yang dipecahkan RabbitMQ</div>
+                </label>
+                <div class="accordion-content">
+                    <p>Tanpa message broker, service A harus langsung memanggil service B (HTTP/REST). Masalahnya:</p>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--s);">
+                        <li><strong>Coupling ketat:</strong> Jika service B down, service A ikut gagal</li>
+                        <li><strong>Kecepatan terbatas:</strong> A harus menunggu B selesai memproses</li>
+                        <li><strong>Scale susah:</strong> Jika B lambat, A terbebani</li>
+                    </ul>
+                    <p class="mt-s">Dengan RabbitMQ: A cukup kirim pesan ke broker dan lanjut. B memproses kapan saja saat siap. Keduanya <em>decoupled</em> — tidak saling bergantung secara langsung.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <input type="checkbox" id="acc-amqp" class="accordion-item-check"/>
+                <label for="acc-amqp" class="accordion-item-label">
+                    <div class="flex-aic-jcb"><p>📡 AMQP — Protokol di Balik RabbitMQ</p><span>▼</span></div>
+                    <div class="accordion-item-label-subtitle">Advanced Message Queuing Protocol</div>
+                </label>
+                <div class="accordion-content">
+                    <p><strong>AMQP 0-9-1</strong> adalah protokol wire-level yang digunakan RabbitMQ. URI koneksinya berbentuk:<br>
+                        <code>amqp://username:password@host:port/vhost</code></p>
+                    <p class="mt-s">Default credentials: <code>guest:guest</code>, port <code>5672</code>, vhost <code>/</code>. Port <code>15672</code> adalah RabbitMQ Management UI (browser). Library Java yang digunakan: <code>com.rabbitmq:amqp-client</code> — official RabbitMQ Java client.</p>
+                </div>
+            </div>
+
+            <div class="laravel-box">
+                <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                <p>RabbitMQ di Java ≈ Laravel Queue dengan driver <code>rabbitmq</code> (via package <code>vladimir-yuldashev/laravel-queue-rabbitmq</code>). <code>ProducerApp.java</code> ≈ <code>dispatch(new SomeJob(...))</code> di Laravel. <code>ConsumerApp.java</code> ≈ <code>php artisan queue:work</code> yang terus berjalan mendengarkan queue. Bedanya: di Java kamu berinteraksi langsung dengan AMQP protocol level, tanpa abstraksi tinggi seperti Laravel Queue yang menyembunyikan detail tersebut.</p>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 1: SETUP KONEKSI ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-1">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner rabbit">
+                    <div class="chapter-num">Chapter 01</div>
+                    <div class="chapter-title">⚙️ Setup Koneksi — ConnectionFactory, Connection, Channel</div>
+                    <div class="chapter-sub">Tiga layer abstraksi AMQP yang wajib dipahami</div>
+                </div>
+
+                <p>Untuk berkomunikasi dengan RabbitMQ, ada <strong>tiga layer abstraksi</strong> yang harus dibuat secara berurutan: <code>ConnectionFactory</code> → <code>Connection</code> → <code>Channel</code>. Ketiganya punya peran dan lifecycle yang berbeda.</p>
+
+                <div class="text-title mt-m">Kode Setup (digunakan di Producer maupun Consumer)</div>
+                <pre><span class="cmt">// Langkah 1: Konfigurasi factory</span>
+<span class="cls">ConnectionFactory</span> factory = <span class="kw">new</span> <span class="cls">ConnectionFactory</span>();  <span class="cmt">// (1)</span>
+factory.<span class="met">setUri</span>(<span class="str">"amqp://guest:guest@localhost:5672/"</span>); <span class="cmt">// (2)</span>
+factory.<span class="met">setVirtualHost</span>(<span class="str">"/"</span>);                          <span class="cmt">// (3)</span>
+
+<span class="cmt">// Langkah 2: Buat koneksi TCP</span>
+<span class="cls">Connection</span> connection = factory.<span class="met">newConnection</span>();      <span class="cmt">// (4)</span>
+
+<span class="cmt">// Langkah 3: Buat channel (virtual connection)</span>
+<span class="cls">Channel</span> channel = connection.<span class="met">createChannel</span>();          <span class="cmt">// (5)</span></pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) ConnectionFactory</span>
+                        <span class="line-desc">Konfigurasi template untuk membuat koneksi. Satu factory bisa menghasilkan banyak Connection. Menyimpan semua setting: host, port, credentials, virtual host, connection timeout, heartbeat, dll. Perlu dikonfigurasi sekali dan bisa di-reuse.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) setUri()</span>
+                        <span class="line-desc">Cara cepat mengset semua parameter sekaligus via URI AMQP. Format: <code>amqp://user:pass@host:port/vhost</code>. Alternatif: set satu per satu via <code>setHost()</code>, <code>setPort()</code>, <code>setUsername()</code>, <code>setPassword()</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) setVirtualHost("/")</span>
+                        <span class="line-desc">Virtual host di RabbitMQ adalah namespace isolasi — seperti database yang berbeda dalam satu server. Default adalah <code>/</code> (root). Dalam production, biasanya tiap aplikasi punya vhost sendiri untuk isolasi.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(4) factory.newConnection()</span>
+                        <span class="line-desc"><strong>Koneksi TCP nyata</strong> ke RabbitMQ server. Mahal untuk dibuat — butuh TCP handshake dan AMQP negotiation. Sebaiknya dibuat sekali dan di-reuse selama aplikasi berjalan. Di production, gunakan connection pool.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(5) connection.createChannel()</span>
+                        <span class="line-desc"><strong>Virtual connection</strong> di atas satu TCP connection. <em>Ringan</em> untuk dibuat — AMQP menggunakan multiplexing sehingga ribuan channel bisa berbagi satu TCP connection. Semua operasi AMQP (publish, consume, declare queue) dilakukan lewat channel. <strong>Channel tidak thread-safe</strong> — satu channel per thread.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Hierarki Layer Koneksi</div>
+                <div class="flow-diagram">
+                    <span class="fd-prod">ConnectionFactory</span>   <span class="fd-label">← template konfigurasi, buat sekali</span>
+                    <span class="fd-arrow">└──▶</span> <span class="fd-exch">Connection</span>       <span class="fd-label">← TCP socket ke RabbitMQ, mahal, reuse</span>
+                    <span class="fd-arrow">├──▶</span> <span class="fd-queue">Channel #1</span>   <span class="fd-label">← virtual, ringan, 1 per thread, publish/consume</span>
+                    <span class="fd-arrow">├──▶</span> <span class="fd-queue">Channel #2</span>
+                    <span class="fd-arrow">└──▶</span> <span class="fd-queue">Channel #N</span>   <span class="fd-label">← satu connection bisa ribuan channel</span>
+                </div>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ Channel Tidak Thread-Safe!</strong><br>
+                    Satu <code>Channel</code> tidak boleh digunakan dari beberapa thread secara bersamaan. Untuk aplikasi multi-threaded: buat satu channel per thread (bukan satu channel global). Atau gunakan pool channel. Ini adalah kesalahan paling umum yang menyebabkan bug intermittent di production.
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Satu Channel untuk Semua Thread</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Channel dibuat sekali secara global</span>
+Channel channel = connection.createChannel();
+
+<span class="cmt">// Thread A menggunakan channel yang sama</span>
+executor.submit(() -> channel.basicPublish(...));
+<span class="cmt">// Thread B juga — RACE CONDITION!</span>
+executor.submit(() -> channel.basicPublish(...));
+<span class="cmt">// → Data corrupt / exception acak</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Channel per Thread</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Buat channel baru di setiap thread</span>
+executor.submit(() -> {
+    Channel ch = connection.createChannel(); <span class="cmt">// ← per thread</span>
+    ch.basicPublish(...);
+    ch.close();
+});
+<span class="cmt">// Atau gunakan ThreadLocal&lt;Channel&gt;</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>ConnectionFactory</code> ≈ konfigurasi koneksi di <code>config/queue.php</code>. <code>Connection</code> ≈ koneksi database yang dibuat oleh Laravel saat startup. <code>Channel</code> ≈ PDO statement handle — objek yang kamu gunakan untuk menjalankan operasi aktual, dan tidak boleh di-share antar request tanpa isolation.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 1</div>
+                    <p><strong>Q:</strong> Dalam aplikasi multi-threaded dengan 50 thread yang masing-masing perlu publish pesan ke RabbitMQ, berapa <code>Connection</code> dan berapa <code>Channel</code> yang sebaiknya dibuat?</p>
+                    <div class="quiz-options" id="q1">
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">A. 50 Connection dan 1 Channel (share channel dari satu connection)</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,true)">B. 1 Connection (shared) dan 50 Channel (satu per thread)</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">C. 1 Connection dan 1 Channel (keduanya shared, pakai synchronized)</div>
+                        <div class="quiz-option" onclick="checkQuiz('q1',this,false)">D. 50 Connection dan 50 Channel (satu set per thread)</div>
+                    </div>
+                    <div class="quiz-feedback" id="q1-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 2: PRODUCER ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-2">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner sky">
+                    <div class="chapter-num">Chapter 02</div>
+                    <div class="chapter-title">📤 Producer — Mengirim Pesan</div>
+                    <div class="chapter-sub">ProducerApp.java · basicPublish · loop publish · close</div>
+                </div>
+
+                <p>Producer adalah sisi <strong>pengirim</strong> — membuat koneksi, mempublish pesan ke exchange, lalu menutup koneksi. Dalam skenario nyata, producer biasanya adalah service backend yang menerima request lalu melempar task ke queue.</p>
+
+                <div class="text-title mt-m">Kode Lengkap: ProducerApp.java</div>
+                <pre><span class="kw">public class</span> <span class="cls">ProducerApp</span> {
+  <span class="kw">public static void</span> <span class="met">main</span>(<span class="typ">String</span>[] args) <span class="kw">throws</span> <span class="cls">Exception</span> {
+
+    <span class="cmt">// 1. Setup koneksi</span>
+    <span class="cls">ConnectionFactory</span> factory = <span class="kw">new</span> <span class="cls">ConnectionFactory</span>();
+    factory.<span class="met">setUri</span>(<span class="str">"amqp://guest:guest@localhost:5672/"</span>);
+    factory.<span class="met">setVirtualHost</span>(<span class="str">"/"</span>);
+
+    <span class="cls">Connection</span> connection = factory.<span class="met">newConnection</span>();
+    <span class="cls">Channel</span>    channel    = connection.<span class="met">createChannel</span>();
+
+    <span class="cmt">// 2. Publish 10 pesan</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++) {
+      <span class="typ">String</span> message = <span class="str">"Whatsapp "</span> + i;                    <span class="cmt">// (A)</span>
+
+      <span class="cls">AMQP</span>.<span class="cls">BasicProperties</span> properties =
+          <span class="kw">new</span> <span class="cls">AMQP</span>.<span class="cls">BasicProperties</span>().<span class="met">builder</span>()
+              .<span class="met">headers</span>(<span class="cls">Map</span>.<span class="met">of</span>(<span class="str">"sample"</span>, <span class="str">"value"</span>))           <span class="cmt">// (B)</span>
+              .<span class="met">build</span>();
+
+      channel.<span class="met">basicPublish</span>(
+          <span class="str">"notification"</span>,   <span class="cmt">// (C) nama exchange</span>
+          <span class="str">"whatsapp"</span>,        <span class="cmt">// (D) routing key</span>
+          properties,          <span class="cmt">// (E) message properties</span>
+          message.<span class="met">getBytes</span>()  <span class="cmt">// (F) body = byte[]</span>
+      );
+    }
+
+    <span class="cmt">// 3. Tutup resource — WAJIB untuk producer</span>
+    channel.<span class="met">close</span>();                                        <span class="cmt">// (G)</span>
+    connection.<span class="met">close</span>();                                     <span class="cmt">// (H)</span>
+  }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) Body sebagai String</span>
+                        <span class="line-desc">Pesan dibuat sebagai <code>String</code> biasa. Di dunia nyata, ini biasanya JSON yang di-serialize dari object (<code>objectMapper.writeValueAsString(dto)</code>). RabbitMQ tidak peduli format isi — ia hanya melihat bytes.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) headers(Map.of(...))</span>
+                        <span class="line-desc">Menambahkan header key-value ke pesan — metadata tambahan yang tidak mengubah body. Header bisa digunakan untuk routing (pada header exchange) atau untuk memberikan context kepada consumer (misal: <code>x-retry-count</code>, <code>source-service</code>, <code>content-type</code>).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) Exchange "notification"</span>
+                        <span class="line-desc">Nama exchange yang sudah dikonfigurasi di RabbitMQ. Producer <strong>tidak mengirim langsung ke queue</strong> — ia mengirim ke exchange. Exchange yang menentukan queue tujuan berdasarkan routing key dan binding.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(D) Routing Key "whatsapp"</span>
+                        <span class="line-desc">Kunci routing — string yang digunakan exchange untuk memutuskan ke queue mana pesan diteruskan. Pada direct exchange: harus cocok persis dengan binding key. Pada topic exchange: bisa menggunakan wildcard (<code>*</code>, <code>#</code>).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(E) properties</span>
+                        <span class="line-desc">Metadata pesan — selain header, bisa berisi: <code>contentType</code>, <code>correlationId</code>, <code>replyTo</code>, <code>expiration</code>, <code>messageId</code>, <code>timestamp</code>, <code>priority</code>, dan <code>deliveryMode</code> (persistent atau tidak). Dibahas detail di Chapter 5.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(F) message.getBytes()</span>
+                        <span class="line-desc">Body pesan selalu berupa <code>byte[]</code> di AMQP — bukan String. Konversi String ke bytes menggunakan encoding default JVM (sebaiknya eksplisit: <code>message.getBytes(StandardCharsets.UTF_8)</code>).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(G-H) close() channel & connection</span>
+                        <span class="line-desc">Producer <strong>wajib close</strong> channel dan connection setelah selesai — berbeda dengan Consumer yang biasanya membiarkan connection terbuka (long-running). Urutan tutup: channel dulu, baru connection.</span>
+                    </div>
+                </div>
+
+                <div class="info-box warning mt-m">
+                    <strong>⚠️ getBytes() Tanpa Encoding Eksplisit</strong><br>
+                    <code>message.getBytes()</code> menggunakan encoding default JVM — bisa berbeda di environment yang berbeda. Untuk konsistensi lintas platform, selalu gunakan:<br>
+                    <code>message.getBytes(StandardCharsets.UTF_8)</code><br>
+                    Dan di consumer, konversi balik dengan encoding yang sama: <code>new String(message.getBody(), StandardCharsets.UTF_8)</code>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Kirim langsung ke queue (bypass exchange)</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// String kosong = default exchange</span>
+channel.basicPublish(
+    "",          <span class="cmt">// ← empty = default exchange</span>
+    "whatsapp",  <span class="cmt">// ← routing key = nama queue</span>
+    null,
+    msg.getBytes()
+);
+<span class="cmt">// Ini bisa bekerja, tapi:
+// - Tidak bisa routing ke banyak queue
+// - Tidak bisa fanout / topic pattern
+// - Tidak fleksibel untuk production</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Gunakan named exchange</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Named exchange = fleksibel dan scalable</span>
+channel.basicPublish(
+    "notification", <span class="cmt">// ← named exchange</span>
+    "whatsapp",     <span class="cmt">// ← routing key</span>
+    properties,
+    msg.getBytes()
+);
+<span class="cmt">// Exchange bisa route ke banyak queue
+// berdasarkan routing key ✓</span></pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>channel.basicPublish("notification", "whatsapp", props, body)</code> ≈ <code>dispatch((new WhatsappJob($data))->onQueue('whatsapp'))</code> di Laravel. Tapi di Java kamu eksplisit menyebut exchange dan routing key — tidak ada abstraksi yang menyembunyikannya. <code>AMQP.BasicProperties</code> ≈ job options di Laravel seperti <code>->delay()</code>, <code>->withChain()</code>, dll — tapi lebih low-level dan detail.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 2</div>
+                    <p><strong>Q:</strong> Kenapa body pesan di <code>basicPublish()</code> bertipe <code>byte[]</code>, bukan <code>String</code>?</p>
+                    <div class="quiz-options" id="q2">
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">A. Karena RabbitMQ hanya mendukung binary data, tidak bisa teks</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,true)">B. AMQP adalah binary protocol — semua data dikirim sebagai bytes, memungkinkan pengiriman format apapun (JSON, XML, Protobuf, gambar, dll) tanpa terikat satu format</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">C. Karena String di Java tidak bisa diserialisasi lewat network</div>
+                        <div class="quiz-option" onclick="checkQuiz('q2',this,false)">D. Untuk alasan keamanan agar pesan tidak bisa dibaca langsung</div>
+                    </div>
+                    <div class="quiz-feedback" id="q2-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 3: CONSUMER ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-3">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Chapter 03</div>
+                    <div class="chapter-title">📥 Consumer — Menerima &amp; Memproses Pesan</div>
+                    <div class="chapter-sub">ConsumerApp.java · basicConsume · DeliverCallback · CancelCallback</div>
+                </div>
+
+                <p>Consumer adalah sisi <strong>penerima</strong> — mendengarkan queue secara terus-menerus dan memproses setiap pesan yang masuk. Berbeda dengan Producer yang bersifat <em>fire-and-forget</em>, Consumer biasanya berjalan sebagai proses <em>long-running</em>.</p>
+
+                <div class="text-title mt-m">Kode Lengkap: ConsumerApp.java</div>
+                <pre><span class="kw">public class</span> <span class="cls">ConsumerApp</span> {
+  <span class="kw">public static void</span> <span class="met">main</span>(<span class="typ">String</span>[] args) <span class="kw">throws</span> <span class="cls">Exception</span> {
+
+    <span class="cmt">// 1. Setup koneksi (sama seperti Producer)</span>
+    <span class="cls">ConnectionFactory</span> factory = <span class="kw">new</span> <span class="cls">ConnectionFactory</span>();
+    factory.<span class="met">setUri</span>(<span class="str">"amqp://guest:guest@localhost:5672/"</span>);
+    factory.<span class="met">setVirtualHost</span>(<span class="str">"/"</span>);
+
+    <span class="cls">Connection</span> connection = factory.<span class="met">newConnection</span>();
+    <span class="cls">Channel</span>    channel    = connection.<span class="met">createChannel</span>();
+
+    <span class="cmt">// 2. Definisikan callback saat pesan tiba</span>
+    <span class="cls">DeliverCallback</span> deliverCallback = (consumerTag, message) -> { <span class="cmt">// (A)</span>
+      System.out.<span class="met">println</span>(message.<span class="met">getEnvelope</span>().<span class="met">getRoutingKey</span>()); <span class="cmt">// (B)</span>
+      System.out.<span class="met">println</span>(<span class="kw">new</span> <span class="typ">String</span>(message.<span class="met">getBody</span>()));         <span class="cmt">// (C)</span>
+    };
+
+    <span class="cmt">// 3. Definisikan callback jika consumer dibatalkan</span>
+    <span class="cls">CancelCallback</span> cancelCallback = consumerTag -> {              <span class="cmt">// (D)</span>
+      System.out.<span class="met">println</span>(<span class="str">"Consumer is canceled"</span>);
+    };
+
+    <span class="cmt">// 4. Mulai listen — NON-BLOCKING!</span>
+    channel.<span class="met">basicConsume</span>(
+        <span class="str">"whatsapp"</span>,      <span class="cmt">// (E) nama queue</span>
+        <span class="kw">true</span>,             <span class="cmt">// (F) autoAck</span>
+        deliverCallback,
+        cancelCallback
+    );
+
+    <span class="cmt">// CATATAN: channel & connection TIDAK ditutup!
+    // Consumer terus hidup, menunggu pesan berikutnya</span>
+<span class="cmt">//  channel.close();
+//  connection.close();</span>
+  }
+}</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) DeliverCallback</span>
+                        <span class="line-desc">Functional interface — lambda yang dipanggil setiap kali ada pesan baru masuk dari queue. Parameter: <code>consumerTag</code> (identifier consumer ini) dan <code>message</code> (object <code>Delivery</code> berisi envelope + body + properties). Dipanggil di <em>thread yang berbeda</em> dari thread utama.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) getEnvelope().getRoutingKey()</span>
+                        <span class="line-desc"><code>Envelope</code> berisi metadata routing pesan: routing key yang digunakan saat publish, exchange asal, dan delivery tag (identifier unik pesan untuk ACK). Berguna untuk consumer yang terdaftar di beberapa queue atau routing key.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) new String(message.getBody())</span>
+                        <span class="line-desc">Mengkonversi body bytes kembali ke String. Harus menggunakan encoding yang sama dengan Producer. Best practice: <code>new String(message.getBody(), StandardCharsets.UTF_8)</code>. Untuk JSON: <code>objectMapper.readValue(message.getBody(), MyDto.class)</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(D) CancelCallback</span>
+                        <span class="line-desc">Dipanggil saat consumer dibatalkan oleh broker (bukan oleh kode kita) — misalnya queue dihapus, atau broker memutus consumer karena idle timeout. Tempat yang tepat untuk logging dan cleanup.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(E) "whatsapp" — nama queue</span>
+                        <span class="line-desc">Consumer mendengarkan langsung pada queue, bukan exchange. Queue harus sudah ada (dibuat sebelumnya via RabbitMQ Management UI atau <code>channel.queueDeclare()</code> di kode).</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(F) autoAck = true</span>
+                        <span class="line-desc"><strong>Auto-acknowledgement.</strong> Nilai <code>true</code> berarti RabbitMQ langsung menandai pesan sebagai "terproses" begitu pesan dikirim ke consumer — tanpa menunggu consumer selesai memproses. Jika consumer crash di tengah proses, pesan <strong>hilang</strong>. Dibahas detail di Chapter 6.</span>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 basicConsume() adalah Non-Blocking</strong><br>
+                    Setelah <code>channel.basicConsume()</code> dipanggil, method ini langsung return — tidak blocking. RabbitMQ client library membuat <strong>background thread</strong> yang mendengarkan pesan masuk dan memanggil <code>deliverCallback</code> setiap kali ada pesan. Itulah mengapa kita <strong>tidak boleh close</strong> channel dan connection setelah <code>basicConsume()</code> — consumer harus tetap hidup untuk menerima pesan.
+                </div>
+
+                <div class="text-title mt-l">Visualisasi: Thread Model Consumer</div>
+                <div class="flow-diagram">
+                    <span class="fd-prod">main() thread</span>
+                    <span class="fd-arrow">├── factory.newConnection()     → membuka TCP ke RabbitMQ</span>
+                    <span class="fd-arrow">├── connection.createChannel()  → membuat channel</span>
+                    <span class="fd-arrow">├── channel.basicConsume(...)   → mendaftarkan consumer, LANGSUNG RETURN</span>
+                    <span class="fd-arrow">└── main() selesai? (JVM tetap hidup karena ada background thread)</span>
+
+                    <span class="fd-cons">Consumer Thread</span> (dibuat oleh RabbitMQ client library)
+                    <span class="fd-arrow">├── Pesan masuk → deliverCallback("tag", delivery) dipanggil</span>
+                    <span class="fd-arrow">├── Pesan masuk → deliverCallback("tag", delivery) dipanggil</span>
+                    <span class="fd-arrow">└── ... (terus loop sampai connection ditutup)</span>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — Close connection setelah basicConsume</div>
+                        <pre style="font-size:.64rem;margin-top:8px;">channel.basicConsume("whatsapp", true,
+    deliverCallback, cancelCallback);
+
+channel.close();    <span class="cmt">// ← consumer mati!</span>
+connection.close(); <span class="cmt">// ← tidak ada pesan yang diterima</span>
+
+<span class="cmt">// Consumer terdaftar tapi langsung disconnect
+// → 0 pesan pernah diproses</span></pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Biarkan tetap hidup</div>
+                        <pre style="font-size:.64rem;margin-top:8px;">channel.basicConsume("whatsapp", true,
+    deliverCallback, cancelCallback);
+
+<span class="cmt">// JANGAN close! Biarkan proses berjalan.
+// Untuk graceful shutdown, gunakan shutdown hook:</span>
+Runtime.getRuntime().addShutdownHook(
+    new Thread(() -> {
+        channel.close();
+        connection.close();
+    })
+);</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>channel.basicConsume()</code> ≈ <code>Queue::before()</code> / <code>Queue::after()</code> listener di Laravel, atau lebih tepat seperti command yang dijalankan oleh <code>php artisan queue:work</code>. <code>DeliverCallback</code> ≈ method <code>handle()</code> di Job class Laravel — dipanggil otomatis saat ada job di queue. Perbedaan besar: di Laravel, semua ini dikelola oleh framework; di Java, kamu menulis thread model-nya sendiri.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 3</div>
+                    <p><strong>Q:</strong> Setelah <code>channel.basicConsume()</code> dipanggil, kenapa JVM tidak langsung exit meski <code>main()</code> sudah selesai?</p>
+                    <div class="quiz-options" id="q3">
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">A. Karena basicConsume() adalah blocking method yang menahan main thread</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,true)">B. RabbitMQ client library membuat background thread non-daemon untuk mendengarkan pesan — JVM tidak exit selama ada non-daemon thread yang masih hidup</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">C. Karena Connection object masih ada di memori dan mencegah garbage collection</div>
+                        <div class="quiz-option" onclick="checkQuiz('q3',this,false)">D. Java selalu menunggu semua method selesai sebelum exit</div>
+                    </div>
+                    <div class="quiz-feedback" id="q3-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 4: EXCHANGE & ROUTING ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-4">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner violet">
+                    <div class="chapter-num">Chapter 04</div>
+                    <div class="chapter-title">🔁 Exchange &amp; Routing Key</div>
+                    <div class="chapter-sub">Direct · Fanout · Topic · Headers — 4 tipe exchange RabbitMQ</div>
+                </div>
+
+                <p><strong>Exchange</strong> adalah komponen terpenting yang menentukan bagaimana pesan didistribusikan ke queue. Ada 4 tipe exchange, masing-masing dengan strategi routing yang berbeda. Memilih tipe exchange yang tepat adalah kunci arsitektur messaging yang scalable.</p>
+
+                <div class="text-title mt-m">Empat Tipe Exchange</div>
+                <div class="concept-grid mt-s">
+                    <div class="concept-card">
+                        <div class="concept-card-title">🎯 Direct Exchange</div>
+                        <div class="concept-card-body">Routing key harus <strong>cocok persis</strong> dengan binding key queue. Pesan dengan routing key <code>"whatsapp"</code> hanya masuk ke queue yang binding key-nya juga <code>"whatsapp"</code>. <br><br><em>Use case:</em> Notifikasi yang harus ke channel spesifik.</div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-card-title">📢 Fanout Exchange</div>
+                        <div class="concept-card-body">Mengabaikan routing key — pesan dikirim ke <strong>semua queue</strong> yang terikat ke exchange ini. <br><br><em>Use case:</em> Broadcast event ke semua service (misal: event "user.registered" perlu diterima oleh email service, analytics service, dll).</div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-card-title">🎯 Topic Exchange</div>
+                        <div class="concept-card-body">Routing key menggunakan <strong>pattern matching</strong> dengan wildcard: <code>*</code> = satu kata, <code>#</code> = nol atau lebih kata. Contoh: <code>"order.#"</code> cocok dengan <code>"order.created"</code>, <code>"order.updated.status"</code>, dll. <br><br><em>Use case:</em> Event yang bersifat hierarkis.</div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-card-title">🏷️ Headers Exchange</div>
+                        <div class="concept-card-body">Routing berdasarkan <strong>header message</strong>, bukan routing key. Binding mendefinisikan pasangan header yang harus cocok. Bisa menggunakan logika <code>all</code> (AND) atau <code>any</code> (OR). <br><br><em>Use case:</em> Routing kompleks berdasarkan metadata pesan.</div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Contoh Project: Direct Exchange</div>
+                <pre><span class="cmt">// Producer mengirim ke exchange "notification" dengan routing key "whatsapp"</span>
+channel.<span class="met">basicPublish</span>(<span class="str">"notification"</span>, <span class="str">"whatsapp"</span>, props, body);
+
+<span class="cmt">// Di RabbitMQ Management UI, binding yang sudah dikonfigurasi:
+// Exchange: "notification" (type: direct)
+//   Binding: routingKey="whatsapp" → Queue: "whatsapp"
+//   Binding: routingKey="email"    → Queue: "email"
+//   Binding: routingKey="sms"      → Queue: "sms"
+
+// Consumer mendengarkan queue "whatsapp" — hanya menerima pesan
+// yang routing key-nya persis "whatsapp"</span>
+channel.<span class="met">basicConsume</span>(<span class="str">"whatsapp"</span>, <span class="kw">true</span>, deliverCallback, cancelCallback);</pre>
+
+                <div class="text-title mt-l">Topic Exchange — Pattern Matching</div>
+                <pre><span class="cmt">// Exchange "events" type: topic
+// Binding: "payment.#"   → Queue: "all-payment-events"
+// Binding: "payment.ok"  → Queue: "payment-success"
+// Binding: "*.failed"    → Queue: "all-failures"
+
+channel.<span class="met">basicPublish</span>(<span class="str">"events"</span>, <span class="str">"payment.ok"</span>, props, body);
+<span class="cmt">// → masuk ke: "all-payment-events" DAN "payment-success"
+
+channel.<span class="met">basicPublish</span>(<span class="str">"events"</span>, <span class="str">"payment.failed"</span>, props, body);
+<span class="cmt">// → masuk ke: "all-payment-events" DAN "all-failures"
+
+channel.<span class="met">basicPublish</span>(<span class="str">"events"</span>, <span class="str">"email.failed"</span>, props, body);
+<span class="cmt">// → masuk ke: "all-failures" saja</span></pre>
+
+                <div class="text-title mt-l">Declare Queue via Kode (opsional)</div>
+                <pre><span class="cmt">// Jika queue belum dibuat di RabbitMQ, bisa declare via Java:</span>
+channel.<span class="met">queueDeclare</span>(
+    <span class="str">"whatsapp"</span>,  <span class="cmt">// (1) nama queue</span>
+    <span class="kw">true</span>,         <span class="cmt">// (2) durable — survive restart</span>
+    <span class="kw">false</span>,        <span class="cmt">// (3) exclusive — hanya satu connection</span>
+    <span class="kw">false</span>,        <span class="cmt">// (4) autoDelete — hapus saat consumer disconnect</span>
+    <span class="kw">null</span>          <span class="cmt">// (5) arguments — TTL, max length, dll</span>
+);
+
+<span class="cmt">// Bind queue ke exchange:</span>
+channel.<span class="met">queueBind</span>(<span class="str">"whatsapp"</span>, <span class="str">"notification"</span>, <span class="str">"whatsapp"</span>);
+<span class="cmt">//              queue       exchange          routingKey</span></pre>
+
+                <div class="info-box success mt-m">
+                    <strong>✅ idempotent: queueDeclare() Aman Dipanggil Berulang</strong><br>
+                    <code>queueDeclare()</code> adalah operasi idempotent — jika queue sudah ada dengan parameter yang sama, tidak ada yang terjadi. Jika parameter berbeda (misal: <code>durable</code> berbeda), akan throw exception. Aman untuk dipanggil setiap kali aplikasi startup sebagai "ensure queue exists".
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Exchange Types di Java/AMQP ≈ berbagai driver queue di Laravel: <strong>Direct</strong> ≈ queue bernama spesifik (<code>->onQueue('whatsapp')</code>). <strong>Fanout</strong> ≈ Event broadcasting ke banyak listener. <strong>Topic</strong> ≈ event pattern matching yang tidak ada padanan langsung di Laravel standar. Di Laravel, routing ke queue ini tersembunyi di balik abstraksi Job — di Java, kamu eksplisit mengonfigurasinya di AMQP level.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 4</div>
+                    <p><strong>Q:</strong> Kamu ingin satu event "order.created" diterima oleh TIGA service sekaligus: email service, SMS service, dan analytics service. Exchange tipe apa yang paling tepat?</p>
+                    <div class="quiz-options" id="q4">
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">A. Direct Exchange — binding key "order.created" ke tiga queue berbeda</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,true)">B. Fanout Exchange — otomatis broadcast ke semua queue yang terikat, tanpa perlu routing key</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">C. Topic Exchange dengan pattern "order.*"</div>
+                        <div class="quiz-option" onclick="checkQuiz('q4',this,false)">D. Ketiga bisa digunakan, tidak ada perbedaan</div>
+                    </div>
+                    <div class="quiz-feedback" id="q4-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 5: MESSAGE PROPERTIES ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-5">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner orange">
+                    <div class="chapter-num">Chapter 05</div>
+                    <div class="chapter-title">📨 Message Properties</div>
+                    <div class="chapter-sub">AMQP.BasicProperties · headers · deliveryMode · contentType · correlationId</div>
+                </div>
+
+                <p>Setiap pesan AMQP membawa dua bagian: <strong>body</strong> (payload data) dan <strong>properties</strong> (metadata). <code>AMQP.BasicProperties</code> adalah tempat menyimpan metadata tersebut — penting untuk reliability, routing, dan tracing pesan.</p>
+
+                <div class="text-title mt-m">Semua Properties yang Tersedia</div>
+                <pre><span class="cls">AMQP</span>.<span class="cls">BasicProperties</span> properties =
+    <span class="kw">new</span> <span class="cls">AMQP</span>.<span class="cls">BasicProperties</span>().<span class="met">builder</span>()
+        <span class="cmt">// Dari ProducerApp.java</span>
+        .<span class="met">headers</span>(<span class="cls">Map</span>.<span class="met">of</span>(<span class="str">"sample"</span>, <span class="str">"value"</span>))            <span class="cmt">// (A) key-value metadata</span>
+
+        <span class="cmt">// Properties penting lainnya (tidak ada di kode, tapi wajib diketahui)</span>
+        .<span class="met">contentType</span>(<span class="str">"application/json"</span>)              <span class="cmt">// (B) format body</span>
+        .<span class="met">deliveryMode</span>(<span class="num">2</span>)                               <span class="cmt">// (C) 1=transient, 2=persistent</span>
+        .<span class="met">correlationId</span>(<span class="cls">UUID</span>.<span class="met">randomUUID</span>().<span class="met">toString</span>())  <span class="cmt">// (D) untuk request-reply pattern</span>
+        .<span class="met">replyTo</span>(<span class="str">"response-queue"</span>)                   <span class="cmt">// (E) queue balasan</span>
+        .<span class="met">messageId</span>(<span class="cls">UUID</span>.<span class="met">randomUUID</span>().<span class="met">toString</span>())     <span class="cmt">// (F) ID unik pesan</span>
+        .<span class="met">timestamp</span>(<span class="kw">new</span> <span class="cls">Date</span>())                       <span class="cmt">// (G) kapan pesan dibuat</span>
+        .<span class="met">expiration</span>(<span class="str">"60000"</span>)                          <span class="cmt">// (H) TTL dalam milidetik (String!)</span>
+        .<span class="met">priority</span>(<span class="num">5</span>)                                   <span class="cmt">// (I) prioritas 0-9</span>
+        .<span class="met">appId</span>(<span class="str">"payment-service"</span>)                     <span class="cmt">// (J) identifier aplikasi pengirim</span>
+        .<span class="met">build</span>();</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) headers</span>
+                        <span class="line-desc">Key-value metadata bebas. Digunakan untuk headers exchange routing, atau informasi konteks tambahan bagi consumer. Contoh: <code>"x-retry-count"</code>, <code>"source-service"</code>, <code>"trace-id"</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) contentType</span>
+                        <span class="line-desc">MIME type body pesan. RabbitMQ tidak mewajibkan ini, tapi consumer yang baik harus memeriksa ini sebelum mem-parse body. Standard: <code>"application/json"</code> untuk JSON, <code>"application/octet-stream"</code> untuk binary.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C) deliveryMode = 2</span>
+                        <span class="line-desc"><strong>Property terpenting untuk reliability.</strong> Mode <code>1</code> = transient (pesan hilang jika RabbitMQ restart). Mode <code>2</code> = persistent (pesan disimpan ke disk, survive restart). Untuk production, <strong>selalu gunakan mode 2</strong> pada queue yang juga dideklarasikan sebagai <code>durable</code>.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(D) correlationId &amp; (E) replyTo</span>
+                        <span class="line-desc">Digunakan bersama untuk <strong>RPC pattern</strong> via RabbitMQ: Producer mengirim pesan dengan <code>replyTo</code> = nama queue balasan dan <code>correlationId</code> = ID request. Consumer memproses dan mengirim response ke queue <code>replyTo</code> dengan <code>correlationId</code> yang sama. Producer mencocokkan response berdasarkan correlationId.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(H) expiration</span>
+                        <span class="line-desc">TTL (Time-To-Live) pesan dalam milidetik sebagai <strong>String</strong>. Pesan dihapus dari queue jika belum dikonsumsi setelah waktu ini. Jangan lupa tipe datanya String, bukan int — kesalahan umum yang menyebabkan pesan tidak pernah expire.</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Membaca Properties di Consumer</div>
+                <pre><span class="cls">DeliverCallback</span> deliverCallback = (consumerTag, message) -> {
+    <span class="cls">AMQP</span>.<span class="cls">BasicProperties</span> props = message.<span class="met">getProperties</span>();
+
+    System.out.<span class="met">println</span>(<span class="str">"ContentType: "</span> + props.<span class="met">getContentType</span>());
+    System.out.<span class="met">println</span>(<span class="str">"CorrelationId: "</span> + props.<span class="met">getCorrelationId</span>());
+    System.out.<span class="met">println</span>(<span class="str">"Headers: "</span> + props.<span class="met">getHeaders</span>());
+
+    <span class="cmt">// Body</span>
+    <span class="typ">String</span> body = <span class="kw">new</span> <span class="typ">String</span>(message.<span class="met">getBody</span>(), <span class="cls">StandardCharsets</span>.UTF_8);
+    System.out.<span class="met">println</span>(<span class="str">"Body: "</span> + body);
+};</pre>
+
+                <div class="info-box danger mt-m">
+                    <strong>🚨 Pesan Hilang Tanpa deliveryMode = 2!</strong><br>
+                    Jika kamu menggunakan <code>deliveryMode = 1</code> (atau tidak set sama sekali, karena defaultnya adalah <code>1</code>) dan RabbitMQ server restart, semua pesan yang belum dikonsumsi akan <strong>hilang permanen</strong>. Untuk production: selalu set <code>deliveryMode(2)</code> di properties dan <code>durable = true</code> di queueDeclare.
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p><code>AMQP.BasicProperties</code> ≈ property-property Job di Laravel: <code>deliveryMode(2)</code> ≈ <code>$this->queue = 'persistent-queue'</code> dengan driver yang mendukung persistence. <code>correlationId</code> ≈ UUID yang digunakan untuk tracing job di Laravel. <code>expiration</code> ≈ <code>$this->timeout</code> di Job. Di Laravel, semua ini dikelola framework; di Java, kamu set secara eksplisit.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CHAPTER 6: ACK & RELIABILITY ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="chapter-6">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner red">
+                    <div class="chapter-num">Chapter 06</div>
+                    <div class="chapter-title">✅ Acknowledgement &amp; Reliability</div>
+                    <div class="chapter-sub">autoAck · basicAck · basicNack · basicReject · Dead Letter Queue</div>
+                </div>
+
+                <p><strong>Acknowledgement (ACK)</strong> adalah mekanisme konfirmasi bahwa consumer telah berhasil memproses pesan. Ini adalah fondasi dari <em>at-least-once delivery</em> — jaminan bahwa pesan tidak akan hilang begitu saja.</p>
+
+                <div class="text-title mt-m">autoAck = true vs false</div>
+                <div class="concept-grid mt-s">
+                    <div class="concept-card">
+                        <div class="concept-card-title" style="color:var(--danger-color)">❌ autoAck = true</div>
+                        <div class="concept-card-body">RabbitMQ langsung hapus pesan dari queue begitu dikirim ke consumer. Jika consumer crash di tengah proses → pesan <strong>hilang permanen</strong>. Hanya cocok untuk data yang boleh hilang (log, metrics non-kritis).</div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-card-title" style="color:var(--success-color)">✅ autoAck = false (Manual ACK)</div>
+                        <div class="concept-card-body">RabbitMQ menahan pesan di queue sampai menerima konfirmasi dari consumer. Jika consumer crash → pesan dikembalikan ke queue dan akan dikirim ulang ke consumer lain. <strong>Wajib untuk production.</strong></div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">Implementasi Manual ACK</div>
+                <pre><span class="cmt">// Consumer dengan manual ACK</span>
+channel.<span class="met">basicConsume</span>(<span class="str">"whatsapp"</span>, <span class="kw">false</span>, <span class="cmt">// ← autoAck = FALSE</span>
+    (consumerTag, message) -> {
+        <span class="kw">try</span> {
+            <span class="cmt">// Proses pesan</span>
+            <span class="typ">String</span> body = <span class="kw">new</span> <span class="typ">String</span>(message.<span class="met">getBody</span>());
+            processMessage(body);
+
+            <span class="cmt">// ACK: beritahu RabbitMQ bahwa pesan berhasil diproses</span>
+            channel.<span class="met">basicAck</span>(
+                message.<span class="met">getEnvelope</span>().<span class="met">getDeliveryTag</span>(), <span class="cmt">// (A) ID pesan</span>
+                <span class="kw">false</span>                                    <span class="cmt">// (B) multiple = false</span>
+            );
+
+        } <span class="kw">catch</span> (<span class="cls">Exception</span> e) {
+            <span class="cmt">// NACK: gagal proses, kembalikan ke queue</span>
+            channel.<span class="met">basicNack</span>(
+                message.<span class="met">getEnvelope</span>().<span class="met">getDeliveryTag</span>(),
+                <span class="kw">false</span>,  <span class="cmt">// (C) multiple</span>
+                <span class="kw">true</span>   <span class="cmt">// (D) requeue = true → dikembalikan ke queue</span>
+            );
+        }
+    },
+    consumerTag -> System.out.<span class="met">println</span>(<span class="str">"Canceled"</span>)
+);</pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(A) getDeliveryTag()</span>
+                        <span class="line-desc">Nomor urut pengiriman — identifier unik pesan dalam scope satu channel. Digunakan di <code>basicAck()</code>, <code>basicNack()</code>, dan <code>basicReject()</code> untuk memberi tahu RabbitMQ pesan mana yang dikonfirmasi.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(B) multiple = false</span>
+                        <span class="line-desc">Jika <code>true</code>: ACK semua pesan dengan delivery tag ≤ yang diberikan (batch ACK). Jika <code>false</code>: ACK hanya pesan ini. Batch ACK lebih efisien untuk throughput tinggi tapi berisiko kehilangan ACK lebih banyak jika crash.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(C-D) basicNack(tag, multiple, requeue)</span>
+                        <span class="line-desc"><code>requeue = true</code> → pesan dikembalikan ke queue (akan dikirim ulang). <code>requeue = false</code> → pesan dibuang (atau dikirim ke Dead Letter Exchange jika dikonfigurasi). Hati-hati dengan <code>requeue = true</code> jika error bersifat permanen → bisa infinite loop!</span>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">basicReject vs basicNack</div>
+                <pre><span class="cmt">// basicReject — tolak SATU pesan saja (tidak ada opsi multiple)</span>
+channel.<span class="met">basicReject</span>(
+    message.<span class="met">getEnvelope</span>().<span class="met">getDeliveryTag</span>(),
+    <span class="kw">false</span>  <span class="cmt">// requeue: false = buang, true = kembalikan ke queue</span>
+);
+
+<span class="cmt">// basicNack — tolak SATU atau BANYAK pesan (ada opsi multiple)
+// Gunakan basicNack jika ingin reject batch pesan sekaligus</span></pre>
+
+                <div class="text-title mt-l">Dead Letter Queue — Penampung Pesan Gagal</div>
+                <pre><span class="cmt">// Queue dengan Dead Letter Exchange (DLX) dikonfigurasi</span>
+<span class="cls">Map</span>&lt;<span class="typ">String</span>, <span class="cls">Object</span>&gt; args = <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;();
+args.<span class="met">put</span>(<span class="str">"x-dead-letter-exchange"</span>, <span class="str">"dlx"</span>);      <span class="cmt">// (1)</span>
+args.<span class="met">put</span>(<span class="str">"x-dead-letter-routing-key"</span>, <span class="str">"failed"</span>); <span class="cmt">// (2)</span>
+args.<span class="met">put</span>(<span class="str">"x-message-ttl"</span>, <span class="num">60000</span>);               <span class="cmt">// (3) TTL 60 detik</span>
+
+channel.<span class="met">queueDeclare</span>(<span class="str">"whatsapp"</span>, <span class="kw">true</span>, <span class="kw">false</span>, <span class="kw">false</span>, args);
+<span class="cmt">// Pesan yang di-reject dengan requeue=false → otomatis ke DLX</span></pre>
+
+                <div class="line-explain">
+                    <div class="line-explain-item">
+                        <span class="line-num">(1) x-dead-letter-exchange</span>
+                        <span class="line-desc">Exchange tujuan untuk pesan yang ditolak (basicReject/basicNack dengan requeue=false) atau yang expired. Pesan "mati" dikirim ke sini alih-alih dibuang.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(2) x-dead-letter-routing-key</span>
+                        <span class="line-desc">Routing key yang digunakan saat mengirim ke DLX. Jika tidak diset, routing key asli pesan digunakan.</span>
+                    </div>
+                    <div class="line-explain-item">
+                        <span class="line-num">(3) x-message-ttl</span>
+                        <span class="line-desc">Semua pesan di queue ini akan expire setelah waktu ini (milidetik). Pesan expired dikirim ke DLX — bisa digunakan untuk <em>delayed retry pattern</em>.</span>
+                    </div>
+                </div>
+
+                <div class="info-box primary mt-m">
+                    <strong>💡 Pola Retry yang Aman — Exponential Backoff via DLQ</strong><br>
+                    <ol style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs);">
+                        <li>Consumer gagal → <code>basicNack(tag, false, false)</code> → pesan ke DLX</li>
+                        <li>DLX route ke "retry-queue" dengan TTL (misal 30 detik)</li>
+                        <li>Setelah 30 detik, pesan expired dari retry-queue → kembali ke DLX asli → kembali ke queue utama</li>
+                        <li>Consumer mencoba lagi — dengan penambahan <code>x-retry-count</code> di header</li>
+                        <li>Setelah max retry → kirim ke "dead-queue" untuk manual review</li>
+                    </ol>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-wrong">
+                        <div class="compare-label">❌ Salah — autoAck=true untuk proses kritis</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Proses pembayaran dengan autoAck=true</span>
+channel.basicConsume("payment", true, <span class="cmt">// ← bahaya!</span>
+    (tag, msg) -> {
+        <span class="cmt">// Pesan langsung dihapus dari queue
+        // SEBELUM proses pembayaran selesai!</span>
+        processPayment(msg.getBody());
+        <span class="cmt">// Jika crash di sini → pesan hilang
+        // Pembayaran tidak diproses tapi pesan sudah gone</span>
+    }, ...
+);</pre>
+                    </div>
+                    <div class="compare-right">
+                        <div class="compare-label">✅ Benar — Manual ACK untuk proses kritis</div>
+                        <pre style="font-size:.64rem;margin-top:8px;"><span class="cmt">// Proses pembayaran dengan manual ACK</span>
+channel.basicConsume("payment", false, <span class="cmt">// ← manual</span>
+    (tag, msg) -> {
+        try {
+            processPayment(msg.getBody());
+            channel.basicAck(  <span class="cmt">// ← konfirmasi SETELAH selesai</span>
+                msg.getEnvelope().getDeliveryTag(), false);
+        } catch (Exception e) {
+            channel.basicNack(  <span class="cmt">// ← kembalikan jika gagal</span>
+                msg.getEnvelope().getDeliveryTag(), false, true);
+        }
+    }, ...
+);</pre>
+                    </div>
+                </div>
+
+                <div class="laravel-box">
+                    <div class="laravel-box-title">⚡ Analogi Laravel</div>
+                    <p>Manual ACK di Java ≈ Laravel Job yang memanggil <code>$this->fail($exception)</code> atau <code>$this->release()</code> (kembalikan ke queue dengan delay). <code>basicNack(..., true, true)</code> ≈ <code>$this->release(30)</code>. <code>basicNack(..., true, false)</code> ≈ <code>$this->fail()</code>. Dead Letter Queue ≈ Laravel's <code>failed_jobs</code> table + <code>php artisan queue:retry</code>. Di Java, semua ini dikonfigurasi di level AMQP, bukan di framework level.</p>
+                </div>
+
+                <div class="quiz-box mt-l">
+                    <div class="quiz-title">🧪 Mini Quiz — Chapter 6</div>
+                    <p><strong>Q:</strong> Consumer memproses pembayaran dan <code>basicNack(tag, false, true)</code> dipanggil karena terjadi error koneksi database. Apa yang terjadi?</p>
+                    <div class="quiz-options" id="q6">
+                        <div class="quiz-option" onclick="checkQuiz('q6',this,false)">A. Pesan dihapus dari queue dan tidak akan diproses lagi</div>
+                        <div class="quiz-option" onclick="checkQuiz('q6',this,true)">B. Pesan dikembalikan ke queue (<code>requeue=true</code>) dan akan dikirim ulang ke consumer yang tersedia</div>
+                        <div class="quiz-option" onclick="checkQuiz('q6',this,false)">C. Pesan dikirim ke Dead Letter Exchange secara otomatis</div>
+                        <div class="quiz-option" onclick="checkQuiz('q6',this,false)">D. RabbitMQ menunggu consumer melakukan retry sendiri</div>
+                    </div>
+                    <div class="quiz-feedback" id="q6-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SUMMARY ============ -->
+        <div class="padding-top-ideal-distance-to-header" id="summary">
+            <div class="card-wrapper max-width-1000">
+                <div class="chapter-banner green">
+                    <div class="chapter-num">Summary</div>
+                    <div class="chapter-title">📋 Ringkasan &amp; Cheat Sheet</div>
+                    <div class="chapter-sub">Semua komponen, alur, dan referensi cepat</div>
+                </div>
+
+                <div class="text-title mt-m">Arsitektur Lengkap Project</div>
+                <div class="flow-diagram">
+                    <span class="fd-label">// === Koneksi Layer ===</span>
+                    <span class="fd-prod">ConnectionFactory</span>  → konfigurasi (URI, vhost, heartbeat, timeout)
+                    <span class="fd-exch">Connection</span>         → TCP ke RabbitMQ, buat SEKALI, REUSE, MAHAL
+                    <span class="fd-queue">Channel</span>            → virtual connection, RINGAN, 1 PER THREAD, TIDAK THREAD-SAFE
+
+                    <span class="fd-label">// === Producer (ProducerApp.java) ===</span>
+                    channel.basicPublish(exchange, routingKey, properties, body_bytes)
+                    <span class="fd-arrow">├─ exchange    : "notification" (sudah dibuat di RabbitMQ)</span>
+                    <span class="fd-arrow">├─ routingKey  : "whatsapp" (digunakan direct exchange untuk route ke queue)</span>
+                    <span class="fd-arrow">├─ properties  : AMQP.BasicProperties (headers, deliveryMode, contentType, dll)</span>
+                    <span class="fd-arrow">└─ body        : byte[] (konversi dari String/JSON/Protobuf)</span>
+                    channel.close() → connection.close() <span class="fd-label">← WAJIB untuk producer</span>
+
+                    <span class="fd-label">// === Consumer (ConsumerApp.java) ===</span>
+                    channel.basicConsume(queue, autoAck, deliverCallback, cancelCallback)
+                    <span class="fd-arrow">├─ queue          : "whatsapp"</span>
+                    <span class="fd-arrow">├─ autoAck        : true (unsafe) / false (safe, manual ACK)</span>
+                    <span class="fd-arrow">├─ deliverCallback: (tag, Delivery) → baca body + envelope + properties</span>
+                    <span class="fd-arrow">└─ cancelCallback : (tag) → cleanup saat consumer dibatalkan broker</span>
+                    <span class="fd-label">// JANGAN close connection untuk consumer — biarkan hidup (long-running)</span>
+
+                    <span class="fd-label">// === ACK Pattern ===</span>
+                    channel.basicAck(deliveryTag, multiple)      <span class="fd-label">← sukses</span>
+                    channel.basicNack(deliveryTag, multiple, requeue=true)  <span class="fd-label">← gagal, coba lagi</span>
+                    channel.basicNack(deliveryTag, multiple, requeue=false) <span class="fd-label">← gagal, ke DLQ</span>
+                    channel.basicReject(deliveryTag, requeue)    <span class="fd-label">← reject satu pesan</span>
+                </div>
+
+                <div class="text-title mt-l">Cheat Sheet: basicPublish vs basicConsume</div>
+                <div class="table-content mt-s">
+                    <table>
+                        <thead><tr><th>Aspek</th><th>basicPublish (Producer)</th><th>basicConsume (Consumer)</th></tr></thead>
+                        <tbody>
+                        <tr><td>Target</td><td>Exchange + Routing Key</td><td>Queue langsung</td></tr>
+                        <tr><td>Blocking?</td><td>Tidak (langsung return)</td><td>Tidak (callback-based)</td></tr>
+                        <tr><td>Close setelah?</td><td>Ya — close channel + connection</td><td>Tidak — biarkan hidup</td></tr>
+                        <tr><td>Thread model</td><td>Satu thread untuk semua publish</td><td>RabbitMQ buat background thread</td></tr>
+                        <tr><td>ACK</td><td>Tidak relevan untuk producer</td><td>autoAck atau manual</td></tr>
+                        <tr><td>Body format</td><td><code>String.getBytes(UTF_8)</code></td><td><code>new String(body, UTF_8)</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-title mt-l">Checklist Production-Ready RabbitMQ</div>
+                <div class="display-grid mt-s">
+                    <div class="stepper">
+                        <div class="stepper-item"><div class="stepper-key active">1</div><div class="stepper-value"><strong>deliveryMode = 2</strong> di BasicProperties — pesan persistent, tidak hilang saat restart</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">2</div><div class="stepper-value"><strong>durable = true</strong> di queueDeclare — queue survive restart RabbitMQ</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">3</div><div class="stepper-value"><strong>autoAck = false</strong> — manual ACK untuk semua proses bisnis kritis</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">4</div><div class="stepper-value"><strong>1 Channel per Thread</strong> — jangan share channel antar thread</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">5</div><div class="stepper-value"><strong>Dead Letter Queue</strong> — konfigurasi DLX untuk menampung pesan gagal</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key active">6</div><div class="stepper-value"><strong>basicQos() / prefetchCount</strong> — batasi berapa pesan sekaligus per consumer agar tidak overload</div></div>
+                        <div class="stepper-divider"></div>
+                        <div class="stepper-item"><div class="stepper-key">7</div></div>
+                        <div class="stepper-value"><strong>Graceful shutdown hook</strong> — pastikan semua pesan di-ACK sebelum aplikasi berhenti</div>
+                    </div>
+                </div>
+
+                <div class="text-title mt-l">basicQos — Kontrol Beban Consumer</div>
+                <pre><span class="cmt">// Tambahkan ini SEBELUM basicConsume</span>
+channel.<span class="met">basicQos</span>(<span class="num">1</span>);  <span class="cmt">// Kirim maks 1 pesan per consumer sebelum ACK diterima</span>
+
+<span class="cmt">// Dengan prefetchCount=1:
+// - Consumer A sedang proses → tidak dapat pesan baru
+// - Consumer B idle → mendapat pesan berikutnya
+// → Load balancing yang adil antar consumer!
+
+// Tanpa basicQos (default prefetch=unlimited):
+// → Round-robin tanpa mempedulikan beban consumer
+// → Consumer A yang lambat bisa terima ratusan pesan sekaligus</span></pre>
+
+                <div class="info-box primary mt-m">
+                    <strong>🚀 Langkah Berikutnya</strong><br>
+                    <ul style="padding-left:1.2rem;line-height:2.2;margin-top:var(--xs);">
+                        <li><strong>Spring AMQP</strong> — abstraksi Spring di atas RabbitMQ client: <code>@RabbitListener</code>, <code>RabbitTemplate</code>, auto-configuration</li>
+                        <li><strong>Spring Cloud Stream</strong> — abstraksi lebih tinggi yang mendukung RabbitMQ, Kafka, dll dengan kode yang sama</li>
+                        <li><strong>Publisher Confirms</strong> — konfirmasi dari broker bahwa pesan telah diterima (tidak hanya dikirim)</li>
+                        <li><strong>RabbitMQ Streams</strong> — fitur baru RabbitMQ 3.9+ untuk append-only log seperti Kafka</li>
+                        <li><strong>Quorum Queues</strong> — queue terdistribusi untuk high availability di cluster RabbitMQ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="height:4rem;"></div>
+    </section>
+
+    <footer>
+        <p style="text-align:center;padding:var(--m);color:var(--transtext-color);font-size:var(--xs);">
+            Modul Interaktif Java RabbitMQ · Untuk developer PHP/Laravel yang migrasi ke Java &amp; Spring Boot
+        </p>
+    </footer>
+</main>
+
+<script>
+    function sidebarMinify() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("collapse");
+        document.getElementsByClassName("container")[0].classList.toggle("expanded");
+    }
+    function switchTheme() { document.getElementsByTagName("body")[0].classList.toggle("dark-mode"); }
+    function showMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("show");
+        document.getElementById('get-menu').classList.toggle('opened');
+    }
+
+    const QUIZ_FEEDBACK = {
+        q1: { ok: 'Tepat! Connection (TCP) mahal dan thread-safe — buat sekali dan shared. Channel murah tapi tidak thread-safe — buat satu per thread. Ini adalah pattern yang direkomendasikan RabbitMQ sendiri.', no: 'Membuat 50 Connection itu boros resource (50 TCP handshake). Sharing 1 Channel dari banyak thread menyebabkan race condition. Pattern optimal: 1 Connection, N Channel (1 per thread).' },
+        q2: { ok: 'Tepat! AMQP adalah binary protocol — semua data, apapun formatnya (JSON, XML, image, binary), dikirim sebagai byte stream. Ini membuat AMQP sangat fleksibel — consumer bisa menerima berbagai format tanpa broker perlu tahu format-nya.', no: 'RabbitMQ bisa menangani teks — tapi di level protokol, semuanya adalah bytes. Ini bukan soal "tidak bisa teks", melainkan soal fleksibilitas format yang bebas.' },
+        q3: { ok: 'Benar! JVM exit hanya jika semua non-daemon thread sudah selesai. RabbitMQ client library membuat thread background yang non-daemon untuk mendengarkan pesan. Selama connection hidup dan thread ini aktif, JVM tidak akan exit.', no: 'basicConsume() tidak blocking — ia langsung return. Yang membuat JVM tetap hidup adalah background thread yang dibuat oleh library, bukan main thread.' },
+        q4: { ok: 'Tepat! Untuk broadcast ke banyak consumer sekaligus, Fanout Exchange adalah pilihan paling tepat — ia mengirim ke SEMUA queue yang terikat tanpa perlu routing key. Direct Exchange juga bisa (binding ke 3 queue), tapi Fanout lebih semantik dan scalable (mudah tambah service baru tanpa ubah producer).', no: 'Direct dengan 3 binding memang bisa, tapi setiap kali ada service baru kamu harus update binding. Fanout lebih scalable — service baru tinggal bind ke exchange yang sama tanpa perlu mengubah producer atau konfigurasi exchange.' },
+        q6: { ok: 'Tepat! basicNack dengan requeue=true mengembalikan pesan ke posisi depan queue. Pesan akan dikirim ulang ke consumer yang tersedia. Hati-hati: jika error bersifat permanen (bug di kode), ini bisa menyebabkan infinite loop — sebaiknya pakai counter retry di header.', no: 'requeue=true berarti pesan DIKEMBALIKAN ke queue, bukan dihapus atau ke DLQ. Pesan ke DLQ terjadi jika requeue=false DAN ada Dead Letter Exchange yang dikonfigurasi.' },
+    };
+
+    function checkQuiz(groupId, clickedEl, isCorrect) {
+        const container = document.getElementById(groupId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = '1';
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.style.pointerEvents = 'none');
+        const fbEl = document.getElementById(groupId + '-fb');
+        if (isCorrect) {
+            clickedEl.classList.add('correct');
+            fbEl.textContent = '✅ ' + QUIZ_FEEDBACK[groupId].ok;
+            fbEl.className = 'quiz-feedback show ok';
+        } else {
+            clickedEl.classList.add('wrong');
+            fbEl.textContent = '❌ ' + QUIZ_FEEDBACK[groupId].no;
+            fbEl.className = 'quiz-feedback show no';
+            options.forEach(opt => {
+                if (opt.onclick && opt.onclick.toString().includes(',true)')) opt.classList.add('correct');
+            });
+        }
+    }
+
+    const sectionIds = ['intro','chapter-1','chapter-2','chapter-3','chapter-4','chapter-5','chapter-6','summary'];
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu-item');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + e.target.id) link.classList.add('active');
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sectionIds.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+</script>
+</body>
+</html>

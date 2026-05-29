@@ -489,41 +489,41 @@ String name = names.get(0); // ← tidak perlu cast, compiler sudah tahu tipenya
                 </div>
 
                 <div class="text-title">Pohon Hierarki Lengkap</div>
-                <div class="hier-tree">
-                    <span class="h-iface">java.lang.Iterable&lt;E&gt;</span>           ← bisa di-looping dengan for-each
-                    └─ <span class="h-iface">java.util.Collection&lt;E&gt;</span>        ← add, remove, contains, size
-                    ├─ <span class="h-iface">java.util.List&lt;E&gt;</span>             ← ordered, boleh duplikat, akses by index
-                    │    ├─ <span class="h-class">ArrayList&lt;E&gt;</span>             ← dynamic array, random access O(1)
-                    │    ├─ <span class="h-class">LinkedList&lt;E&gt;</span>            ← doubly linked list
-                    │    └─ <span class="h-legacy">Vector&lt;E&gt;</span>               ← legacy, thread-safe ArrayList
-                    │         └─ <span class="h-legacy">Stack&lt;E&gt;</span>            ← legacy LIFO, pakai Deque sebagai gantinya
-                    │
-                    ├─ <span class="h-iface">java.util.Set&lt;E&gt;</span>              ← tidak ada duplikat
-                    │    ├─ <span class="h-class">HashSet&lt;E&gt;</span>               ← urutan tidak terjamin
-                    │    ├─ <span class="h-class">LinkedHashSet&lt;E&gt;</span>         ← urutan insertion terjamin
-                    │    ├─ <span class="h-class">EnumSet&lt;E&gt;</span>               ← khusus Enum, sangat cepat
-                    │    └─ <span class="h-iface">SortedSet&lt;E&gt;</span>             ← selalu terurut
-                    │         └─ <span class="h-iface">NavigableSet&lt;E&gt;</span>     ← navigasi lower/higher/floor/ceiling
-                    │               └─ <span class="h-class">TreeSet&lt;E&gt;</span>   ← Red-Black Tree implementation
-                    │
-                    └─ <span class="h-iface">java.util.Queue&lt;E&gt;</span>            ← FIFO, offer/poll/peek
-                    ├─ <span class="h-class">PriorityQueue&lt;E&gt;</span>         ← heap-based, priority order
-                    ├─ <span class="h-class">ArrayDeque&lt;E&gt;</span>            ← resizable array deque
-                    └─ <span class="h-iface">Deque&lt;E&gt;</span>                  ← double-ended queue (Stack &amp; Queue)
-                    └─ <span class="h-class">LinkedList&lt;E&gt;</span>        ← implements List AND Deque!
+                <pre class="hier-tree">
+<span class="h-iface">java.lang.Iterable&lt;E&gt;</span>            ← bisa di-looping dengan for-each
+└─ <span class="h-iface">java.util.Collection&lt;E&gt;</span>       ← add, remove, contains, size
+├─ <span class="h-iface">java.util.List&lt;E&gt;</span>             ← ordered, boleh duplikat, akses by index
+│    ├─ <span class="h-class">ArrayList&lt;E&gt;</span>             ← dynamic array, random access O(1)
+│    ├─ <span class="h-class">LinkedList&lt;E&gt;</span>            ← doubly linked list
+│    └─ <span class="h-legacy">Vector&lt;E&gt;</span>                ← legacy, thread-safe ArrayList
+│         └─ <span class="h-legacy">Stack&lt;E&gt;</span>            ← legacy LIFO, pakai Deque sebagai gantinya
+│
+├─ <span class="h-iface">java.util.Set&lt;E&gt;</span>              ← tidak ada duplikat
+│    ├─ <span class="h-class">HashSet&lt;E&gt;</span>               ← urutan tidak terjamin
+│    ├─ <span class="h-class">LinkedHashSet&lt;E&gt;</span>         ← urutan insertion terjamin
+│    ├─ <span class="h-class">EnumSet&lt;E&gt;</span>               ← khusus Enum, sangat cepat
+│    └─ <span class="h-iface">SortedSet&lt;E&gt;</span>             ← selalu terurut
+│         └─ <span class="h-iface">NavigableSet&lt;E&gt;</span>     ← navigasi lower/higher/floor/ceiling
+│               └─ <span class="h-class">TreeSet&lt;E&gt;</span>    ← Red-Black Tree implementation
+│
+└─ <span class="h-iface">java.util.Queue&lt;E&gt;</span>            ← FIFO, offer/poll/peek
+├─ <span class="h-class">PriorityQueue&lt;E&gt;</span>              ← heap-based, priority order
+├─ <span class="h-class">ArrayDeque&lt;E&gt;</span>                 ← resizable array deque
+└─ <span class="h-iface">Deque&lt;E&gt;</span>                      ← double-ended queue (Stack &amp; Queue)
+└─ <span class="h-class">LinkedList&lt;E&gt;</span>                 ← implements List AND Deque!
 
-                    <span style="opacity:0.5;">──── Map hierarchy (TERPISAH, bukan turunan Collection) ────</span>
-                    <span class="h-iface">java.util.Map&lt;K,V&gt;</span>                  ← key-value pairs, key unik
-                    ├─ <span class="h-class">HashMap&lt;K,V&gt;</span>                    ← paling umum, urutan tidak terjamin
-                    ├─ <span class="h-class">LinkedHashMap&lt;K,V&gt;</span>              ← urutan insertion terjamin
-                    ├─ <span class="h-class">IdentityHashMap&lt;K,V&gt;</span>            ← key equality pakai == bukan .equals()
-                    ├─ <span class="h-class">WeakHashMap&lt;K,V&gt;</span>                ← key bisa di-GC jika tidak ada referensi
-                    ├─ <span class="h-class">EnumMap&lt;K,V&gt;</span>                    ← khusus key Enum
-                    ├─ <span class="h-legacy">Hashtable&lt;K,V&gt;</span>                  ← legacy, thread-safe HashMap
-                    └─ <span class="h-iface">SortedMap&lt;K,V&gt;</span>                  ← key selalu terurut
-                    └─ <span class="h-iface">NavigableMap&lt;K,V&gt;</span>            ← navigasi key
-                    └─ <span class="h-class">TreeMap&lt;K,V&gt;</span>             ← Red-Black Tree implementation</div>
-
+<span style="opacity:0.5;">──── Map hierarchy (TERPISAH, bukan turunan Collection) ────</span>
+<span class="h-iface">java.util.Map&lt;K,V&gt;</span>                 ← key-value pairs, key unik
+├─ <span class="h-class">HashMap&lt;K,V&gt;</span>                    ← paling umum, urutan tidak terjamin
+├─ <span class="h-class">LinkedHashMap&lt;K,V&gt;</span>              ← urutan insertion terjamin
+├─ <span class="h-class">IdentityHashMap&lt;K,V&gt;</span>            ← key equality pakai == bukan .equals()
+├─ <span class="h-class">WeakHashMap&lt;K,V&gt;</span>                ← key bisa di-GC jika tidak ada referensi
+├─ <span class="h-class">EnumMap&lt;K,V&gt;</span>                    ← khusus key Enum
+├─ <span class="h-legacy">Hashtable&lt;K,V&gt;</span>                  ← legacy, thread-safe HashMap
+└─ <span class="h-iface">SortedMap&lt;K,V&gt;</span>                  ← key selalu terurut
+└─ <span class="h-iface">NavigableMap&lt;K,V&gt;</span>               ← navigasi key
+└─ <span class="h-class">TreeMap&lt;K,V&gt;</span>                    ← Red-Black Tree implementation
+                </pre>
                 <div class="info-box">
                     💡 <strong>Tip membaca hierarki ini:</strong> <span style="color:var(--primary-color);font-weight:bold;">Biru = Interface</span> (kontrak), <span style="color:var(--success-color);font-weight:bold;">Hijau = Class konkret</span> (implementasi yang kamu <code>new</code>), <span style="color:var(--warning-color);font-weight:bold;">Kuning = Legacy</span> (hindari di kode baru, masih ada untuk backward compatibility).
                 </div>

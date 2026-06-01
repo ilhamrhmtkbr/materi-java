@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="https://ilhamrhmtkbr.github.io/iamra-css/assets/svg/iamra-logo.svg"/>
     <style>
         @media screen and (max-width: 800px) {
             .helper{
@@ -52,6 +53,7 @@
         .line-annotation{box-sizing:border-box;max-width:77dvw;overflow:auto;margin:var(--m) 0}
         .line-annotation table{width:100%}
         .line-annotation th{background:var(--transprimary-color)}
+        .adapt{max-width: 77dvw;overflow: auto;box-sizing: border-box;        }
         .quiz-option{display:flex;align-items:flex-start;gap:var(--s);padding:var(--s) var(--m);border-radius:var(--radius-m);border:var(--border);cursor:pointer;margin-bottom:var(--s);transition:background .15s;font-size:var(--s)}
         .quiz-option:hover{background:var(--transprimary-color)}
         .quiz-option.correct{background:var(--transsuccess-color);border-color:var(--success-color)}
@@ -546,7 +548,7 @@ ExecutorService pool = Executors.newFixedThreadPool(200);
 
                 <hr class="section-divider">
                 <div class="text-subtitle">🧪 Mini Quiz</div>
-                <div id="quiz1">
+                <div id="quiz1" class="adapt">
                     <p style="font-size:var(--s);font-weight:600;">Mengapa Platform Thread tidak bisa dengan mudah dibuat dalam jumlah sangat besar (misal 1 juta thread)?</p>
                     <div class="quiz-option" onclick="checkQuiz('quiz1',this,false)">A. Karena Java membatasi jumlah thread maksimum di source code-nya</div>
                     <div class="quiz-option" onclick="checkQuiz('quiz1',this,true)">B. Karena setiap Platform Thread memetakan ke OS Thread yang mengonsumsi ~1MB stack memory dan overhead context switch yang besar</div>
@@ -665,7 +667,7 @@ Thread.ofPlatform().start(() -> System.out.println("running!"));</code></pre></d
 
                 <hr class="section-divider">
                 <div class="text-subtitle">🧪 Mini Quiz</div>
-                <div id="quiz2">
+                <div id="quiz2" class="adapt">
                     <p style="font-size:var(--s);font-weight:600;">Apa perbedaan antara <code>.unstarted(runnable)</code> dan <code>.start(runnable)</code> pada Thread builder?</p>
                     <div class="quiz-option" onclick="checkQuiz('quiz2',this,false)">A. Tidak ada perbedaan, keduanya langsung menjalankan thread</div>
                     <div class="quiz-option" onclick="checkQuiz('quiz2',this,true)">B. <code>unstarted()</code> membuat thread tapi belum menjalankannya — perlu panggil <code>.start()</code> secara eksplisit; <code>start()</code> langsung menjalankan</div>
@@ -820,7 +822,7 @@ t.start();
 
                 <hr class="section-divider">
                 <div class="text-subtitle">🧪 Mini Quiz</div>
-                <div id="quiz3">
+                <div id="quiz3" class="adapt">
                     <p style="font-size:var(--s);font-weight:600;">Saat Virtual Thread memanggil <code>Thread.sleep()</code>, apa yang terjadi pada Carrier Thread?</p>
                     <div class="quiz-option" onclick="checkQuiz('quiz3',this,false)">A. Carrier Thread ikut tidur (blocking)</div>
                     <div class="quiz-option" onclick="checkQuiz('quiz3',this,true)">B. Virtual Thread di-unmount dari Carrier Thread; Carrier Thread bebas menjalankan Virtual Thread lain</div>
@@ -976,7 +978,7 @@ for (int i = 0; i &lt; 10_000; i++) {
 
                 <hr class="section-divider">
                 <div class="text-subtitle">🧪 Mini Quiz</div>
-                <div id="quiz4">
+                <div id="quiz4" class="adapt">
                     <p style="font-size:var(--s);font-weight:600;">Mengapa Virtual Thread tidak perlu di-pool (berbeda dengan Platform Thread yang biasanya dipakai dalam Thread Pool)?</p>
                     <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">A. Karena Virtual Thread tidak bisa menjalankan task berulang</div>
                     <div class="quiz-option" onclick="checkQuiz('quiz4',this,false)">B. Karena Virtual Thread secara otomatis di-pool oleh JVM</div>
@@ -1090,7 +1092,7 @@ try {
 
                 <hr class="section-divider">
                 <div class="text-subtitle">🧪 Mini Quiz</div>
-                <div id="quiz5">
+                <div id="quiz5" class="adapt">
                     <p style="font-size:var(--s);font-weight:600;">Situasi apa yang menyebabkan Virtual Thread mengalami "pinning" (tidak bisa di-unmount) di Java 21?</p>
                     <div class="quiz-option" onclick="checkQuiz('quiz5',this,false)">A. Saat Virtual Thread memanggil <code>Thread.sleep()</code></div>
                     <div class="quiz-option" onclick="checkQuiz('quiz5',this,true)">B. Saat Virtual Thread berada di dalam blok <code>synchronized</code> atau memanggil native method</div>
@@ -1284,7 +1286,7 @@ List&lt;Long&gt; results = LongStream.range(0, 1_000_000)
 
                 <hr class="section-divider">
                 <div class="text-subtitle">🧪 Mini Quiz</div>
-                <div id="quiz6">
+                <div id="quiz6" class="adapt">
                     <p style="font-size:var(--s);font-weight:600;">Untuk mengaktifkan Virtual Thread di semua request HTTP dalam aplikasi Spring Boot 3.2+, apa yang perlu dilakukan?</p>
                     <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">A. Rewrite semua Controller untuk menggunakan <code>CompletableFuture</code></div>
                     <div class="quiz-option" onclick="checkQuiz('quiz6',this,false)">B. Ganti semua anotasi <code>@RestController</code> menjadi <code>@VirtualController</code></div>
@@ -1381,7 +1383,7 @@ List&lt;Long&gt; results = LongStream.range(0, 1_000_000)
                 <hr class="section-divider">
 
                 <div class="text-subtitle">🏆 Checklist Penguasaan Java Virtual Thread</div>
-                <ul class="bp-list">
+                <ul class="bp-list adapt">
                     <li><span>✅</span><span>Paham mengapa Platform Thread tidak efisien untuk I/O-bound tasks (blocking = waste OS Thread)</span></li>
                     <li><span>✅</span><span>Tahu konsep mount/unmount: Virtual Thread di-unmount dari Carrier Thread saat blocking, Carrier Thread bebas menjalankan VT lain</span></li>
                     <li><span>✅</span><span>Bisa membuat Virtual Thread dengan <code>Thread.ofVirtual().name().unstarted(task)</code></span></li>
